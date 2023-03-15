@@ -96,6 +96,9 @@ find_package(Freetype REQUIRED)
 # MxFunctions
 find_package(MxFunctions REQUIRED)
 
+# MeshData
+find_package(MeshData REQUIRED)
+
 #-----------------------------------------------------------------------------
 # 开启项目分组
 #-----------------------------------------------------------------------------
