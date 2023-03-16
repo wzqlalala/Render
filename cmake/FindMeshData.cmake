@@ -22,4 +22,6 @@ set_property(TARGET MeshData APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
 set_target_properties(MeshData PROPERTIES
 		IMPORTED_IMPLIB_RELEASE "${MeshData_LIB_DIR}/MeshData.lib"
 		IMPORTED_LOCATION_RELEASE "${MeshData_BIN_DIR}/MeshData.dll"
+		IMPORTED_IMPLIB_DEBUG "${MeshData_LIB_DIR}/MeshDatad.lib"
+		IMPORTED_LOCATION_DEBUG "${MeshData_BIN_DIR}/MeshDatad.dll"
 	)

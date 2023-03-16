@@ -22,4 +22,6 @@ set_property(TARGET MxFunctions APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
 set_target_properties(MxFunctions PROPERTIES
 		IMPORTED_IMPLIB_RELEASE "${MxFunctions_LIB_DIR}/MxFunctions.lib"
 		IMPORTED_LOCATION_RELEASE "${MxFunctions_BIN_DIR}/MxFunctions.dll"
+		IMPORTED_IMPLIB_DEBUG "${MxFunctions_LIB_DIR}/MxFunctionsd.lib"
+		IMPORTED_LOCATION_DEBUG "${MxFunctions_BIN_DIR}/MxFunctionsd.dll"
 	)

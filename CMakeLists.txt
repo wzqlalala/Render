@@ -20,6 +20,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # 默认编译动态库
 set(BUILD_SHARED_LIBS ON)
+# Debug添加后缀d
+set(CMAKE_DEBUG_POSTFIX d)
 
 #-----------------------------------------------------------------------------
 # 检测操作系统

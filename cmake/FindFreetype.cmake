@@ -22,4 +22,6 @@ set_property(TARGET Freetype APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
 set_target_properties(Freetype PROPERTIES
 		IMPORTED_IMPLIB_RELEASE "${Freetype_LIB_DIR}/freetype.lib"
 		IMPORTED_LOCATION_RELEASE "${Freetype_BIN_DIR}/freetype.dll"
+		IMPORTED_IMPLIB_DEBUG "${Freetype_LIB_DIR}/freetype.lib"
+		IMPORTED_LOCATION_DEBUG "${Freetype_BIN_DIR}/freetype.dll"
 	)
