@@ -37,7 +37,7 @@ target_compile_definitions(RendLabel PRIVATE "RENDLABEL_LIB")
 list(APPEND _depend_library RendBasic)
 
 list(APPEND _runtimes_libraries
-	Qt5::Core Qt5::Gui Qt5::Widgets MxFunctions
+	Qt5::Core Qt5::Gui Qt5::Widgets MxFunctions Freetype
 )
 
 #-----------------------------------------------------------------------------

@@ -1,6 +1,7 @@
 #-----------------------------------------------------------------------------
 # 头文件搜索路径
 #-----------------------------------------------------------------------------
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../RendBasic)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 #-----------------------------------------------------------------------------
@@ -27,6 +28,7 @@ add_library(RendData
 #-----------------------------------------------------------------------------
 target_compile_definitions(RendData PRIVATE "RENDDATA_LIB")
 
+list(APPEND _depend_library RendBasic)
 list(APPEND _runtimes_libraries
 	Qt5::Core Qt5::Gui Qt5::Widgets MxFunctions
 )
@@ -36,7 +38,13 @@ list(APPEND _runtimes_libraries
 #-----------------------------------------------------------------------------
 target_link_libraries(RendData PRIVATE
 	${_runtimes_libraries}
+	${_depend_library}
 )
+
+#-----------------------------------------------------------------------------
+# 添加依赖关系
+#-----------------------------------------------------------------------------
+add_dependencies(RendData ${_depend_library})
 
 #-----------------------------------------------------------------------------
 # 添加运行时依赖关系

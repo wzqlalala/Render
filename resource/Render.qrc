@@ -1,5 +1,38 @@
 <RCC>
     <qresource prefix="/">
         <file>Icon/GeoPoint.png</file>
+        <file>GLSL/Arrow_Common.glsl</file>
+        <file>GLSL/Arrow_GlobalAxis.glsl</file>
+        <file>GLSL/BackGround.glsl</file>
+        <file>GLSL/extfunction.glsl</file>
+        <file>GLSL/Font_Common.glsl</file>
+        <file>GLSL/Font_Fixed.glsl</file>
+        <file>GLSL/Font_GlobalAxis.glsl</file>
+        <file>GLSL/ModelTestRend.glsl</file>
+        <file>GLSL/ModelTestRendMat.glsl</file>
+        <file>GLSL/ModelTestRendNormalMap.glsl</file>
+        <file>GLSL/PostCuttingPlaneWithOutDeformation.glsl</file>
+        <file>GLSL/PostEdgeLineWithDeformation.glsl</file>
+        <file>GLSL/PostHighLightFaceLine.glsl</file>
+        <file>GLSL/PostHighLightLine.glsl</file>
+        <file>GLSL/PostHighLightPoint.glsl</file>
+        <file>GLSL/PostMeshFaceLineWithDeformation.glsl</file>
+        <file>GLSL/PostMeshFaceTransparentWithDeformation.glsl</file>
+        <file>GLSL/PostMeshFaceTransparentWithOutDeformation.glsl</file>
+        <file>GLSL/PostMeshFaceWithDeformation.glsl</file>
+        <file>GLSL/PostMeshLineWithDeformation.glsl</file>
+        <file>GLSL/PostMeshPointWithDeformation.glsl</file>
+        <file>GLSL/PostTransparentPlaneWithOutDeformation.glsl</file>
+        <file>GLSL/PreGeoMeshDotLine.glsl</file>
+        <file>GLSL/PreGeoMeshEdgeLine.glsl</file>
+        <file>GLSL/PreGeoMeshFace.glsl</file>
+        <file>GLSL/PreGeoMeshLine.glsl</file>
+        <file>GLSL/PreGeoPoint.glsl</file>
+        <file>GLSL/PreHighLightGeoMeshFace.glsl</file>
+        <file>GLSL/PreHighLightGeoMeshLine.glsl</file>
+        <file>GLSL/PreHighLightGeoPoint.glsl</file>
+        <file>GLSL/PreMeshPoint.glsl</file>
+        <file>GLSL/ScreenQuad.glsl</file>
+        <file>GLSL/testRend.glsl</file>
     </qresource>
 </RCC>

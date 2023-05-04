@@ -2,6 +2,7 @@
 # 头文件搜索路径
 #-----------------------------------------------------------------------------
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../RendData)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../RendBasic)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../RendBase)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../RendLabel)
 
@@ -21,6 +22,7 @@ qt5_add_resources(_resource ${_qrc})
 #-----------------------------------------------------------------------------
 file(GLOB _header "*.h")
 file(GLOB _source "*.cpp")
+file(GLOB _cc "*.cc")
 
 #-----------------------------------------------------------------------------
 # 添加动态库目标
@@ -29,6 +31,7 @@ add_library(RendView
 	${_resource}
 	${_header}
 	${_source}
+	${_cc}
 )
 
 #-----------------------------------------------------------------------------
@@ -36,10 +39,10 @@ add_library(RendView
 #-----------------------------------------------------------------------------
 target_compile_definitions(RendView PRIVATE "RENDVIEW_LIB")
 
-list(APPEND _depend_library RendData RendBase RendLabel)
+list(APPEND _depend_library RendData RendBase RendBasic RendLabel)
 
 list(APPEND _runtimes_libraries
-	Qt5::Core Qt5::Gui Qt5::Widgets MxFunctions MeshData
+	Qt5::Core Qt5::Gui Qt5::Widgets MxFunctions MeshData Freetype
 )
 
 #-----------------------------------------------------------------------------
