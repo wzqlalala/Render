@@ -11,7 +11,7 @@
 #include <QSet>
 #include <set>
 
-#include "mBasicEnum.h"
+#include "mMeshViewEnum.h"
 #include "mBasicStructor.h"
 
 using namespace std;
@@ -89,7 +89,7 @@ namespace MDataPost
 
 
 		//获取模型的最大半径和中心
-		void getModelSize(MBasicFunction::ModelSize & modelSize);
+		void getModelSize(MViewBasic::ModelSize & modelSize);
 
 		//判断是否存在模型
 		bool isExistModel();
@@ -151,11 +151,11 @@ namespace MDataPost
 		 */
 
 		 //创建网格
-		void createMesh(int ID, MBasicFunction::MeshType meshType, MBasicFunction::ElementType elementType, 
+		void createMesh(int ID, MViewBasic::MeshType meshType, MViewBasic::ElementType elementType, 
 			QVector<int> index, mPostMeshPartData1 *partData, QHash<QVector<int>, mPostMeshFaceData1*> &_meshFace);
 
 		//创建网格
-		void createMesh(int ID, MBasicFunction::MeshType meshType, MBasicFunction::ElementType elementType,
+		void createMesh(int ID, MViewBasic::MeshType meshType, MViewBasic::ElementType elementType,
 			QVector<int> index, mPostMeshPartData1 *partData, QVector<QVector<QPair<QPair<int, int>, mPostMeshFaceData1*>>> &_meshFace);
 
 		//隐藏网格
@@ -171,7 +171,7 @@ namespace MDataPost
 		void showAllMesh();
 
 		//根据单元类型获取个数
-		int getNumByElementType(MBasicFunction::ElementType elementType);
+		int getNumByElementType(MViewBasic::ElementType elementType);
 
 		//获取网格的形心
 		QVector3D getMeshCenter(mPostMeshData1 *meshData, const QHash<int, QVector3D> &dis, QVector3D deformationScale);
@@ -300,7 +300,7 @@ namespace MDataPost
 		
 	public:
 		//模型操作枚举
-		MBasicFunction::ModelOperateEnum _meshOperateEnum;
+		MViewBasic::ModelOperateEnum _meshOperateEnum;
 
 		//渲染需要实时判断
 		//单个模型操作的部件，渲染后置为空
@@ -347,10 +347,10 @@ namespace MDataPost
 		std::vector<mPostMeshFaceData1*> _meshFaceData1;
 
 		QHash<QString, mPostMeshPartData1*> _partData1;
-		QHash<MBasicFunction::ElementType, int> _eleNum;
+		QHash<MViewBasic::ElementType, int> _eleNum;
 
 		//模型尺寸
-		MBasicFunction::ModelSize _modelSize;
+		MViewBasic::ModelSize _modelSize;
 
 		//是否对模型进行删除或者添加
 		bool _isAddOrDeletePart_Mesh;

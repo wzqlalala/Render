@@ -1,8 +1,10 @@
 #include "mPostMeshData1.h"
 #include "mPostMeshFaceData1.h"
+
+using namespace MxFunctions;
 namespace MDataPost
 {
-	mPostMeshData1::mPostMeshData1(int ID, MBasicFunction::MeshType meshType, MBasicFunction::ElementType eleType, QString partName)
+	mPostMeshData1::mPostMeshData1(int ID, MeshType meshType, ElementType eleType, QString partName)
 	{
 		_meshID = ID;
 		_meshType = meshType;
@@ -34,18 +36,18 @@ namespace MDataPost
 			QVector<int> index;
 			switch (_meshType)
 			{
-			case MBasicFunction::MeshTet:
+			case MeshTet:
 				indexs.append(faces[0]->getNodeIndex(_meshID)[0]);
 				indexs.append(faces[2]->getNodeIndex(_meshID));
 				break;
-			case MBasicFunction::MeshWedge:
+			case MeshWedge:
 				index = faces[0]->getNodeIndex(_meshID);
 				indexs.append(index[0]);
 				indexs.append(index[2]);
 				indexs.append(index[1]);
 				indexs.append(faces[1]->getNodeIndex(_meshID));
 				break;
-			case MBasicFunction::MeshHex:
+			case MeshHex:
 				index = faces[0]->getNodeIndex(_meshID);
 				indexs.append(index[0]);
 				indexs.append(index[3]);
@@ -53,7 +55,7 @@ namespace MDataPost
 				indexs.append(index[1]);	
 				indexs.append(faces[1]->getNodeIndex(_meshID));
 				break;
-			case MBasicFunction::MeshPyramid:
+			case MeshPyramid:
 				indexs.append(faces[0]->getNodeIndex(_meshID));
 				indexs.append(faces[1]->getNodeIndex(_meshID)[2]);
 				break;
@@ -65,17 +67,17 @@ namespace MDataPost
 	}
 
 
-	MBasicFunction::MeshType mPostMeshData1::getMeshType()
+	MeshType mPostMeshData1::getMeshType()
 	{
 		return _meshType;
 	}
 
-	void mPostMeshData1::setElementType(MBasicFunction::ElementType eleType)
+	void mPostMeshData1::setElementType(ElementType eleType)
 	{
 		_eleType = eleType;
 	}
 
-	MBasicFunction::ElementType mPostMeshData1::getElementType()
+	ElementType mPostMeshData1::getElementType()
 	{
 		return _eleType;
 	}
@@ -148,10 +150,10 @@ namespace MDataPost
 	{
 		switch (_meshType)
 		{
-		case MBasicFunction::MeshPoint:return 0;
-		case MBasicFunction::MeshBeam: return 1;
-		case MBasicFunction::MeshTri:
-		case MBasicFunction::MeshQuad:return 2;
+		case MeshPoint:return 0;
+		case MeshBeam: return 1;
+		case MeshTri:
+		case MeshQuad:return 2;
 		default:return 3;
 		}
 	}

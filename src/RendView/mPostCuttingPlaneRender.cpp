@@ -10,13 +10,13 @@
 #include "mPostMeshNodeData1.h"
 #include "mPostMeshPartData1.h"
 
-#include "mBasicEnum.h"
+#include "mMeshViewEnum.h"
 
 #include <algorithm>
 #include <math.h>
 #include <renderpch.h>
 
-using namespace MBasicFunction;
+using namespace MViewBasic;
 using namespace mxr;
 namespace MPostRend
 {

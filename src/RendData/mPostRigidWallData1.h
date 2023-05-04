@@ -4,7 +4,7 @@
 
 #include "renddata_global.h"
 
-//MBasicFunction
+//MViewBasic
 #include "mPostEnum.h"
 #include "mBasicStructor.h"
 
@@ -12,7 +12,7 @@
 #include <QVector3D>
 #include <QVector>
 
-using namespace MBasicFunction;
+using namespace MViewBasic;
 namespace MDataPost
 {
 	class RENDDATA_EXPORT mPostRigidWallDataBase

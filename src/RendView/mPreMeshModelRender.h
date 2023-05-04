@@ -13,7 +13,7 @@
 //
 //#include "SpaceTree.h"
 //
-//#include "mBasicEnum.h"
+//#include "mMeshViewEnum.h"
 //#include "mMeshViewEnum.h"
 //#include "mBasicStructor.h"
 //
@@ -41,7 +41,7 @@
 //}
 //using namespace MViewBasic;
 //using namespace MDataGeo;
-//using namespace MBasicFunction;
+//using namespace MViewBasic;
 //using namespace MBaseRend;
 //using namespace mxr;
 //using namespace std;
@@ -111,9 +111,9 @@
 //		void UpdateModelBuffer();
 //
 //		//更新单个部件操作
-//		void updateOneModelOperate(QPair<MBasicFunction::ModelOperateEnum, std::set<QString>> postModelOperates);
+//		void updateOneModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>> postModelOperates);
 //		//更新全部部件操作
-//		void updateAllModelOperate(MBasicFunction::ModelOperateEnum postModelOperate);
+//		void updateAllModelOperate(MViewBasic::ModelOperateEnum postModelOperate);
 //
 //		void setShowFuntion(ShowFuntion showFuntion);
 //

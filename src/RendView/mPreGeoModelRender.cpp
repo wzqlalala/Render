@@ -27,7 +27,7 @@
 
 using namespace mxr;
 using namespace std;
-using namespace MBasicFunction;
+using namespace MViewBasic;
 namespace MPreRend
 {
 	mPreGeoModelRender::mPreGeoModelRender(std::shared_ptr<mxr::Group> parent, shared_ptr<mPreRendStatus> rendStatus, mGeoModelData1 *geoModelData):
@@ -108,9 +108,9 @@ namespace MPreRend
 
 			_partRenders.insert(partName, part);
 		}
-		updateModelOperate(QPair<MBasicFunction::ModelOperateEnum, std::set<QString>>(HideOnePart, hidePartNames));
+		updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(HideOnePart, hidePartNames));
 	}
-	bool mPreGeoModelRender::updateModelOperate(QPair<MBasicFunction::ModelOperateEnum, std::set<QString>> postModelOperates)
+	bool mPreGeoModelRender::updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>> postModelOperates)
 	{
 		ModelOperateEnum postModelOperate = postModelOperates.first;
 		set<QString> partNames = postModelOperates.second;
@@ -182,19 +182,19 @@ namespace MPreRend
 			}
 			else if (postModelOperate == HideAllPart)
 			{
-				updateModelOperate(QPair<MBasicFunction::ModelOperateEnum, std::set<QString>>(HideOnePart, partnames));
+				updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(HideOnePart, partnames));
 			}
 			else if (postModelOperate == ShowAllPart)
 			{
-				updateModelOperate(QPair<MBasicFunction::ModelOperateEnum, std::set<QString>>(ShowOnePart, partnames));
+				updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(ShowOnePart, partnames));
 			}
 			else if (postModelOperate == ColorAllPart)
 			{
-				updateModelOperate(QPair<MBasicFunction::ModelOperateEnum, std::set<QString>>(ColorOnePart, partnames));
+				updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(ColorOnePart, partnames));
 			}
 			else if (postModelOperate == DeleteAllPart)
 			{
-				updateModelOperate(QPair<MBasicFunction::ModelOperateEnum, std::set<QString>>(DeleteOnePart, partnames));
+				updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(DeleteOnePart, partnames));
 			}
 		}
 		return false;

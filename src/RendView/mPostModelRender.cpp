@@ -23,7 +23,7 @@
 
 using namespace mxr;
 using namespace std;
-using namespace MBasicFunction;
+using namespace MViewBasic;
 namespace MPostRend
 {
 	mPostModelRender::mPostModelRender(std::shared_ptr<mxr::Group> parent, shared_ptr<mPostRendStatus> rendStatus, mOneFrameData1 *oneFrameData, mPostOneFrameRendData *oneFrameRendData):
@@ -103,9 +103,9 @@ namespace MPostRend
 			_partRenders.insert(partName, part);
 			_oneFrameRendData->setPartMinMaxData(partName, part->_minValue, part->_maxValue);
 		}
-		updateOneModelOperate(QPair<MBasicFunction::PostModelOperateEnum, std::set<QString>>(HideOnePartOperate, hidePartNames));
+		updateOneModelOperate(QPair<MViewBasic::PostModelOperateEnum, std::set<QString>>(HideOnePartOperate, hidePartNames));
 	}
-	void mPostModelRender::updateOneModelOperate(QPair<MBasicFunction::PostModelOperateEnum, std::set<QString>> postModelOperates)
+	void mPostModelRender::updateOneModelOperate(QPair<MViewBasic::PostModelOperateEnum, std::set<QString>> postModelOperates)
 	{
 		PostModelOperateEnum postModelOperate = postModelOperates.first;
 		set<QString> partNames = postModelOperates.second;
@@ -228,7 +228,7 @@ namespace MPostRend
 			}
 		}
 	}
-	void mPostModelRender::updateAllModelOperate(MBasicFunction::PostModelOperateEnum postModelOperate)
+	void mPostModelRender::updateAllModelOperate(MViewBasic::PostModelOperateEnum postModelOperate)
 	{
 		std::set<QString> partnames{ _partOrder.begin(),_partOrder.end()};
 		if (postModelOperate == ImportOperate)
@@ -241,23 +241,23 @@ namespace MPostRend
 		}
 		else if (postModelOperate == HideAllPartOperate)
 		{
-			updateOneModelOperate(QPair<MBasicFunction::PostModelOperateEnum, std::set<QString>>(HideOnePartOperate, partnames));
+			updateOneModelOperate(QPair<MViewBasic::PostModelOperateEnum, std::set<QString>>(HideOnePartOperate, partnames));
 		}
 		else if (postModelOperate == ShowAllPartOperate)
 		{
-			updateOneModelOperate(QPair<MBasicFunction::PostModelOperateEnum, std::set<QString>>(ShowOnePartOperate, partnames));
+			updateOneModelOperate(QPair<MViewBasic::PostModelOperateEnum, std::set<QString>>(ShowOnePartOperate, partnames));
 		}
 		else if (postModelOperate == TextureAllPartOperate)
 		{
-			updateOneModelOperate(QPair<MBasicFunction::PostModelOperateEnum, std::set<QString>>(TextureOnePartOperate, partnames));
+			updateOneModelOperate(QPair<MViewBasic::PostModelOperateEnum, std::set<QString>>(TextureOnePartOperate, partnames));
 		}
 		else if (postModelOperate == TransparentAllPartOperate)
 		{
-			updateOneModelOperate(QPair<MBasicFunction::PostModelOperateEnum, std::set<QString>>(TransparentOnePartOperate, partnames));
+			updateOneModelOperate(QPair<MViewBasic::PostModelOperateEnum, std::set<QString>>(TransparentOnePartOperate, partnames));
 		}
 		else if (postModelOperate == ColorAllPartOperate)
 		{
-			updateOneModelOperate(QPair<MBasicFunction::PostModelOperateEnum, std::set<QString>>(ColorOnePartOperate, partnames));
+			updateOneModelOperate(QPair<MViewBasic::PostModelOperateEnum, std::set<QString>>(ColorOnePartOperate, partnames));
 		}
 		else if (postModelOperate == UpdateVariableValue)
 		{
@@ -269,7 +269,7 @@ namespace MPostRend
 		}
 		else if (postModelOperate == ChangeColorAllPartOperate)
 		{
-			updateOneModelOperate(QPair<MBasicFunction::PostModelOperateEnum, std::set<QString>>(ColorOnePartOperate, partnames));
+			updateOneModelOperate(QPair<MViewBasic::PostModelOperateEnum, std::set<QString>>(ColorOnePartOperate, partnames));
 		}
 		else if (postModelOperate == UpdateMinMax)
 		{

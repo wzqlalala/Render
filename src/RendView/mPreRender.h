@@ -14,8 +14,8 @@
 //MViewBasic
 #include "mMeshViewEnum.h"
 
-//MBasicFunction
-#include "mBasicEnum.h"
+//MViewBasic
+#include "mMeshViewEnum.h"
 #include "mBasicStructor.h"
 
 #include "SpaceTree.h"
@@ -43,7 +43,7 @@ namespace MDataGeo
 }
 
 using namespace MViewBasic;
-using namespace MBasicFunction;
+using namespace MViewBasic;
 using namespace MBaseRend;
 using namespace MDataGeo;
 using namespace std;
@@ -76,7 +76,7 @@ namespace MPreRend
 		void updateHighLightRender();
 
 		//更新部件操作
-		void updateModelOperate(QPair<MBasicFunction::ModelOperateEnum, std::set<QString>> modelOperates);
+		void updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>> modelOperates);
 		
 		//清除全部的渲染
 		void clearRender();

@@ -1,8 +1,8 @@
 #include "mIMxdbFile1.h"
 
-//MBasicFunction
-#include "mCommonFunctions.h"
-#include "mBasicEnum.h"
+//MViewBasic
+#include "mElementFunction.h"
+#include "mMeshViewEnum.h"
 
 //MDataPost
 #include "mDataPost1.h"
@@ -27,7 +27,8 @@
 
 #define optimazation false
 
-using namespace MBasicFunction;
+using namespace MViewBasic;
+using namespace MxFunctions;
 QMutex postmutex;
 namespace MIOFile
 {
@@ -2961,10 +2962,10 @@ namespace MIOFile
 				//_byteAmount += 32* sizeof(char);
 
 				//存储
-				ElementType elementtype = mCommonFunctions::getElementType(QString(eletype).toUpper());
-				MeshType meshtype = mCommonFunctions::transformTypeStrToEnum(elementtype);
+				ElementType elementtype = getElementType(QString(eletype).toUpper());
+				MeshType meshtype = transformTypeStrToEnum(elementtype);
 				//根据类型获取单元包含的节点个数
-				int elenode = mCommonFunctions::elementNodeCount(elementtype);
+				int elenode = elementNodeCount(elementtype);
 
 
 				//读取单元包含的节点ID

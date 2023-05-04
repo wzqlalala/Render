@@ -6,7 +6,7 @@
 #include <QList>
 #include <QVector4D>
 
-namespace MBasicFunction
+namespace MViewBasic
 {
 	class RENDBASIC_EXPORT mColor
 	{

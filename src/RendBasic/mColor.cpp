@@ -3,7 +3,7 @@
 //QVector4D
 #include <QVector4D>
 
-namespace MBasicFunction
+namespace MViewBasic
 {
 	mColor* mColor::_instance = nullptr;
 

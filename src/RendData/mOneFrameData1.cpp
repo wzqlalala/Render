@@ -12,18 +12,18 @@
 #include <QTime>
 #include <qguiapplication.h>
 
-//MAppconfinguration
-#include "mAppConfigurationSingleton.h"
-#include "mFileConfiguration.h"
 
-#include "mContainers.h"
+//MxFunction
+#include "mGlobalVarible.h"
+
+#include "mGlobalVarible.h"
 #include <unordered_map>
 #include <vector>
 #include <fstream>
 
 using namespace std;
-using namespace MBasicFunction;
-using namespace MAppConfiguration;
+using namespace MxFunctions;
+using namespace MViewBasic;
 namespace MDataPost
 {
 	mOneFrameData1::mOneFrameData1()
@@ -67,7 +67,7 @@ namespace MDataPost
 		}
 
 
-		std::ofstream fout(mAppConfigurationSingleton::getInstance()->getFileConfiguration()->_postPointCellFileName + ".dat", std::ios::binary | std::ios::trunc);
+		std::ofstream fout(_postPointCellFileName, std::ios::binary | std::ios::trunc);
 		int begin_size = 0;
 		for (auto &item : pcells)
 		{
@@ -201,7 +201,7 @@ namespace MDataPost
 		{
 			itermesh.next();
 
-			if (itermesh.value()->getMeshType() == MBasicFunction::MeshPoint)
+			if (itermesh.value()->getMeshType() == MxFunctions::MeshPoint)
 			{
 				continue;
 			}
@@ -217,7 +217,7 @@ namespace MDataPost
 		}
 		for (mPostMeshData1* meshData: _meshData2)
 		{
-			if (meshData == nullptr|| meshData->getMeshType() == MBasicFunction::MeshPoint)
+			if (meshData == nullptr|| meshData->getMeshType() == MxFunctions::MeshPoint)
 			{
 				continue;
 			}
@@ -1014,7 +1014,7 @@ namespace MDataPost
 		}
 	}
 
-	void mOneFrameData1::createMesh(int ID, MBasicFunction::MeshType meshType, MBasicFunction::ElementType elementType, QVector<int> index, 
+	void mOneFrameData1::createMesh(int ID, MxFunctions::MeshType meshType, MxFunctions::ElementType elementType, QVector<int> index, 
 		mPostMeshPartData1* partData, QHash<QVector<int>, mPostMeshFaceData1*> &_meshFace)
 	{
 		QString partName = partData->getPartName();
@@ -1080,34 +1080,34 @@ namespace MDataPost
 		_eleNum[elementType]++;
 	}
 
-	void mOneFrameData1::createMesh(int ID, MBasicFunction::MeshType meshType, MBasicFunction::ElementType elementType, QVector<int> index, mPostMeshPartData1 * partData, QVector<QVector<QPair<QPair<int,int>, mPostMeshFaceData1*>>>& _meshFace)
+	void mOneFrameData1::createMesh(int ID, MxFunctions::MeshType meshType, MxFunctions::ElementType elementType, QVector<int> index, mPostMeshPartData1 * partData, QVector<QVector<QPair<QPair<int,int>, mPostMeshFaceData1*>>>& _meshFace)
 	{
 		QString partName = partData->getPartName();
 		mPostMeshData1 *meshData = new mPostMeshData1(ID, meshType, elementType, partName);
 		appendMeshData(ID, meshData);
 		switch (meshType)
 		{
-		case MBasicFunction::MeshPoint:	
+		case MxFunctions::MeshPoint:	
 			meshData->setNodeIndex(index);
 			partData->appendMesh0(meshData);
 			break;
-		case MBasicFunction::MeshBeam:
+		case MxFunctions::MeshBeam:
 			meshData->setNodeIndex(index);
 			partData->appendMesh1(meshData);
 			break;
-		case MBasicFunction::MeshTri:
-		case MBasicFunction::MeshQuad:
+		case MxFunctions::MeshTri:
+		case MxFunctions::MeshQuad:
 			meshData->setNodeIndex(index);
 			partData->appendMesh2(meshData);
 			break;
-		case MBasicFunction::MeshTet:
+		case MxFunctions::MeshTet:
 			partData->appendMesh3(meshData);
 			createMeshFace(QVector<int>{index.at(0), index.at(2), index.at(1)}, meshData, 1, partName, _meshFace);
 			createMeshFace(QVector<int>{index.at(0), index.at(1), index.at(3)}, meshData, 2, partName, _meshFace);
 			createMeshFace(QVector<int>{index.at(1), index.at(2), index.at(3)}, meshData, 3, partName, _meshFace);
 			createMeshFace(QVector<int>{index.at(0), index.at(3), index.at(2)}, meshData, 4, partName, _meshFace);
 			break;
-		case MBasicFunction::MeshWedge:
+		case MxFunctions::MeshWedge:
 			partData->appendMesh3(meshData);
 			//meshData->faces.reserve(5);
 			createMeshFace(QVector<int>{index.at(0), index.at(2), index.at(1)}, meshData, 1, partName, _meshFace);
@@ -1116,7 +1116,7 @@ namespace MDataPost
 			createMeshFace(QVector<int>{index.at(1), index.at(2), index.at(5), index.at(4)}, meshData, 4, partName, _meshFace);
 			createMeshFace(QVector<int>{index.at(2), index.at(0), index.at(3), index.at(5)}, meshData, 5, partName, _meshFace);
 			break;
-		case MBasicFunction::MeshHex:
+		case MxFunctions::MeshHex:
 			partData->appendMesh3(meshData);
 			//meshData->faces.reserve(6);
 			createMeshFace(QVector<int>{index.at(0), index.at(3), index.at(2), index.at(1)}, meshData, 1, partName, _meshFace);
@@ -1126,7 +1126,7 @@ namespace MDataPost
 			createMeshFace(QVector<int>{index.at(2), index.at(3), index.at(7), index.at(6)}, meshData, 5, partName, _meshFace);
 			createMeshFace(QVector<int>{index.at(3), index.at(0), index.at(4), index.at(7)}, meshData, 6, partName, _meshFace);
 			break;
-		case MBasicFunction::MeshPyramid:
+		case MxFunctions::MeshPyramid:
 			partData->appendMesh3(meshData);
 			//meshData->faces.reserve(5);
 			createMeshFace(QVector<int>{index.at(0), index.at(1), index.at(2), index.at(3)}, meshData, 1, partName, _meshFace);

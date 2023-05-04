@@ -5,13 +5,13 @@
 #include <set>
 #include <QVector3D>
 
-#include "mBasicEnum.h"
+#include "mMeshViewEnum.h"
 #include "mBasicStructor.h"
 
 #include "SpaceTree.h"
 
 using namespace std;
-using namespace MBasicFunction;
+using namespace MViewBasic;
 namespace MDataGeo
 {
 	class mGeoPartData1;
@@ -157,7 +157,7 @@ namespace MDataGeo
 	public:
 
 		//模型操作枚举
-		QList<QPair<MBasicFunction::ModelOperateEnum, std::set<QString>>> _modelOperate;
+		QList<QPair<MViewBasic::ModelOperateEnum, std::set<QString>>> _modelOperate;
 
 	private:
 		QHash<int, mGeoPointData1*> _geoPointData;

@@ -14,8 +14,8 @@
 //MViewBasic
 #include "mMeshViewEnum.h"
 
-//MBasicFunction
-#include "mBasicEnum.h"
+//MViewBasic
+#include "mMeshViewEnum.h"
 #include "mBasicStructor.h"
 
 namespace mxr
@@ -44,7 +44,7 @@ namespace MDataPost
 }
 using namespace MViewBasic;
 using namespace MDataPost;
-using namespace MBasicFunction;
+using namespace MViewBasic;
 using namespace MBaseRend;
 using namespace std;
 namespace MPostRend
@@ -77,9 +77,9 @@ namespace MPostRend
 		void updateHighLightRender();
 
 		//更新单个部件操作
-		void updateOneModelOperate(QPair<MBasicFunction::PostModelOperateEnum, std::set<QString>> postModelOperates);
+		void updateOneModelOperate(QPair<MViewBasic::PostModelOperateEnum, std::set<QString>> postModelOperates);
 		//更新全部部件操作
-		void updateAllModelOperate(MBasicFunction::PostModelOperateEnum postModelOperate);
+		void updateAllModelOperate(MViewBasic::PostModelOperateEnum postModelOperate);
 
 		//设置后处理渲染模式
 		void setPostMode(PostMode postMode);

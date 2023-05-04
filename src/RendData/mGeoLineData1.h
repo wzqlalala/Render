@@ -7,9 +7,9 @@
 
 #include "SpaceTree.h"
 
-#include "mBasicEnum.h"
+#include "mMeshViewEnum.h"
 
-using namespace MBasicFunction;
+using namespace MViewBasic;
 namespace MDataGeo
 {
 	class mGeoModelData1;

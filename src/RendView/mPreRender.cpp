@@ -194,8 +194,8 @@ namespace MPreRend
 		_geoPickThread->setPickMode(*_baseRend->getCurrentPickMode(), *_baseRend->getMultiplyPickMode());
 		if (*_baseRend->getCurrentPickMode() == PickMode::SoloPick)
 		{		
-			float depth;
-			QOpenGLContext::currentContext()->functions()->glReadPixels(poses.first().x() - 1, _baseRend->getCamera()->SCR_HEIGHT - poses.first().y() - 1, 2, 2, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+			float depth = 0.0;
+			QOpenGLContext::currentContext()->functions()->glReadPixels(poses.first().x(), _baseRend->getCamera()->SCR_HEIGHT - poses.first().y(), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
 			_geoPickThread->setLocation(poses.first(), depth);
 		}
 		else
@@ -238,7 +238,7 @@ namespace MPreRend
 			_geoHighLightRender->updateHighLightRender();
 		emit update();
 	}
-	void mPreRender::updateModelOperate(QPair<MBasicFunction::ModelOperateEnum, std::set<QString>> modelOperates)
+	void mPreRender::updateModelOperate(QPair<ModelOperateEnum, std::set<QString>> modelOperates)
 	{
 		this->makeCurrent();
 		if (_geoModelRender)

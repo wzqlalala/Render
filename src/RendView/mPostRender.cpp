@@ -369,7 +369,7 @@ namespace MPostRend
 		if (_highLightRender)
 			_highLightRender->updateHighLightRender(_oneFrameRender->getOneFrameData(), _oneFrameRender->getOneFrameRendData());
 	}
-	void mPostRender::updateOneModelOperate(QPair<MBasicFunction::PostModelOperateEnum, std::set<QString>> postModelOperates)
+	void mPostRender::updateOneModelOperate(QPair<MViewBasic::PostModelOperateEnum, std::set<QString>> postModelOperates)
 	{
 		this->makeCurrent();
 		if (_oneFrameRender)
@@ -385,7 +385,7 @@ namespace MPostRend
 			rend->updateOneModelOperate(postModelOperates);
 		}
 	}
-	void mPostRender::updateAllModelOperate(MBasicFunction::PostModelOperateEnum postModelOperate)
+	void mPostRender::updateAllModelOperate(MViewBasic::PostModelOperateEnum postModelOperate)
 	{
 		this->makeCurrent();
 		if (_oneFrameRender)

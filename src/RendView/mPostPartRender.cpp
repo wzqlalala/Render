@@ -22,12 +22,12 @@
 #include <QFileInfo>
 #include <QApplication>
 
-#include "mBasicEnum.h"
+#include "mMeshViewEnum.h"
 
 using namespace mxr;
 using namespace std;
 using namespace MDataPost;
-using namespace MBasicFunction;
+using namespace MViewBasic;
 namespace MPostRend
 {
 	mPostPartRender::mPostPartRender(std::shared_ptr<mxr::Group> parent, MDataPost::mOneFrameData1 * oneFrameData, MDataPost::mPostMeshPartData1 * part)

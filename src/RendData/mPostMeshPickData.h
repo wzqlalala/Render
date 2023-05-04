@@ -4,9 +4,9 @@
 
 #include "renddata_global.h"
 
-//MBasicFunction
+//MViewBasic
 #include "mBasicStructor.h"
-#include "mBasicEnum.h"
+#include "mMeshViewEnum.h"
 
 //Qt
 #include <QVector>
@@ -15,7 +15,7 @@
 namespace MDataPost
 {
 	using namespace std;
-	using namespace MBasicFunction;
+	using namespace MViewBasic;
 	class RENDDATA_EXPORT mPostMeshPickData
 	{
 	public:

@@ -3,7 +3,7 @@
 #include "renddata_global.h"
 #include "mResultInfo.h"
 
-//MBasicFunction
+//MViewBasic
 #include "mPostEnum.h"
 
 //Qt

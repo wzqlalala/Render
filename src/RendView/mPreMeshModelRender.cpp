@@ -26,7 +26,7 @@
 //
 //using namespace mxr;
 //using namespace std;
-//using namespace MBasicFunction;
+//using namespace MViewBasic;
 //namespace MPreRend
 //{
 //	mPreGeoModelRender::mPreGeoModelRender(std::shared_ptr<mxr::Group> parent, shared_ptr<mPreRendStatus> rendStatus, mGeoModelData1 *geoModelData):
@@ -102,9 +102,9 @@
 //
 //			_partRenders.insert(partName, part);
 //		}
-//		updateOneModelOperate(QPair<MBasicFunction::ModelOperateEnum, std::set<QString>>(HideOnePart, hidePartNames));
+//		updateOneModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(HideOnePart, hidePartNames));
 //	}
-//	void mPreGeoModelRender::updateOneModelOperate(QPair<MBasicFunction::ModelOperateEnum, std::set<QString>> postModelOperates)
+//	void mPreGeoModelRender::updateOneModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>> postModelOperates)
 //	{
 //		ModelOperateEnum postModelOperate = postModelOperates.first;
 //		set<QString> partNames = postModelOperates.second;
@@ -138,7 +138,7 @@
 //			}
 //		}
 //	}
-//	void mPreGeoModelRender::updateAllModelOperate(MBasicFunction::ModelOperateEnum postModelOperate)
+//	void mPreGeoModelRender::updateAllModelOperate(MViewBasic::ModelOperateEnum postModelOperate)
 //	{
 //		std::set<QString> partnames{ _partOrder.begin(),_partOrder.end()};
 //		if (postModelOperate == ImportPart)
@@ -150,15 +150,15 @@
 //		}
 //		else if (postModelOperate == HideAllPart)
 //		{
-//			updateOneModelOperate(QPair<MBasicFunction::ModelOperateEnum, std::set<QString>>(HideOnePart, partnames));
+//			updateOneModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(HideOnePart, partnames));
 //		}
 //		else if (postModelOperate == ShowAllPart)
 //		{
-//			updateOneModelOperate(QPair<MBasicFunction::ModelOperateEnum, std::set<QString>>(ShowOnePart, partnames));
+//			updateOneModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(ShowOnePart, partnames));
 //		}
 //		else if (postModelOperate == ColorAllPart)
 //		{
-//			updateOneModelOperate(QPair<MBasicFunction::ModelOperateEnum, std::set<QString>>(ColorOnePart, partnames));
+//			updateOneModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(ColorOnePart, partnames));
 //		}
 //	}
 //

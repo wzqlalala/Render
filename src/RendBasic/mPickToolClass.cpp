@@ -9,10 +9,9 @@
 
 #define optimization true
 
-using namespace MBasicFunction;
 namespace MViewBasic
 {
-	QHash<MBasicFunction::MeshType, QVector<int>> mPickToolClass::LineIntersectionWithQuadVector = {
+	QHash<MeshType, QVector<int>> mPickToolClass::LineIntersectionWithQuadVector = {
 		{MeshBeam ,QVector<int>{0,1} },
 		{MeshTri ,QVector<int>{0,1,1,2,2,0} },
 		{MeshQuad ,QVector<int>{0,1,1,2,2,3,3,0 } },
@@ -22,7 +21,7 @@ namespace MViewBasic
 		{MeshPyramid ,QVector<int>{0,1,1,2,2,3,3,0,0,4,1,4,2,4,3,4} },
 	};
 
-	QHash<MBasicFunction::MeshType, QVector<QVector<int>>> mPickToolClass::QuadPointInMeshVector = {
+	QHash<MeshType, QVector<QVector<int>>> mPickToolClass::QuadPointInMeshVector = {
 	{MeshTri ,QVector<QVector<int>>{ QVector<int>{0,1,1,2,2,0} }},
 	{MeshQuad ,QVector<QVector<int>>{ QVector<int>{ 0,1,1,2,2,0},QVector<int>{2,3,3,1,1,2},QVector<int>{3,0,0,2,2,3},QVector<int>{1,0,0,3,3,1} }},
 	{MeshTet ,QVector<QVector<int>>{ QVector<int>{ 0,1,1,2,2,0}, QVector<int>{3,4,4,5,5,3},QVector<int>{0,2,2,5,5,3,3,0 },QVector<int>{1,4,4,5,5,2,2,1 },QVector<int>{0,3,3,4,4,1,1,0 } }},

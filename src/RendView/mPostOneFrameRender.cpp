@@ -103,7 +103,7 @@ namespace MPostRend
 		_viewer->noClearRun();
 	}
 
-	void mPostOneFrameRender::updateOneModelOperate(QPair<MBasicFunction::PostModelOperateEnum, std::set<QString>> postModelOperates)
+	void mPostOneFrameRender::updateOneModelOperate(QPair<MViewBasic::PostModelOperateEnum, std::set<QString>> postModelOperates)
 	{
 		if (_modelRender)
 		{
@@ -111,7 +111,7 @@ namespace MPostRend
 		}
 	}
 
-	void mPostOneFrameRender::updateAllModelOperate(MBasicFunction::PostModelOperateEnum postModelOperate)
+	void mPostOneFrameRender::updateAllModelOperate(MViewBasic::PostModelOperateEnum postModelOperate)
 	{
 		if (_modelRender)
 		{

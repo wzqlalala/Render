@@ -451,7 +451,7 @@ namespace MDataGeo
 				QVector2D ap1 = WorldvertexToScreenvertex(geoLineData->getGeoLineVertex().at(j), depth1);
 				QVector2D ap2 = WorldvertexToScreenvertex(geoLineData->getGeoLineVertex().at(j + 1), depth2);
 				QVector<QVector2D> tempQVector2D = QVector<QVector2D>{ ap1, ap2 };
-				if (mPickToolClass::IsLineIntersectionWithQuad(tempQVector2D, soloQuad, MBasicFunction::MeshBeam))
+				if (mPickToolClass::IsLineIntersectionWithQuad(tempQVector2D, soloQuad, MViewBasic::MeshBeam))
 				{
 					//根据线段长度计算被点击的点的深度值
 					float d = mPickToolClass::CaculatePointInLineDepth(ap1, ap2, _pos, depth1, depth2);
@@ -507,7 +507,7 @@ namespace MDataGeo
 				//QVector2D ap2 = WorldvertexToScreenvertex(geoFaceData->getGeoFaceVertex().at(j + 1), depth2);
 				//QVector2D ap3 = WorldvertexToScreenvertex(geoFaceData->getGeoFaceVertex().at(j + 2), depth3);
 				//QVector<QVector2D> tempQVector2D = QVector<QVector2D>{ ap1, ap2, ap3 };
-				//if (mPickToolClass::IsQuadPointInMesh(_pos, tempQVector2D, MBasicFunction::MeshTri))
+				//if (mPickToolClass::IsQuadPointInMesh(_pos, tempQVector2D, MViewBasic::MeshTri))
 				//{
 				//	//根据三角形面积计算被点击的点的深度值
 				//	float d = mPickToolClass::CaculatePointInTriDepth(ap1, ap2, ap3, _pos, depth1, depth2, depth3);
@@ -562,7 +562,7 @@ namespace MDataGeo
 					//QVector2D ap2 = WorldvertexToScreenvertex(geoFaceData->getGeoFaceVertex().at(k + 1), depth2);
 					//QVector2D ap3 = WorldvertexToScreenvertex(geoFaceData->getGeoFaceVertex().at(k + 2), depth3);
 					//QVector<QVector2D> tempQVector2D = QVector<QVector2D>{ ap1, ap2, ap3 };
-					//if (mPickToolClass::IsQuadPointInMesh(_pos, tempQVector2D, MBasicFunction::MeshTri))
+					//if (mPickToolClass::IsQuadPointInMesh(_pos, tempQVector2D, MViewBasic::MeshTri))
 					{
 						//根据三角形面积计算被点击的点的深度值
 						if (mPickToolClass::rayTriangleIntersect(_origin, _dir, geoFaceData->getGeoFaceVertex().mid(k, 3), uv, t))
@@ -638,7 +638,7 @@ namespace MDataGeo
 				QVector2D ap1 = WorldvertexToScreenvertex(geoLineData->getGeoLineVertex().at(j), depth1);
 				QVector2D ap2 = WorldvertexToScreenvertex(geoLineData->getGeoLineVertex().at(j + 1), depth2);
 				QVector<QVector2D> tempQVector2D = QVector<QVector2D>{ ap1, ap2 };
-				if (mPickToolClass::IsLineIntersectionWithQuad(tempQVector2D, soloQuad, MBasicFunction::MeshBeam))
+				if (mPickToolClass::IsLineIntersectionWithQuad(tempQVector2D, soloQuad, MViewBasic::MeshBeam))
 				{
 					//根据线段长度计算被点击的点的深度值
 					float d = mPickToolClass::CaculatePointInLineDepth(ap1, ap2, _pos, depth1, depth2);
@@ -694,7 +694,7 @@ namespace MDataGeo
 				//QVector2D ap2 = WorldvertexToScreenvertex(geoFaceData->getGeoFaceVertex().at(j + 1), depth2);
 				//QVector2D ap3 = WorldvertexToScreenvertex(geoFaceData->getGeoFaceVertex().at(j + 2), depth3);
 				//QVector<QVector2D> tempQVector2D = QVector<QVector2D>{ ap1, ap2, ap3 };
-				//if (mPickToolClass::IsQuadPointInMesh(_pos, tempQVector2D, MBasicFunction::MeshTri))
+				//if (mPickToolClass::IsQuadPointInMesh(_pos, tempQVector2D, MViewBasic::MeshTri))
 				//{
 				//	//根据三角形面积计算被点击的点的深度值
 				//	float d = mPickToolClass::CaculatePointInTriDepth(ap1, ap2, ap3, _pos, depth1, depth2, depth3);

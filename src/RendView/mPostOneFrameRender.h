@@ -7,7 +7,7 @@
 #include <QOpenGLContext>
 #include <set>
 
-#include "mBasicEnum.h"
+#include "mMeshViewEnum.h"
 #include "mMeshViewEnum.h"
 #include "mBasicStructor.h"
 
@@ -72,9 +72,9 @@ namespace MPostRend
 		//void UpdateModelBuffer();
 
 		//更新单个部件操作
-		void updateOneModelOperate(QPair<MBasicFunction::PostModelOperateEnum, std::set<QString>> postModelOperates);
+		void updateOneModelOperate(QPair<MViewBasic::PostModelOperateEnum, std::set<QString>> postModelOperates);
 		//更新全部部件操作
-		void updateAllModelOperate(MBasicFunction::PostModelOperateEnum postModelOperate);
+		void updateAllModelOperate(MViewBasic::PostModelOperateEnum postModelOperate);
 
 		void setFaceStateSet(std::shared_ptr<mxr::StateSet> faceStateSet);
 		void setFaceTransparentStateSet(std::shared_ptr<mxr::StateSet> faceTransparentStateSet);

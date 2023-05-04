@@ -3,6 +3,123 @@ namespace MViewBasic
 {
 
 	/*
+	 * 二维曲线类型
+	 */
+	enum PlotType
+	{
+		//折线图
+		LineChart,
+
+		//光滑曲线图
+		SmoothChart,
+
+		//阶跃曲线图
+		StepChart,
+
+		//分布光滑曲线图（前段为光滑，后端为直线）
+		SmoothStepChart,
+	};
+
+	/*
+	* 网格和几何模型操作枚举
+	*/
+	enum ModelOperateEnum
+	{
+		//导入文件操作
+		ImportPart,
+
+		//不操作
+		OperateNothing,
+
+		//单个几何操作
+		AppendOnePart,
+		DeleteOnePart,
+		HideOnePart,
+		ShowOnePart,
+		ColorOnePart,
+		ReplaceOnePart,
+		RenameOnePart,
+
+		//全部几何操作
+		DeleteAllPart,
+		HideAllPart,
+		ShowAllPart,
+		ColorAllPart,
+	};
+
+	/*
+	 * 后处理模型操作枚举
+	 */
+	enum PostModelOperateEnum
+	{
+		//导入文件操作
+		ImportOperate,
+
+		//不操作
+		NoOperate,
+
+		//单个部件操作
+		HideOnePartOperate,//隐藏
+		ShowOnePartOperate,//显示
+		ChangeColorOnePartOperate,//改变颜色
+		ColorOnePartOperate,//显示模型颜色
+		TransparentOnePartOperate,//显示透明
+		TextureOnePartOperate,//显示纹理
+		ReplaceOnePartOperate,//替换部件
+
+		//全部部件操作
+		HideAllPartOperate,//隐藏所有Isshow
+		ShowAllPartOperate,//显示所有Isshow
+		ChangeColorAllPartOperate,//改变颜色Material
+		ColorAllPartOperate,//显示模型颜色isColor
+		TransparentAllPartOperate,//显示透明isColor
+		TextureAllPartOperate,//显示纹理isColor
+		UpdateVariableValue,//更新变量值value
+		UpdateMinMax,//更新最值
+		UpdateNormal,//更新法向量Normal
+		ShowNodeformation,//显示变形前的图
+		HideNodeformation,//隐藏变形前的图
+	};
+
+	//拾取对象
+	enum class PickObjectType
+	{
+		Mesh1D,
+
+		MeshEdge,
+
+		Mesh2D,
+
+		MeshFace,
+	};
+
+	enum class GeoLineProperty
+	{
+		IndependentEdge,//独立边
+		EdgeOnFace,//面上的边
+		DottedTopology//虚拓扑边
+	};
+
+	//后处理渲染模式
+	enum PostMode
+	{
+
+		No,
+
+		//单帧
+		OneFrame,
+
+		//动画
+		Animation,
+
+		//单帧线性动画
+		OneFrameLinearAnimation,
+
+		//单帧正弦动画
+		OneFrameSinAnimation,
+	};
+
+	/*
 	* 拾取模式,add,reduce,replace
 	*/
 	enum class PickFuntion

@@ -1,11 +1,11 @@
 #include "mGeoLineData1.h"
 #include "mGeoModelData1.h"
 
-#include "mContainers.h"
+#include "mGlobalVarible.h"
 
 #include <QDebug>
 
-
+using namespace MxFunctions;
 namespace MDataGeo
 {
 	mGeoLineData1::mGeoLineData1(mGeoModelData1 *geoModelData, QString partName, int ID)
@@ -16,7 +16,7 @@ namespace MDataGeo
 		_ID = ID;
 		_aabb = Space::AABB();
 		geoModelData->appendGeoLineData(ID, this);
-		MBasicFunction::_globalLineId = std::max(MBasicFunction::_globalLineId, ID);
+		_globalLineId = std::max(_globalLineId, ID);
 		//qDebug() << _globalLineId;
 	}
 

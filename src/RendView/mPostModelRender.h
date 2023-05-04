@@ -13,7 +13,7 @@
 
 #include "SpaceTree.h"
 
-#include "mBasicEnum.h"
+#include "mMeshViewEnum.h"
 #include "mMeshViewEnum.h"
 #include "mBasicStructor.h"
 namespace mxr
@@ -40,7 +40,7 @@ namespace MDataPost
 }
 using namespace MViewBasic;
 using namespace MDataPost;
-using namespace MBasicFunction;
+using namespace MViewBasic;
 using namespace std;
 namespace MPostRend
 {
@@ -66,9 +66,9 @@ namespace MPostRend
 		void UpdateModelBuffer();
 
 		//更新单个部件操作
-		void updateOneModelOperate(QPair<MBasicFunction::PostModelOperateEnum, std::set<QString>> postModelOperates);
+		void updateOneModelOperate(QPair<MViewBasic::PostModelOperateEnum, std::set<QString>> postModelOperates);
 		//更新全部部件操作
-		void updateAllModelOperate(MBasicFunction::PostModelOperateEnum postModelOperate);
+		void updateAllModelOperate(MViewBasic::PostModelOperateEnum postModelOperate);
 
 		//void setDistancePlane(std::vector<QVector4D> cutplane);
 		//void setModelView(QMatrix4x4 projection, QMatrix4x4 view, QMatrix4x4 model);
@@ -89,7 +89,7 @@ namespace MPostRend
 
 		//void append
 
-		//void updateOneModelOperate(QPair<MBasicFunction::PostModelOperateEnum, std::set<QString>> postModelOperates);
+		//void updateOneModelOperate(QPair<MViewBasic::PostModelOperateEnum, std::set<QString>> postModelOperates);
 
 	private:
 		shared_ptr<mxr::Group> _parent;//父节点

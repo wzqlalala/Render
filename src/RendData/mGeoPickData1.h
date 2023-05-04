@@ -7,14 +7,14 @@
 #include <set>
 #include <QHash>
 
-//MBasicFunction
+//MViewBasic
 #include "mBasicStructor.h"
 
 
 namespace MDataGeo
 {
 	using namespace std;
-	using namespace MBasicFunction;
+	using namespace MViewBasic;
 	class RENDDATA_EXPORT mGeoPickData1
 	{
 

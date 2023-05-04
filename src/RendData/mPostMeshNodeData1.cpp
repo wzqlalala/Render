@@ -1,11 +1,10 @@
 #include "mPostMeshNodeData1.h"
 #include <fstream>
-#include "mAppConfigurationSingleton.h"
-#include "mFileConfiguration.h"
+#include "mGlobalVarible.h"
 
 #include <qguiapplication.h>
 
-using namespace MAppConfiguration;
+using namespace MxFunctions;
 namespace MDataPost
 {
 	mPostMeshNodeData1::mPostMeshNodeData1(int ID, QVector3D vertex)
@@ -60,7 +59,7 @@ namespace MDataPost
 			return ids;
 		}
 		
-		std::ifstream fin(mAppConfigurationSingleton::getInstance()->getFileConfiguration()->_postPointCellFileName + ".dat", std::ios::binary);
+		std::ifstream fin(_postPointCellFileName, std::ios::binary);
 		fin.seekg(pointcell.addr, std::ios::beg);
 		void* data = malloc(pointcell.size);
 		fin.read((char*)data, pointcell.size);
@@ -82,7 +81,7 @@ namespace MDataPost
 		{
 			return ids;
 		}
-		std::ifstream fin(mAppConfigurationSingleton::getInstance()->getFileConfiguration()->_postPointLineFileName + ".dat", std::ios::binary);
+		std::ifstream fin(_postPointCellFileName, std::ios::binary);
 		fin.seekg(pointline.addr, std::ios::beg);
 		for (int i = 0; i < pointline.size / sizeof(int); i++)
 		{

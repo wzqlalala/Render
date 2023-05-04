@@ -1,23 +1,25 @@
 #pragma once
 #include "rendbasic_global.h"
 
-#include "mBasicEnum.h"
+#include "mMeshViewEnum.h"
+#include "mElementFunction.h"
 
 #include <QObject>
 
+using namespace MxFunctions;
 namespace MViewBasic
 {
 	class RENDBASIC_EXPORT mPickToolClass : public QObject
 	{
 	public:
-		static QHash<MBasicFunction::MeshType, QVector<int>> LineIntersectionWithQuadVector;
+		static QHash<MeshType, QVector<int>> LineIntersectionWithQuadVector;
 
-		static QHash<MBasicFunction::MeshType, QVector<QVector<int>>> QuadPointInMeshVector;
+		static QHash<MeshType, QVector<QVector<int>>> QuadPointInMeshVector;
 
 		/*
 		 * 判断一个线段和一个矩形选择框是否相交
 		 */
-		static bool IsLineIntersectionWithQuad(const QVector<QVector2D> &Line1, const QVector<QVector2D> &Quad, MBasicFunction::MeshType meshtype);
+		static bool IsLineIntersectionWithQuad(const QVector<QVector2D> &Line1, const QVector<QVector2D> &Quad, MeshType meshtype);
 
 		/*
 		* 判断一个线段和一个圆形选择框是否相交
@@ -27,7 +29,7 @@ namespace MViewBasic
 		/*
 		 * 判断点是否在网格内部
 		 */
-		static bool IsPointInMesh(const QVector2D & pos, const QVector<QVector2D> &Line1, MBasicFunction::MeshType meshtype);
+		static bool IsPointInMesh(const QVector2D & pos, const QVector<QVector2D> &Line1, MeshType meshtype);
 
 		/*
 		 * 判断网格的点是否在拾取矩形框内部

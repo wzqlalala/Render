@@ -6,15 +6,15 @@
 //MViewBasic
 #include "mMeshViewEnum.h"
 
-//MBasicFunction
-#include "mBasicEnum.h"
+//MViewBasic
+#include "mMeshViewEnum.h"
 #include "mBasicStructor.h"
 
 #include <QVector4D>
 #include <QVector>
 
 using namespace MViewBasic;
-using namespace MBasicFunction;
+using namespace MViewBasic;
 namespace MPreRend
 {
 	class RENDVIEW_EXPORT mPreRendStatus

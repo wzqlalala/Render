@@ -2,11 +2,13 @@
 #include <QString>
 #include <QVector3D>
 #include <set>
-#include "mBasicEnum.h"
+#include "mMeshViewEnum.h"
+#include "mElementFunction.h"
 #include <float.h>
-namespace MBasicFunction
+namespace MViewBasic
 {
 	using namespace std;
+	using namespace MxFunctions;
 	struct IDDepthBuffer
 	{
 		int id;

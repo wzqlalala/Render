@@ -8,7 +8,7 @@
 #include <QList>
 #include <set>
 #include "SpaceTree.h"
-//MBasicFunction
+//MViewBasic
 #include "mBasicStructor.h"
 
 namespace MDataPost

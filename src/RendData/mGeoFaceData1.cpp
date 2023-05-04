@@ -1,10 +1,10 @@
 #include "mGeoFaceData1.h"
 #include "mGeoModelData1.h"
 
-//MBasicFunction
-#include "mContainers.h"
+//MxFunctions
+#include "mGlobalVarible.h"
 
-
+using namespace MxFunctions;
 namespace MDataGeo
 {
 	mGeoFaceData1::mGeoFaceData1(mGeoModelData1 *geoModelData, QString partName, int ID)
@@ -15,7 +15,7 @@ namespace MDataGeo
 		_ID = ID;
 		_aabb = Space::AABB();
 		geoModelData->appendGeoFaceData(ID, this);
-		MBasicFunction::_globalFaceId = std::max(MBasicFunction::_globalFaceId, ID);
+		_globalFaceId = std::max(_globalFaceId, ID);
 	}
 
 	mGeoFaceData1::~mGeoFaceData1()

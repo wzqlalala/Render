@@ -11,7 +11,7 @@
 #include "mArrowRender.h"
 #include "mModelView.h"
 
-#include "mContainers.h"
+#include "mGlobalVarible.h"
 
 //MDataPost
 #include "mDataPost1.h"
@@ -41,6 +41,7 @@
 #include "mIMxdbFile1.h"
 
 using namespace MDataPost;
+using namespace MxFunctions;
 MxRendTest::MxRendTest(int id)
 {
 	_id = id;

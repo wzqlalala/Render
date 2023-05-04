@@ -7,7 +7,7 @@
 #include <QOpenGLContext>
 #include <set>
 
-#include "mBasicEnum.h"
+#include "mMeshViewEnum.h"
 #include "mMeshViewEnum.h"
 #include "mBasicStructor.h"
 
