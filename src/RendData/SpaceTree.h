@@ -146,8 +146,8 @@ namespace Space
 				}
 				else
 				{
-					range[0] = std::min(range[0], dot);
-					range[1] = std::max(range[1], dot);
+					range[0] = (std::min)(range[0], dot);
+					range[1] = (std::max)(range[1], dot);
 				}
 			}
 			return range;
