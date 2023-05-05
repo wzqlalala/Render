@@ -48,9 +48,10 @@ using namespace std;
 namespace MPreRend
 {
 	class mPreRend;
-	class mPreGeoModelRender;
 	class mPreRendStatus;
+	class mPreGeoModelRender;
 	class mPreGeoHighLightRender;
+	class mPreMeshModelRender;
 	class RENDVIEW_EXPORT mPreRender :public mBaseRender
 	{
 		Q_OBJECT

@@ -186,6 +186,7 @@ namespace MPostRend
 		{
 			return;
 		}
+		_pointrend->getDrawable()->setNodeMask(0);
 		_linerend->getDrawable()->setNodeMask(0);
 		if (showFuntion == ElementFace)
 		{
