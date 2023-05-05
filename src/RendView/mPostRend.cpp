@@ -9,7 +9,7 @@
 namespace MPostRend
 {
 
-	mPostRend::mPostRend(const QString& name):mBaseRend( name)
+	mPostRend::mPostRend(const QString& name):mBaseRend(name, Viewport3D)
 	{
 		qDebug() << "Post Struct";
 	}

@@ -26,7 +26,7 @@
 
 namespace MBaseRend
 {
-	mBaseRend::mBaseRend(const QString& name): _name(name)
+	mBaseRend::mBaseRend(const QString& name, MxFunctions::ViewportType type): _name(name),_viewportType(type)
 	{
 		setMouseTracking(true);
 
@@ -436,6 +436,18 @@ namespace MBaseRend
 		}
 		qDebug() << "Base Distruct";
 
+	}
+	void mBaseRend::setViewportName(const QString & name)
+	{
+		_name = name;
+	}
+	QString mBaseRend::getViewportName()
+	{
+		return _name;
+	}
+	MxFunctions::ViewportType mBaseRend::getViewportType()
+	{
+		return _viewportType;
 	}
 	void mBaseRend::setCameraType(CameraType cameratype)
 	{

@@ -13,7 +13,7 @@
 namespace MPreRend
 {
 
-	mPreRend::mPreRend(const QString& name):mBaseRend( name)
+	mPreRend::mPreRend(const QString& name):mBaseRend(name, Viewport3D)
 	{
 		qDebug() << "Pre Struct";
 	}
