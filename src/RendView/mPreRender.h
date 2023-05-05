@@ -97,25 +97,21 @@ namespace MPreRend
 
 		void updateUniform(shared_ptr<mViewBase> modelView, shared_ptr<mViewBase> commonView) override;
 
-	private:
-
-		//初始化线程
-		void initialPickThreads();
-
 	protected:
 
 		shared_ptr<mPreRendStatus> _rendStatus;
 
+		QFutureWatcher<void> w;//监控拾取多线程
+
 		shared_ptr<mPreGeoModelRender> _geoModelRender;//几何渲染
+		mGeoModelData1 *_geoModelData;//几何模型数据
+		mPreGeoPickThread *_geoPickThread;//几何拾取
+		mGeoPickData1 *_geoPickData;//几何拾取数据
+		shared_ptr<mPreGeoHighLightRender> _geoHighLightRender;//几何高亮数据
 
-		mGeoModelData1 *_geoModelData;//模型数据
+		shared_ptr<mPreMeshModelRender> _meshModelRender;//网格渲染
 
-		mPreGeoPickThread *_geoPickThread;//拾取
-		QFutureWatcher<void> w;
-		mGeoPickData1 *_geoPickData;//拾取数据
-		shared_ptr<mPreGeoHighLightRender> _geoHighLightRender;
-
-		shared_ptr<mxr::Texture> _pointTexture;
+		shared_ptr<mxr::Texture> _pointTexture;//几何点的纹理
 
 		/*********************************模型*****************************************************/
 		std::shared_ptr<mxr::StateSet> _faceStateSet;//渲染面的状态

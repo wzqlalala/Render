@@ -77,6 +77,19 @@ namespace MPreRend
 		_parent->removeChild(_geode);
 		_partRenders.clear();
 	}
+	bool mPreMeshModelRender::updateRender()
+	{
+		//if (!_geoModelData->_modelOperate.empty())
+		{
+			bool isUpdateCamera{ false };
+			//while (!_geoModelData->_modelOperate.empty())
+			{
+				//isUpdateCamera = isUpdateCamera | updateModelOperate(_geoModelData->_modelOperate.takeFirst());
+			}
+			return isUpdateCamera;
+		}
+		return false;
+	}
 	void mPreMeshModelRender::UpdateModelBuffer()
 	{
 		std::set<QString> hidePartNames;

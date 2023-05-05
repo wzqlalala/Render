@@ -3,6 +3,7 @@
 #include "mPreRendStatus.h"
 #include "mPreGeoModelRender.h"
 #include "mPreGeoHighLightRender.h"
+#include "mPreMeshModelRender.h"
 #include "mFontRender.h"
 #include "mArrowRender.h"
 
@@ -50,7 +51,7 @@ namespace MPreRend
 		_pointTexture = mTextureManage::GetInstance()->GetTexture("GeoPoint.png", 3);
 		_geoModelData = new mGeoModelData1();
 		_geoModelRender = MakeAsset<mPreGeoModelRender>(parent, _rendStatus, _geoModelData);
-
+		_meshModelRender = MakeAsset<mPreMeshModelRender>(parent, _rendStatus);
 
 		/**********************************************************模型**********************************************************/
 		//face
@@ -92,20 +93,20 @@ namespace MPreRend
 		_edgelineStateSet->setUniform(MakeAsset<Uniform>("lineWidth", 1.0f));
 
 		//faceline
-		//_facelineStateSet = MakeAsset<StateSet>();
-		//shader = mShaderManage::GetInstance()->GetShader("PostMeshFaceLineWithDeformation");
-		//_facelineStateSet->setShader(shader);
-		//_facelineStateSet->setDrawMode(GL_TRIANGLES);
-		//_facelineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
-		//_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::LINE), 1);
-		//_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(-1, -1), 1);
-		//_facelineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
+		_facelineStateSet = MakeAsset<StateSet>();
+		shader = mShaderManage::GetInstance()->GetShader("PreMeshFaceLine");
+		_facelineStateSet->setShader(shader);
+		_facelineStateSet->setDrawMode(GL_TRIANGLES);
+		_facelineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
+		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::LINE), 1);
+		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(-1, -1), 1);
+		_facelineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
 
-		//_facelineStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
-		//_facelineStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
-		//_facelineStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
-		//_facelineStateSet->setUniform(MakeAsset<Uniform>("showColor", _rendStatus->_faceLineColor));
-		//_facelineStateSet->setUniform(MakeAsset<Uniform>("rightToLeft", 0));
+		_facelineStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
+		_facelineStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
+		_facelineStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
+		_facelineStateSet->setUniform(MakeAsset<Uniform>("showColor", _rendStatus->_faceLineColor));
+		_facelineStateSet->setUniform(MakeAsset<Uniform>("rightToLeft", 0));
 
 		//line
 		_independentlineStateSet = MakeAsset<StateSet>();
@@ -161,6 +162,12 @@ namespace MPreRend
 		_geoModelRender->setDotLineStateSet(_dotlineStateSet);
 		_geoModelRender->setEdgeLineStateSet(_edgelineStateSet);
 		_geoModelRender->setPointStateSet(_pointStateSet);
+
+		_meshModelRender->setFaceStateSet(_faceStateSet);
+		_meshModelRender->setEdgeLineStateSet(_edgelineStateSet);
+		_meshModelRender->setFaceLineStateSet(_facelineStateSet);
+		_meshModelRender->setLineStateSet(_independentlineStateSet);
+		_meshModelRender->setPointStateSet(_pointStateSet);
 
 		//初始化高亮渲染
 		_geoPickData = new mGeoPickData1();
@@ -295,24 +302,7 @@ namespace MPreRend
 	{
 		this->makeCurrent();
 		_geoModelRender.reset();
-		
-	}
-
-	void mPreRender::initialPickThreads()
-	{
-		//if (!_dataPost)
-		//{
-		//	return;
-		//}
-
-		////初始化部件拾取多线程
-		//set<QString> partNames = _dataPost->getAllPostPartNames();
-		//_thread = new mPostMeshPickThread(_geoPickData);
-		//_thread->setPickFilter(_baseRend->getPickFilter());
-		//for (QString partName : partNames)
-		//{
-		//	_thread->appendPartSpaceTree(partName, _oneFrameRender->getModelRender()->getPartSpaceTree(partName));
-		//}	
+		_meshModelRender.reset();
 	}
 
 	void mPreRender::updateUniform(shared_ptr<mViewBase> modelView, shared_ptr<mViewBase> commonView)
@@ -325,9 +315,9 @@ namespace MPreRend
 			_edgelineStateSet->getUniform("projection")->SetData(modelView->_projection);
 			_edgelineStateSet->getUniform("view")->SetData(modelView->_view);
 			_edgelineStateSet->getUniform("model")->SetData(modelView->_model);
-			//_facelineStateSet->getUniform("projection")->SetData(modelView->_projection);
-			//_facelineStateSet->getUniform("view")->SetData(modelView->_view);
-			//_facelineStateSet->getUniform("model")->SetData(modelView->_model);
+			_facelineStateSet->getUniform("projection")->SetData(modelView->_projection);
+			_facelineStateSet->getUniform("view")->SetData(modelView->_view);
+			_facelineStateSet->getUniform("model")->SetData(modelView->_model);
 			_independentlineStateSet->getUniform("projection")->SetData(modelView->_projection);
 			_independentlineStateSet->getUniform("view")->SetData(modelView->_view);
 			_independentlineStateSet->getUniform("model")->SetData(modelView->_model);
@@ -351,7 +341,7 @@ namespace MPreRend
 				_pointStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
 			}
 
-			//_facelineStateSet->getUniform("rightToLeft")->SetData(float(modelView->_Right - modelView->_Left));
+			_facelineStateSet->getUniform("rightToLeft")->SetData(float(modelView->_Right - modelView->_Left));
 			_edgelineStateSet->getUniform("rightToLeft")->SetData(float(modelView->_Right - modelView->_Left));
 		}
 		//检测模型数据更新模型渲染
@@ -359,6 +349,10 @@ namespace MPreRend
 		if (_geoModelRender)
 		{
 			isUpdateCamera = isUpdateCamera | _geoModelRender->updateRender();
+		}
+		if (_meshModelRender)
+		{
+			isUpdateCamera = isUpdateCamera | _meshModelRender->updateRender();
 		}
 		if (isUpdateCamera)
 		{

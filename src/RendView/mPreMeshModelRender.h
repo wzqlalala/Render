@@ -97,6 +97,8 @@ namespace MPreRend
 
 		~mPreMeshModelRender();
 
+		bool updateRender();
+
 		void setFaceStateSet(std::shared_ptr<mxr::StateSet> faceStateSet);
 		void setFaceTransparentStateSet(std::shared_ptr<mxr::StateSet> faceTransparentStateSet);
 		void setFaceTransparentNoDeformationStateSet(std::shared_ptr<mxr::StateSet> faceTransparentNoDeformationStateSet);

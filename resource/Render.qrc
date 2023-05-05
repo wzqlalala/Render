@@ -34,5 +34,6 @@
         <file>GLSL/PreMeshPoint.glsl</file>
         <file>GLSL/ScreenQuad.glsl</file>
         <file>GLSL/testRend.glsl</file>
+        <file>GLSL/PreMeshFaceLine.glsl</file>
     </qresource>
 </RCC>
