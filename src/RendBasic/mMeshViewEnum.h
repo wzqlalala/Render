@@ -21,33 +21,6 @@ namespace MViewBasic
 	};
 
 	/*
-	* 网格和几何模型操作枚举
-	*/
-	enum ModelOperateEnum
-	{
-		//导入文件操作
-		ImportPart,
-
-		//不操作
-		OperateNothing,
-
-		//单个几何操作
-		AppendOnePart,
-		DeleteOnePart,
-		HideOnePart,
-		ShowOnePart,
-		ColorOnePart,
-		ReplaceOnePart,
-		RenameOnePart,
-
-		//全部几何操作
-		DeleteAllPart,
-		HideAllPart,
-		ShowAllPart,
-		ColorAllPart,
-	};
-
-	/*
 	 * 后处理模型操作枚举
 	 */
 	enum PostModelOperateEnum

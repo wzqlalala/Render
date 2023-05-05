@@ -105,9 +105,9 @@
 //
 //			_partRenders.insert(partName, part);
 //		}
-//		updateOneModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(HideOnePart, hidePartNames));
+//		updateOneModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>>(HideOnePart, hidePartNames));
 //	}
-//	void mPreGeoModelRender::updateOneModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>> postModelOperates)
+//	void mPreGeoModelRender::updateOneModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>> postModelOperates)
 //	{
 //		ModelOperateEnum postModelOperate = postModelOperates.first;
 //		set<QString> partNames = postModelOperates.second;
@@ -141,7 +141,7 @@
 //			}
 //		}
 //	}
-//	void mPreGeoModelRender::updateAllModelOperate(MViewBasic::ModelOperateEnum postModelOperate)
+//	void mPreGeoModelRender::updateAllModelOperate(MxFunctions::ModelOperateEnum postModelOperate)
 //	{
 //		std::set<QString> partnames{ _partOrder.begin(),_partOrder.end()};
 //		if (postModelOperate == ImportPart)
@@ -153,15 +153,15 @@
 //		}
 //		else if (postModelOperate == HideAllPart)
 //		{
-//			updateOneModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(HideOnePart, partnames));
+//			updateOneModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>>(HideOnePart, partnames));
 //		}
 //		else if (postModelOperate == ShowAllPart)
 //		{
-//			updateOneModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(ShowOnePart, partnames));
+//			updateOneModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>>(ShowOnePart, partnames));
 //		}
 //		else if (postModelOperate == ColorAllPart)
 //		{
-//			updateOneModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(ColorOnePart, partnames));
+//			updateOneModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>>(ColorOnePart, partnames));
 //		}
 //	}
 //

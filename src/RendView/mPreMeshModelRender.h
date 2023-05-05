@@ -108,9 +108,9 @@
 //		void UpdateModelBuffer();
 //
 //		//更新单个部件操作
-//		void updateOneModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>> postModelOperates);
+//		void updateOneModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>> postModelOperates);
 //		//更新全部部件操作
-//		void updateAllModelOperate(MViewBasic::ModelOperateEnum postModelOperate);
+//		void updateAllModelOperate(MxFunctions::ModelOperateEnum postModelOperate);
 //
 //		void setShowFuntion(ShowFuntion showFuntion);
 //

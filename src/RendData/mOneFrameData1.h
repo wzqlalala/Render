@@ -300,7 +300,7 @@ namespace MDataPost
 		
 	public:
 		//模型操作枚举
-		MViewBasic::ModelOperateEnum _meshOperateEnum;
+		MxFunctions::ModelOperateEnum _meshOperateEnum;
 
 		//渲染需要实时判断
 		//单个模型操作的部件，渲染后置为空

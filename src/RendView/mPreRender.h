@@ -74,7 +74,7 @@ namespace MPreRend
 		void updateHighLightRender();
 
 		//更新部件操作
-		void updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>> modelOperates);
+		void updateModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>> modelOperates);
 		
 		//清除全部的渲染
 		void clearRender();

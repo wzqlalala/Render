@@ -10,6 +10,8 @@
 
 #include "SpaceTree.h"
 
+#include "mBasicEnum.h"
+
 using namespace std;
 using namespace MViewBasic;
 namespace MDataGeo
@@ -157,7 +159,7 @@ namespace MDataGeo
 	public:
 
 		//模型操作枚举
-		QList<QPair<MViewBasic::ModelOperateEnum, std::set<QString>>> _modelOperate;
+		QList<QPair<MxFunctions::ModelOperateEnum, std::set<QString>>> _modelOperate;
 
 	private:
 		QHash<int, mGeoPointData1*> _geoPointData;
