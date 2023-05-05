@@ -8,13 +8,13 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLFunctions_4_5_Core>
 
-#include "mBaseRend.h"
+#include "mBaseRend3D.h"
 
 using namespace MBaseRend;
 namespace MPreRend
 {
 	class mPreRender;
-	class RENDVIEW_EXPORT mPreRend : public mBaseRend
+	class RENDVIEW_EXPORT mPreRend : public mBaseRend3D
 	{
 		Q_OBJECT
 

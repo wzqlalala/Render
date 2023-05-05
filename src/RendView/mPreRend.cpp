@@ -13,14 +13,14 @@
 namespace MPreRend
 {
 
-	mPreRend::mPreRend(const QString& name):mBaseRend(name, Viewport3D)
+	mPreRend::mPreRend(const QString& name):mBaseRend3D(name, Viewport3D)
 	{
 		qDebug() << "Pre Struct";
 	}
 
 	void mPreRend::initializeGL()
 	{
-		mBaseRend::initializeGL();
+		mBaseRend3D::initializeGL();
 
 		makeCurrent();
 
@@ -35,28 +35,28 @@ namespace MPreRend
 
 	void mPreRend::paintGL()
 	{
-		mBaseRend::paintGL();
+		mBaseRend3D::paintGL();
 	}
 
 	void mPreRend::resizeGL(int w, int h)
 	{
-		mBaseRend::resizeGL(w, h);
+		mBaseRend3D::resizeGL(w, h);
 	}
 	void mPreRend::mousePressEvent(QMouseEvent *event)
 	{
-		mBaseRend::mousePressEvent(event);
+		mBaseRend3D::mousePressEvent(event);
 	}
 	void mPreRend::mouseReleaseEvent(QMouseEvent *event)
 	{
-		mBaseRend::mouseReleaseEvent(event);
+		mBaseRend3D::mouseReleaseEvent(event);
 	}
 	void mPreRend::mouseMoveEvent(QMouseEvent *event)
 	{
-		mBaseRend::mouseMoveEvent(event);
+		mBaseRend3D::mouseMoveEvent(event);
 	}
 	void mPreRend::wheelEvent(QWheelEvent *event)
 	{
-		mBaseRend::wheelEvent(event);
+		mBaseRend3D::wheelEvent(event);
 	}
 
 	mPreRend::~mPreRend()

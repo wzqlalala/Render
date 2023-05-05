@@ -9,14 +9,14 @@
 namespace MPostRend
 {
 
-	mPostRend::mPostRend(const QString& name):mBaseRend(name, Viewport3D)
+	mPostRend::mPostRend(const QString& name):mBaseRend3D(name, Viewport3D)
 	{
 		qDebug() << "Post Struct";
 	}
 
 	void mPostRend::initializeGL()
 	{
-		mBaseRend::initializeGL();
+		mBaseRend3D::initializeGL();
 
 		makeCurrent();
 
@@ -32,7 +32,7 @@ namespace MPostRend
 	void mPostRend::paintGL()
 	{
 		//glLineWidth(5.0);
-		mBaseRend::paintGL();
+		mBaseRend3D::paintGL();
 		GLenum error = QOpenGLContext::currentContext()->functions()->glGetError();
 		if (error != 0)
 		{
@@ -43,23 +43,23 @@ namespace MPostRend
 
 	void mPostRend::resizeGL(int w, int h)
 	{
-		mBaseRend::resizeGL(w, h);
+		mBaseRend3D::resizeGL(w, h);
 	}
 	void mPostRend::mousePressEvent(QMouseEvent *event)
 	{
-		mBaseRend::mousePressEvent(event);
+		mBaseRend3D::mousePressEvent(event);
 	}
 	void mPostRend::mouseReleaseEvent(QMouseEvent *event)
 	{
-		mBaseRend::mouseReleaseEvent(event);
+		mBaseRend3D::mouseReleaseEvent(event);
 	}
 	void mPostRend::mouseMoveEvent(QMouseEvent *event)
 	{
-		mBaseRend::mouseMoveEvent(event);
+		mBaseRend3D::mouseMoveEvent(event);
 	}
 	void mPostRend::wheelEvent(QWheelEvent *event)
 	{
-		mBaseRend::wheelEvent(event);
+		mBaseRend3D::wheelEvent(event);
 	}
 
 	mPostRend::~mPostRend()

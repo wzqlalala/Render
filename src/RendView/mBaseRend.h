@@ -147,12 +147,6 @@ namespace MBaseRend
 		void initializeGL()  Q_DECL_OVERRIDE;
 		void resizeGL(int w, int h) Q_DECL_OVERRIDE;
 		void paintGL() Q_DECL_OVERRIDE;
-		void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-		void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-		void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-		void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
-
-		virtual bool event(QEvent *e) override;
 
 	public slots:
 
@@ -168,7 +162,6 @@ namespace MBaseRend
 
 	protected:
 		CameraOperateMode getCameraMode(Qt::MouseButton, Qt::KeyboardModifiers);
-
 
 		PickMode getPickMode(Qt::MouseButton, Qt::KeyboardModifiers);
 
