@@ -136,6 +136,11 @@ namespace MBaseRend
 		}
 	}
 
+	void mBaseArrow::setStateSet(std::shared_ptr<mxr::StateSet> stateSet)
+	{
+		 _drawable->setStateSet(stateSet);
+	}
+
 	void mBaseArrow::setIsShow(bool isShow)
 	{
 		if (_drawable)

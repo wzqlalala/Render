@@ -5,15 +5,11 @@
 
 //MViewBasic
 #include "mMeshViewEnum.h"
-
-//MViewBasic
-#include "mMeshViewEnum.h"
 #include "mBasicStructor.h"
 
 #include <QVector4D>
 #include <QVector>
 
-using namespace MViewBasic;
 using namespace MViewBasic;
 namespace MPreRend
 {

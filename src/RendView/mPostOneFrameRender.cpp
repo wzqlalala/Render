@@ -299,4 +299,14 @@ namespace MPostRend
 		}
 	}
 
+	void mPostOneFrameRender::makeCurrent()
+	{
+		_app->GLContext()->makeCurrent(_app->GLContext()->surface());
+	}
+
+	void mPostOneFrameRender::doneCurrent()
+	{
+		_app->GLContext()->doneCurrent();
+	}
+
 }

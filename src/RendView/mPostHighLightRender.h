@@ -8,10 +8,9 @@
 #include <set>
 
 #include "mMeshViewEnum.h"
-#include "mMeshViewEnum.h"
 #include "mBasicStructor.h"
 
-#include "Array.h"
+#include "mGroupRender.h"
 
 namespace mxr
 {
@@ -40,39 +39,13 @@ namespace MDataPost
 }
 using namespace MViewBasic;
 using namespace MDataPost;
+using namespace MBaseRend;
 using namespace std;
 namespace MPostRend
 {
 	class mPostRendStatus;
 	class mPostModelRender;
 	class mPostCuttingPlaneRender;
-	class mPostBaseHighLightRender//点和线和边界线
-	{
-	public:
-		std::shared_ptr<mxr::Vec3Array>  _vertex0;
-
-		mPostBaseHighLightRender(std::shared_ptr<mxr::Group> parent);
-		~mPostBaseHighLightRender();
-		std::shared_ptr<mxr::Drawable> getDrawable() { return _drawable; }
-		void setStateSet(std::shared_ptr<mxr::StateSet> state);
-	private:
-		std::shared_ptr<mxr::Drawable> _drawable;
-		std::shared_ptr<mxr::Group> _parent;
-	};
-	class mPostBaseHighLightRender1//面线
-	{
-	public:
-		std::shared_ptr<mxr::Vec3Array>  _vertex0;
-		std::shared_ptr<mxr::FloatArray>  _vertex1;
-
-		mPostBaseHighLightRender1(std::shared_ptr<mxr::Group> parent);
-		~mPostBaseHighLightRender1();
-		std::shared_ptr<mxr::Drawable> getDrawable() { return _drawable; }
-		void setStateSet(std::shared_ptr<mxr::StateSet> state);
-	private:
-		std::shared_ptr<mxr::Drawable> _drawable;
-		std::shared_ptr<mxr::Group> _parent;
-	};
 	class RENDVIEW_EXPORT mPostHighLightRender
 	{
 	public:
@@ -106,9 +79,9 @@ namespace MPostRend
 		std::shared_ptr<mxr::StateSet> _lineStateSet;//渲染线的状态
 		std::shared_ptr<mxr::StateSet> _pointStateSet;//渲染点的状态
 
-		std::shared_ptr<mPostBaseHighLightRender> _lineRender;
-		std::shared_ptr<mPostBaseHighLightRender> _pointRender;
-		std::shared_ptr<mPostBaseHighLightRender1> _facelineRender;
+		std::shared_ptr<mGroupRender1<mxr::Vec3Array>> _lineRender;
+		std::shared_ptr<mGroupRender1<mxr::Vec3Array>> _pointRender;
+		std::shared_ptr<mGroupRender2<mxr::Vec3Array, mxr::FloatArray>> _facelineRender;
 
 		std::shared_ptr<mxr::Viewer> _viewer;
 	};

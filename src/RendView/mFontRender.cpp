@@ -263,6 +263,11 @@ namespace MBaseRend
 		}
 	}
 
+	void mBaseFont::setStateSet(std::shared_ptr<mxr::StateSet> stateSet)
+	{
+		_drawable->setStateSet(stateSet);
+	}
+
 	void mBaseFont::setIsShow(bool isShow)
 	{
 		if (_drawable)

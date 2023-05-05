@@ -9,13 +9,7 @@
 #include <QOpenGLFunctions_4_5_Core>
 
 #include "mBaseRend.h"
-#include "app.h"
 
-namespace mxr
-{
-	class Group;
-	class Viewer;
-}
 using namespace MBaseRend;
 namespace MPreRend
 {
@@ -25,7 +19,7 @@ namespace MPreRend
 		Q_OBJECT
 
 	public:
-		mPreRend(const QString& name);
+		mPreRend(const QString& name = "");
 		~mPreRend();
 
 		shared_ptr<mPreRender> getPreRender() override;

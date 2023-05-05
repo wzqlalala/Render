@@ -2,19 +2,16 @@
 #include "rendview_global.h"
 //解决中文乱码
 #pragma execution_character_set("utf-8")
-//#define TINYOBJLOADER_IMPLEMENTATION
 #include <QObject>
 #include <QOpenGLContext>
 #include <set>
 
 #include "mMeshViewEnum.h"
-#include "mMeshViewEnum.h"
 #include "mBasicStructor.h"
-
-#include "app.h"
 
 namespace mxr
 {
+	class Application;
 	class Shader;
 	class Texture;
 	class Uniform;
@@ -122,9 +119,9 @@ namespace MPostRend
 
 		void initial();
 
-		void makeCurrent() { _app->GLContext()->makeCurrent(_app->GLContext()->surface()); };
+		void makeCurrent();
 
-		void doneCurrent() { _app->GLContext()->doneCurrent(); };
+		void doneCurrent();
 	private:
 		std::shared_ptr<mxr::Application> _app;
 

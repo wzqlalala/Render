@@ -4,8 +4,6 @@
 //#pragma execution_character_set("utf-8")
 //#include "mBaseRender.h"
 //#include "app.h"
-////#define TINYOBJLOADER_IMPLEMENTATION
-//#include "tiny_obj_loader.h"
 //#include <QObject>
 //#include <QHash>
 //#include <set>
@@ -13,7 +11,6 @@
 //
 //#include "SpaceTree.h"
 //
-//#include "mMeshViewEnum.h"
 //#include "mMeshViewEnum.h"
 //#include "mBasicStructor.h"
 //
@@ -34,13 +31,13 @@
 //	class mModelView;
 //	class mViewBase;
 //}
-//namespace MDataGeo
-//{
-//	class mGeoModelData1;
-//	class mGeoPartData1;
-//}
+//class MXMesh;
+//class MeshEntity;
+//class MXGeoSolid;
+//class MXGeoFace;
+//class MXGeoEdge;
+//class MXMeshElement;
 //using namespace MViewBasic;
-//using namespace MDataGeo;
 //using namespace MViewBasic;
 //using namespace MBaseRend;
 //using namespace mxr;

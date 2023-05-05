@@ -4,13 +4,13 @@
 #pragma execution_character_set("utf-8")
 
 #include "mBaseRender.h"
-#include "app.h"
 //#define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
 #include <QObject>
 
 namespace mxr
 {
+	class Application;
 	class Shader;
 	class Texture;
 	class Uniform;

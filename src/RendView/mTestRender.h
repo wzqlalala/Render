@@ -3,25 +3,18 @@
 //解决中文乱码
 #pragma execution_character_set("utf-8")
 #include "mBaseRender.h"
-#include "app.h"
 
 #include <QObject>
 
-namespace mxr
-{
-	class Shader;
-	class Texture;
-	class Uniform;
-	class Drawable;
-	class StateSet;
-	class Group;
-	class Texture;
-}
 namespace MViewBasic
 {
 	class mViewBase;
 }
-
+namespace mxr
+{
+	class Texture;
+	class StateSet;
+}
 using namespace MViewBasic;
 namespace MBaseRend
 {

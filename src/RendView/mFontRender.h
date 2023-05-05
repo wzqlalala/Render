@@ -11,8 +11,6 @@
 
 #include "mBaseRender.h"
 
-#include "Drawable.h"
-
 #include <memory>
 
 namespace mxr
@@ -52,7 +50,7 @@ namespace MBaseRend
 
 		~mBaseFont();
 
-		void setStateSet(std::shared_ptr<mxr::StateSet> stateSet) { _drawable->setStateSet(stateSet); };
+		void setStateSet(std::shared_ptr<mxr::StateSet> stateSet);
 
 		void setIsShow(bool isShow);
 

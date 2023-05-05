@@ -9,13 +9,7 @@
 #include <QOpenGLFunctions_4_5_Core>
 
 #include "mBaseRend.h"
-#include "app.h"
 
-namespace mxr
-{
-	class Group;
-	class Viewer;
-}
 using namespace MBaseRend;
 namespace MPostRend
 {
@@ -25,7 +19,7 @@ namespace MPostRend
 		Q_OBJECT
 
 	public:
-		mPostRend(const QString& name);
+		mPostRend(const QString& name = "");
 		~mPostRend();
 
 		shared_ptr<mPostRender> getPostRender() override;

@@ -1,11 +1,14 @@
 //#include "mPreGeoModelRender.h"
 //
-//#include "mGeoModelData1.h"
-//#include "mGeoPartData1.h"
-//#include "mGeoSolidData1.h"
-//#include "mGeoFaceData1.h"
-//#include "mGeoLineData1.h"
-//#include "mGeoPointData1.h"
+//#include "MXMesh.h"
+//#include "MXGeoPoint.h"
+//#include "MXGeoEdge.h"
+//#include "MXGeoFace.h"
+//#include "MXGeoSolid.h"
+//#include "MXMeshTetrahedron.h"
+//#include "MXMeshHexahedral.h"
+//#include "MXMeshTriangle.h"
+//#include "MXMeshQuadrangle.h"
 //
 //#include <renderpch.h>
 //#include "Space.h"

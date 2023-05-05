@@ -3,9 +3,6 @@
 //解决中文乱码
 #pragma execution_character_set("utf-8")
 #include "mBaseRender.h"
-#include "app.h"
-//#define TINYOBJLOADER_IMPLEMENTATION
-#include "tiny_obj_loader.h"
 #include <QObject>
 #include <QHash>
 #include <set>
@@ -13,7 +10,6 @@
 
 #include "SpaceTree.h"
 
-#include "mMeshViewEnum.h"
 #include "mMeshViewEnum.h"
 #include "mBasicStructor.h"
 namespace mxr

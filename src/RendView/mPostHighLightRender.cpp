@@ -52,9 +52,9 @@ namespace MPostRend
 		_oneFrameData = oneFrameData;
 		_oneFrameRendData = oneFrameRendData;
 
-		_facelineRender = make_shared<mPostBaseHighLightRender1>(_geode);
-		_lineRender = make_shared<mPostBaseHighLightRender>(_geode);
-		_pointRender = make_shared<mPostBaseHighLightRender>(_geode);
+		_pointRender = make_shared<mGroupRender1<Vec3Array>>(_geode);
+		_lineRender = make_shared<mGroupRender1<Vec3Array>>(_geode);
+		_facelineRender = make_shared<mGroupRender2<Vec3Array, FloatArray>>(_geode);
 
 		_facelineRender->setStateSet(_facelineStateSet);
 		_lineRender->setStateSet(_lineStateSet);
@@ -520,49 +520,6 @@ namespace MPostRend
 		_pointStateSet->setUniform(MakeAsset<Uniform>("light.specular", _rendStatus->_postLight.specular));
 		_pointStateSet->setUniform(MakeAsset<Uniform>("light.shiness", _rendStatus->_postLight.shiness));
 		_pointStateSet->setUniform(MakeAsset<Uniform>("PointSize", 10));
-	}
-
-	mPostBaseHighLightRender::mPostBaseHighLightRender(std::shared_ptr<mxr::Group> parent)
-	{
-		_drawable = MakeAsset<Drawable>();
-		_vertex0 = MakeAsset<Vec3Array>();
-		_drawable->setVertexAttribArray(0, _vertex0);
-
-		_parent = parent;
-		_parent->addChild(_drawable);
-	}
-
-	mPostBaseHighLightRender::~mPostBaseHighLightRender()
-	{
-		_parent->removeChild(_drawable);
-	}
-
-	void mPostBaseHighLightRender::setStateSet(std::shared_ptr<mxr::StateSet> state)
-	{
-		_drawable->setStateSet(state);
-	}
-
-
-	mPostBaseHighLightRender1::mPostBaseHighLightRender1(std::shared_ptr<mxr::Group> parent)
-	{
-		_drawable = MakeAsset<Drawable>();
-		_vertex0 = MakeAsset<Vec3Array>();
-		_vertex1 = MakeAsset<FloatArray>();
-		_drawable->setVertexAttribArray(0, _vertex0);
-		_drawable->setVertexAttribArray(1, _vertex1);
-
-		_parent = parent;
-		_parent->addChild(_drawable);
-	}
-
-	mPostBaseHighLightRender1::~mPostBaseHighLightRender1()
-	{
-		_parent->removeChild(_drawable);
-	}
-
-	void mPostBaseHighLightRender1::setStateSet(std::shared_ptr<mxr::StateSet> state)
-	{
-		_drawable->setStateSet(state);
 	}
 
 }

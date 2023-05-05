@@ -3,13 +3,13 @@
 //解决中文乱码
 #pragma execution_character_set("utf-8")
 
-#include "app.h"
 #include <QObject>
 #include <QVector2D>
 
 #include "mMeshViewEnum.h"
 namespace mxr
 {
+	class Application;
 	class Group;
 }
 namespace MViewBasic
@@ -39,9 +39,9 @@ namespace MBaseRend
 		virtual void dragSomething(QVector2D pos) {};
 	protected:
 
-		void makeCurrent() { _app->GLContext()->makeCurrent(_app->GLContext()->surface()); };
+		void makeCurrent();
 
-		void doneCurrent() { _app->GLContext()->doneCurrent(); };
+		void doneCurrent();
 
 	signals:
 

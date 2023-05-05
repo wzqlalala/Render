@@ -4,8 +4,6 @@
 
 #include <memory>
 
-#include "app.h"
-
 #include "mMeshViewEnum.h"
 
 #include "mBaseRender.h"
@@ -13,8 +11,6 @@
 namespace mxr
 {
 	class Drawable;
-	class Shader;
-	class Group;
 	class StateSet;
 }
 using namespace MViewBasic;

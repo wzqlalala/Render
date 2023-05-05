@@ -10,7 +10,6 @@
 #include <QOpenGLFramebufferObject>
 
 #include"mMeshViewEnum.h"
-#include "app.h"
 
 #include "SpaceTree.h"
 
@@ -21,6 +20,7 @@ namespace MViewBasic
 }
 namespace mxr
 {
+	class Application;
 	class Group;
 	class Viewer;
 }
@@ -48,7 +48,7 @@ namespace MBaseRend
 		Q_OBJECT
 
 	public:
-		mBaseRend(const QString& name);
+		mBaseRend(const QString& name = "");
 		~mBaseRend();
 
 		std::shared_ptr<mxr::Application> getApplication() { return _app; };
