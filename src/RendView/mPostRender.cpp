@@ -35,8 +35,7 @@
 #include "mPostMeshPickThread.h"
 #include "mPostMeshPickData.h"
 
-#define _USE_MATH_DEFINES
-#include <math.h>
+#include <qmath.h>
 
 using namespace mxr;
 using namespace std;

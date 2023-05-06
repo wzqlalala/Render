@@ -32,9 +32,8 @@
 #include <QThread>
 
 
+#include <qmath.h>
 
-#define _USE_MATH_DEFINES
-#include <math.h>
 
 using namespace mxr;
 using namespace std;

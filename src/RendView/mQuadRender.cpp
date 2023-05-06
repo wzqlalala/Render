@@ -1,8 +1,7 @@
 #include "mQuadRender.h"
 #include "mBaseRend.h"
 
-#define _USE_MATH_DEFINES
-#include <math.h>
+#include <qmath.h>
 
 #include <renderpch.h>
 #include "mShaderManage.h"
