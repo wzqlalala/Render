@@ -10,6 +10,7 @@
 #include "mFontRender.h"
 #include "mArrowRender.h"
 #include "mModelView.h"
+#include "mBaseRend2D.h"
 
 #include "mGlobalVarible.h"
 
@@ -50,21 +51,24 @@ MxRendTest::MxRendTest(int id)
 	_postRend = nullptr;
 	_testRender = nullptr;
 	this->showMaximized();
-	if (id %2 == 0)
+	if (id % 3 == 0)
 	{
 		_preRend = new MPreRend::mPreRend(QString::number(id)); ui.gridLayout->addWidget(_preRend);
 	}
-	else
+	else if(id % 3 == 1)
 	{
 		_postRend = new MPostRend::mPostRend(QString::number(id)); ui.gridLayout->addWidget(_postRend);
 	}
-
+	else
+	{
+		ui.gridLayout->addWidget(new mBaseRend2D);
+	}
 	
 }
 
 void MxRendTest::keyPressEvent(QKeyEvent * event)
 {
-	if (_id % 2 == 1)//后处理
+	if (_id % 3 == 1)//后处理
 	{
 		switch (event->key())
 		{

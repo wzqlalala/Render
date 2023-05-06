@@ -52,7 +52,7 @@ namespace MBaseRend
 		Q_OBJECT
 
 	public:
-		mBaseRend2D(const QString& name = "", MxFunctions::ViewportType = MxFunctions::Viewport3D);
+		mBaseRend2D(const QString& name = "", MxFunctions::ViewportType = MxFunctions::Viewport2D);
 		~mBaseRend2D();
 
 	public:

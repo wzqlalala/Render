@@ -28,31 +28,17 @@ namespace MBaseRend
 {
 	mBaseRend2D::mBaseRend2D(const QString& name, MxFunctions::ViewportType type): mBaseRend(name, type)
 	{
-		setMouseTracking(true);
-
-		_viewOperateMode = new ViewOperateMode; *_viewOperateMode = ViewOperateMode::NoViewOperate;
-		_cameraMode = new CameraOperateMode; *_cameraMode = CameraOperateMode::NoCameraOperate;
-		_pickMode = new PickMode;*_pickMode = PickMode::NoPick;//当前拾取模式
-		_multiplyPickMode = new MultiplyPickMode; *_multiplyPickMode = MultiplyPickMode::QuadPick;//框选拾取模式
-		_pickFilter = new PickFilter; *_pickFilter = PickFilter::PickGeoPoint;
-
-		//QOpenGLContext *context = QOpenGLContext::currentContext();
-		_app = MakeAsset<mxr::Application>();
-		//_app->setContext(context);
-		mxr::ApplicationInstance::GetInstance().appendApplication(name, _app);
-	
-		_beforeroot = MakeAsset<mxr::Group>();
-		_root = MakeAsset<mxr::Group>();
-		_afterroot = MakeAsset<mxr::Group>();
-
-		//QSurfaceFormat format;
-		//format.setMajorVersion(4);
-		//format.setMinorVersion(5);
-		//format.setProfile(QSurfaceFormat::OpenGLContextProfile::CoreProfile);
-		//format.setSamples(4);
-		//setFormat(format);
-		//this->showMaximized();
-		qDebug() << "Base Struct";
+		qDebug() << "mBaseRend2D Struct";
+		auto iter = QHashIterator< QPair<Qt::MouseButton, Qt::KeyboardModifiers>, CameraOperateMode>(_cameraKeys);//移除旋转
+		while (iter.hasNext())
+		{
+			iter.next();
+			if (iter.value() == CameraOperateMode::Rotate)
+			{
+				_cameraKeys.remove(iter.key());
+				break;
+			}
+		}
 	}
 
 	void mBaseRend2D::initializeGL()
@@ -151,22 +137,6 @@ namespace MBaseRend
 					for (auto render : _beforeRenderArray)
 					{
 						makeCurrent();
-						/*
-						FBO->bind();
-						float depth = 0.0;
-						QOpenGLContext::currentContext()->functions()->glReadPixels(nowX, SCR_HEIGHT - nowY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
-						if (depth != 0)
-						{
-							qDebug() << "depth" << depth;
-						}
-						GLenum error = QOpenGLContext::currentContext()->functions()->glGetError();
-						if (error != 0)
-						{
-							qDebug() << error;
-						}
-						render->startPick(_polygonVertexs);
-						FBO->release();
-						*/
 						FBO->bind();
 						render->startPick(_polygonVertexs);
 						FBO->release();
@@ -226,21 +196,8 @@ namespace MBaseRend
 		if (view)
 		{
 			if (*_viewOperateMode == ViewOperateMode::CameraOperate)
-			{
-				if (*_cameraMode == CameraOperateMode::Rotate)
-				{
-					if (ifRotateAtXY == true && ifGetRotateCenter == false)
-					{
-						view->Rotate(xoffset, yoffset, Rotate_XY);
-						view1->Rotate(xoffset, yoffset, Rotate_XY);
-					}
-					else if (ifRotateAtZ == true && ifGetRotateCenter == false)
-					{
-						view->Rotate(xoffset, yoffset, Rotate_Z);
-						view1->Rotate(xoffset, yoffset, Rotate_Z);
-					}
-				}
-				else if (*_cameraMode == CameraOperateMode::Translate)
+			{	
+				if (*_cameraMode == CameraOperateMode::Translate)
 				{
 					view->Translate(xoffset, yoffset);
 				}
