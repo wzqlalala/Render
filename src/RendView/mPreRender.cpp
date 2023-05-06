@@ -63,9 +63,9 @@ namespace MPreRend
 		_faceStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
 		_faceStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
 
-		_faceStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
-		_faceStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
 		_faceStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
+		_faceStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
+		_faceStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
 		_faceStateSet->setUniform(MakeAsset<Uniform>("lightIsOn", int(1)));
 		_faceStateSet->setUniform(MakeAsset<Uniform>("viewPos", QVector3D()));
 		_faceStateSet->setUniform(MakeAsset<Uniform>("light.position", _rendStatus->_postLight.lightPosition));
@@ -85,9 +85,7 @@ namespace MPreRend
 		_edgelineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(mxr::PolygonMode::FRONT_AND_BACK, mxr::PolygonMode::FILL), 1);
 		_edgelineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
 
-		_edgelineStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
-		_edgelineStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
-		_edgelineStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
+		_edgelineStateSet->setUniform(MakeAsset<Uniform>("pvm", QMatrix4x4()));
 		_edgelineStateSet->setUniform(MakeAsset<Uniform>("showColor", _rendStatus->_faceLineColor));
 		_edgelineStateSet->setUniform(MakeAsset<Uniform>("rightToLeft", 0));
 		_edgelineStateSet->setUniform(MakeAsset<Uniform>("lineWidth", 1.0f));
@@ -102,9 +100,7 @@ namespace MPreRend
 		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(-1, -1), 1);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
 
-		_facelineStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
-		_facelineStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
-		_facelineStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
+		_facelineStateSet->setUniform(MakeAsset<Uniform>("pvm", QMatrix4x4()));
 		_facelineStateSet->setUniform(MakeAsset<Uniform>("showColor", _rendStatus->_faceLineColor));
 		_facelineStateSet->setUniform(MakeAsset<Uniform>("rightToLeft", 0));
 
@@ -117,9 +113,7 @@ namespace MPreRend
 		_independentlineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
 		_independentlineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
 
-		_independentlineStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
-		_independentlineStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
-		_independentlineStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
+		_independentlineStateSet->setUniform(MakeAsset<Uniform>("pvm", QMatrix4x4()));
 
 		//dotline
 		_dotlineStateSet = MakeAsset<StateSet>();
@@ -130,9 +124,7 @@ namespace MPreRend
 		_dotlineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
 		_dotlineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
 
-		_dotlineStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
-		_dotlineStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
-		_dotlineStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
+		_dotlineStateSet->setUniform(MakeAsset<Uniform>("pvm", QMatrix4x4()));
 		_dotlineStateSet->setUniform(MakeAsset<Uniform>("showColor", QVector3D(0.5,0.5,0.5)));
 
 		//point
@@ -144,9 +136,9 @@ namespace MPreRend
 		_pointStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
 		_pointStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
 
-		_pointStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
-		_pointStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
 		_pointStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
+		_pointStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
+		_pointStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
 		_pointStateSet->setUniform(MakeAsset<Uniform>("lightIsOn", int(1)));
 		_pointStateSet->setUniform(MakeAsset<Uniform>("viewPos", QVector3D()));
 		_pointStateSet->setUniform(MakeAsset<Uniform>("light.position", _rendStatus->_postLight.lightPosition));
@@ -309,21 +301,14 @@ namespace MPreRend
 	{
 		if (_faceStateSet)
 		{
+			QMatrix4x4 pvm = modelView->getPVMValue();
 			_faceStateSet->getUniform("projection")->SetData(modelView->_projection);
 			_faceStateSet->getUniform("view")->SetData(modelView->_view);
 			_faceStateSet->getUniform("model")->SetData(modelView->_model);
-			_edgelineStateSet->getUniform("projection")->SetData(modelView->_projection);
-			_edgelineStateSet->getUniform("view")->SetData(modelView->_view);
-			_edgelineStateSet->getUniform("model")->SetData(modelView->_model);
-			_facelineStateSet->getUniform("projection")->SetData(modelView->_projection);
-			_facelineStateSet->getUniform("view")->SetData(modelView->_view);
-			_facelineStateSet->getUniform("model")->SetData(modelView->_model);
-			_independentlineStateSet->getUniform("projection")->SetData(modelView->_projection);
-			_independentlineStateSet->getUniform("view")->SetData(modelView->_view);
-			_independentlineStateSet->getUniform("model")->SetData(modelView->_model);
-			_dotlineStateSet->getUniform("projection")->SetData(modelView->_projection);
-			_dotlineStateSet->getUniform("view")->SetData(modelView->_view);
-			_dotlineStateSet->getUniform("model")->SetData(modelView->_model);
+			_edgelineStateSet->getUniform("pvm")->SetData(pvm);
+			_facelineStateSet->getUniform("pvm")->SetData(pvm);
+			_independentlineStateSet->getUniform("pvm")->SetData(pvm);
+			_dotlineStateSet->getUniform("pvm")->SetData(pvm);
 			_pointStateSet->getUniform("projection")->SetData(modelView->_projection);
 			_pointStateSet->getUniform("view")->SetData(modelView->_view);
 			_pointStateSet->getUniform("model")->SetData(modelView->_model);			

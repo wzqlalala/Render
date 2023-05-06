@@ -3,9 +3,7 @@
 #ifdef vertex_shader
 layout (location = 0) in vec3 aPos;
 
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
+uniform mat4 pvm;
 
 out VS_OUT 
 {
@@ -15,7 +13,7 @@ out VS_OUT
 void main()
 {
     vs_out.pos = aPos;
-	gl_Position = projection * view * model * vec4(vs_out.pos, 1.0f);
+	gl_Position = pvm * vec4(vs_out.pos, 1.0f);
     // gl_Position.z = gl_Position.z - 0.00001;
 }
 #endif

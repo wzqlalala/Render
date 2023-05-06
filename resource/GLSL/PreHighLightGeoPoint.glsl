@@ -37,10 +37,6 @@ in vec3 FragPos;
 uniform sampler2D sprite_texture;
 uniform int lightIsOn;
 
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
-
 uniform vec3 showColor;
 uniform vec3 viewPos;
 uniform Light light;

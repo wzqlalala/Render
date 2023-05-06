@@ -3,9 +3,7 @@
 #ifdef vertex_shader
 layout (location = 0) in vec3 aPos;
 
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
+uniform mat4 pvm;
 
 void main()
 {
@@ -16,9 +14,7 @@ void main()
 #ifdef geometry_shader
 layout(lines) in;
 layout(line_strip, max_vertices = 2) out;
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
+uniform mat4 pvm;
 out float texCoord; // 输出到片段着色器中计算线的模式
 void main(void)
 {
@@ -26,11 +22,11 @@ void main(void)
     vec3 pos1 = gl_in[1].gl_Position.xyz;
     float max_u_texture = length(pos1 - pos0);//使纹理坐标与线的长度成正比
     // 线段头
-    gl_Position = projection * view * model * (gl_in[0].gl_Position);
+    gl_Position = pvm * (gl_in[0].gl_Position);
     texCoord = 0.0;
     EmitVertex(); //发射顶点
     //线段尾
-    gl_Position = projection * view * model * (gl_in[1].gl_Position);
+    gl_Position = pvm * (gl_in[1].gl_Position);
     texCoord = max_u_texture;
     EmitVertex();//发射顶点
     EndPrimitive();//顶点发送完毕
