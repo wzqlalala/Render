@@ -12,6 +12,13 @@
 #include "mModelView.h"
 #include "mBaseRend2D.h"
 
+//MLableRend
+#include"mLableRendController_pre.h"
+#include"mLableRendController_common.h"
+//MDataLable
+#include"mLableDataController_pre.cpp"
+#include"mLableDataController_common.cpp"
+
 #include "mGlobalVarible.h"
 
 //MDataPost
@@ -667,6 +674,38 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 				_cameraType = CameraType::Camera1;
 			}
 			_preRend->setCameraType(_cameraType);
+			break;
+		}
+		case Qt::Key_P:
+		{
+			if (_preRend == nullptr)
+			{
+				return;
+			}
+			
+			auto labelRend = _preRend->getLableRendController_pre();
+			if (labelRend)
+			{
+				QVector<POS_DIR> pos_dir; QVector<QVector3D> pos;
+				pos_dir = QVector<POS_DIR>{ {QVector3D(0,0,0), QVector3D(1,0,1)} };
+				labelRend->appendLableRendData<MDataLable::Force>("1", pos_dir, "F", 1.0);
+				pos_dir = QVector<POS_DIR>{ {QVector3D(1,0,0), QVector3D(0,1,0)} };
+				labelRend->appendLableRendData<MDataLable::Gravity>("2", pos_dir, "G", 1.0, QVector3D(255, 255, 0), true, false);
+				pos_dir = QVector<POS_DIR>{ {QVector3D(1,0,0), QVector3D(1,0,0)} };
+				labelRend->appendLableRendData<MDataLable::Pressure>("3", pos_dir, "P", 1.0);
+				pos_dir = QVector<POS_DIR>{ {QVector3D(1,0,0), QVector3D(0,0,1)} };
+				labelRend->appendLableRendData<MDataLable::LineForce>("4", pos_dir, "LF", 1.0);
+				pos_dir = QVector<POS_DIR>{ {QVector3D(1,0,0), QVector3D(1,0,1)} };
+				labelRend->appendLableRendData<MDataLable::Pretension>("5", pos_dir, "Bolt_F", 1.0, QVector3D(255, 255, 0), true, false);
+				pos = QVector<QVector3D>{ {QVector3D(1,0,0)} };
+				labelRend->appendLableRendData<MDataLable::Conv>("6", pos, "CH");
+				pos = QVector<QVector3D>{ {QVector3D(0,0,0)} };
+				labelRend->appendLableRendData<MDataLable::TempLoad>("7", pos, "T", 1, QVector3D(255.0, 140.0, 0));
+				pos = QVector<QVector3D>{ {QVector3D(0,1,0)} };
+				labelRend->appendLableRendData<MDataLable::InterHeat>("8", pos, "IH", 1, QVector3D(255.0, 255.0, 0), true, false);
+				pos = QVector<QVector3D>{ {QVector3D(0,0,1)} };
+				labelRend->appendLableRendData<MDataLable::Charge>("9", pos, "Q", 1, QVector3D(0, 0, 255.0));
+			}
 			break;
 		}
 		case Qt::Key_Z:
