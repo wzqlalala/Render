@@ -148,6 +148,8 @@ namespace MBaseRend
 		void resizeGL(int w, int h) Q_DECL_OVERRIDE;
 		void paintGL() Q_DECL_OVERRIDE;
 
+		virtual void otherRend() {};
+
 	public slots:
 
 		//导入新模型后更新视角

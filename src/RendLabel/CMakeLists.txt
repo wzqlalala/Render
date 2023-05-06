@@ -2,6 +2,7 @@
 # 头文件搜索路径
 #-----------------------------------------------------------------------------
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../RendBasic)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../RendLabelData)
 
 #-----------------------------------------------------------------------------
 # 自动添加include目录
@@ -11,7 +12,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #-----------------------------------------------------------------------------
 # 添加资源文件
 #-----------------------------------------------------------------------------
-set(_qrc "${CMAKE_CURRENT_SOURCE_DIR}/../../resource/Render.qrc")
+set(_qrc "${CMAKE_CURRENT_SOURCE_DIR}/../../resource/RendLabel.qrc")
 qt5_add_resources(_resource ${_qrc})
 
 #-----------------------------------------------------------------------------
@@ -34,7 +35,7 @@ add_library(RendLabel
 #-----------------------------------------------------------------------------
 target_compile_definitions(RendLabel PRIVATE "RENDLABEL_LIB")
 
-list(APPEND _depend_library RendBasic)
+list(APPEND _depend_library RendBasic RendLabelData)
 
 list(APPEND _runtimes_libraries
 	Qt5::Core Qt5::Gui Qt5::Widgets MxFunctions Freetype

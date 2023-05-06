@@ -46,7 +46,6 @@ namespace MBaseRend
 	class mPostRender;
 	class mFontRender;
 	class mArrowRender;
-	typedef QVector<shared_ptr<mBaseRender>> RenderArray;
 	class RENDVIEW_EXPORT mBaseRend3D : public mBaseRend
 	{
 		Q_OBJECT

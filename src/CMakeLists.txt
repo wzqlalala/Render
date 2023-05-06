@@ -3,7 +3,7 @@
 #-----------------------------------------------------------------------------
 # 所有项目
 #-----------------------------------------------------------------------------
-list(APPEND _libraries RendBasic RendData RendBase RendLabel RendView Main)
+list(APPEND _libraries RendBasic RendData RendBase RendLabel RendLabelData RendView Main)
 
 #-----------------------------------------------------------------------------
 # 处理程序的RPATH

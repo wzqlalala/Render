@@ -166,6 +166,8 @@ namespace MBaseRend
 			baseRender->updateUniform(_modelView, _commonView);
 		}
 		_afterviewer->noClearRun();
+		this->otherRend();
+
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, QOpenGLContext::currentContext()->defaultFramebufferObject());
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, FBO->handle());
 		glBlitFramebuffer(0, 0, width(), height(), 0, 0, FBO->width(), FBO->height(), GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_NEAREST);

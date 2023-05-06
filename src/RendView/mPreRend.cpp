@@ -4,9 +4,18 @@
 #include "mArrowRender.h"
 
 #include "mViewBase.h"
+#include "mCommonView.h"
+#include "mModelView.h"
 
 ////MxRender
 #include <renderpch.h>
+
+//图标渲染
+#include"mLableRendIntegrate_pre.h"
+#include"mLableRendController_pre.h"
+#include"mLableRendIntegrate_common.h"
+#include"mLableRendController_common.h"
+#include"mLableDataController_common.cpp"
 
 #include <math.h>
 
@@ -30,17 +39,47 @@ namespace MPreRend
 		_fontRender->appendGloabalAxisFont();
 		_arrowRender->appendGloabalAxisArrow();
 
+		//图标渲染对象
+		_lableRend_pre = make_shared<mLableRendIntegrate_pre>();
+		_lableRend_common = make_shared<mLableRendIntegrate_common>();
+		mCommonView *commonView =  dynamic_pointer_cast<mCommonView>(_commonView).get();
+		mModelView *modelView = dynamic_pointer_cast<mModelView>(_modelView).get();
+		_lableRend_pre->initial(commonView, modelView);
+		_lableRend_common->initial(commonView, modelView);
+		//图标控制对象
+		_lableRendController_pre = make_shared<mLableRendController_pre>(_lableRend_pre);
+		connect(_lableRendController_pre.get(), SIGNAL(updateView()), this, SLOT(update()));
+		_lableRendController_common = make_shared<mLableRendController_common>(_lableRend_common);
+		connect(_lableRendController_common.get(), SIGNAL(updateView()), this, SLOT(update()));
+	
+		//_lableRendController_common->appendLableRendData<GlobalAxis>("globalAxis", QVector2D(75, 75), 1.3);
+
 		qDebug() << "Pre Initial";
+
+		GLenum error = QOpenGLContext::currentContext()->functions()->glGetError();
+		if (error != 0)
+		{
+			qDebug() << error;
+		}
 	}
 
 	void mPreRend::paintGL()
 	{
 		mBaseRend3D::paintGL();
+		//GLenum error = QOpenGLContext::currentContext()->functions()->glGetError();
+		//if (error != 0)
+		//{
+		//	qDebug() << error;
+		//}
 	}
 
 	void mPreRend::resizeGL(int w, int h)
 	{
 		mBaseRend3D::resizeGL(w, h);
+		////////图标测试////////////
+		_lableRend_pre->getScreenSize(w, h);
+		_lableRend_common->getScreenSize(w, h);
+		///////////////////////////
 	}
 	void mPreRend::mousePressEvent(QMouseEvent *event)
 	{
@@ -74,6 +113,18 @@ namespace MPreRend
 			}
 		}
 		return nullptr;
+	}
+	shared_ptr<mLableRendController_pre> mPreRend::getLableRendController_pre()
+	{
+		return _lableRendController_pre;
+	}
+	shared_ptr<mLableRendController_common> mPreRend::getLableRendController_common()
+	{
+		return _lableRendController_common;
+	}
+	shared_ptr<mLableDataController_pre> mPreRend::getLableDataController_pre()
+	{
+		return _lableRend_pre->getLableDataController();
 	}
 	void mPreRend::GetModelSizePara(bool isModelCenter)
 	{
@@ -175,5 +226,17 @@ namespace MPreRend
 		//_meshModelRulerRend->UpdateNum();
 		//HideOrShowAllFont();
 		update();
+	}
+	void mPreRend::otherRend()
+	{
+		////////图标////////////
+		_lableRend_pre->drawLable();
+		_lableRend_common->drawLable();
+		///////////////////////////
+		GLenum error = QOpenGLContext::currentContext()->functions()->glGetError();
+		if (error != 0)
+		{
+			qDebug() << error;
+		}
 	}
 }

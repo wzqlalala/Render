@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 	QSurfaceFormat format;
 	format.setMajorVersion(4);
 	format.setMinorVersion(5);
-	format.setProfile(QSurfaceFormat::OpenGLContextProfile::CoreProfile);
+	format.setProfile(QSurfaceFormat::OpenGLContextProfile::CompatibilityProfile);
 	format.setSamples(4);
 	QSurfaceFormat::setDefaultFormat(format);
 	

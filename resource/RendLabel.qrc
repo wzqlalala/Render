@@ -1,0 +1,30 @@
+<RCC>
+    <qresource prefix="/">
+        <file>GLSLLabel/Font_Arrow.frag</file>
+        <file>GLSLLabel/Font_Arrow.vert</file>
+        <file>GLSLLabel/Font_Common.frag</file>
+        <file>GLSLLabel/Font_Common.vert</file>
+        <file>GLSLLabel/Font_Fixed.frag</file>
+        <file>GLSLLabel/Font_Fixed.vert</file>
+        <file>GLSLLabel/Font_FixShape.frag</file>
+        <file>GLSLLabel/Font_FixShape.vert</file>
+        <file>GLSLLabel/Font_GlobalAxis.frag</file>
+        <file>GLSLLabel/Font_GlobalAxis.vert</file>
+        <file>GLSLLabel/Lable_Arrow.frag</file>
+        <file>GLSLLabel/Lable_Arrow.vert</file>
+        <file>GLSLLabel/Lable_BCDF.frag</file>
+        <file>GLSLLabel/Lable_BCDF.vert</file>
+        <file>GLSLLabel/Lable_FixShape.frag</file>
+        <file>GLSLLabel/Lable_FixShape.vert</file>
+        <file>GLSLLabel/Lable_FixShapeRotate.frag</file>
+        <file>GLSLLabel/Lable_FixShapeRotate.vert</file>
+        <file>GLSLLabel/Lable_FixShapeRotate2.frag</file>
+        <file>GLSLLabel/Lable_FixShapeRotate2.vert</file>
+        <file>GLSLLabel/Lable_GlobalAxis.frag</file>
+        <file>GLSLLabel/Lable_GlobalAxis.vert</file>
+        <file>GLSLLabel/Lable_Model.frag</file>
+        <file>GLSLLabel/Lable_Model.vert</file>
+        <file>GLSLLabel/Lable_Point.frag</file>
+        <file>GLSLLabel/Lable_Point.vert</file>
+    </qresource>
+</RCC>

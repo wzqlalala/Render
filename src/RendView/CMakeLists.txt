@@ -5,6 +5,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../RendData)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../RendBasic)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../RendBase)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../RendLabel)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../RendLabelData)
 
 #-----------------------------------------------------------------------------
 # 自动添加include目录
@@ -39,7 +40,7 @@ add_library(RendView
 #-----------------------------------------------------------------------------
 target_compile_definitions(RendView PRIVATE "RENDVIEW_LIB")
 
-list(APPEND _depend_library RendData RendBase RendBasic RendLabel)
+list(APPEND _depend_library RendData RendBase RendBasic RendLabel RendLabelData)
 
 list(APPEND _runtimes_libraries
 	Qt5::Core Qt5::Gui Qt5::Widgets MxFunctions MeshData Freetype
