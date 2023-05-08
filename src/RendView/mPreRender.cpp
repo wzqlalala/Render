@@ -244,9 +244,12 @@ namespace MPreRend
 			_geoPickThread->setWidget(_baseRend->getCamera()->SCR_WIDTH, _baseRend->getCamera()->SCR_HEIGHT);
 			_geoPickThread->setPickMode(*_baseRend->getCurrentPickMode(), *_baseRend->getMultiplyPickMode());
 			if (*_baseRend->getCurrentPickMode() == PickMode::SoloPick)
-			{
-				float depth = 0.0;
-				QOpenGLContext::currentContext()->functions()->glReadPixels(poses.first().x(), _baseRend->getCamera()->SCR_HEIGHT - poses.first().y(), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+			{			
+				float depth = this->getDepth(poses.first());
+				if (depth == 1.0)
+				{
+					return;
+				}
 				_geoPickThread->setLocation(poses.first(), depth);
 			}
 			else

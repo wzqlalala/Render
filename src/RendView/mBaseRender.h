@@ -32,7 +32,7 @@ namespace MBaseRend
 
 		virtual void updateUniform(shared_ptr<mViewBase> modelView, shared_ptr<mViewBase> commonView) {};
 
-		virtual void startPick(QVector<QVector2D> poses) { _poses = poses; };
+		virtual void startPick(QVector<QVector2D> poses) { };
 
 		virtual bool getIsDragSomething(QVector2D pos) { return false; };
 
@@ -49,6 +49,9 @@ namespace MBaseRend
 
 		void doneCurrent();
 
+		//通过容差范围内的矩形像素深度获取深度
+		float getDepth(QVector2D pos);
+
 	signals:
 
 		void update();
@@ -63,8 +66,5 @@ namespace MBaseRend
 		std::shared_ptr<mxr::Group> _parent;
 
 		mBaseRend *_baseRend;
-
-		//位置
-		QVector<QVector2D> _poses;//单选和拖拽就是当前点，矩形和圆形框选就是中心和最终的点，多边形框选就是每一个点
 	};
 }
