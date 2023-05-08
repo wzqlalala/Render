@@ -14,6 +14,22 @@ namespace MBaseRend
 	{
 	}
 
+	void mBaseRender::setPickFilter(MViewBasic::PickFilter pickFilter)
+	{
+		if (_baseRend)
+		{
+			_baseRend->setPickFilter(pickFilter);
+		}
+	}
+
+	void mBaseRender::setMultiplyPickMode(MultiplyPickMode multiplyPickMode)
+	{
+		if (_baseRend)
+		{
+			_baseRend->setMultiplyPickMode(multiplyPickMode);
+		}
+	}
+
 	void mBaseRender::makeCurrent()
 	{
 		_app->GLContext()->makeCurrent(_app->GLContext()->surface());

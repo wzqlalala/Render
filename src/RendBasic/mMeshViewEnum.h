@@ -334,6 +334,9 @@ namespace MViewBasic
 	enum class MultiplyPickMode
 	{
 		/**************框选模式***********/
+		//禁用框选
+		NoPick,
+
 		//矩形框选（角点）
 		QuadPick,
 

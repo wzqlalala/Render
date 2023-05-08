@@ -94,6 +94,6 @@ private:
 	int _pickfilterID = 0;
 
 	//前处理几何
-	QVector<PickFilter> _pickfilters1{ PickFilter::PickGeoPoint, PickFilter::PickGeoLine, PickFilter::PickGeoFace, PickFilter::PickGeoSolid, PickFilter::PickGeoPart, PickFilter::PickGeoPointByPart, PickFilter::PickGeoLineByPart, PickFilter::PickGeoFaceByPart, PickFilter::PickGeoSolidByPart, PickFilter::pickVertexOnGeoLine, PickFilter::pickVertexOnGeoFace };
+	QVector<PickFilter> _pickfilters1{ PickFilter::PickGeoPoint, PickFilter::PickGeoLine, PickFilter::PickGeoFace, PickFilter::PickGeoSolid, PickFilter::PickGeoPart, PickFilter::PickGeoPointByPart, PickFilter::PickGeoLineByPart, PickFilter::PickGeoFaceByPart, PickFilter::PickGeoSolidByPart, PickFilter::pickVertexOnGeoLine, PickFilter::pickVertexOnGeoFace, PickFilter::pickVertexOnScreen };
 
 };

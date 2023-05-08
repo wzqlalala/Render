@@ -11,6 +11,7 @@ namespace MPostRend
 
 	mPostRend::mPostRend(const QString& name):mBaseRend3D(name, ViewportPost3D)
 	{
+		*_pickFilter = PickFilter::PickNode;
 		qDebug() << "Post Struct";
 	}
 

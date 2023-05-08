@@ -180,38 +180,94 @@ namespace MPreRend
 	void mPreRender::startPick(QVector<QVector2D> poses)
 	{
 		makeCurrent();
-		//开始拾取操作
-		if (!_geoModelRender)
+		QFuture<void> future;
+		switch (*_baseRend->getPickFilter())
 		{
+		case PickFilter::PickAny:
+		case PickFilter::PickPoint:
+		case PickFilter::Pick1DMesh:
+		case PickFilter::Pick2DMesh:
+		case PickFilter::PickTri:
+		case PickFilter::PickQuad:
+		case PickFilter::PickTet:
+		case PickFilter::PickWedge:
+		case PickFilter::PickHex:
+		case PickFilter::PickPyramid:
+		case PickFilter::PickNode:
+		case PickFilter::PickNodeOrder:
+		case PickFilter::PickAnyMesh:
+		case PickFilter::PickMeshLine:
+		case PickFilter::PickMeshFace:
+		case PickFilter::PickNodeByPart:
+		case PickFilter::PickAnyMeshByPart:
+		case PickFilter::PickMeshLineByPart:
+		case PickFilter::PickMeshFaceByPart:
+		case PickFilter::PickNodeByLine:
+		case PickFilter::PickMeshByLine:
+		case PickFilter::PickMeshLineByLine:
+		case PickFilter::PickNodeByFace:
+		case PickFilter::PickMeshFaceByFace:
+		case PickFilter::PickMeshByFace:
+		case PickFilter::PickMeshPart:
+		case PickFilter::PickNodeByLineAngle:
+		case PickFilter::PickNodeByFaceAngle:
+		case PickFilter::Pick1DMeshByAngle:
+		case PickFilter::Pick2DMeshByAngle:
+		case PickFilter::PickMeshLineByAngle:
+		case PickFilter::PickMeshFaceByAngle:
+		//网格
+		{
+			
+		}
+		break;
+		case PickFilter::PickGeoPoint:
+		case PickFilter::PickGeoLine:
+		case PickFilter::PickGeoFace:
+		case PickFilter::PickGeoSolid:
+		case PickFilter::PickGeoPointByPart:
+		case PickFilter::PickGeoLineByPart:
+		case PickFilter::PickGeoFaceByPart:
+		case PickFilter::PickGeoSolidByPart:
+		case PickFilter::PickGeoPart:
+		case PickFilter::pickVertexOnGeoLine:
+		case PickFilter::pickVertexOnGeoFace:
+		case PickFilter::pickVertexOnScreen:
+		//几何
+		{
+			//开始拾取操作
+			if (!_geoModelRender)
+			{
+				return;
+			}
+			_geoPickData->setGeoPickFunction(int(_baseRend->getPickFuntion()));
+			_geoPickThread->setMatrix(_baseRend->getCamera()->getPVMValue());
+			_geoPickThread->setWidget(_baseRend->getCamera()->SCR_WIDTH, _baseRend->getCamera()->SCR_HEIGHT);
+			_geoPickThread->setPickMode(*_baseRend->getCurrentPickMode(), *_baseRend->getMultiplyPickMode());
+			if (*_baseRend->getCurrentPickMode() == PickMode::SoloPick)
+			{
+				float depth = 0.0;
+				QOpenGLContext::currentContext()->functions()->glReadPixels(poses.first().x(), _baseRend->getCamera()->SCR_HEIGHT - poses.first().y(), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+				_geoPickThread->setLocation(poses.first(), depth);
+			}
+			else
+			{
+				_geoPickThread->setLocation(poses, (_baseRend->getCamera()->_Center - _baseRend->getCamera()->_Eye).normalized());
+			}
+			
+			future = QtConcurrent::run(_geoPickThread, &mPreGeoPickThread::startPick);
+			QObject::connect(&w, &QFutureWatcher<void>::finished, [this] {
+				_geoHighLightRender->updateHighLightRender();
+				QObject::disconnect(&w, 0, 0, 0);//断开信号
+				emit finishedPickSig();
+				emit update();
+			});
+			w.setFuture(future);
+		}
+		break;
+		default:
 			return;
 		}
-		_geoPickData->setGeoPickFunction(int(_baseRend->getPickFuntion()));
-		//_thread->setCurrentFrameRend(_oneFrameRender->getOneFrameData(), _oneFrameRender->getOneFrameRendData());
-		_geoPickThread->setMatrix(_baseRend->getCamera()->getPVMValue());
-		_geoPickThread->setWidget(_baseRend->getCamera()->SCR_WIDTH, _baseRend->getCamera()->SCR_HEIGHT);
-		_geoPickThread->setPickMode(*_baseRend->getCurrentPickMode(), *_baseRend->getMultiplyPickMode());
-		if (*_baseRend->getCurrentPickMode() == PickMode::SoloPick)
-		{		
-			float depth = 0.0;
-			QOpenGLContext::currentContext()->functions()->glReadPixels(poses.first().x(), _baseRend->getCamera()->SCR_HEIGHT - poses.first().y(), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
-			_geoPickThread->setLocation(poses.first(), depth);
-		}
-		else
-		{
-			_geoPickThread->setLocation(poses, (_baseRend->getCamera()->_Center - _baseRend->getCamera()->_Eye).normalized());
-		}
-		QFuture<void> future; 
-		future = QtConcurrent::run(_geoPickThread, &mPreGeoPickThread::startPick);
-		QObject::connect(&w, &QFutureWatcher<void>::finished, [this] {
-			_geoHighLightRender->updateHighLightRender();
-			//this->
-			set<int> ids = _geoPickData->getPickPointIDs();
-			//qDebug() << "拾取完成";
-			QObject::disconnect(&w, 0, 0, 0);//断开信号
-			emit finishedPickSig();
-			emit update();
-		});
-		w.setFuture(future);
+		
 
 	}
 

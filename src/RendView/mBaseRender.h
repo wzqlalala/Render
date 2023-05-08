@@ -37,6 +37,12 @@ namespace MBaseRend
 		virtual bool getIsDragSomething(QVector2D pos) { return false; };
 
 		virtual void dragSomething(QVector2D pos) {};
+
+		//设置拾取过滤模式
+		void setPickFilter(MViewBasic::PickFilter pickFilter);
+
+		//设置框选模式
+		void setMultiplyPickMode(MultiplyPickMode multiplyPickMode);
 	protected:
 
 		void makeCurrent();

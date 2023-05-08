@@ -212,6 +212,7 @@ namespace MDataGeo
 		/*
 		 * ตฅัก
 		 */
+		void SoloPickScreen();
 		void SoloPickGeoPoint(mGeoPartData1 *partData);
 		void SoloPickGeoLine(mGeoPartData1 *partData);
 		void SoloPickGeoFace(mGeoPartData1 *partData);

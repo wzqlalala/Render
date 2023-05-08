@@ -34,7 +34,7 @@ namespace MBaseRend
 		_cameraMode = new CameraOperateMode; *_cameraMode = CameraOperateMode::NoCameraOperate;
 		_pickMode = new PickMode;*_pickMode = PickMode::NoPick;//当前拾取模式
 		_multiplyPickMode = new MultiplyPickMode; *_multiplyPickMode = MultiplyPickMode::QuadPick;//框选拾取模式
-		_pickFilter = new PickFilter; *_pickFilter = PickFilter::PickGeoPoint;
+		_pickFilter = new PickFilter; *_pickFilter = PickFilter::PickNothing;
 
 		//QOpenGLContext *context = QOpenGLContext::currentContext();
 		_app = MakeAsset<mxr::Application>();
@@ -77,7 +77,10 @@ namespace MBaseRend
 		QOpenGLContext *context = QOpenGLContext::currentContext();
 		//qDebug() << "initializeGL" << QString::number(long long int(context->surface()), 16);
 		_app->setContext(context);
-		//glEnable(GL_POINT_SPRITE);		//开启渲染点精灵功能（已经被核心模式废除）
+		if (QSurfaceFormat::defaultFormat().profile() == QSurfaceFormat::OpenGLContextProfile::CompatibilityProfile)
+		{
+			glEnable(GL_POINT_SPRITE);		//开启渲染点精灵功能（已经被核心模式废除）
+		}
 		glEnable(GL_PROGRAM_POINT_SIZE); //让顶点程序决定点块大小
 		_modelView = MakeAsset<mModelView>();
 		//_modelView = MakeAsset<mModelView>();

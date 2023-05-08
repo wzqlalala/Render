@@ -93,8 +93,7 @@ namespace mxr
 		: IAsset(), target(GL_TEXTURE_2D), depth(1), n_levels(levels)
 	{
 
-		auto image = QImage(img_path);
-
+		QImage image = QImage(img_path).convertToFormat(QImage::Format_RGB888);
 		this->width = image.width();
 		this->height = image.height();
 		if (image.format() == QImage::Format_RGB888)
@@ -109,8 +108,10 @@ namespace mxr
 		}
 		else
 		{
+			this->format = GL_RGB;
+			this->i_format = GL_RGB8;
 			//qDebug() << "Unsupported image format.";
-			return;
+			//return;
 		}
 
 		// 自动计算 mipmap 级别

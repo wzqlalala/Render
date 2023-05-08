@@ -20,7 +20,7 @@
 #include <QMutex>
 #include <QtConcurrent/QtConcurrent>
 #include <QFuture>
-#include <math.h>
+#include <qmath.h>
 
 using namespace MViewBasic;
 using namespace MDataPost;
@@ -341,23 +341,25 @@ namespace MDataGeo
 	{
 		//判断该部件是否存在碰撞
 		//判断点选是否在部件的包围盒内
-		QVector3D worldVertex = _pos;
-		if (partData->getGeoPartAABB().ContainPoint(_pos));
-		switch (*_pickFilter)
+		QVector3D worldVertex = _p;
+		if (partData->getGeoPartAABB().ContainPoint(_p))
 		{
-		case PickFilter::PickNothing:; break;
-		case PickFilter::PickGeoPoint:SoloPickGeoPoint(partData); break;
-		case PickFilter::PickGeoLine:SoloPickGeoLine(partData); break;
-		case PickFilter::PickGeoFace:SoloPickGeoFace(partData); break;
-		case PickFilter::PickGeoSolid:SoloPickGeoSolid(partData); break;
-		case PickFilter::PickGeoPart:SoloPickGeoPart(partData); break;
-		case PickFilter::PickGeoPointByPart:SoloPickGeoPointByPart(partData); break;
-		case PickFilter::PickGeoLineByPart:SoloPickGeoLineByPart(partData); break;
-		case PickFilter::PickGeoFaceByPart:SoloPickGeoFaceByPart(partData); break;
-		case PickFilter::PickGeoSolidByPart:SoloPickGeoSolidByPart(partData); break;
-		case PickFilter::pickVertexOnGeoLine:SoloPickVertexOnGeoLine(partData); break;
-		case PickFilter::pickVertexOnGeoFace:SoloPickVertexOnGeoFace(partData); break;
-		default:break;
+			switch (*_pickFilter)
+			{
+			case PickFilter::PickNothing:; break;
+			case PickFilter::PickGeoPoint:SoloPickGeoPoint(partData); break;
+			case PickFilter::PickGeoLine:SoloPickGeoLine(partData); break;
+			case PickFilter::PickGeoFace:SoloPickGeoFace(partData); break;
+			case PickFilter::PickGeoSolid:SoloPickGeoSolid(partData); break;
+			case PickFilter::PickGeoPart:SoloPickGeoPart(partData); break;
+			case PickFilter::PickGeoPointByPart:SoloPickGeoPointByPart(partData); break;
+			case PickFilter::PickGeoLineByPart:SoloPickGeoLineByPart(partData); break;
+			case PickFilter::PickGeoFaceByPart:SoloPickGeoFaceByPart(partData); break;
+			case PickFilter::PickGeoSolidByPart:SoloPickGeoSolidByPart(partData); break;
+			case PickFilter::pickVertexOnGeoLine:SoloPickVertexOnGeoLine(partData); break;
+			case PickFilter::pickVertexOnGeoFace:SoloPickVertexOnGeoFace(partData); break;
+			default:break;
+			}
 		}
 	}
 
@@ -390,6 +392,29 @@ namespace MDataGeo
 			case PickFilter::PickGeoSolidByPart:MultiplyPickGeoSolidByPart(partData, isAllIn); break;
 			default:break;
 			}
+		}
+	}
+
+	void mPreGeoPickThread::SoloPickScreen()
+	{
+		if (qFuzzyCompare(_depth, 1.0f))//相等
+		{
+			//auto vertexs = _pickData->getPickVertexOnScreenDatas();
+			float d = 0.5;
+			//if (!vertexs.empty())
+			//{
+			//	WorldvertexToScreenvertex(vertexs.last(), d);			
+			//}
+			QVector3D v = ScreenvertexToWorldvertex(QVector3D(_pos, d));
+			_pickData->setSoloPickVertexOnScreenData(v);
+		}
+		else
+		{
+			//QVector3D v = ScreenvertexToWorldvertex(QVector3D(_pos, _depth));
+			//float d;
+			//QVector2D p = WorldvertexToScreenvertex(v, d);
+
+			_pickData->setSoloPickVertexOnScreenData(_p);
 		}
 	}
 
@@ -446,22 +471,25 @@ namespace MDataGeo
 		for (int lineID : lineIDs)
 		{
 			MDataGeo::mGeoLineData1* geoLineData = _geoModelData->getGeoLineDataByID(lineID);
-			for (int j = 0; j < geoLineData->getGeoLineVertex().size(); j +=2)
+			if (geoLineData->getGeoLineAABB().ContainPoint(_p))
 			{
-				QVector2D ap1 = WorldvertexToScreenvertex(geoLineData->getGeoLineVertex().at(j), depth1);
-				QVector2D ap2 = WorldvertexToScreenvertex(geoLineData->getGeoLineVertex().at(j + 1), depth2);
-				QVector<QVector2D> tempQVector2D = QVector<QVector2D>{ ap1, ap2 };
-				if (mPickToolClass::IsLineIntersectionWithQuad(tempQVector2D, soloQuad, MViewBasic::MeshBeam))
+				for (int j = 0; j < geoLineData->getGeoLineVertex().size(); j += 2)
 				{
-					//根据线段长度计算被点击的点的深度值
-					float d = mPickToolClass::CaculatePointInLineDepth(ap1, ap2, _pos, depth1, depth2);
-					if (d < depth)
+					QVector2D ap1 = WorldvertexToScreenvertex(geoLineData->getGeoLineVertex().at(j), depth1);
+					QVector2D ap2 = WorldvertexToScreenvertex(geoLineData->getGeoLineVertex().at(j + 1), depth2);
+					QVector<QVector2D> tempQVector2D = QVector<QVector2D>{ ap1, ap2 };
+					if (mPickToolClass::IsLineIntersectionWithQuad(tempQVector2D, soloQuad, MViewBasic::MeshBeam))
 					{
-						id = lineID;
-						depth = d;
-						//break;
-					}
+						//根据线段长度计算被点击的点的深度值
+						float d = mPickToolClass::CaculatePointInLineDepth(ap1, ap2, _pos, depth1, depth2);
+						if (d < depth)
+						{
+							id = lineID;
+							depth = d;
+							//break;
+						}
 
+					}
 				}
 			}
 
@@ -496,28 +524,31 @@ namespace MDataGeo
 		for (int faceID : faceIDs)
 		{
 			MDataGeo::mGeoFaceData1* geoFaceData = _geoModelData->getGeoFaceDataByID(faceID);
-			for (int j = 0; j < geoFaceData->getGeoFaceVertex().size(); j += 3)
+			if (geoFaceData->getGeoFaceAABB().ContainPoint(_p))
 			{
-				if (mPickToolClass::rayTriangleIntersect(_origin, _dir, geoFaceData->getGeoFaceVertex().mid(j, 3), uv, t))
+				for (int j = 0; j < geoFaceData->getGeoFaceVertex().size(); j += 3)
 				{
-					id = faceID;
-					depth = t;
+					if (mPickToolClass::rayTriangleIntersect(_origin, _dir, geoFaceData->getGeoFaceVertex().mid(j, 3), uv, t))
+					{
+						id = faceID;
+						depth = t;
+					}
+					//QVector2D ap1 = WorldvertexToScreenvertex(geoFaceData->getGeoFaceVertex().at(j), depth1);
+					//QVector2D ap2 = WorldvertexToScreenvertex(geoFaceData->getGeoFaceVertex().at(j + 1), depth2);
+					//QVector2D ap3 = WorldvertexToScreenvertex(geoFaceData->getGeoFaceVertex().at(j + 2), depth3);
+					//QVector<QVector2D> tempQVector2D = QVector<QVector2D>{ ap1, ap2, ap3 };
+					//if (mPickToolClass::IsQuadPointInMesh(_pos, tempQVector2D, MViewBasic::MeshTri))
+					//{
+					//	//根据三角形面积计算被点击的点的深度值
+					//	float d = mPickToolClass::CaculatePointInTriDepth(ap1, ap2, ap3, _pos, depth1, depth2, depth3);
+					//	if (d < depth)
+					//	{
+					//		id = faceID;
+					//		depth = d;
+					//		//break;
+					//	}
+					//}
 				}
-				//QVector2D ap1 = WorldvertexToScreenvertex(geoFaceData->getGeoFaceVertex().at(j), depth1);
-				//QVector2D ap2 = WorldvertexToScreenvertex(geoFaceData->getGeoFaceVertex().at(j + 1), depth2);
-				//QVector2D ap3 = WorldvertexToScreenvertex(geoFaceData->getGeoFaceVertex().at(j + 2), depth3);
-				//QVector<QVector2D> tempQVector2D = QVector<QVector2D>{ ap1, ap2, ap3 };
-				//if (mPickToolClass::IsQuadPointInMesh(_pos, tempQVector2D, MViewBasic::MeshTri))
-				//{
-				//	//根据三角形面积计算被点击的点的深度值
-				//	float d = mPickToolClass::CaculatePointInTriDepth(ap1, ap2, ap3, _pos, depth1, depth2, depth3);
-				//	if (d < depth)
-				//	{
-				//		id = faceID;
-				//		depth = d;
-				//		//break;
-				//	}
-				//}
 			}
 
 		}
@@ -552,33 +583,39 @@ namespace MDataGeo
 		for (int solidID : solidIDs)
 		{
 			MDataGeo::mGeoSolidData1* geoSolidData = _geoModelData->getGeoSolidDataByID(solidID);
-			set<int> faceIDs = geoSolidData->getGeoSolidFaceIDs();
-			for (int faceID : faceIDs)
+			if (geoSolidData->getGeoSolidAABB().ContainPoint(_p))
 			{
-				MDataGeo::mGeoFaceData1* geoFaceData = _geoModelData->getGeoFaceDataByID(faceID);
-				for (int k = 0; k < geoFaceData->getGeoFaceVertex().size(); k += 3)
+				set<int> faceIDs = geoSolidData->getGeoSolidFaceIDs();
+				for (int faceID : faceIDs)
 				{
-					//QVector2D ap1 = WorldvertexToScreenvertex(geoFaceData->getGeoFaceVertex().at(k), depth1);
-					//QVector2D ap2 = WorldvertexToScreenvertex(geoFaceData->getGeoFaceVertex().at(k + 1), depth2);
-					//QVector2D ap3 = WorldvertexToScreenvertex(geoFaceData->getGeoFaceVertex().at(k + 2), depth3);
-					//QVector<QVector2D> tempQVector2D = QVector<QVector2D>{ ap1, ap2, ap3 };
-					//if (mPickToolClass::IsQuadPointInMesh(_pos, tempQVector2D, MViewBasic::MeshTri))
+					MDataGeo::mGeoFaceData1* geoFaceData = _geoModelData->getGeoFaceDataByID(faceID);
+					if (geoFaceData->getGeoFaceAABB().ContainPoint(_p))
 					{
-						//根据三角形面积计算被点击的点的深度值
-						if (mPickToolClass::rayTriangleIntersect(_origin, _dir, geoFaceData->getGeoFaceVertex().mid(k, 3), uv, t))
+						for (int k = 0; k < geoFaceData->getGeoFaceVertex().size(); k += 3)
 						{
-							id = solidID;
-							//isInSolid = true;
-							depth = t;
-							//break;
+							//QVector2D ap1 = WorldvertexToScreenvertex(geoFaceData->getGeoFaceVertex().at(k), depth1);
+							//QVector2D ap2 = WorldvertexToScreenvertex(geoFaceData->getGeoFaceVertex().at(k + 1), depth2);
+							//QVector2D ap3 = WorldvertexToScreenvertex(geoFaceData->getGeoFaceVertex().at(k + 2), depth3);
+							//QVector<QVector2D> tempQVector2D = QVector<QVector2D>{ ap1, ap2, ap3 };
+							//if (mPickToolClass::IsQuadPointInMesh(_pos, tempQVector2D, MViewBasic::MeshTri))
+							{
+								//根据三角形面积计算被点击的点的深度值
+								if (mPickToolClass::rayTriangleIntersect(_origin, _dir, geoFaceData->getGeoFaceVertex().mid(k, 3), uv, t))
+								{
+									id = solidID;
+									//isInSolid = true;
+									depth = t;
+									//break;
+								}
+							}
 						}
 					}
+					//if (isInSolid)
+					//{
+					//	isInSolid = false;
+					//	break;
+					//}
 				}
-				//if (isInSolid)
-				//{
-				//	isInSolid = false;
-				//	break;
-				//}
 			}
 
 		}
@@ -644,7 +681,7 @@ namespace MDataGeo
 					float d = mPickToolClass::CaculatePointInLineDepth(ap1, ap2, _pos, depth1, depth2);
 					if (d < depth)
 					{
-						//vertex = ScreenvertexToWorldvertex(QVector2D(_pos.x(), _pos.y()), d);
+						vertex = ScreenvertexToWorldvertex(QVector3D(_pos.x(), _pos.y(), d));
 						id = lineID;
 						depth = d;
 					}
@@ -688,23 +725,9 @@ namespace MDataGeo
 				if (mPickToolClass::rayTriangleIntersect(_origin, _dir, geoFaceData->getGeoFaceVertex().mid(j, 3), uv, t))
 				{
 					id = faceID;
+					vertex = geoFaceData->getGeoFaceVertex().at(j) * (1 - uv[0] - uv[1]) + geoFaceData->getGeoFaceVertex().at(j + 1) * uv[0] + geoFaceData->getGeoFaceVertex().at(j + 2) * uv[1];
 					depth = t;
 				}
-				//QVector2D ap1 = WorldvertexToScreenvertex(geoFaceData->getGeoFaceVertex().at(j), depth1);
-				//QVector2D ap2 = WorldvertexToScreenvertex(geoFaceData->getGeoFaceVertex().at(j + 1), depth2);
-				//QVector2D ap3 = WorldvertexToScreenvertex(geoFaceData->getGeoFaceVertex().at(j + 2), depth3);
-				//QVector<QVector2D> tempQVector2D = QVector<QVector2D>{ ap1, ap2, ap3 };
-				//if (mPickToolClass::IsQuadPointInMesh(_pos, tempQVector2D, MViewBasic::MeshTri))
-				//{
-				//	//根据三角形面积计算被点击的点的深度值
-				//	float d = mPickToolClass::CaculatePointInTriDepth(ap1, ap2, ap3, _pos, depth1, depth2, depth3);
-				//	if (d < depth)
-				//	{
-				//		//vertex = ScreenvertexToWorldvertex(QVector2D(_pos.x(), _pos.y()), d);
-				//		id = faceID;
-				//		depth = d;
-				//	}
-				//}
 			}
 		}
 		if (id == 0)
@@ -1182,24 +1205,30 @@ namespace MDataGeo
 		QVector<QFuture<void>> futures;
 		if (_pickMode == PickMode::SoloPick)
 		{
-			
-			auto iter = _geoModelData->getPartIterator();
-			while (iter.hasNext())
+			if (*_pickFilter == PickFilter::pickVertexOnScreen)
 			{
-				iter.next();
-				if (!iter.value()->getPartVisual())
-				{
-					return;
-				}
-				futures.append(QtConcurrent::run(this, &mPreGeoPickThread::doSoloPick, iter.value()));
+				this->SoloPickScreen();
 			}
-			while (!futures.empty())
+			else
 			{
-				futures.back().waitForFinished();
-				futures.takeLast();
+				auto iter = _geoModelData->getPartIterator();
+				while (iter.hasNext())
+				{
+					iter.next();
+					if (!iter.value()->getPartVisual())
+					{
+						return;
+					}
+					futures.append(QtConcurrent::run(this, &mPreGeoPickThread::doSoloPick, iter.value()));
+				}
+				while (!futures.empty())
+				{
+					futures.back().waitForFinished();
+					futures.takeLast();
+				}
+				_pickData->setSoloPickData();
 			}
 
-			_pickData->setSoloPickData();
 		}
 		else
 		{
@@ -1242,7 +1271,7 @@ namespace MDataGeo
 	QVector2D mPreGeoPickThread::WorldvertexToScreenvertex(QVector3D Worldvertex, float& depth)
 	{
 		QVector4D res = _pvm * QVector4D(Worldvertex, 1.0);
-		depth = res.z();
+		depth = res.z() + 0.5;
 		return QVector2D(((res.x() / res.w()) / 2.0 + 0.5)*_Win_WIDTH, _Win_HEIGHT - (res.y() / res.w() / 2.0 + 0.5)*_Win_HEIGHT);
 	}
 

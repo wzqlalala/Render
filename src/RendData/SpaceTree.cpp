@@ -41,6 +41,11 @@ namespace Space
 			aabb.maxEdge[0] += longestEdge * 1e-2;
 			aabb.minEdge[0] -= longestEdge * 1e-2;
 		}
+		else if (longestEdge == 0 && Edge == 0)
+		{
+			aabb.maxEdge[0] += 1;
+			aabb.minEdge[0] -= 1;
+		}
 		else
 		{
 			aabb.maxEdge[0] += Edge * 1e-2;
@@ -52,6 +57,11 @@ namespace Space
 			aabb.maxEdge[1] += longestEdge * 1e-2;
 			aabb.minEdge[1] -= longestEdge * 1e-2;
 		}
+		else if (longestEdge == 0 && Edge == 0)
+		{
+			aabb.maxEdge[1] += 1;
+			aabb.minEdge[1] -= 1;
+		}
 		else
 		{
 			aabb.maxEdge[1] += Edge * 1e-2;
@@ -62,6 +72,11 @@ namespace Space
 		{
 			aabb.maxEdge[2] += longestEdge * 1e-2;
 			aabb.minEdge[2] -= longestEdge * 1e-2;
+		}
+		else if (longestEdge == 0 && Edge == 0)
+		{
+			aabb.maxEdge[2] += 1;
+			aabb.minEdge[2] -= 1;
 		}
 		else
 		{
