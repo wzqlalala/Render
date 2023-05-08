@@ -206,8 +206,9 @@ namespace MPreRend
 			_geoHighLightRender->updateHighLightRender();
 			//this->
 			set<int> ids = _geoPickData->getPickPointIDs();
-			qDebug() << "拾取完成";
+			//qDebug() << "拾取完成";
 			QObject::disconnect(&w, 0, 0, 0);//断开信号
+			emit finishedPickSig();
 			emit update();
 		});
 		w.setFuture(future);

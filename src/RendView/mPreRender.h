@@ -67,8 +67,10 @@ namespace MPreRend
 
 		bool getModelAABB(Space::AABB &aabb);
 
+		//获取几何模型渲染数据
 		mGeoModelData1 *getGeoModelData() { return _geoModelData; }; 
 
+		//获取集合模型拾取数据
 		mGeoPickData1 *getGeoPickData() { return _geoPickData; };
 
 		//更新高亮渲染
@@ -96,6 +98,10 @@ namespace MPreRend
 		~mPreRender();
 
 		void updateUniform(shared_ptr<mViewBase> modelView, shared_ptr<mViewBase> commonView) override;
+
+	signals:
+		//拾取完成信号
+		void finishedPickSig();
 
 	protected:
 
