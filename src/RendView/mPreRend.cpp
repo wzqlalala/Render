@@ -66,6 +66,7 @@ namespace MPreRend
 
 	void mPreRend::paintGL()
 	{
+		makeCurrent();
 		mBaseRend3D::paintGL();
 		//GLenum error = QOpenGLContext::currentContext()->functions()->glGetError();
 		//if (error != 0)
@@ -76,6 +77,7 @@ namespace MPreRend
 
 	void mPreRend::resizeGL(int w, int h)
 	{
+		makeCurrent();
 		mBaseRend3D::resizeGL(w, h);
 		////////Í¼±ê²âÊÔ////////////
 		_lableRend_pre->getScreenSize(w, h);

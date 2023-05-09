@@ -7,6 +7,12 @@
 
 #include "mPostRendStatus.h"
 
+#include <QApplication>
+#include <QPixmap>
+#include <QScreen>
+#include <QRect>
+#include <QDesktopWidget>
+
 namespace MPreRend
 {
 	class mPreRend;
@@ -49,6 +55,37 @@ protected:
 
 	bool readTxtFile();
 
+protected:
+
+
+private:
+
+	// 禁用所有子窗口的事件响应
+	void disableChildWidgets(QWidget *widget)
+	{
+		const QObjectList &children = widget->children();
+		for (QObject *child : children) {
+			QWidget *childWidget = qobject_cast<QWidget *>(child);
+			if (childWidget) {
+				childWidget->setEnabled(false);
+				disableChildWidgets(childWidget);
+			}
+		}
+	}
+
+	// 启用所有子窗口的事件响应
+	void enableChildWidgets(QWidget *widget)
+	{
+		const QObjectList &children = widget->children();
+		for (QObject *child : children) {
+			QWidget *childWidget = qobject_cast<QWidget *>(child);
+			if (childWidget) {
+				childWidget->setEnabled(true);
+				enableChildWidgets(childWidget);
+			}
+		}
+	}
+
 private:
     Ui::MxRendTestClass ui;
 
@@ -63,6 +100,8 @@ private:
 	std::shared_ptr<MBaseRend::mModelTestRender> _modelRender;
 
 	shared_ptr<MBaseRend::mTestRender> _testRender;
+
+	bool isStartScreen{false};//是否录屏
 
 	//测试
 	PostMode _postMode{ OneFrame};

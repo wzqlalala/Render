@@ -1,4 +1,5 @@
 #include "MxRendTest.h"
+#include "ScreenWidget.h"
 #include <QtWidgets/QApplication>
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
@@ -60,5 +61,6 @@ int main(int argc, char *argv[])
 
 	//MxRendTest w2(2);
 	//w2.show();
+	//ScreenWidget::Instance()->showFullScreen();
     return a.exec();
 }

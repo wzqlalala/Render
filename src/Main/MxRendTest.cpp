@@ -1,4 +1,5 @@
 #include "MxRendTest.h"
+#include "ScreenWidget.h"
 #include "mPreRend.h"
 #include "mPreRender.h"
 #include "mPostRend.h"
@@ -45,6 +46,10 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QCollator>
+#include <QApplication>
+#include <QPixmap>
+#include <QScreen>
+#include <QRect>
 
 #include "mIMxdbFile1.h"
 
@@ -57,6 +62,7 @@ MxRendTest::MxRendTest(int id)
 	_preRend = nullptr;
 	_postRend = nullptr;
 	_testRender = nullptr;
+	ScreenWidget::Instance();
 	this->showMaximized();
 	if (id % 3 == 0)
 	{
@@ -71,6 +77,10 @@ MxRendTest::MxRendTest(int id)
 		ui.gridLayout->addWidget(new mBaseRend2D);
 	}
 	
+	// 创建中心部件并设置事件过滤器
+	//QWidget* centralWidget = ui.centralWidget;
+	//this->installEventFilter(this);
+	//setCentralWidget(centralWidget);
 }
 
 void MxRendTest::keyPressEvent(QKeyEvent * event)
@@ -773,6 +783,25 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			_preRender->setEdgeLineWidth(_lineWidth);
 			break;
 		}
+		case Qt::Key_Space:
+		{
+			ScreenWidget::Instance()->startScreen();//截屏
+			break;
+		}
+		case Qt::Key_Enter:
+		{
+			if (!isStartScreen)
+			{
+				ScreenRecordWidget::Instance()->startScreen();//录屏
+				isStartScreen = true;
+			}
+			else
+			{
+				ScreenRecordWidget::Instance()->stopScreen();
+				isStartScreen = false;
+			}
+			break;
+		}
 		}
 
 	}
@@ -1044,3 +1073,4 @@ bool MxRendTest::readTxtFile()
 
 	return true;
 }
+
