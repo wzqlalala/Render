@@ -3,7 +3,6 @@
 //解决中文乱码
 #pragma execution_character_set("utf-8")
 #include "mBaseRender.h"
-#include "app.h"
 #include <QObject>
 #include <QTimer>
 #include <QThread>
