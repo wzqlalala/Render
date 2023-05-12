@@ -7,7 +7,24 @@
 #include <QPoint>
 #include <QSize>
 #include <QThread>
+#include <QPaintEvent>
+#include <QPainter>
+#include <QTime>
+#include <QTimer>
+#include <QPushButton>
 
+
+enum ScreenType
+{
+	QuadScreen,
+
+	FullScreen,
+
+	OneScreen,
+
+	SoftScreen,
+
+};
 //截屏对象类
 class Screen
 {
@@ -41,31 +58,61 @@ private:
 	void cmpPoint(QPoint &s, QPoint &e);//比较两位置，判断左上角、右下角
 };
 
+class ScreenWidgetBase :public QWidget
+{
+	Q_OBJECT
+public:
+	explicit ScreenWidgetBase(QWidget *parent = 0);
+
+	virtual void startScreen(ScreenType screenType, QRect rect = QRect());
+
+protected:
+	Screen *screen;         //截屏对象
+	QPixmap *fullScreen;    //保存全屏图像
+	QPixmap *bgScreen;      //模糊背景图
+	QPoint movPos;          //坐标
+
+	ScreenType _screenType;//截屏类型
+
+protected:
+	void mousePressEvent(QMouseEvent *);
+	void mouseMoveEvent(QMouseEvent *);
+	void mouseReleaseEvent(QMouseEvent *);
+	void paintEvent(QPaintEvent *);
+	void showEvent(QShowEvent *);
+
+};
+
 //截屏窗口类
-class ScreenWidget : public QWidget
+class ScreenWidget : public ScreenWidgetBase
 {
 	Q_OBJECT
 public:
 	static ScreenWidget *Instance();
 	explicit ScreenWidget(QWidget *parent = 0);
 
-	void startScreen();
+	void startScreen(ScreenType screenType, QRect rect = QRect()) override;
 
-private:
+protected:
 	static QScopedPointer<ScreenWidget> self;
 	QMenu *menu;            //右键菜单对象
-	Screen *screen;         //截屏对象
-	QPixmap *fullScreen;    //保存全屏图像
-	QPixmap *bgScreen;      //模糊背景图
-	QPoint movPos;          //坐标
+	QPushButton *saveButton;//保存
+	QPushButton *saveAsButton;//另存为
+	QPushButton *cancelButton;//取消
 
 protected:
 	void contextMenuEvent(QContextMenuEvent *);
-	void mousePressEvent(QMouseEvent *);
-	void mouseMoveEvent(QMouseEvent *);
-	void mouseReleaseEvent(QMouseEvent *);
-	void paintEvent(QPaintEvent *);
-	void showEvent(QShowEvent *);
+
+	void paintEvent(QPaintEvent *event) override;
+
+public slots:
+
+	void slot_saveButton();
+
+	void slot_saveAsButton();
+
+	void slot_cancelButton();
+
 
 private slots:
 	void saveScreen();
@@ -73,15 +120,23 @@ private slots:
 	void saveScreenOther();
 	void saveFullOther();
 };
+//录屏类
 class Record :public QObject
 {
 	Q_OBJECT
 public:
 	Record(Screen *screen) { _screen = screen; };
 
-	void slot_startScreen();
+public slots:
+	void slot_start();
 
-	void slot_stopScreen();
+	void slot_stop();
+
+	void slot_pause();
+
+	void slot_resume();
+
+	void slot_cancel();
 
 private slots:
 	//录屏
@@ -90,6 +145,7 @@ private slots:
 
 
 private:
+	QString _fileName;
 	Screen *_screen;
 	//录屏计时器
 	QTimer *_timer;
@@ -97,17 +153,68 @@ private:
 	int _gifDelay = 10;
 };
 //录屏窗口类
-class ScreenRecordWidget : public QWidget
+class RecordWidget : public QWidget
+{
+	Q_OBJECT
+public:
+	RecordWidget(Screen *screen);
+
+	~RecordWidget();
+public slots:
+	void start();
+
+	void puaseOrReusme();//暂停或继续
+
+	void stop();
+
+	void cancel();
+
+	void updateTime();
+
+signals:
+	void startsig();
+	void stopsig();
+	void puasesig();
+	void resumesig();
+	void cancelsig();
+
+protected:
+	void paintEvent(QPaintEvent *event) override;
+
+	QTime time;//时间
+	QTimer *t;
+	QPushButton *stopButton;//结束
+	QPushButton *pauseButton;//暂停（开始）
+	QPushButton *cancelButton;//取消
+	Record *record; 
+	QThread thread;
+	float _lastTime;
+	float _elaspedTime;
+	int x, y, w, h;
+};
+//录屏获取矩形框窗口类
+class ScreenRecordWidget : public ScreenWidgetBase
 {
 	Q_OBJECT
 public:
 	static ScreenRecordWidget *Instance();
 	explicit ScreenRecordWidget(QWidget *parent = 0);
 
+	void startScreen(ScreenType screenType, QRect rect = QRect()) override;
+
 	~ScreenRecordWidget();
 
-	void startScreen();
-	void stopScreen();
+protected:
+
+	void paintEvent(QPaintEvent *e);
+
+public slots:
+	//开始录屏
+	void slot_startScreen();
+	//结束录屏
+	void slot_stopScreen();
+	//取消录屏
+	void slot_cancelScreen();
 
 signals:
 
@@ -117,27 +224,11 @@ signals:
 
 private:
 	static QScopedPointer<ScreenRecordWidget> self;
-	//QMenu *menu;            //右键菜单对象
-	Screen *screen;         //截屏对象
-	QPixmap *fullScreen;    //保存全屏图像
-	QPixmap *bgScreen;      //模糊背景图
-	QPoint movPos;          //坐标
-	Record *record; QThread thread;
+	RecordWidget *widget;
+	QPushButton *startbutton;
 	bool isStart = false;
 
 protected:
 	void keyPressEvent(QKeyEvent *event) override;
-	void contextMenuEvent(QContextMenuEvent *);
-	void mousePressEvent(QMouseEvent *);
-	void mouseMoveEvent(QMouseEvent *);
-	void mouseReleaseEvent(QMouseEvent *);
-	void paintEvent(QPaintEvent *);
-	void showEvent(QShowEvent *);
-
-private slots:
-	void saveScreen();
-	void saveFullScreen();
-	void saveScreenOther();
-	void saveFullOther();
 };
 #endif // SCREENWIDGET_H

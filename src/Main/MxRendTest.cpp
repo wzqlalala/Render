@@ -785,19 +785,27 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 		}
 		case Qt::Key_Space:
 		{
-			ScreenWidget::Instance()->startScreen();//½ØÆÁ
+			ScreenWidget::Instance()->startScreen(QuadScreen);//½ØÆÁ
+			//ScreenWidget::Instance()->startScreen(OneScreen);//½ØÆÁ
+			//ScreenWidget::Instance()->startScreen(FullScreen);//½ØÆÁ
+			//ScreenWidget::Instance()->startScreen(SoftScreen, geometry());
+			//ScreenWidget::Instance()->startScreen(SoftScreen, QRect(100,100,1000,1000));
 			break;
 		}
 		case Qt::Key_Enter:
 		{
 			if (!isStartScreen)
 			{
-				ScreenRecordWidget::Instance()->startScreen();//Â¼ÆÁ
+				ScreenRecordWidget::Instance()->startScreen(QuadScreen);//Â¼ÆÁ
+				//ScreenRecordWidget::Instance()->startScreen(OneScreen);//Â¼ÆÁ
+				//ScreenRecordWidget::Instance()->startScreen(FullScreen);//Â¼ÆÁ
+				//ScreenRecordWidget::Instance()->startScreen(SoftScreen, geometry());
+				//ScreenRecordWidget::Instance()->startScreen(SoftScreen, QRect(100, 100, 1000, 1000));
 				isStartScreen = true;
 			}
 			else
 			{
-				ScreenRecordWidget::Instance()->stopScreen();
+				ScreenRecordWidget::Instance()->slot_stopScreen();//Í£Ö¹Â¼ÆÁ
 				isStartScreen = false;
 			}
 			break;
