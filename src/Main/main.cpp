@@ -55,12 +55,9 @@ int main(int argc, char *argv[])
 	//}
 	//context2->setFormat(format);
 	MxRendTest w0(0);
-	w0.show();
 	//MxRendTest w1(1);
-	//w1.show();
 
 	//MxRendTest w2(2);
-	//w2.show();
 	//ScreenWidget::Instance()->showFullScreen();
     return a.exec();
 }

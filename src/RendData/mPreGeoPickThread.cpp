@@ -458,6 +458,7 @@ namespace MDataGeo
 		int id = 0;
 		float depth = 1.0;
 		float depth1 = 1.0f, depth2 = 1.0f;
+		float uv[2];
 		////MDataGeo::mGeoPartData1 *partData = _geoModelData->getGeoPartDataByPartName(_partName);
 		if (partData == nullptr)
 		{
@@ -481,7 +482,7 @@ namespace MDataGeo
 					if (mPickToolClass::IsLineIntersectionWithQuad(tempQVector2D, soloQuad, MViewBasic::MeshBeam))
 					{
 						//根据线段长度计算被点击的点的深度值
-						float d = mPickToolClass::CaculatePointInLineDepth(ap1, ap2, _pos, depth1, depth2);
+						float d = mPickToolClass::CaculatePointInLineDepth(ap1, ap2, _pos, depth1, depth2, uv);
 						if (d < depth)
 						{
 							id = lineID;
@@ -657,6 +658,7 @@ namespace MDataGeo
 		QVector3D vertex;
 		float depth = 1.0;
 		float depth1 = 1.0f, depth2 = 1.0f;
+		float uv[2];
 		//MDataGeo::mGeoPartData1 *partData = _geoModelData->getGeoPartDataByPartName(_partName);
 		if (partData == nullptr)
 		{
@@ -678,10 +680,10 @@ namespace MDataGeo
 				if (mPickToolClass::IsLineIntersectionWithQuad(tempQVector2D, soloQuad, MViewBasic::MeshBeam))
 				{
 					//根据线段长度计算被点击的点的深度值
-					float d = mPickToolClass::CaculatePointInLineDepth(ap1, ap2, _pos, depth1, depth2);
+					float d = mPickToolClass::CaculatePointInLineDepth(ap1, ap2, _pos, depth1, depth2, uv);
 					if (d < depth)
 					{
-						vertex = ScreenvertexToWorldvertex(QVector3D(_pos.x(), _pos.y(), d));
+						vertex = geoLineData->getGeoLineVertex().at(j) * uv[0] + geoLineData->getGeoLineVertex().at(j + 1) * uv[1];
 						id = lineID;
 						depth = d;
 					}
@@ -1211,6 +1213,10 @@ namespace MDataGeo
 			}
 			else
 			{
+				if (_depth == 1.0)
+				{
+					return;
+				}
 				auto iter = _geoModelData->getPartIterator();
 				while (iter.hasNext())
 				{

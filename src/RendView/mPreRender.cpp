@@ -246,10 +246,6 @@ namespace MPreRend
 			if (*_baseRend->getCurrentPickMode() == PickMode::SoloPick)
 			{			
 				float depth = this->getDepth(poses.first());
-				if (depth == 1.0)
-				{
-					return;
-				}
 				_geoPickThread->setLocation(poses.first(), depth);
 			}
 			else

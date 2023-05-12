@@ -544,13 +544,23 @@ namespace MViewBasic
 		return depth;
 	}
 
-	float mPickToolClass::CaculatePointInLineDepth(QVector2D ap1, QVector2D ap2, QVector2D pos, float depth1, float depth2)
+	//float mPickToolClass::CaculatePointInLineDepth(QVector2D ap1, QVector2D ap2, QVector2D pos, float depth1, float depth2)
+	//{
+	//	float distance1 = ap1.distanceToPoint(QVector2D(pos));
+	//	float distance2 = ap2.distanceToPoint(QVector2D(pos));
+	//	float distance = distance1 + distance2;
+	//	float depth = (depth1 * distance2 + depth2 * distance1) / distance;
+	//	return depth;
+	//}
+
+	float mPickToolClass::CaculatePointInLineDepth(QVector2D ap1, QVector2D ap2, QVector2D pos, float depth1, float depth2, float uv[2])
 	{
-		float distance = ap1.distanceToPoint(ap2);
 		float distance1 = ap1.distanceToPoint(QVector2D(pos));
 		float distance2 = ap2.distanceToPoint(QVector2D(pos));
-		float depth = (depth1 * distance2 + depth2 * distance1) / distance;
-		return depth;
+		float distance = distance1 + distance2;
+		uv[0] = distance2 / distance;
+		uv[1] = distance1 / distance;
+		return depth1 * uv[0] + depth2 * uv[1];
 	}
 
 	bool mPickToolClass::rayTriangleIntersect(const QVector3D & orig, const QVector3D & dir, const QVector<QVector3D>& tri, float uv[2], float & tnear)
