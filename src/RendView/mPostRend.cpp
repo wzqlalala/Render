@@ -13,6 +13,10 @@ namespace MPostRend
 	{
 		*_pickFilter = PickFilter::PickNode;
 		qDebug() << "Post Struct";
+
+		//让其自动进入OpenGL初始化
+		this->setGeometry(-1, -1, 1, 1);
+		this->show();
 	}
 
 	void mPostRend::initializeGL()

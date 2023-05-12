@@ -12,6 +12,8 @@
 #include <QScreen>
 #include <QRect>
 #include <QDesktopWidget>
+#include <QMdiSubWindow>
+#include <QMdiArea>
 
 namespace MPreRend
 {
@@ -91,9 +93,13 @@ private:
 
 	int _id = 0;//奇数为后处理，偶数为前处理
 
+	QMdiArea *_mdiArea;
+
+	QMdiSubWindow *_presubwindow;
 	MPreRend::mPreRend *_preRend;
 	shared_ptr<MPreRend::mPreRender> _preRender;
 
+	QMdiSubWindow *_postsubwindow;
 	MPostRend::mPostRend *_postRend;
 	shared_ptr<MPostRend::mPostRender> _postRender;
 

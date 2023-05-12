@@ -64,13 +64,19 @@ MxRendTest::MxRendTest(int id)
 	_testRender = nullptr;
 	ScreenWidget::Instance();
 	this->showMaximized();
+	_mdiArea = new QMdiArea(this);
+	this->setCentralWidget(_mdiArea);
 	if (id % 3 == 0)
 	{
-		_preRend = new MPreRend::mPreRend(QString::number(id)); ui.gridLayout->addWidget(_preRend);
+		_preRend = new MPreRend::mPreRend(QString::number(id)); /*ui.gridLayout->addWidget(_preRend);*/
+		_presubwindow = _mdiArea->addSubWindow(_preRend);
+		_presubwindow->showMaximized();
 	}
-	else if(id % 3 == 1)
+	else if (id % 3 == 1)
 	{
-		_postRend = new MPostRend::mPostRend(QString::number(id)); ui.gridLayout->addWidget(_postRend);
+		_postRend = new MPostRend::mPostRend(QString::number(id)); /*ui.gridLayout->addWidget(_postRend);*/
+		_postsubwindow = _mdiArea->addSubWindow(_postRend);
+		_postsubwindow->showMaximized();
 	}
 	else
 	{

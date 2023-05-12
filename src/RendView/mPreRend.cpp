@@ -26,6 +26,10 @@ namespace MPreRend
 	{
 		*_pickFilter = PickFilter::PickGeoPoint;
 		qDebug() << "Pre Struct";
+
+		//让其自动进入OpenGL初始化
+		this->setGeometry(-1, -1, 1, 1);
+		this->show();
 	}
 
 	void mPreRend::initializeGL()
