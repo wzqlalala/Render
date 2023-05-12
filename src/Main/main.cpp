@@ -33,12 +33,12 @@ int main(int argc, char *argv[])
 	qDebug() << (const char *)ctx.functions()->glGetString(GL_VERSION);
 	qDebug() << (const char *)ctx.functions()->glGetString(GL_EXTENSIONS);
 	*/
-	//QSurfaceFormat format;
-	//format.setMajorVersion(4);
-	//format.setMinorVersion(5);
-	//format.setProfile(QSurfaceFormat::OpenGLContextProfile::CompatibilityProfile);
-	//format.setSamples(4);
-	//QSurfaceFormat::setDefaultFormat(format);
+	QSurfaceFormat format;
+	format.setMajorVersion(4);
+	format.setMinorVersion(5);
+	format.setProfile(QSurfaceFormat::OpenGLContextProfile::CompatibilityProfile);
+	format.setSamples(4);
+	QSurfaceFormat::setDefaultFormat(format);
 	
 	//setFormat(format);
 

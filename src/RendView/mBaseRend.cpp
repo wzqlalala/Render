@@ -28,13 +28,6 @@ namespace MBaseRend
 {
 	mBaseRend::mBaseRend(const QString& name, MxFunctions::ViewportType type): _name(name),_viewportType(type)
 	{
-		QSurfaceFormat format;
-		format.setMajorVersion(4);
-		format.setMinorVersion(5);
-		format.setProfile(QSurfaceFormat::OpenGLContextProfile::CompatibilityProfile);
-		format.setSamples(4);
-		QSurfaceFormat::setDefaultFormat(format);
-
 		setMouseTracking(true);
 
 		_viewOperateMode = new ViewOperateMode; *_viewOperateMode = ViewOperateMode::NoViewOperate;
