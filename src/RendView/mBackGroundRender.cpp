@@ -29,7 +29,7 @@ namespace MBaseRend
 		{
 			v /= id;
 		}
-		id++;
+		//id++;
 		_backgroundShader = mShaderManage::GetInstance()->GetShader("BackGround");
 		_drawable = MakeAsset<Drawable>();
 		_drawable->setVertexAttribArray(0, MakeAsset<Vec2Array>(_backGroundVertex));
