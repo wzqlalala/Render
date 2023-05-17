@@ -26,7 +26,7 @@ namespace MBaseRend
 		SetVertices();
 
 		_fixedArrowFontState = MakeAsset<StateSet>();
-		asset_ref<Shader> shader = mShaderManage::GetInstance()->GetShader("Arrow_GlobalAxis");
+		mxr::Shader * shader = mShaderManage::GetInstance()->GetShader("Arrow_GlobalAxis");
 		_fixedArrowFontState->setShader(shader);
 		_fixedArrowFontState->setAttributeAndModes(MakeAsset<Depth>(), 0);
 		_fixedArrowFontState->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::LINE), 1);

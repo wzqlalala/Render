@@ -59,7 +59,7 @@ namespace mxr
 		return _uniformvalues[name].get();
 	}
 
-	void StateSet::setTexture(std::string _name, asset_ref<Texture> texture)
+	void StateSet::setTexture(std::string _name, Texture *texture)
 	{
 		_textures[_name] = texture;
 	}

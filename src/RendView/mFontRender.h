@@ -38,7 +38,7 @@ namespace MBaseRend
 	};
 
 	//大纹理
-	extern std::shared_ptr<mxr::Texture> textTexture;
+	extern mxr::Texture *textTexture;
 
 	//字形数据库
 	extern QHash<GLchar, Character> Characters;

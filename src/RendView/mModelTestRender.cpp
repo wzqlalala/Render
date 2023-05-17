@@ -25,7 +25,7 @@ namespace MBaseRend
 		_drawable->setStateSet(_stateSet);
 		_parent->addChild(_drawable);
 
-		shared_ptr<Shader> shaderTest = mShaderManage::GetInstance()->GetShader("ModelTestRend");
+		mxr::Shader * shaderTest = mShaderManage::GetInstance()->GetShader("ModelTestRend");
 		_stateSet->setShader(shaderTest);//设置着色器
 		_stateSet->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::FILL), 1);//填充模式
 		_stateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);//深度开启
@@ -145,7 +145,7 @@ namespace MBaseRend
 				}
 				else//法线贴图
 				{
-					shared_ptr<Shader> shaderTest = mShaderManage::GetInstance()->GetShader("ModelTestRendMat");
+					mxr::Shader * shaderTest = mShaderManage::GetInstance()->GetShader("ModelTestRendMat");
 
 					_diffuseMap = mTextureManage::GetInstance()->GetTexture(diffuseinfo.completeBaseName(), 3);
 					_normalMap = mTextureManage::GetInstance()->GetTexture(normalinfo.completeBaseName(), 3);
@@ -212,7 +212,7 @@ namespace MBaseRend
 		}
 		else
 		{
-			shared_ptr<Shader> shaderTest = mShaderManage::GetInstance()->GetShader("ModelTestRendMat");
+			mxr::Shader * shaderTest = mShaderManage::GetInstance()->GetShader("ModelTestRendMat");
 			_stateSet->setShader(shaderTest);//设置着色器
 
 			QVector<QVector3D> vertexs;

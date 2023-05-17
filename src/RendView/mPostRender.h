@@ -192,7 +192,7 @@ namespace MPostRend
 
 		shared_ptr<mPostOneFrameRender> _oneFrameAnimationRender;//单帧动画
 
-		shared_ptr<mxr::Texture> _texture;
+		mxr::Texture * _texture;
 
 		/*********************************模型*****************************************************/
 		std::shared_ptr<mxr::StateSet> _faceStateSet;//渲染面的状态

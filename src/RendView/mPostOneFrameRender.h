@@ -81,7 +81,7 @@ namespace MPostRend
 		void setLineStateSet(std::shared_ptr<mxr::StateSet> lineStateSet);
 		void setPointStateSet(std::shared_ptr<mxr::StateSet> pointStateSet);
 
-		void setTexture(std::shared_ptr<mxr::Texture> texture);
+		void setTexture(mxr::Texture * texture);
 
 		//设置变形倍数	
 		void setDeformationScale(QVector3D deformationScale);
@@ -140,7 +140,7 @@ namespace MPostRend
 
 		std::shared_ptr<MBaseRend::mArrowRender> _arrowRender;//箭头渲染
 
-		std::shared_ptr<mxr::Texture> _texture;//颜色表纹理
+		mxr::Texture * _texture;//颜色表纹理
 
 		/*********************************模型*****************************************************/
 		std::shared_ptr<mxr::StateSet> _faceStateSet;//渲染面的状态

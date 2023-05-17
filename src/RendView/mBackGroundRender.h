@@ -56,7 +56,7 @@ namespace MBaseRend
 		 */
 		void getPureColor(QVector3D &color);
 	private:	
-		std::shared_ptr<mxr::Shader> _backgroundShader;
+		mxr::Shader * _backgroundShader;
 		std::shared_ptr<mxr::Drawable> _drawable;
 		//背景矩形的顶点坐标
 		QVector<QVector2D> _backGroundVertex;

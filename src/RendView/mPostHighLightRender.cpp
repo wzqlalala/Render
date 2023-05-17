@@ -479,7 +479,7 @@ namespace MPostRend
 		}
 
 		_facelineStateSet = MakeAsset<StateSet>();
-		shared_ptr<Shader> facelineshader = mShaderManage::GetInstance()->GetShader("PostHighLightFaceLine");
+		mxr::Shader * facelineshader = mShaderManage::GetInstance()->GetShader("PostHighLightFaceLine");
 		_facelineStateSet->setShader(facelineshader);
 		_facelineStateSet->setDrawMode(GL_TRIANGLES);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 0);
@@ -492,7 +492,7 @@ namespace MPostRend
 
 		//edgeline
 		_lineStateSet = MakeAsset<StateSet>();
-		shared_ptr<Shader> meshlineshader = mShaderManage::GetInstance()->GetShader("PostHighLightLine");
+		mxr::Shader * meshlineshader = mShaderManage::GetInstance()->GetShader("PostHighLightLine");
 		_lineStateSet->setShader(meshlineshader);
 		_lineStateSet->setDrawMode(GL_LINES);
 		_lineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 0);
@@ -503,7 +503,7 @@ namespace MPostRend
 		_lineStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
 
 		_pointStateSet = MakeAsset<StateSet>();
-		shared_ptr<Shader> pointshader = mShaderManage::GetInstance()->GetShader("PostHighLightPoint");
+		mxr::Shader * pointshader = mShaderManage::GetInstance()->GetShader("PostHighLightPoint");
 		_pointStateSet->setShader(pointshader);
 		_pointStateSet->setDrawMode(GL_POINTS);
 		_pointStateSet->setAttributeAndModes(MakeAsset<Depth>(), 0);

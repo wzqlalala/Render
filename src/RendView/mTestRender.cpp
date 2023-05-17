@@ -21,8 +21,8 @@ namespace MBaseRend
 
 		_stateSet = MakeAsset<mxr::StateSet>();
 
-		shared_ptr<Shader> shaderTest = mShaderManage::GetInstance()->GetShader("testRend");
-		//shared_ptr<Shader> shaderTest = MakeAsset<Shader>(qApp->applicationDirPath().toStdString() + "/../GLSL/testRend.glsl");
+		mxr::Shader * shaderTest = mShaderManage::GetInstance()->GetShader("testRend");
+		//mxr::Shader * shaderTest = MakeAsset<Shader>(qApp->applicationDirPath().toStdString() + "/../GLSL/testRend.glsl");
 
 		_stateSet->setShader(shaderTest);//设置着色器
 		_stateSet->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::FILL), 1);//填充模式
@@ -49,8 +49,8 @@ namespace MBaseRend
 		/**纹理**/
 		_diffuseMap = mTextureManage::GetInstance()->GetTexture("brickwall.jpg", 3);
 		_normalMap = mTextureManage::GetInstance()->GetTexture("brickwall_normal.jpg", 3);
-		//_diffuseMap = MakeAsset<Texture>(qApp->applicationDirPath().toStdString() + "/../Texture/brickwall.jpg", 3);
-		//_normalMap = MakeAsset<Texture>(qApp->applicationDirPath().toStdString() + "/../Texture/brickwall_normal.jpg", 3);
+		//_diffuseMap =new Texture(qApp->applicationDirPath().toStdString() + "/../Texture/brickwall.jpg", 3);
+		//_normalMap =new Texture(qApp->applicationDirPath().toStdString() + "/../Texture/brickwall_normal.jpg", 3);
 		_stateSet->setTexture("diffuseMap", _diffuseMap);
 		_stateSet->setTexture("normalMap", _normalMap);
 

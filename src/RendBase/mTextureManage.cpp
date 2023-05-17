@@ -10,7 +10,7 @@ namespace mxr
 		return &manage;
 	}
 
-	std::shared_ptr<mxr::Texture> mTextureManage::GetTexture(QString pathname, GLuint levels)
+	mxr::Texture *mTextureManage::GetTexture(QString pathname, GLuint levels)
 	{
 		if (_textures.contains(pathname))
 		{
@@ -20,7 +20,7 @@ namespace mxr
 		{
 			//asset_ref<Texture> texture = MakeAsset<Texture>(qApp->applicationDirPath().toStdString()
 			//	+ "/../Texture/" + pathname.toStdString(), levels);
-			asset_ref<Texture> texture = MakeAsset<Texture>(":/Icon/" + pathname, levels);
+			Texture *texture = new Texture(":/Icon/" + pathname, levels);
 			_textures[pathname] = texture;
 			return texture;
 		}
@@ -29,6 +29,10 @@ namespace mxr
 
 	void mTextureManage::deleteAllTextures()
 	{
+		for (auto texture : _textures)
+		{
+			delete texture;
+		}
 		_textures.clear();
 	}
 

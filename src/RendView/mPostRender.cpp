@@ -59,7 +59,7 @@ namespace MPostRend
 		/**********************************************************模型**********************************************************/
 		//face
 		_faceStateSet = MakeAsset<StateSet>();
-		shared_ptr<Shader> faceshader = mShaderManage::GetInstance()->GetShader("PostMeshFaceWithDeformation");
+		mxr::Shader *faceshader = mShaderManage::GetInstance()->GetShader("PostMeshFaceWithDeformation");
 		_faceStateSet->setShader(faceshader);
 		_faceStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
 		_faceStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetFill>(0, 0), 0);
@@ -92,7 +92,7 @@ namespace MPostRend
 
 		//face透明
 		_faceTransparentStateSet = MakeAsset<StateSet>();
-		shared_ptr<Shader> facetransparentshader = mShaderManage::GetInstance()->GetShader("PostMeshFaceTransparentWithDeformation");
+		mxr::Shader * facetransparentshader = mShaderManage::GetInstance()->GetShader("PostMeshFaceTransparentWithDeformation");
 		_faceTransparentStateSet->setShader(facetransparentshader);
 		_faceTransparentStateSet->setAttributeAndModes(MakeAsset<Depth>(), 0);
 		_faceTransparentStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
@@ -120,7 +120,7 @@ namespace MPostRend
 
 		//face透明无变形
 		_faceTransparentNodeformationStateSet = MakeAsset<StateSet>();
-		shared_ptr<Shader> facetransparentNodeformationshader = mShaderManage::GetInstance()->GetShader("PostMeshFaceTransparentWithOutDeformation");
+		mxr::Shader * facetransparentNodeformationshader = mShaderManage::GetInstance()->GetShader("PostMeshFaceTransparentWithOutDeformation");
 		_faceTransparentNodeformationStateSet->setShader(facetransparentNodeformationshader);
 		_faceTransparentNodeformationStateSet->setAttributeAndModes(MakeAsset<Depth>(), 0);
 		_faceTransparentNodeformationStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
@@ -147,7 +147,7 @@ namespace MPostRend
 
 		//edgeline
 		_edgelineStateSet = MakeAsset<StateSet>();
-		shared_ptr<Shader> meshlineshader = mShaderManage::GetInstance()->GetShader("PostEdgeLineWithDeformation");
+		mxr::Shader * meshlineshader = mShaderManage::GetInstance()->GetShader("PostEdgeLineWithDeformation");
 		_edgelineStateSet->setShader(meshlineshader);
 		_edgelineStateSet->setDrawMode(GL_LINES);
 		_edgelineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
@@ -172,7 +172,7 @@ namespace MPostRend
 
 		//faceline
 		_facelineStateSet = MakeAsset<StateSet>();
-		shared_ptr<Shader> facelineshader = mShaderManage::GetInstance()->GetShader("PostMeshFaceLineWithDeformation");
+		mxr::Shader * facelineshader = mShaderManage::GetInstance()->GetShader("PostMeshFaceLineWithDeformation");
 		_facelineStateSet->setShader(facelineshader);
 		_facelineStateSet->setDrawMode(GL_TRIANGLES);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
@@ -198,7 +198,7 @@ namespace MPostRend
 
 		//line
 		_lineStateSet = MakeAsset<StateSet>();
-		shared_ptr<Shader> lineshader = mShaderManage::GetInstance()->GetShader("PostMeshLineWithDeformation");
+		mxr::Shader * lineshader = mShaderManage::GetInstance()->GetShader("PostMeshLineWithDeformation");
 		_lineStateSet->setShader(lineshader);
 		_lineStateSet->setDrawMode(GL_LINES);
 		_lineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
@@ -224,7 +224,7 @@ namespace MPostRend
 
 		//point
 		_pointStateSet = MakeAsset<StateSet>();
-		shared_ptr<Shader> pointshader = mShaderManage::GetInstance()->GetShader("PostMeshPointWithDeformation");
+		mxr::Shader * pointshader = mShaderManage::GetInstance()->GetShader("PostMeshPointWithDeformation");
 		_pointStateSet->setShader(pointshader);
 		_pointStateSet->setDrawMode(GL_POINTS);
 		_pointStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
@@ -259,7 +259,7 @@ namespace MPostRend
 		/**********************************************************切面**********************************************************/
 		//cuttingplane
 		_cuttingPlaneStateSet = MakeAsset<StateSet>();
-		shared_ptr<Shader> cuttingplaneshader = mShaderManage::GetInstance()->GetShader("PostCuttingPlaneWithOutDeformation");
+		mxr::Shader * cuttingplaneshader = mShaderManage::GetInstance()->GetShader("PostCuttingPlaneWithOutDeformation");
 		_cuttingPlaneStateSet->setShader(cuttingplaneshader);
 		_cuttingPlaneStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
 		_cuttingPlaneStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetFill>(1, 1), 1);
@@ -291,7 +291,7 @@ namespace MPostRend
 
 		//transparentPlane
 		_transparentPlaneStateSet = MakeAsset<StateSet>();
-		shared_ptr<Shader> transparentplaneshader = mShaderManage::GetInstance()->GetShader("PostTransparentPlaneWithOutDeformation");
+		mxr::Shader * transparentplaneshader = mShaderManage::GetInstance()->GetShader("PostTransparentPlaneWithOutDeformation");
 		_transparentPlaneStateSet->setShader(transparentplaneshader);
 		_transparentPlaneStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
 		_transparentPlaneStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetFill>(0, 0), 0);
@@ -436,7 +436,7 @@ namespace MPostRend
 		if (!_texture)
 		{
 			mPostColorTableData *table = postOneFrameRendData->getRendColorTable();
-			_texture = MakeAsset<Texture>(GL_TEXTURE_1D, table->getPostColorTableNum(), 0, 0, GL_RGB8, 1);
+			_texture =new Texture(GL_TEXTURE_1D, table->getPostColorTableNum(), 0, 0, GL_RGB8, 1);
 			_texture->SetData(0, 0, table->getPostColorTableNum(), table->getColorTable());
 			_faceStateSet->setTexture("texture", _texture);
 			_lineStateSet->setTexture("texture", _texture);

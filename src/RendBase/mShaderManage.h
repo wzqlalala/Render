@@ -1,5 +1,6 @@
 #pragma once
-
+//解决中文乱码
+#pragma execution_character_set("utf-8")
 
 #include <memory>
 #include <qvector.h>
@@ -13,7 +14,7 @@ namespace mxr
 	{
 	public:
 		static mShaderManage* GetInstance();
-		std::shared_ptr<mxr::Shader> GetShader(QString pathname);
+		mxr::Shader* GetShader(QString pathname);
 
 		void deleteAllShaders();
 
@@ -21,7 +22,7 @@ namespace mxr
 		mShaderManage();
 
 		~mShaderManage();
-		QMap<QString, std::shared_ptr<mxr::Shader> > _shaders;
+		QMap<QString, mxr::Shader*> _shaders;
 
 	};
 

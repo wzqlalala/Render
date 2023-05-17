@@ -29,8 +29,8 @@ namespace mxr
 		Uniform* getUniform(std::string name);
 
 		void removeUniform() {};
-		void setTexture(std::string _name, asset_ref<Texture> texture);
-		void setShader(asset_ref<Shader> shader) { _shader = shader; };
+		void setTexture(std::string _name, Texture *texture);
+		void setShader(Shader *shader) { _shader = shader; };
 		void setRenderPass(asset_ref<RenderPass> renderpass) { _renderpass = renderpass; }
 		RenderPass* getRenderPass() { return _renderpass.get(); }
 
@@ -48,10 +48,10 @@ namespace mxr
 		ParentList _parents;
 		ModeList	_modelist;
 		AttributeList  _attributeList;
-		asset_ref<Shader> _shader;
+		Shader *_shader;
 		std::map<std::string, asset_ref<Uniform>> _uniformvalues;
 
-		std::map<std::string, asset_ref<Texture>> _textures;
+		std::map<std::string, Texture*> _textures;
 		asset_ref<RenderPass> _renderpass;
 	};
 }

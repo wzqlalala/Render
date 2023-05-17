@@ -29,7 +29,7 @@
 //		_state->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::LINE), 1);
 //		_state->setDrawMode(GL_LINES);
 //
-//		asset_ref<Shader> shader = mShaderManage::GetInstance()->GetShader("GlobalAxis");
+//		mxr::Shader * shader = mShaderManage::GetInstance()->GetShader("GlobalAxis");
 //		_state->setShader(shader);
 //
 //		_state->setUniform(MakeAsset<Uniform>("uModel_c", QMatrix4x4()));

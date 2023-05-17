@@ -116,7 +116,7 @@ namespace MPreRend
 
 		shared_ptr<mPreMeshModelRender> _meshModelRender;//网格渲染
 
-		shared_ptr<mxr::Texture> _pointTexture;//几何点的纹理
+		mxr::Texture *_pointTexture;//几何点的纹理
 
 		/*********************************模型*****************************************************/
 		std::shared_ptr<mxr::StateSet> _faceStateSet;//渲染面的状态

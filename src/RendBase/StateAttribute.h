@@ -305,7 +305,7 @@ namespace mxr
 		void SetData(QVector4D  vec4data);
 		void SetData(QMatrix4x4 mat4data);
 
-		void SetUniform(asset_ref<Shader> shader);
+		void SetUniform(Shader *shader);
 
 		void SetEnable(bool enable);
 		bool getEnable() { return _enable; }

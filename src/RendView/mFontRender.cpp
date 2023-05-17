@@ -18,7 +18,7 @@ namespace MBaseRend
 {
 	float mFontRender::_ratio = 0.0;
 
-	std::shared_ptr<mxr::Texture> textTexture = 0;
+	mxr::Texture *textTexture = nullptr;
 	QHash<GLchar, Character> Characters;
 	mFontRender::mFontRender(std::shared_ptr<mxr::Application> app, std::shared_ptr<mxr::Group> parent, mBaseRend * baseRend) :mBaseRender(app, parent, baseRend)
 	{
@@ -51,7 +51,7 @@ namespace MBaseRend
 		_fixedAxisFontState->setUniform(MakeAsset<Uniform>("uAuxZ_new", QVector3D()));
 		_fixedAxisFontState->setUniform(MakeAsset<Uniform>("uRatio", float(0)));
 
-		asset_ref<Shader> GlobalAxisShader = mShaderManage::GetInstance()->GetShader("Font_GlobalAxis");
+		mxr::Shader * GlobalAxisShader = mShaderManage::GetInstance()->GetShader("Font_GlobalAxis");
 		_fixedAxisFontState->setShader(GlobalAxisShader);
 		_fixedAxisFontState->setAttributeAndModes(MakeAsset<Depth>(), 0);
 		_fixedAxisFontState->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
@@ -66,7 +66,7 @@ namespace MBaseRend
 		_fixedFontState->setUniform(MakeAsset<Uniform>("uScr_height", float(0)));
 		_fixedFontState->setUniform(MakeAsset<Uniform>("uRatio", float(0)));
 
-		asset_ref<Shader> FixedFontShader = mShaderManage::GetInstance()->GetShader("Font_Fixed");
+		mxr::Shader * FixedFontShader = mShaderManage::GetInstance()->GetShader("Font_Fixed");
 		_fixedFontState->setShader(FixedFontShader);
 		_fixedFontState->setAttributeAndModes(MakeAsset<Depth>(), 0);
 		_fixedFontState->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
@@ -85,7 +85,7 @@ namespace MBaseRend
 		_commonFontState->setUniform(MakeAsset<Uniform>("uScr_height", float(0)));
 		_commonFontState->setUniform(MakeAsset<Uniform>("uRatio", float(0)));
 
-		asset_ref<Shader> CommonFontShader = mShaderManage::GetInstance()->GetShader("Font_Common");
+		mxr::Shader * CommonFontShader = mShaderManage::GetInstance()->GetShader("Font_Common");
 		_commonFontState->setShader(CommonFontShader);
 		_commonFontState->setAttributeAndModes(MakeAsset<Depth>(), 0);
 		_commonFontState->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
@@ -201,7 +201,7 @@ namespace MBaseRend
 	{
 		if (!textTexture)
 		{
-			textTexture = MakeAsset<Texture>(GL_TEXTURE_2D, 1024, 1024, 0, GL_R8, 1);
+			textTexture =new Texture(GL_TEXTURE_2D, 1024, 1024, 0, GL_R8, 1);
 			//将字形纹理贴在大纹理上
 			FT_Library ft;
 			if (FT_Init_FreeType(&ft))

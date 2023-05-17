@@ -161,7 +161,7 @@ namespace MPostRend
 		_modelRender->setPointStateSet(_pointStateSet);
 	}
 
-	void mPostOneFrameRender::setTexture(std::shared_ptr<mxr::Texture> texture)
+	void mPostOneFrameRender::setTexture(mxr::Texture * texture)
 	{
 		_texture = texture;
 	}

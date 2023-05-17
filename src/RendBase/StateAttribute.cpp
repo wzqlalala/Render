@@ -254,7 +254,7 @@ namespace mxr
 		_type = MAT4;
 	}
 
-	void Uniform::SetUniform(asset_ref<Shader> shader)
+	void Uniform::SetUniform(Shader *shader)
 	{
 		switch (_type)
 		{

@@ -294,7 +294,7 @@ namespace MPreRend
 		//}
 
 		_faceStateSet = MakeAsset<StateSet>();
-		shared_ptr<Shader> facelineshader = mShaderManage::GetInstance()->GetShader("PreHighLightGeoMeshFace");
+		mxr::Shader * facelineshader = mShaderManage::GetInstance()->GetShader("PreHighLightGeoMeshFace");
 		_faceStateSet->setShader(facelineshader);
 		_faceStateSet->setDrawMode(GL_TRIANGLES);
 		_faceStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
@@ -315,7 +315,7 @@ namespace MPreRend
 
 		//edgeline
 		_lineStateSet = MakeAsset<StateSet>();
-		shared_ptr<Shader> meshlineshader = mShaderManage::GetInstance()->GetShader("PreHighLightGeoMeshLine");
+		mxr::Shader * meshlineshader = mShaderManage::GetInstance()->GetShader("PreHighLightGeoMeshLine");
 		_lineStateSet->setShader(meshlineshader);
 		_lineStateSet->setDrawMode(GL_LINES);
 		_lineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
@@ -328,7 +328,7 @@ namespace MPreRend
 		_lineStateSet->setUniform(MakeAsset<Uniform>("showColor", QVector3D(1, 1, 1)));
 
 		_pointStateSet = MakeAsset<StateSet>();
-		shared_ptr<Shader> pointshader = mShaderManage::GetInstance()->GetShader("PreHighLightGeoPoint");
+		mxr::Shader * pointshader = mShaderManage::GetInstance()->GetShader("PreHighLightGeoPoint");
 		_pointStateSet->setShader(pointshader);
 		_pointStateSet->setDrawMode(GL_POINTS);
 		_pointStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);

@@ -10,7 +10,7 @@ namespace mxr
 		return &manage;
 	}
 
-	std::shared_ptr<mxr::Shader> mShaderManage::GetShader(QString pathname)
+	mxr::Shader *mShaderManage::GetShader(QString pathname)
 	{
 		if (_shaders.contains(pathname))
 		{
@@ -20,7 +20,7 @@ namespace mxr
 		{
 			//asset_ref<Shader> shader = MakeAsset<Shader>(qApp->applicationDirPath().toStdString() 
 			//	+ "/../GLSL/" + pathname.toStdString() + ".glsl");
-			asset_ref<Shader> shader = MakeAsset<Shader>(":/GLSL/" + pathname+ ".glsl");
+			Shader *shader = new Shader(":/GLSL/" + pathname+ ".glsl");
 			_shaders[pathname] = shader;
 			return shader;
 		}
@@ -29,6 +29,10 @@ namespace mxr
 
 	void mShaderManage::deleteAllShaders()
 	{
+		for (auto shader : _shaders)
+		{
+			delete shader;
+		}
 		_shaders.clear();
 	}
 

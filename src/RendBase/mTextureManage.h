@@ -1,5 +1,6 @@
 #pragma once
-
+//解决中文乱码
+#pragma execution_character_set("utf-8")
 
 #include <memory>
 #include <qvector.h>
@@ -13,12 +14,12 @@ namespace mxr
 	{
 	public:
 		static mTextureManage* GetInstance();
-		std::shared_ptr<mxr::Texture> GetTexture(QString pathname, GLuint levels = 0);
+		mxr::Texture *GetTexture(QString pathname, GLuint levels = 0);
 		void deleteAllTextures();
 	protected:
 		mTextureManage();
 		~mTextureManage();
-		QMap<QString, std::shared_ptr<mxr::Texture> > _textures;
+		QMap<QString, mxr::Texture*> _textures;
 
 	};
 

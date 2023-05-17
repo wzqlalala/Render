@@ -1088,3 +1088,15 @@ bool MxRendTest::readTxtFile()
 	return true;
 }
 
+void MxRendTest::closeEvent(QCloseEvent * event)
+{
+	if (_id % 3 == 0)
+	{
+		delete _preRend;
+	}
+	else if (_id % 3 == 1)
+	{
+		delete _postRend;
+	}
+}
+
