@@ -40,7 +40,6 @@ namespace MDataGeo
 }
 
 using namespace MViewBasic;
-using namespace MViewBasic;
 using namespace MBaseRend;
 using namespace MDataGeo;
 using namespace std;

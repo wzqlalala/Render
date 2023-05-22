@@ -411,6 +411,16 @@ namespace MBaseRend
 
 		update();
 	}
+	void mBaseRend::SetZoomAtViewCenter_ByPercent(float Percent)
+	{
+		auto view = dynamic_pointer_cast<mModelView>(_modelView);
+		if (view)
+		{
+			view->ZoomAtViewCenter_ByPercent(Percent);
+		}
+
+		update();
+	}
 	//设置视图*旋转中心*类型
 	void mBaseRend::SetRotateCenterToPoint()
 	{

@@ -98,8 +98,8 @@ find_package(Freetype REQUIRED)
 # MxFunctions
 find_package(MxFunctions REQUIRED)
 
-# MeshData
-find_package(MeshData REQUIRED)
+# BasicData
+find_package(BasicData REQUIRED)
 
 #-----------------------------------------------------------------------------
 # 开启项目分组

@@ -1,10 +1,11 @@
 #include "mPreMeshModelRender.h"
 
-//#include "MXMesh.h"
+//#include "MeshMessage.h"
 //#include "MXGeoPoint.h"
 //#include "MXGeoEdge.h"
 //#include "MXGeoFace.h"
 //#include "MXGeoSolid.h"
+//#include "MeshEntity.h"
 //#include "MXMeshTetrahedron.h"
 //#include "MXMeshHexahedral.h"
 //#include "MXMeshTriangle.h"
