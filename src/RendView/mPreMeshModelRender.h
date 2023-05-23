@@ -51,7 +51,7 @@ namespace MPreRend
 	{
 	public:
 
-		mPreMeshPartRender(std::shared_ptr<mxr::Group> parent/*, MDataGeo::mGeoPartData1 *part*/);
+		mPreMeshPartRender(std::shared_ptr<mxr::Group> parent, QString partName);
 
 		~mPreMeshPartRender();
 
@@ -78,14 +78,15 @@ namespace MPreRend
 		shared_ptr<mxr::Group> _parent;//父节点
 		std::shared_ptr<mxr::Geode> _geode;//当前总节点
 
-		std::shared_ptr<mGroupRender5<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array>>  _facerend;//面
+		std::shared_ptr<mGroupRender2<Vec3Array, Vec3Array>>  _facerend;//面
 		std::shared_ptr<mGroupRender1<Vec3Array>> _facetransparentnodeformationrend;//变形前透明的面
-		std::shared_ptr<mGroupRender2<Vec3Array, Vec3Array>>  _edgelinerend;//边界线
-		std::shared_ptr<mGroupRender3<Vec3Array, Vec3Array, FloatArray>>  _facelinerend;//面线
-		std::shared_ptr<mGroupRender5<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array>>  _linerend;//线
-		std::shared_ptr<mGroupRender5<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array>>  _pointrend;//点
+		std::shared_ptr<mGroupRender1<Vec3Array>>  _edgelinerend;//边界线
+		std::shared_ptr<mGroupRender2<Vec3Array, FloatArray>>  _facelinerend;//面线
+		std::shared_ptr<mGroupRender2<Vec3Array, Vec3Array>>  _linerend;//线
+		std::shared_ptr<mGroupRender2<Vec3Array, Vec3Array>>  _pointrend;//点
 
 		//MDataGeo::mGeoPartData1 *_partData;
+		QString _partName;
 
 		Space::SpaceTree *_spaceTree;
 	};
