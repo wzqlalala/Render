@@ -65,3 +65,11 @@ install(
 	FILES ${_header}
 	DESTINATION ${INSTALL_INCDIR}			#将头文件安装到install/include目录
 )
+
+#-----------------------------------------------------------------------------
+# 安装几个特殊的CPP文件
+#-----------------------------------------------------------------------------
+install(
+	FILES mLableDataController_pre.cpp mLableDataController_post.cpp mLableDataController_common.cpp
+	DESTINATION ${INSTALL_INCDIR}			#将头文件安装到install/include目录
+)
