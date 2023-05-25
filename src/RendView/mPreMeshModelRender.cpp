@@ -1,6 +1,6 @@
 #include "mPreMeshModelRender.h"
 
-//#include "MeshMessage.h"
+#include "MeshMessage.h"
 //#include "MXGeoPoint.h"
 //#include "MXGeoEdge.h"
 //#include "MXGeoFace.h"
@@ -81,7 +81,7 @@ namespace MPreRend
 	bool mPreMeshModelRender::updateRender()
 	{
 		QList<QPair<ModelOperateEnum, std::set<QString>>> renderState
-		/*= MeshMessage::getInstance()->getUpdatedRenderState()*/;
+		= MeshMessage::getInstance()->getUpdatedRenderState();
 		if (!renderState.empty())
 		{
 			bool isUpdateCamera{ false };
@@ -98,7 +98,7 @@ namespace MPreRend
 		std::set<QString> hidePartNames;
 		//auto iter = _oneFrameData->getMeshPartIterator();
 		//_partOrder = _geoModelData->getAllPartName();
-		//_partOrder = MeshMessage::getInstance()->getAllPartNames().toList();
+		_partOrder = MeshMessage::getInstance()->getAllPartNames().toList();
 		for (auto partName : _partOrder)
 		{
 			//mGeoPartData1 *partData = _geoModelData->getGeoPartDataByPartName(partName);
@@ -295,7 +295,7 @@ namespace MPreRend
 	{
 		QVector3D color;
 		//color = MeshMessage::getInstance()->get//获取部件颜色
-		/*
+		
 		//表面
 		QVector<MXGeoFace*> geoFaces = MeshMessage::getInstance()->getGeoFaceSamePart(_partName);
 		for (auto geoFace : geoFaces)
@@ -348,7 +348,7 @@ namespace MPreRend
 			}
 		
 		}
-		*/
+		
 
 	}
 	void mPreMeshPartRender::setShowFuntion(ShowFuntion showFuntion)
