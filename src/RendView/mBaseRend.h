@@ -182,6 +182,8 @@ namespace MBaseRend
 		void SetRotate_ByButton(float angle);
 		//设置屏幕中心缩放(按键进行缩放，不连续)
 		void SetZoomAtViewCenter_ByButton(ScaleDirection);
+		//设置屏幕中心缩放(按百分比)
+		void SetZoomAtViewCenter_ByPercent(float Percent);
 		//初始化视角槽函数
 		void SetPerspective(Perspective);
 		//保存当前视角

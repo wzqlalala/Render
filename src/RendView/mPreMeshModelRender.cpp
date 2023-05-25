@@ -1,10 +1,11 @@
 #include "mPreMeshModelRender.h"
 
-//#include "MXMesh.h"
+#include "MeshMessage.h"
 //#include "MXGeoPoint.h"
 //#include "MXGeoEdge.h"
 //#include "MXGeoFace.h"
 //#include "MXGeoSolid.h"
+//#include "MeshEntity.h"
 //#include "MXMeshTetrahedron.h"
 //#include "MXMeshHexahedral.h"
 //#include "MXMeshTriangle.h"
@@ -79,12 +80,14 @@ namespace MPreRend
 	}
 	bool mPreMeshModelRender::updateRender()
 	{
-		//if (!_geoModelData->_modelOperate.empty())
+		QList<QPair<ModelOperateEnum, std::set<QString>>> renderState
+		= MeshMessage::getInstance()->getUpdatedRenderState();
+		if (!renderState.empty())
 		{
 			bool isUpdateCamera{ false };
-			//while (!_geoModelData->_modelOperate.empty())
+			while (!renderState.empty())
 			{
-				//isUpdateCamera = isUpdateCamera | updateModelOperate(_geoModelData->_modelOperate.takeFirst());
+				isUpdateCamera = isUpdateCamera | updateModelOperate(renderState.takeFirst());
 			}
 			return isUpdateCamera;
 		}
@@ -95,6 +98,7 @@ namespace MPreRend
 		std::set<QString> hidePartNames;
 		//auto iter = _oneFrameData->getMeshPartIterator();
 		//_partOrder = _geoModelData->getAllPartName();
+		_partOrder = MeshMessage::getInstance()->getAllPartNames().toList();
 		for (auto partName : _partOrder)
 		{
 			//mGeoPartData1 *partData = _geoModelData->getGeoPartDataByPartName(partName);
@@ -106,7 +110,7 @@ namespace MPreRend
 			{
 				hidePartNames.insert(partName);
 			}
-			asset_ref<mPreMeshPartRender> part = MakeAsset<mPreMeshPartRender>(_geode/*, partData*/);
+			asset_ref<mPreMeshPartRender> part = MakeAsset<mPreMeshPartRender>(_geode, partName);
 			part->setFaceStateSet(_faceStateSet);
 			part->setFaceTransparentNodeformationStateSet(_faceTransparentNodeformationStateSet);
 			part->setEdgeLineStateSet(_edgelineStateSet);
@@ -130,7 +134,7 @@ namespace MPreRend
 				//mGeoPartData1 *partData = _geoModelData->getGeoPartDataByPartName(partName);
 				//if (partData)
 				{
-					asset_ref<mPreMeshPartRender> part = MakeAsset<mPreMeshPartRender>(_geode/*, partData*/);
+					asset_ref<mPreMeshPartRender> part = MakeAsset<mPreMeshPartRender>(_geode, partName);
 					part->setFaceStateSet(_faceStateSet);
 					part->setFaceTransparentNodeformationStateSet(_faceTransparentNodeformationStateSet);
 					part->setEdgeLineStateSet(_edgelineStateSet);
@@ -239,15 +243,15 @@ namespace MPreRend
 	{
 		return _partRenders.value(partName)->getPartSpaceTree();
 	}
-	mPreMeshPartRender::mPreMeshPartRender(std::shared_ptr<mxr::Group> parent/*, MDataGeo::mGeoPartData1 * part*/)
+	mPreMeshPartRender::mPreMeshPartRender(std::shared_ptr<mxr::Group> parent, QString partName)
 	{
-		_facerend = MakeAsset<mGroupRender5<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array>>(_geode);
+		_facerend = MakeAsset<mGroupRender2<Vec3Array, Vec3Array>>(_geode);
 		_facetransparentnodeformationrend = MakeAsset<mGroupRender1<Vec3Array>>(_geode);
-		_edgelinerend = MakeAsset<mGroupRender2<Vec3Array, Vec3Array>>(_geode);
-		_facelinerend = MakeAsset<mGroupRender3<Vec3Array, Vec3Array, FloatArray>>(_geode);
-		_linerend = MakeAsset<mGroupRender5<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array>>(_geode);
-		_pointrend = MakeAsset<mGroupRender5<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array>>(_geode);
-
+		_edgelinerend = MakeAsset<mGroupRender1<Vec3Array>>(_geode);
+		_facelinerend = MakeAsset<mGroupRender2<Vec3Array, FloatArray>>(_geode);
+		_linerend = MakeAsset<mGroupRender2<Vec3Array, Vec3Array>>(_geode);
+		_pointrend = MakeAsset<mGroupRender2<Vec3Array, Vec3Array>>(_geode);
+		_partName = partName;
 		appendPart();
 	}
 	mPreMeshPartRender::~mPreMeshPartRender()
@@ -284,9 +288,68 @@ namespace MPreRend
 	{
 		return nullptr;
 	}
+
+	QVector<int> quadToTriIndex{ 0, 1, 2, 2, 3, 0 };
+
 	void mPreMeshPartRender::appendPart()
 	{
+		QVector3D color;
+		//color = MeshMessage::getInstance()->get//获取部件颜色
 		
+		//表面
+		QVector<MXGeoFace*> geoFaces = MeshMessage::getInstance()->getGeoFaceSamePart(_partName);
+		for (auto geoFace : geoFaces)
+		{
+			for (auto mesh : geoFace->_mTriangles)
+			{
+				for (int i = 0; i < 3; i++)
+				{
+					_facerend->_vertex0->append(QVector3D(mesh->getVertex(i)->vx(), mesh->getVertex(i)->vy(), mesh->getVertex(i)->vz()));
+					_facerend->_vertex1->append(color);
+				}
+				_facelinerend->_vertex1->append(QVector<float>(3, 1.0f));
+			}
+			for (auto mesh : geoFace->_mQuadangles)
+			{
+				for (int i = 0; i < 6; i++)
+				{
+					int index = quadToTriIndex.at(i);
+					_facerend->_vertex0->append(QVector3D(mesh->getVertex(index)->vx(), mesh->getVertex(index)->vy(), mesh->getVertex(index)->vz()));
+					_facerend->_vertex1->append(color);
+				}
+				_facelinerend->_vertex1->append(QVector<float>(6, 0.0f));
+			}
+		}
+		_facelinerend->getDrawable()->setVertexAttribArray(0, _facerend->_vertex0);
+
+		//线网格
+		QVector<MXGeoEdge*> geoEdges = MeshMessage::getInstance()->getGeoEdgeSamePart(_partName);
+		for (auto geoEdge : geoEdges)
+		{
+			for (auto mesh : geoEdge->_mLines)
+			{
+				for (int i = 0; i < 2; i++)
+				{
+					_linerend->_vertex0->append(QVector3D(mesh->getVertex(i)->vx(), mesh->getVertex(i)->vy(), mesh->getVertex(i)->vz()));
+					_linerend->_vertex1->append(color);
+				}
+			}
+		}
+
+		//点网格
+		QVector<MXGeoPoint*> geoPoints = MeshMessage::getInstance()->getGeoPointSamePart(_partName);
+		for (auto geoPoint : geoPoints)
+		{
+			auto mesh = geoPoint->_mVertex;
+			for (int i = 0; i < 1; i++)
+			{
+				_linerend->_vertex0->append(QVector3D(mesh->vx(), mesh->vy(), mesh->vz()));
+				_linerend->_vertex1->append(color);
+			}
+		
+		}
+		
+
 	}
 	void mPreMeshPartRender::setShowFuntion(ShowFuntion showFuntion)
 	{
