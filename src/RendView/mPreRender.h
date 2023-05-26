@@ -50,6 +50,8 @@ namespace MPreRend
 	class mPreGeoModelRender;
 	class mPreGeoHighLightRender;
 	class mPreMeshModelRender;
+	class mPreMeshPickData1;
+	class mPreMeshHighLightRender;
 	class RENDVIEW_EXPORT mPreRender :public mBaseRender
 	{
 		Q_OBJECT
@@ -114,6 +116,8 @@ namespace MPreRend
 		shared_ptr<mPreGeoHighLightRender> _geoHighLightRender;//几何高亮数据
 
 		shared_ptr<mPreMeshModelRender> _meshModelRender;//网格渲染
+		mPreMeshPickData1 *_meshPickData;//网格拾取
+		shared_ptr<mPreMeshHighLightRender> _meshHighLightRender;//几何高亮数据
 
 		mxr::Texture *_pointTexture;//几何点的纹理
 

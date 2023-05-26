@@ -75,6 +75,15 @@ namespace MPreRend
 		std::shared_ptr<mxr::Geode> getGeode() { return _geode; }
 
 	private:
+		void getGeoSolidData(MXGeoSolid* geoSolid, QVector3D color);
+
+		void getGeoFaceData(MXGeoFace* geoFace, QVector3D color);
+
+		void getGeoEdgeData(MXGeoEdge* geoEdge);
+
+		void getGeoIndependentEdgeData(MXGeoEdge* geoFace, QVector3D color);
+
+	private:
 		shared_ptr<mxr::Group> _parent;//父节点
 		std::shared_ptr<mxr::Geode> _geode;//当前总节点
 

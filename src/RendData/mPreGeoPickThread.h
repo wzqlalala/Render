@@ -33,9 +33,9 @@ namespace MDataGeo
 		mBasePick(QMatrix4x4 pvm, int w, int h) { _pvm = pvm; _width = w; _height = h; };
 
 		virtual bool getGeoPointIsInPick(QVector3D pointCenter) = 0;//0维
-		
+
 		virtual bool getGeoLineIsInPick(QVector<QVector3D> vertexs) = 0;//1维
-	
+
 		virtual bool getGeoFaceIsInPick(QVector<QVector3D> vertexs) = 0;//2维
 
 		virtual bool isIntersectionAABBAndPick(QVector<QVector2D> ap) = 0;//判断是否相交
@@ -50,7 +50,7 @@ namespace MDataGeo
 		QVector2D WorldvertexToScreenvertex(QVector3D Worldvertex);
 		QVector<QVector2D> WorldvertexToScreenvertex(QVector<QVector3D> Worldvertexs);
 		//将世界坐标转化为屏幕坐标并且返回他的深度值
-		QVector2D WorldvertexToScreenvertex(QVector3D Worldvertex, float &depth);	
+		QVector2D WorldvertexToScreenvertex(QVector3D Worldvertex, float &depth);
 		void WorldvertexToScreenvertex(QVector<QVector3D> Worldvertexs, QVector<QVector2D> &Screenvertexs, std::set<float> &depths);
 
 	protected:
@@ -90,7 +90,7 @@ namespace MDataGeo
 	class mPolygonPick :public mBasePick
 	{
 	public:
-		mPolygonPick(QMatrix4x4 pvm, int w, int h, QVector<QVector2D> multiQuad):mBasePick(pvm, w, h),_multiQuad(multiQuad)
+		mPolygonPick(QMatrix4x4 pvm, int w, int h, QVector<QVector2D> multiQuad) :mBasePick(pvm, w, h), _multiQuad(multiQuad)
 		{
 			_center = (_multiQuad.first() + _multiQuad.last()) / 2.0;
 		};
@@ -118,7 +118,7 @@ namespace MDataGeo
 		mRoundPick(QMatrix4x4 pvm, int w, int h, QVector2D p1, QVector2D p2, QVector3D centerDirection)
 			:mBasePick(pvm, w, h)
 		{
-			_screenCenter = (p1 + p2)/2.0;
+			_screenCenter = (p1 + p2) / 2.0;
 			QVector3D Point = ScreenvertexToWorldvertex(p2);//算出圆上一点的坐标
 			_centerPoint = ScreenvertexToWorldvertex(_screenCenter);//算出圆心坐标
 			_radius = _centerPoint.distanceToPoint(Point);
@@ -235,9 +235,9 @@ namespace MDataGeo
 		void MultiplyPickGeoLineByPart(mGeoPartData1 *partData, bool isAllIn = false);
 		void MultiplyPickGeoFaceByPart(mGeoPartData1 *partData, bool isAllIn = false);
 		void MultiplyPickGeoSolidByPart(mGeoPartData1 *partData, bool isAllIn = false);
-		
+
 		//判断单选是否拾取到该部件,并且返回他的深度值
-		
+
 		bool IsSoloPickMeshPart(MDataPost::mPostMeshPartData1 *meshPartData, float &depth);
 
 		/***********框选*********/
@@ -252,16 +252,16 @@ namespace MDataGeo
 
 		//判断是否拾取到该几何体
 		bool IsMultiplyPickGeoSolid(MDataGeo::mGeoSolidData1* geoSolidData);
-		
+
 		//判断框选是否拾取到该部件
 		bool isMultiplyPickGeoPart(MDataGeo::mGeoPartData1 *geoPartData);
 
-		
+
 		//将世界坐标转化为屏幕坐标
 		QVector2D WorldvertexToScreenvertex(QVector3D Worldvertex);
 
 		QVector3D ScreenvertexToWorldvertex(QVector3D vertex);
-		
+
 		//将世界坐标转化为屏幕坐标并且返回他的深度值
 		QVector2D WorldvertexToScreenvertex(QVector3D Worldvertex, float &depth);
 

@@ -4,8 +4,10 @@
 #include "mPreGeoModelRender.h"
 #include "mPreGeoHighLightRender.h"
 #include "mPreMeshModelRender.h"
+#include "mPreMeshHighLightRender.h"
 #include "mFontRender.h"
 #include "mArrowRender.h"
+#include "mPreMeshPickData1.h"
 
 //MDataGeo
 #include "mGeoPickData1.h"
@@ -165,6 +167,10 @@ namespace MPreRend
 		_geoPickThread = new mPreGeoPickThread(_geoModelData, _geoPickData);
 		_geoPickThread->setPickFilter(_baseRend->getPickFilter());
 		_geoHighLightRender = make_shared<mPreGeoHighLightRender>(_parent ,_rendStatus, _geoPickData, _geoModelData);
+
+		_meshPickData = new mPreMeshPickData1();
+
+		_meshHighLightRender = make_shared<mPreMeshHighLightRender>(_rendStatus, _meshPickData);
 
 		//this->doneCurrent();
 	}
