@@ -39,6 +39,7 @@ class MXGeoSolid;
 class MXGeoFace;
 class MXGeoEdge;
 class MXMeshElement;
+class MFace;
 using namespace MViewBasic;
 using namespace MViewBasic;
 using namespace MBaseRend;
@@ -76,6 +77,8 @@ namespace MPreRend
 
 	private:
 		void getGeoSolidData(MXGeoSolid* geoSolid, QVector3D color);
+
+		void getMFaceData(MFace* geoSolid, QVector3D color);
 
 		void getGeoFaceData(MXGeoFace* geoFace, QVector3D color);
 

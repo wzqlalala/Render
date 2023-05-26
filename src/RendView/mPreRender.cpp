@@ -8,10 +8,14 @@
 #include "mFontRender.h"
 #include "mArrowRender.h"
 #include "mPreMeshPickData1.h"
+#include "mPreMeshPickThread.h"
 
 //MDataGeo
 #include "mGeoPickData1.h"
 #include "mPreGeoPickThread.h"
+
+//BasicData
+#include "MeshMessage.h"
 
 #include <renderpch.h>
 #include "texture.h"
@@ -169,7 +173,7 @@ namespace MPreRend
 		_geoHighLightRender = make_shared<mPreGeoHighLightRender>(_parent ,_rendStatus, _geoPickData, _geoModelData);
 
 		_meshPickData = new mPreMeshPickData1();
-
+		_meshPickThread = new mPreMeshPickThread(_meshPickData);
 		_meshHighLightRender = make_shared<mPreMeshHighLightRender>(_rendStatus, _meshPickData);
 
 		//this->doneCurrent();
@@ -223,7 +227,28 @@ namespace MPreRend
 		case PickFilter::PickMeshFaceByAngle:
 		//Íø¸ñ
 		{
-			
+			_meshPickData->setMeshPickFunction(int(_baseRend->getPickFuntion()));
+			_meshPickThread->setMatrix(_baseRend->getCamera()->getPVMValue());
+			_meshPickThread->setWidget(_baseRend->getCamera()->SCR_WIDTH, _baseRend->getCamera()->SCR_HEIGHT);
+			_meshPickThread->setPickMode(*_baseRend->getCurrentPickMode(), *_baseRend->getMultiplyPickMode());
+			if (*_baseRend->getCurrentPickMode() == PickMode::SoloPick)
+			{
+				float depth = this->getDepth(poses.first());
+				_meshPickThread->setLocation(poses.first(), depth);
+			}
+			else
+			{
+				_meshPickThread->setLocation(poses, (_baseRend->getCamera()->_Center - _baseRend->getCamera()->_Eye).normalized());
+			}
+
+			future = QtConcurrent::run(_meshPickThread, &mPreMeshPickThread::startPick);
+			QObject::connect(&w, &QFutureWatcher<void>::finished, [this] {
+				_meshHighLightRender->updateHighLightRender();
+				QObject::disconnect(&w, 0, 0, 0);//¶Ï¿ªÐÅºÅ
+				emit finishedPickSig();
+				emit update();
+			});
+			w.setFuture(future);
 		}
 		break;
 		case PickFilter::PickGeoPoint:
@@ -286,7 +311,7 @@ namespace MPreRend
 		}
 		if (true)
 		{
-
+			
 		}
 		return hasModel;
 	}
@@ -296,6 +321,8 @@ namespace MPreRend
 		this->makeCurrent();
 		if (_geoHighLightRender)
 			_geoHighLightRender->updateHighLightRender();
+		if (_meshHighLightRender)
+			_meshHighLightRender->updateHighLightRender();
 		emit update();
 	}
 	void mPreRender::updateModelOperate(QPair<ModelOperateEnum, std::set<QString>> modelOperates)

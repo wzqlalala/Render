@@ -81,7 +81,7 @@ namespace MPreRend
 			{
 				continue;
 			}
-			QVector<QVector3D> vertexs/* = iter->getNodeIndex()*/;
+			QVector<QVector3D> vertexs = iter->getallVertexs1();
 			switch (iter->getMeshType())
 			{
 			case MeshPoint:
@@ -251,42 +251,40 @@ namespace MPreRend
 			}
 		}
 
-		/*
-		set<int> meshfaceids = _meshPickData->getPickMeshFaceIDs();
-		for (auto iter = meshfaceids.begin(); iter != meshfaceids.end(); ++iter)
+		
+		set<MFace*> meshfaceids = _meshPickData->getPickMeshFaceIDs();
+		for (auto iter : meshfaceids)
 		{
-			mPostMeshFaceData1 *meshFaceData = oneFrameData->getMeshFaceDataByID(*iter);
-			if (meshFaceData == nullptr)
+			if (iter == nullptr)
 			{
 				continue;
 			}
-			QVector<int> index = meshFaceData->getNodeIndex();
-			if (index.size() == 3)
+			QVector<QVector3D> vertexs = iter->getAllVertexsOfMFace();
+			switch (iter->type())
 			{
-				vertex0 = oneFrameData->getNodeDataByID(index.at(0))->getNodeVertex() + deformationScale * dis.value(index.at(0));
-				vertex1 = oneFrameData->getNodeDataByID(index.at(1))->getNodeVertex() + deformationScale * dis.value(index.at(1));
-				vertex2 = oneFrameData->getNodeDataByID(index.at(2))->getNodeVertex() + deformationScale * dis.value(index.at(2));
-				_facelineRender->_vertex0->append(vertex0);
-				_facelineRender->_vertex0->append(vertex1);
-				_facelineRender->_vertex0->append(vertex2);
+			case 1:
+			{
+				_facelineRender->_vertex0->append(vertexs.at(0));
+				_facelineRender->_vertex0->append(vertexs.at(1));
+				_facelineRender->_vertex0->append(vertexs.at(2));
 				_facelineRender->_vertex1->append(QVector<float>(3, 1));
+
+				break;
 			}
-			else
+			case 2:
 			{
-				vertex0 = oneFrameData->getNodeDataByID(index.at(0))->getNodeVertex() + deformationScale * dis.value(index.at(0));
-				vertex1 = oneFrameData->getNodeDataByID(index.at(1))->getNodeVertex() + deformationScale * dis.value(index.at(1));
-				vertex2 = oneFrameData->getNodeDataByID(index.at(2))->getNodeVertex() + deformationScale * dis.value(index.at(2));
-				vertex3 = oneFrameData->getNodeDataByID(index.at(3))->getNodeVertex() + deformationScale * dis.value(index.at(3));
-				_facelineRender->_vertex0->append(vertex0);
-				_facelineRender->_vertex0->append(vertex1);
-				_facelineRender->_vertex0->append(vertex2);
-				_facelineRender->_vertex0->append(vertex2);
-				_facelineRender->_vertex0->append(vertex3);
-				_facelineRender->_vertex0->append(vertex0);
+				_facelineRender->_vertex0->append(vertexs.at(0));
+				_facelineRender->_vertex0->append(vertexs.at(1));
+				_facelineRender->_vertex0->append(vertexs.at(2));
+				_facelineRender->_vertex0->append(vertexs.at(2));
+				_facelineRender->_vertex0->append(vertexs.at(3));
+				_facelineRender->_vertex0->append(vertexs.at(0));
 				_facelineRender->_vertex1->append(QVector<float>(6, 0));
+				break;
+			}
 			}
 		}
-		*/
+		
 		set<QString> partNames = _meshPickData->getPickMeshPartNames();
 		for (QString partName : partNames)
 		{

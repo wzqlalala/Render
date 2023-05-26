@@ -360,8 +360,8 @@ namespace MPreRend
 	{
 		if (geoSolid->_mTetrahedrons.size() == 0 && geoSolid->_mHexahedrals.size() == 0)//二维或者一维
 		{
-			std::vector<MXGeoFace*> geoFaces = geoSolid->getface();
-			//表面
+			QVector<MXGeoFace*> geoFaces = geoSolid->getface();
+			//面
 			for (auto geoFace : geoFaces)
 			{
 				getGeoFaceData(geoFace, color);
@@ -369,20 +369,26 @@ namespace MPreRend
 		}
 		else//三维获取单元面(先从面获取表面)
 		{
-			std::vector<MXGeoFace*> geoFaces = geoSolid->getface();
+			QVector<MFace*> faces = geoSolid->surfaceMeshs;
 			//表面
-			for (auto geoFace : geoFaces)
+			for (auto face : faces)
 			{
-				getGeoFaceData(geoFace, color);
-
-				//边界线
-				QSet<MXGeoEdge*> geoEdges = geoFace->getPVTEdgesOnFace();
-				for (auto geoEdge : geoEdges)
-				{
-					getGeoEdgeData(geoEdge);
-				}
-
+				getMFaceData(face, color);
 			}
+			//边界线
+			//QSet<MXGeoEdge*> geoEdges = geoFace->getPVTEdgesOnFace();
+			//for (auto geoEdge : geoEdges)
+			//{
+			//	getGeoEdgeData(geoEdge);
+			//}
+			
+		}
+	}
+	void mPreMeshPartRender::getMFaceData(MFace *face, QVector3D color)
+	{
+		if (face == nullptr)
+		{
+			return;
 		}
 	}
 	void mPreMeshPartRender::getGeoFaceData(MXGeoFace * geoFace, QVector3D color)
@@ -400,6 +406,10 @@ namespace MPreRend
 		{
 			for (auto mesh : geoFace->_mTriangles)
 			{
+				if (mesh == nullptr)
+				{
+					continue;
+				}
 				_facerend->_vertex0->append(mesh->getallVertexs1());
 				_facerend->_vertex1->append(color);
 
@@ -407,6 +417,10 @@ namespace MPreRend
 			}
 			for (auto mesh : geoFace->_mQuadangles)
 			{
+				if (mesh == nullptr)
+				{
+					continue;
+				}
 				auto vertexs = mesh->getallVertexs1();
 				for (int i = 0; i < 6; i++)
 				{
@@ -429,6 +443,10 @@ namespace MPreRend
 	{
 		for (auto mesh : geoEdge->_mLines)
 		{
+			if (mesh == nullptr)
+			{
+				continue;
+			}
 			for (int i = 0; i < 2; i++)
 			{
 				_edgelinerend->_vertex0->append(QVector3D(mesh->getVertex(i)->vx(), mesh->getVertex(i)->vy(), mesh->getVertex(i)->vz()));
@@ -439,6 +457,10 @@ namespace MPreRend
 	{
 		for (auto mesh : geoEdge->_mLines)
 		{
+			if (mesh == nullptr)
+			{
+				continue;
+			}
 			for (int i = 0; i < 2; i++)
 			{
 				_linerend->_vertex0->append(QVector3D(mesh->getVertex(i)->vx(), mesh->getVertex(i)->vy(), mesh->getVertex(i)->vz()));

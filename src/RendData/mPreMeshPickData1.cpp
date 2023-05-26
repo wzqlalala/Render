@@ -1,6 +1,6 @@
 #include "mPreMeshPickData1.h"
 
-namespace MPreRend
+namespace MDataPre
 {
 	void mPreMeshPickData1::setMeshPickFunction(int pickfunction)
 	{
@@ -53,14 +53,14 @@ namespace MPreRend
 		}
 	}
 
-	void mPreMeshPickData1::setSoloPickMeshFaceData(int meshfaceid, float depth)
+	void mPreMeshPickData1::setSoloPickMeshFaceData(MFace* meshfaceid, float depth)
 	{
 		if (meshfaceid != 0)
 		{
 			if (depth < _meshFaceBuffer.depth)
 			{
 				_meshFaceBuffer.depth = depth;
-				_meshFaceBuffer.id = meshfaceid;
+				_meshFaceBuffer.meshface = meshfaceid;
 			}
 		}
 	}
@@ -113,14 +113,14 @@ namespace MPreRend
 		}
 	}
 
-	void mPreMeshPickData1::setSoloPickMeshFaceByPartData(set<int> meshFaceids, float depth)
+	void mPreMeshPickData1::setSoloPickMeshFaceByPartData(set<MFace*> meshFaceids, float depth)
 	{
 		if (meshFaceids.size() != 0)
 		{
 			if (depth < _meshFaceBuffers.depth)
 			{
 				_meshFaceBuffers.depth = depth;
-				_meshFaceBuffers.ids = meshFaceids;
+				_meshFaceBuffers.meshfaces = meshFaceids;
 			}
 		}
 	}
@@ -142,16 +142,16 @@ namespace MPreRend
 	{
 		if (meshlineid != 0)
 		{
-			if (depth < _meshLinePartNameBuffers.depth)
-			{
-				_meshLinePartNameBuffers.depth = depth;
-				_meshLinePartNameBuffers.partName = partName;
-				_meshLinePartNameBuffers.id = meshlineid;
-			}
+			//if (depth < _meshLinePartNameBuffers.depth)
+			//{
+			//	_meshLinePartNameBuffers.depth = depth;
+			//	_meshLinePartNameBuffers.partName = partName;
+			//	_meshLinePartNameBuffers.ptr = meshlineid;
+			//}
 		}
 	}
 
-	void mPreMeshPickData1::setSoloPickMeshFaceDataByAngle(int meshfaceid, QString partName, float depth)
+	void mPreMeshPickData1::setSoloPickMeshFaceDataByAngle(void * meshfaceid, QString partName, float depth)
 	{
 		if (meshfaceid != 0)
 		{
@@ -159,7 +159,7 @@ namespace MPreRend
 			{
 				_meshFacePartNameBuffers.depth = depth;
 				_meshFacePartNameBuffers.partName = partName;
-				_meshFacePartNameBuffers.id = meshfaceid;
+				_meshFacePartNameBuffers.ptr = meshfaceid;
 			}
 		}
 	}
@@ -201,14 +201,14 @@ namespace MPreRend
 			}
 			_meshLineBuffer.initial();
 		}
-		if (_meshFaceBuffer.id != 0)
+		if (_meshFaceBuffer.meshface != 0)
 		{
 			switch (_pickFunction)
 			{
 			case 0:
-				_pickMeshFaces.insert(_meshFaceBuffer.id); break;
+				_pickMeshFaces.insert(_meshFaceBuffer.meshface); break;
 			case 1:
-				_pickMeshFaces.erase(_meshFaceBuffer.id); break;
+				_pickMeshFaces.erase(_meshFaceBuffer.meshface); break;
 			}
 			_meshFaceBuffer.initial();
 		}
@@ -238,9 +238,9 @@ namespace MPreRend
 			setMultiplyPickMeshLineData(_meshLineBuffers.ids);
 			_meshLineBuffers.initial();
 		}
-		if (_meshFaceBuffers.ids.size() != 0)
+		if (_meshFaceBuffers.meshfaces.size() != 0)
 		{
-			setMultiplyPickMeshFaceData(_meshFaceBuffers.ids);
+			setMultiplyPickMeshFaceData(_meshFaceBuffers.meshfaces);
 			_meshFaceBuffers.initial();
 		}
 	}
@@ -321,7 +321,7 @@ namespace MPreRend
 		}
 	}
 
-	void mPreMeshPickData1::setMultiplyPickMeshFaceData(std::set<int> meshfaceids)
+	void mPreMeshPickData1::setMultiplyPickMeshFaceData(std::set<MFace*> meshfaceids)
 	{
 		if (_pickFunction == 0)
 		{
@@ -366,7 +366,7 @@ namespace MPreRend
 		_pickMeshLines = meshlineids;
 	}
 
-	void mPreMeshPickData1::setAllPickMeshFaceData(set<int> meshfaceids)
+	void mPreMeshPickData1::setAllPickMeshFaceData(set<MFace*> meshfaceids)
 	{
 		_pickMeshFaces = meshfaceids;
 	}
@@ -391,7 +391,7 @@ namespace MPreRend
 		_pickMeshLines.insert(meshlineids.begin(), meshlineids.end());
 	}
 
-	void mPreMeshPickData1::setAddPickMeshFaceData(set<int> meshfaceids)
+	void mPreMeshPickData1::setAddPickMeshFaceData(set<MFace*> meshfaceids)
 	{
 		_pickMeshFaces.insert(meshfaceids.begin(), meshfaceids.end());
 	}
@@ -425,7 +425,7 @@ namespace MPreRend
 		}
 	}
 
-	void mPreMeshPickData1::setReducePickMeshFaceData(set<int> meshfaceids)
+	void mPreMeshPickData1::setReducePickMeshFaceData(set<MFace*> meshfaceids)
 	{
 		for (auto iter = meshfaceids.begin(); iter != meshfaceids.end(); ++iter)
 		{
@@ -461,7 +461,7 @@ namespace MPreRend
 		return _pickMeshLines;
 	}
 
-	set<int> mPreMeshPickData1::getPickMeshFaceIDs()
+	set<MFace*> mPreMeshPickData1::getPickMeshFaceIDs()
 	{
 		return _pickMeshFaces;
 	}
@@ -506,69 +506,69 @@ namespace MPreRend
 	{
 		_pickParts.clear();
 	}
-	QPair<PickObjectType, QPair<QString, int>> mPreMeshPickData1::getSoloPickNodeDataByLineAngle()
+	QPair<PickObjectType, QPair<QString, void*>> mPreMeshPickData1::getSoloPickNodeDataByLineAngle()
 	{
 		PickObjectType objectType = PickObjectType::Mesh1D;
 		QString partName = _meshPartNameBuffers.partName;
-		int id = _meshPartNameBuffers.id;
-		if (_meshLinePartNameBuffers.id != 0 && _meshPartNameBuffers.id != 0)
+		void *id = _meshPartNameBuffers.ptr;
+		if (_meshLinePartNameBuffers.ptr != 0 && _meshPartNameBuffers.ptr != 0)
 		{
 			if (_meshLinePartNameBuffers.depth < _meshPartNameBuffers.depth)
 			{
 				objectType = PickObjectType::MeshEdge;
 				partName = _meshLinePartNameBuffers.partName;
-				id = _meshLinePartNameBuffers.id;
+				id = _meshLinePartNameBuffers.ptr;
 			}
 		}
-		else if (_meshLinePartNameBuffers.id != 0)
+		else if (_meshLinePartNameBuffers.ptr != 0)
 		{
 			objectType = PickObjectType::MeshEdge;
 			partName = _meshLinePartNameBuffers.partName;
-			id = _meshLinePartNameBuffers.id;
+			id = _meshLinePartNameBuffers.ptr;
 		}
 		_meshPartNameBuffers.initial();
 		_meshLinePartNameBuffers.initial();
-		return QPair<PickObjectType, QPair<QString, int>>(objectType, { partName, id });
+		return QPair<PickObjectType, QPair<QString, void*>>(objectType, { partName, id });
 	}
-	QPair<PickObjectType, QPair<QString, int>> mPreMeshPickData1::getSoloPickNodeDataByFaceAngle()
+	QPair<PickObjectType, QPair<QString, void*>> mPreMeshPickData1::getSoloPickNodeDataByFaceAngle()
 	{
 		PickObjectType objectType = PickObjectType::Mesh2D;
 		QString partName = _meshPartNameBuffers.partName;
-		int id = _meshPartNameBuffers.id;
-		if (_meshFacePartNameBuffers.id != 0 && _meshPartNameBuffers.id != 0)
+		void *id = _meshPartNameBuffers.ptr;
+		if (_meshFacePartNameBuffers.ptr != 0 && _meshPartNameBuffers.ptr != 0)
 		{
 			if (_meshFacePartNameBuffers.depth < _meshPartNameBuffers.depth)
 			{
 				objectType = PickObjectType::MeshFace;
 				partName = _meshFacePartNameBuffers.partName;
-				id = _meshFacePartNameBuffers.id;
+				id = _meshFacePartNameBuffers.ptr;
 			}
 		}
-		else if (_meshFacePartNameBuffers.id != 0)
+		else if (_meshFacePartNameBuffers.ptr != 0)
 		{
 			objectType = PickObjectType::MeshFace;
 			partName = _meshFacePartNameBuffers.partName;
-			id = _meshFacePartNameBuffers.id;
+			id = _meshFacePartNameBuffers.ptr;
 		}
 		_meshPartNameBuffers.initial();
 		_meshFacePartNameBuffers.initial();
-		return QPair<PickObjectType, QPair<QString, int>>(objectType, { partName, id});
+		return QPair<PickObjectType, QPair<QString, void*>>(objectType, { partName, id});
 	}
-	QPair<QString, int> mPreMeshPickData1::getSoloPickMeshDataByAngle()
+	QPair<QString, void*> mPreMeshPickData1::getSoloPickMeshDataByAngle()
 	{
-		QPair<QString, int> pair(_meshPartNameBuffers.partName, _meshPartNameBuffers.id);
+		QPair<QString, void*> pair(_meshPartNameBuffers.partName, _meshPartNameBuffers.ptr);
 		_meshPartNameBuffers.initial();
 		return pair;
 	}
-	QPair<QString, int> mPreMeshPickData1::getSoloPickMeshLineDataByAngle()
+	QPair<QString, void*> mPreMeshPickData1::getSoloPickMeshLineDataByAngle()
 	{
-		QPair<QString, int> pair(_meshLinePartNameBuffers.partName, _meshLinePartNameBuffers.id);
+		QPair<QString, void*> pair(_meshLinePartNameBuffers.partName, _meshLinePartNameBuffers.ptr);
 		_meshLinePartNameBuffers.initial();
 		return pair;
 	}
-	QPair<QString, int> mPreMeshPickData1::getSoloPickMeshFaceDataByAngle()
+	QPair<QString, void*> mPreMeshPickData1::getSoloPickMeshFaceDataByAngle()
 	{
-		QPair<QString, int> pair(_meshFacePartNameBuffers.partName, _meshFacePartNameBuffers.id);
+		QPair<QString, void*> pair(_meshFacePartNameBuffers.partName, _meshFacePartNameBuffers.ptr);
 		_meshFacePartNameBuffers.initial();
 		return pair;
 	}

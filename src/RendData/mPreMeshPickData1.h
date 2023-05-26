@@ -1,7 +1,7 @@
 #pragma once
-#include "rendview_global.h"
 //解决中文乱码
 #pragma execution_character_set("utf-8")
+#include "renddata_global.h"
 
 //Qt
 #include <QPair>
@@ -15,7 +15,8 @@
 
 class MXMeshElement;
 class MXMeshVertex;
-namespace MPreRend
+class MFace;
+namespace MDataPre
 {	
 	using namespace std;
 	using namespace MxFunctions;
@@ -50,6 +51,36 @@ namespace MPreRend
 			depth = FLT_MAX;
 		}
 	};
+	struct MeshFaceDepthBuffer
+	{
+		MFace *meshface;
+		float depth;
+		MeshFaceDepthBuffer()
+		{
+			meshface = nullptr;
+			depth = FLT_MAX;
+		}
+		void initial()
+		{
+			meshface = nullptr;
+			depth = FLT_MAX;
+		}
+	};
+
+	struct MeshFaceSetDepthBuffer
+	{
+		set<MFace*> meshfaces;
+		float depth;
+		MeshFaceSetDepthBuffer()
+		{
+			depth = FLT_MAX;
+		}
+		void initial()
+		{
+			meshfaces.clear();
+			depth = FLT_MAX;
+		}
+	};
 	struct MeshElementDepthBuffer
 	{
 		MXMeshElement *element;
@@ -80,7 +111,25 @@ namespace MPreRend
 			depth = FLT_MAX;
 		}
 	};
-	class RENDVIEW_EXPORT mPreMeshPickData1
+	struct PointerQStringDepthBuffer
+	{
+		void *ptr;
+		QString partName;
+		float depth;
+		PointerQStringDepthBuffer()
+		{
+			ptr = nullptr;
+			partName = "";
+			depth = FLT_MAX;
+		}
+		void initial()
+		{
+			ptr = nullptr;
+			partName = "";
+			depth = FLT_MAX;
+		}
+	};
+	class RENDDATA_EXPORT mPreMeshPickData1
 	{
 	public:
 
@@ -97,42 +146,42 @@ namespace MPreRend
 		void setSoloPickNodeData(MXMeshVertex* nodeid, float depth);
 		void setSoloPickMeshData(MXMeshElement* meshid, float depth);
 		void setSoloPickMeshLineData(int meshlineid, float depth);
-		void setSoloPickMeshFaceData(int meshfaceid, float depth);
+		void setSoloPickMeshFaceData(MFace* meshfaceid, float depth);
 		void setSoloPickMeshPartData(QString partName, float depth);
 		void setSoloPickNodeByPartData(set<MXMeshVertex*> nodeids, float depth);
 		void setSoloPickMeshByPartData(set<MXMeshElement*> meshids, float depth);
 		void setSoloPickMeshLineByPartData(set<int> meshLineids, float depth);
-		void setSoloPickMeshFaceByPartData(set<int> meshFaceids, float depth);
+		void setSoloPickMeshFaceByPartData(set<MFace*> meshFaceids, float depth);
 		void setSoloPickMeshDataByAngle(MXMeshElement* meshid, QString partName,float depth);
 		void setSoloPickMeshLineDataByAngle(int meshlineid, QString partName, float depth);
-		void setSoloPickMeshFaceDataByAngle(int meshfaceid, QString partName, float depth);
+		void setSoloPickMeshFaceDataByAngle(void* meshfaceid, QString partName, float depth);
 
 		void setMultiplyPickNodeData(set<MXMeshVertex*> nodeids);
 		void setMultiplyPickNodeData(QVector<MXMeshVertex*> nodeids);
 		void setMultiplyPickMeshData(set<MXMeshElement*> meshids);
 		void setMultiplyPickMeshLineData(set<int> meshlineids);
-		void setMultiplyPickMeshFaceData(set<int> meshfaceids);
+		void setMultiplyPickMeshFaceData(set<MFace*> meshfaceids);
 		void setMultiplyPickMeshPartData(QString partNames);
 
 		//一次性高亮，清除上一次高亮
 		void setAllPickNodeData(set<MXMeshVertex*> nodeids);
 		void setAllPickMeshData(set<MXMeshElement*> meshids);
 		void setAllPickMeshLineData(set<int> meshlineids);
-		void setAllPickMeshFaceData(set<int> meshfaceids);
+		void setAllPickMeshFaceData(set<MFace*> meshfaceids);
 		void setAllPickMeshPartData(set<QString> partNames);
 
 		//累积高亮
 		void setAddPickNodeData(set<MXMeshVertex*> nodeids);
 		void setAddPickMeshData(set<MXMeshElement*> meshids);
 		void setAddPickMeshLineData(set<int> meshlineids);
-		void setAddPickMeshFaceData(set<int> meshfaceids);
+		void setAddPickMeshFaceData(set<MFace*> meshfaceids);
 		void setAddPickMeshPartData(set<QString> partNames);
 
 		//减少高亮
 		void setReducePickNodeData(set<MXMeshVertex*> nodeids);
 		void setReducePickMeshData(set<MXMeshElement*> meshids);
 		void setReducePickMeshLineData(set<int> meshlineids);
-		void setReducePickMeshFaceData(set<int> meshfaceids);
+		void setReducePickMeshFaceData(set<MFace*> meshfaceids);
 		void setReducePickMeshPartData(set<QString> partNames);
 
 		//单选不保留顺序拾取完成后调用
@@ -154,7 +203,7 @@ namespace MPreRend
 		set<int> getPickMeshLineIDs();
 
 		//获取拾取后的单元面编号
-		set<int> getPickMeshFaceIDs();
+		set<MFace*> getPickMeshFaceIDs();
 
 		//获取拾取后的网格部件名称
 		set<QString> getPickMeshPartNames();
@@ -170,11 +219,11 @@ namespace MPreRend
 		void clearPickMeshPartData();
 
 		//通过角度拾取
-		QPair<PickObjectType, QPair<QString, int>> getSoloPickNodeDataByLineAngle();//拾取到的对象和其编号
-		QPair<PickObjectType, QPair<QString, int>> getSoloPickNodeDataByFaceAngle();//拾取到的对象和其编号
-		QPair<QString, int> getSoloPickMeshDataByAngle();
-		QPair<QString, int> getSoloPickMeshLineDataByAngle();
-		QPair<QString, int> getSoloPickMeshFaceDataByAngle();
+		QPair<PickObjectType, QPair<QString, void*>> getSoloPickNodeDataByLineAngle();//拾取到的对象和其编号
+		QPair<PickObjectType, QPair<QString, void*>> getSoloPickNodeDataByFaceAngle();//拾取到的对象和其编号
+		QPair<QString, void*> getSoloPickMeshDataByAngle();
+		QPair<QString, void*> getSoloPickMeshLineDataByAngle();
+		QPair<QString, void*> getSoloPickMeshFaceDataByAngle();
 
 	private:
 
@@ -186,7 +235,7 @@ namespace MPreRend
 
 		IDDepthBuffer _meshLineBuffer;//当前单元线编号
 
-		IDDepthBuffer _meshFaceBuffer;//当前单元面编号
+		MeshFaceDepthBuffer _meshFaceBuffer;//当前单元面编号
 
 		NameDepthBuffer _partBuffer;//当前部件名称
 
@@ -196,13 +245,13 @@ namespace MPreRend
 
 		IDSetDepthBuffer _meshLineBuffers;//按部件拾取单元线的编号
 
-		IDSetDepthBuffer _meshFaceBuffers;//按部件拾取单元面的编号
+		MeshFaceSetDepthBuffer _meshFaceBuffers;//按部件拾取单元面的编号
 
-		IDQStringDepthBuffer _meshPartNameBuffers;//按角度拾取单元的编号
+		PointerQStringDepthBuffer _meshPartNameBuffers;//按角度拾取单元的编号
 
-		IDQStringDepthBuffer _meshLinePartNameBuffers;//按角度拾取单元线的编号
+		PointerQStringDepthBuffer _meshLinePartNameBuffers;//按角度拾取单元线的编号
 
-		IDQStringDepthBuffer _meshFacePartNameBuffers;//按角度拾取单元面的编号
+		PointerQStringDepthBuffer _meshFacePartNameBuffers;//按角度拾取单元面的编号
 
 		//IDQStringDepthBuffer _meshPartNameBuffers;//按角度拾取单元的编号
 
@@ -210,7 +259,7 @@ namespace MPreRend
 		QVector<MXMeshVertex*> _pickNodesOrder;//最终拾取到的节点（保留拾取顺序）
 		set<MXMeshElement*> _pickMeshs;//最终拾取到的单元
 		set<int> _pickMeshLines;//最终拾取到的单元线
-		set<int> _pickMeshFaces;//最终拾取到的单元面
+		set<MFace*> _pickMeshFaces;//最终拾取到的单元面
 		set<QString> _pickParts;//最终拾取到的部件
 
 	};

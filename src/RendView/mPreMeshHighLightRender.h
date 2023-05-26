@@ -29,14 +29,17 @@ namespace MViewBasic
 	class mModelView;
 	class mViewBase;
 }
-
+namespace MDataPre
+{
+	class mPreMeshPickData1;
+}
+using namespace MDataPre;
 using namespace MViewBasic;
 using namespace MBaseRend;
 using namespace std;
 namespace MPreRend
 {
 	class mPreRendStatus;
-	class mPreMeshPickData1;
 	class RENDVIEW_EXPORT mPreMeshHighLightRender
 	{
 	public:

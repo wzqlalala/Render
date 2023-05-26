@@ -38,10 +38,14 @@ namespace MDataGeo
 	class mGeoPickData1;
 	class mPreGeoPickThread;
 }
-
+namespace MDataPre
+{
+	class mPreMeshPickData1;
+}
 using namespace MViewBasic;
 using namespace MBaseRend;
 using namespace MDataGeo;
+using namespace MDataPre;
 using namespace std;
 namespace MPreRend
 {
@@ -50,8 +54,8 @@ namespace MPreRend
 	class mPreGeoModelRender;
 	class mPreGeoHighLightRender;
 	class mPreMeshModelRender;
-	class mPreMeshPickData1;
 	class mPreMeshHighLightRender;
+	class mPreMeshPickThread;
 	class RENDVIEW_EXPORT mPreRender :public mBaseRender
 	{
 		Q_OBJECT
@@ -72,6 +76,9 @@ namespace MPreRend
 
 		//获取集合模型拾取数据
 		mGeoPickData1 *getGeoPickData() { return _geoPickData; };
+
+		//获取网格模型拾取数据
+		mPreMeshPickData1 *getMeshPickData() { return _meshPickData; };
 
 		//更新高亮渲染
 		void updateHighLightRender();
@@ -116,7 +123,8 @@ namespace MPreRend
 		shared_ptr<mPreGeoHighLightRender> _geoHighLightRender;//几何高亮数据
 
 		shared_ptr<mPreMeshModelRender> _meshModelRender;//网格渲染
-		mPreMeshPickData1 *_meshPickData;//网格拾取
+		mPreMeshPickData1 *_meshPickData;//网格数据
+		mPreMeshPickThread *_meshPickThread;//网格拾取
 		shared_ptr<mPreMeshHighLightRender> _meshHighLightRender;//几何高亮数据
 
 		mxr::Texture *_pointTexture;//几何点的纹理
