@@ -117,6 +117,10 @@ namespace MBaseRend
 
 		void clearRender();
 
+		void clearCameraKeys();
+
+		void clearPickKeys();
+
 		void setCameraKeys(QPair<Qt::MouseButton, Qt::KeyboardModifiers> buttons, CameraOperateMode cameraOperateMode);
 
 		void setPickKeys(QPair<Qt::MouseButton, Qt::KeyboardModifiers> buttons, PickMode pickMode);

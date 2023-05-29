@@ -68,6 +68,7 @@ namespace MPreRend
 		std::shared_ptr<mxr::StateSet> _lineStateSet;//äÖÈ¾ÏßµÄ×´Ì¬
 		std::shared_ptr<mxr::StateSet> _pointStateSet;//äÖÈ¾µãµÄ×´Ì¬
 
+		//std::shared_ptr<mGroupRender1<mxr::Vec3Array>> _edgelineRender;
 		std::shared_ptr<mGroupRender1<mxr::Vec3Array>> _lineRender;
 		std::shared_ptr<mGroupRender1<mxr::Vec3Array>> _pointRender;
 		std::shared_ptr<mGroupRender2<mxr::Vec3Array, mxr::FloatArray>> _facelineRender;

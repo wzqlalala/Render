@@ -6,10 +6,10 @@
 //#include "MXGeoFace.h"
 //#include "MXGeoSolid.h"
 //#include "MeshEntity.h"
-//#include "MXMeshTetrahedron.h"
-//#include "MXMeshHexahedral.h"
-//#include "MXMeshTriangle.h"
-//#include "MXMeshQuadrangle.h"
+#include "MXMeshTetrahedron.h"
+#include "MXMeshHexahedral.h"
+#include "MXMeshTriangle.h"
+#include "MXMeshQuadrangle.h"
 
 #include <renderpch.h>
 #include "Space.h"
@@ -294,46 +294,28 @@ namespace MPreRend
 	void mPreMeshPartRender::appendPart()
 	{
 		QVector3D color;
-		//color = MeshMessage::getInstance()->get//获取部件颜色
+		//color = MeshMessage::getInstance()->getPartcolor(_partName);//获取部件颜色
 		
-		//表面
+		//实体(获取实体)
+		QVector<MXGeoSolid*> geoSolids = MeshMessage::getInstance()->getGeoSolidSamePart(_partName);
+		for (auto geoSolid : geoSolids)
+		{
+			getGeoSolidData(geoSolid, color);
+		}
+
+		//面(获取不属于几何实体的面)
 		QVector<MXGeoFace*> geoFaces = MeshMessage::getInstance()->getGeoFaceSamePart(_partName);
 		for (auto geoFace : geoFaces)
 		{
-			for (auto mesh : geoFace->_mTriangles)
-			{
-				for (int i = 0; i < 3; i++)
-				{
-					_facerend->_vertex0->append(QVector3D(mesh->getVertex(i)->vx(), mesh->getVertex(i)->vy(), mesh->getVertex(i)->vz()));
-					_facerend->_vertex1->append(color);
-				}
-				_facelinerend->_vertex1->append(QVector<float>(3, 1.0f));
-			}
-			for (auto mesh : geoFace->_mQuadangles)
-			{
-				for (int i = 0; i < 6; i++)
-				{
-					int index = quadToTriIndex.at(i);
-					_facerend->_vertex0->append(QVector3D(mesh->getVertex(index)->vx(), mesh->getVertex(index)->vy(), mesh->getVertex(index)->vz()));
-					_facerend->_vertex1->append(color);
-				}
-				_facelinerend->_vertex1->append(QVector<float>(6, 0.0f));
-			}
+			getGeoFaceData(geoFace, color);
 		}
 		_facelinerend->getDrawable()->setVertexAttribArray(0, _facerend->_vertex0);
 
-		//线网格
+		//线网格(获取不属于几何面的线)
 		QVector<MXGeoEdge*> geoEdges = MeshMessage::getInstance()->getGeoEdgeSamePart(_partName);
 		for (auto geoEdge : geoEdges)
 		{
-			for (auto mesh : geoEdge->_mLines)
-			{
-				for (int i = 0; i < 2; i++)
-				{
-					_linerend->_vertex0->append(QVector3D(mesh->getVertex(i)->vx(), mesh->getVertex(i)->vy(), mesh->getVertex(i)->vz()));
-					_linerend->_vertex1->append(color);
-				}
-			}
+			getGeoIndependentEdgeData(geoEdge, color);
 		}
 
 		//点网格
@@ -341,12 +323,8 @@ namespace MPreRend
 		for (auto geoPoint : geoPoints)
 		{
 			auto mesh = geoPoint->_mVertex;
-			for (int i = 0; i < 1; i++)
-			{
-				_linerend->_vertex0->append(QVector3D(mesh->vx(), mesh->vy(), mesh->vz()));
-				_linerend->_vertex1->append(color);
-			}
-		
+			_pointrend->_vertex0->append(QVector3D(mesh->vx(), mesh->vy(), mesh->vz()));
+			_pointrend->_vertex1->append(color);	
 		}
 		
 
@@ -376,6 +354,96 @@ namespace MPreRend
 			_facerend->getDrawable()->setNodeMask(1);
 			_facelinerend->getDrawable()->setNodeMask(1);
 			_edgelinerend->getDrawable()->setNodeMask(0);
+		}
+	}
+	void mPreMeshPartRender::getGeoSolidData(MXGeoSolid * geoSolid, QVector3D color)
+	{
+		if (geoSolid->_mTetrahedrons.size() == 0 && geoSolid->_mHexahedrals.size() == 0)//二维或者一维
+		{
+			std::vector<MXGeoFace*> geoFaces = geoSolid->getface();
+			//表面
+			for (auto geoFace : geoFaces)
+			{
+				getGeoFaceData(geoFace, color);
+			}
+		}
+		else//三维获取单元面(先从面获取表面)
+		{
+			std::vector<MXGeoFace*> geoFaces = geoSolid->getface();
+			//表面
+			for (auto geoFace : geoFaces)
+			{
+				getGeoFaceData(geoFace, color);
+
+				//边界线
+				QSet<MXGeoEdge*> geoEdges = geoFace->getPVTEdgesOnFace();
+				for (auto geoEdge : geoEdges)
+				{
+					getGeoEdgeData(geoEdge);
+				}
+
+			}
+		}
+	}
+	void mPreMeshPartRender::getGeoFaceData(MXGeoFace * geoFace, QVector3D color)
+	{
+		if (geoFace->_mTriangles.size() == 0 && geoFace->_mQuadangles.size() == 0)//一维
+		{
+			//线网格
+			QSet<MXGeoEdge*> geoEdges = geoFace->getPVTEdgesOnFace();
+			for (auto geoEdge : geoEdges)
+			{
+				getGeoIndependentEdgeData(geoEdge, color);
+			}
+		}
+		else//二维
+		{
+			for (auto mesh : geoFace->_mTriangles)
+			{
+				_facerend->_vertex0->append(mesh->getallVertexs1());
+				_facerend->_vertex1->append(color);
+
+				_facelinerend->_vertex1->append(QVector<float>(3, 1.0f));
+			}
+			for (auto mesh : geoFace->_mQuadangles)
+			{
+				auto vertexs = mesh->getallVertexs1();
+				for (int i = 0; i < 6; i++)
+				{
+					int index = quadToTriIndex.at(i);
+					_facerend->_vertex0->append(vertexs.at(index));
+					_facerend->_vertex1->append(color);
+				}
+				_facelinerend->_vertex1->append(QVector<float>(6, 0.0f));
+			}
+
+			//边界线
+			QSet<MXGeoEdge*> geoEdges = geoFace->getPVTEdgesOnFace();
+			for (auto geoEdge : geoEdges)
+			{
+				getGeoEdgeData(geoEdge);
+			}
+		}
+	}
+	void mPreMeshPartRender::getGeoEdgeData(MXGeoEdge * geoEdge)
+	{
+		for (auto mesh : geoEdge->_mLines)
+		{
+			for (int i = 0; i < 2; i++)
+			{
+				_edgelinerend->_vertex0->append(QVector3D(mesh->getVertex(i)->vx(), mesh->getVertex(i)->vy(), mesh->getVertex(i)->vz()));
+			}
+		}
+	}
+	void mPreMeshPartRender::getGeoIndependentEdgeData(MXGeoEdge * geoEdge, QVector3D color)
+	{
+		for (auto mesh : geoEdge->_mLines)
+		{
+			for (int i = 0; i < 2; i++)
+			{
+				_linerend->_vertex0->append(QVector3D(mesh->getVertex(i)->vx(), mesh->getVertex(i)->vy(), mesh->getVertex(i)->vz()));
+				_linerend->_vertex1->append(color);
+			}
 		}
 	}
 }

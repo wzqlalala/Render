@@ -292,22 +292,34 @@ namespace MBaseRend
 		_renderArray.clear();
 		_afterRenderArray.clear();
 	}
+	void mBaseRend::clearCameraKeys()
+	{
+		_cameraKeys.clear();
+	}
+	void mBaseRend::clearPickKeys()
+	{
+		_pickKeys.clear();
+	}
 	void mBaseRend::setCameraKeys(QPair<Qt::MouseButton, Qt::KeyboardModifiers> buttons, CameraOperateMode cameraOperateMode)
 	{
 		if (_cameraKeys.contains(buttons))
 		{
 			return;
 		}
-		auto iter = QHashIterator< QPair<Qt::MouseButton, Qt::KeyboardModifiers>, CameraOperateMode>(_cameraKeys);
-		while (iter.hasNext())
+		else if (_pickKeys.contains(buttons))
 		{
-			iter.next();
-			if (iter.value() == cameraOperateMode)
-			{
-				_cameraKeys.remove(iter.key());
-				break;
-			}
+			return;
 		}
+		//auto iter = QHashIterator< QPair<Qt::MouseButton, Qt::KeyboardModifiers>, CameraOperateMode>(_cameraKeys);
+		//while (iter.hasNext())
+		//{
+		//	iter.next();
+		//	if (iter.value() == cameraOperateMode)
+		//	{
+		//		_cameraKeys.remove(iter.key());
+		//		break;
+		//	}
+		//}
 		_cameraKeys[buttons] = cameraOperateMode;
 	}
 	void mBaseRend::setPickKeys(QPair<Qt::MouseButton, Qt::KeyboardModifiers> buttons, PickMode pickMode)
@@ -316,16 +328,20 @@ namespace MBaseRend
 		{
 			return;
 		}
-		auto iter = QHashIterator< QPair<Qt::MouseButton, Qt::KeyboardModifiers>, PickMode>(_pickKeys);
-		while (iter.hasNext())
+		else if (_cameraKeys.contains(buttons))
 		{
-			iter.next();
-			if (iter.value() == pickMode)
-			{
-				_pickKeys.remove(iter.key());
-				break;
-			}
+			return;
 		}
+		//auto iter = QHashIterator< QPair<Qt::MouseButton, Qt::KeyboardModifiers>, PickMode>(_pickKeys);
+		//while (iter.hasNext())
+		//{
+		//	iter.next();
+		//	if (iter.value() == pickMode)
+		//	{
+		//		_pickKeys.remove(iter.key());
+		//		break;
+		//	}
+		//}
 		_pickKeys[buttons] = pickMode;
 	}
 	void mBaseRend::setMultiplyPickMode(MultiplyPickMode multiplyPickMode)

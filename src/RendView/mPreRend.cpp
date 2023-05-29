@@ -33,6 +33,8 @@ namespace MPreRend
 		//保存单位制
 		QString viewStyle = MAppConfiguration::mAppConfiguration::getInstance()->_viewStyle;
 
+		this->clearCameraKeys();
+		this->clearPickKeys();
 		if (viewStyle == "Abaqus")
 		{
 			this->setCameraKeys(QPair<Qt::MouseButton, Qt::KeyboardModifiers>(Qt::MiddleButton, Qt::ControlModifier | Qt::AltModifier), CameraOperateMode::Zoom);
@@ -63,7 +65,7 @@ namespace MPreRend
 			this->setPickKeys(QPair<Qt::MouseButton, Qt::KeyboardModifiers>(Qt::LeftButton, Qt::ControlModifier), PickMode::SoloPick);
 			this->setPickKeys(QPair<Qt::MouseButton, Qt::KeyboardModifiers>(Qt::RightButton, Qt::ControlModifier), PickMode::SoloPick);
 		}
-
+		
 		//让其自动进入OpenGL初始化
 		this->setGeometry(-1, -1, 1, 1);
 		this->show();

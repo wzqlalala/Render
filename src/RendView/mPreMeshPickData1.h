@@ -84,8 +84,11 @@ namespace MPreRend
 	{
 	public:
 
-		//获取单例
-		static mPreMeshPickData1* getInstance();
+		//默认构造函数
+		mPreMeshPickData1();
+
+		//析构函数
+		~mPreMeshPickData1();
 
 		//设置添加拾取还是减少拾取
 		void setMeshPickFunction(int pickfunction);//0加1减
@@ -174,16 +177,6 @@ namespace MPreRend
 		QPair<QString, int> getSoloPickMeshFaceDataByAngle();
 
 	private:
-
-		//默认构造函数
-		mPreMeshPickData1();
-
-		//析构函数
-		~mPreMeshPickData1();
-
-	private:
-		//单例指针
-		static mPreMeshPickData1 *_instance;
 
 		int _pickFunction;//0加1减
 

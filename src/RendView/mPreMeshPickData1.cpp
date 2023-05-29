@@ -2,16 +2,6 @@
 
 namespace MPreRend
 {
-	mPreMeshPickData1* mPreMeshPickData1::_instance = nullptr;
-	mPreMeshPickData1* mPreMeshPickData1::getInstance()
-	{
-		if (_instance == nullptr)
-		{
-			_instance = new mPreMeshPickData1();
-		}
-		return _instance;
-	}
-
 	void mPreMeshPickData1::setMeshPickFunction(int pickfunction)
 	{
 		_pickFunction = pickfunction;
