@@ -3,24 +3,6 @@ namespace MViewBasic
 {
 
 	/*
-	 * 二维曲线类型
-	 */
-	enum PlotType
-	{
-		//折线图
-		LineChart,
-
-		//光滑曲线图
-		SmoothChart,
-
-		//阶跃曲线图
-		StepChart,
-
-		//分布光滑曲线图（前段为光滑，后端为直线）
-		SmoothStepChart,
-	};
-
-	/*
 	 * 后处理模型操作枚举
 	 */
 	enum PostModelOperateEnum
