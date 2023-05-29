@@ -79,7 +79,7 @@ namespace MPreRend
 
 		//获取网格模型拾取数据
 		mPreMeshPickData1 *getMeshPickData() { return _meshPickData; };
-
+		 
 		//更新高亮渲染
 		void updateHighLightRender();
 
