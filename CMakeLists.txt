@@ -101,6 +101,9 @@ find_package(MxFunctions REQUIRED)
 # BasicData
 find_package(BasicData REQUIRED)
 
+# Qwt
+find_package(Qwt REQUIRED)
+
 #-----------------------------------------------------------------------------
 # 开启项目分组
 #-----------------------------------------------------------------------------
