@@ -14,14 +14,19 @@
 #include "SpaceTree.h"
 
 #include "mMeshViewEnum.h"
+#include "mElementFunction.h"
 
 using namespace MViewBasic;
 using namespace Space;
 using namespace std;
+using namespace MxFunctions;
 class MXGeoSolid;
 class MXGeoFace;
 class MXGeoEdge;
 class MXGeoPoint;
+class MFace;
+class MXMeshElement;
+class MXMeshVertex;
 namespace MDataPre
 {
 	class mPreMeshPickData1;
@@ -221,17 +226,17 @@ namespace MPreRend
 		/*
 		 * 单选
 		 */
-		void SoloPickAny(QString partName);
-		void SoloPickPoint(QString partName);
-		void SoloPick1DMesh(QString partName);
-		void SoloPick2DMesh(QString partName);
-		void SoloPickTri(QString partName);
-		void SoloPickQuad(QString partName);
-		void SoloPickTet(QString partName);
-		void SoloPickPyramid(QString partName);
-		void SoloPickWedge(QString partName);
-		void SoloPickHex(QString partName);
-
+		//void SoloPickAny(QString partName);
+		//void SoloPickPoint(QString partName);
+		//void SoloPick1DMesh(QString partName);
+		//void SoloPick2DMesh(QString partName);
+		//void SoloPickTri(QString partName);
+		//void SoloPickQuad(QString partName);
+		//void SoloPickTet(QString partName);
+		//void SoloPickPyramid(QString partName);
+		//void SoloPickWedge(QString partName);
+		//void SoloPickHex(QString partName);
+		void SoloPickMeshTypeFilter(QString partName, QVector<MeshType> filters);
 		void SoloPickNode(QString partName);
 		void SoloPickAnyMesh(QString partName);
 		void SoloPickMeshLine(QString partName);
@@ -239,24 +244,31 @@ namespace MPreRend
 		void SoloPickMeshPart(QString partName);
 		void SoloPickNodeByPart(QString partName);
 		void SoloPickAnyMeshByPart(QString partName);
-		void SoloPickMeshLineByPart(QString partName);
+		//void SoloPickMeshLineByPart(QString partName);
 		void SoloPickMeshFaceByPart(QString partName);
-		void SoloPickNodeByLine(QString partName);
-		void SoloPickMeshByLine(QString partName);
-		void SoloPickMeshLineByLine(QString partName);
-		void SoloPickNodeByFace(QString partName);
-		void SoloPickMeshByFace(QString partName);
-		void SoloPickMeshFaceByFace(QString partName);
-		void SoloPickNodeByLineAngle(QString partName);
+		//void SoloPickNodeByLine(QString partName);
+		//void SoloPickMeshByLine(QString partName);
+		//void SoloPickMeshLineByLine(QString partName);
+		//void SoloPickNodeByFace(QString partName);
+		//void SoloPickMeshByFace(QString partName);
+		//void SoloPickMeshFaceByFace(QString partName);
+		//void SoloPickNodeByLineAngle(QString partName);
 		void SoloPickNodeByFaceAngle(QString partName);
-		void SoloPick1DMeshByAngle(QString partName);
+		//void SoloPick1DMeshByAngle(QString partName);
 		void SoloPick2DMeshByAngle(QString partName);
-		void SoloPickMeshLineByAngle(QString partName);
+		//void SoloPickMeshLineByAngle(QString partName);
 		void SoloPickMeshFaceByAngle(QString partName);
 
 		//框选拾取
 		void MultiplyPickNode(QString partName, bool isAllIn = false);
 		void MultiplyPickAnyMesh(QString partName, bool isAllIn = false);
+		void MultiplyPickMeshTypeFilter(QString partName, QVector<MeshType> filters, bool isAllIn = false);
+		void MultiplyPickMeshFace(QString partName, bool isAllIn = false);
+		void MultiplyPickMeshPart(QString partName, bool isAllIn = false);
+		void MultiplyPickNodeByPart(QString partName, bool isAllIn = false);
+		void MultiplyPickAnyMeshByPart(QString partName, bool isAllIn = false);
+		void MultiplyPickMeshLineByPart(QString partName, bool isAllIn = false);
+		void MultiplyPickMeshFaceByPart(QString partName, bool isAllIn = false);
 
 		//通过角度拾取
 		void SoloPickNodeByLineAngle();
@@ -265,6 +277,13 @@ namespace MPreRend
 		void SoloPickMeshLineByAngle();
 		void SoloPick2DMeshByAngle();
 		void SoloPickMeshFaceByAngle();
+
+		/*************单选***********/
+		//判断单选是否拾取到部件
+
+		//判断单选是否拾取到该部件
+		bool isSoloPickMeshPart(QString partName, float &depth);
+
 
 		/***********框选*********/
 		//判断是否拾取到该几何点
@@ -280,7 +299,7 @@ namespace MPreRend
 		bool IsMultiplyPickGeoSolid(MXGeoSolid* geoSolidData);
 
 		//判断框选是否拾取到该部件
-		bool isMultiplyPickGeoPart(QString partName);
+		bool isMultiplyPickMeshPart(QString partName);
 
 
 		//将世界坐标转化为屏幕坐标
@@ -299,6 +318,10 @@ namespace MPreRend
 		//获取形心
 		QVector3D getCenter(QVector<QVector3D> vertexs);
 
+		//获取一个部件的所有信息
+		set<MXMeshVertex*> getAllNodesByPartName(QString partName);
+		set<MXMeshElement*> getAllMeshsByPartName(QString partName);
+		set<MFace*> getAllMeshFacesByPartName(QString partName);
 
 	signals:
 		/*
