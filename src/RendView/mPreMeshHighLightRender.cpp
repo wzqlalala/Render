@@ -26,10 +26,11 @@ using namespace mxr;
 using namespace std;
 namespace MPreRend
 {
-	mPreMeshHighLightRender::mPreMeshHighLightRender(shared_ptr<mPreRendStatus> rendStatus, mPreMeshPickData1 *meshPickData):_rendStatus(rendStatus), _meshPickData(meshPickData)
+	mPreMeshHighLightRender::mPreMeshHighLightRender(shared_ptr<mxr::Group> parent, shared_ptr<mPreRendStatus> rendStatus, mPreMeshPickData1 *meshPickData):_rendStatus(rendStatus), _meshPickData(meshPickData)
 	{
+		_parent = parent;
 		_geode = MakeAsset<Geode>();
-		_viewer = nullptr;
+		//_viewer = nullptr;
 		//_edgelineRender = nullptr;
 		_facelineRender = nullptr;
 		_lineRender = nullptr;
@@ -343,7 +344,7 @@ namespace MPreRend
 			_pointStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
 		}
 
-		_viewer->noClearRun();
+		//_viewer->noClearRun();
 	}
 
 
@@ -373,11 +374,11 @@ namespace MPreRend
 
 	void mPreMeshHighLightRender::initial()
 	{
-		if (!_viewer)
-		{
-			_viewer = MakeAsset<mxr::Viewer>();
-			_viewer->setSceneData(_geode);
-		}
+		//if (!_viewer)
+		//{
+		//	_viewer = MakeAsset<mxr::Viewer>();
+		//	_viewer->setSceneData(_geode);
+		//}
 
 		_facelineStateSet = MakeAsset<StateSet>();
 		mxr::Shader * facelineshader = mShaderManage::GetInstance()->GetShader("PostHighLightFaceLine");

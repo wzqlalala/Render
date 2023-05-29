@@ -401,7 +401,8 @@ namespace MPreRend
 		//判断该部件是否存在碰撞
 		//判断点选是否在部件的包围盒内
 		QVector3D worldVertex = _p;
-		Space::AABB aabb;//部件包围盒
+		auto part = MeshMessage::getInstance()->getBoundBoxSamePart(partName);
+		Space::AABB aabb(part.first, part.second);//部件包围盒
 		if (aabb.ContainPoint(_p))
 		{
 			switch (*_pickFilter)
@@ -437,7 +438,8 @@ namespace MPreRend
 
 	void mPreMeshPickThread::doMultiplyPick(QString partName)
 	{
-		Space::AABB aabb;//部件包围盒
+		auto part = MeshMessage::getInstance()->getBoundBoxSamePart(partName);
+		Space::AABB aabb(part.first, part.second);//部件包围盒
 		QVector<QVector2D> ap = _pick->getAABBToScreenVertex(aabb.minEdge, aabb.maxEdge);
 		bool isAllIn{ false };
 		bool isIntersetion{ false };

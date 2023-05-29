@@ -174,7 +174,8 @@ namespace MPreRend
 
 		_meshPickData = new mPreMeshPickData1();
 		_meshPickThread = new mPreMeshPickThread(_meshPickData);
-		_meshHighLightRender = make_shared<mPreMeshHighLightRender>(_rendStatus, _meshPickData);
+		_meshPickThread->setPickFilter(_baseRend->getPickFilter());
+		_meshHighLightRender = make_shared<mPreMeshHighLightRender>(_parent, _rendStatus, _meshPickData);
 
 		//this->doneCurrent();
 	}
@@ -309,9 +310,11 @@ namespace MPreRend
 			aabb.push(_geoModelData->getModelSize());
 			hasModel = true;
 		}
-		if (true)
+		if (MeshMessage::getInstance()->getAllPartNames().size() > 0)
 		{
-			
+			auto model = MeshMessage::getInstance()->getBoundBoxAllPart();
+			aabb.push(model.first, model.second);
+			hasModel = true;
 		}
 		return hasModel;
 	}
@@ -433,5 +436,6 @@ namespace MPreRend
 		}
 
 		_geoHighLightRender->updateUniform(modelView, commonView);
+		_meshHighLightRender->updateUniform(modelView, commonView);
 	}
 }
