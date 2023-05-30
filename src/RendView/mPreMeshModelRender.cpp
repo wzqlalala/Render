@@ -80,7 +80,7 @@ namespace MPreRend
 	}
 	bool mPreMeshModelRender::updateRender()
 	{
-		if (!MeshMessage::getInstance()->hasUpdatedRenderState())
+		if (MeshMessage::getInstance()->hasUpdatedRenderState())
 		{
 			bool isUpdateCamera{ false };
 			isUpdateCamera = isUpdateCamera | updateModelOperate(MeshMessage::getInstance()->getUpdatedRenderState());
@@ -225,21 +225,21 @@ namespace MPreRend
 	Space::AABB mPreMeshModelRender::getModelAABB()
 	{
 		Space::AABB aabb;
-		for(auto partrend : _partRenders)
+		for (auto partrend : _partRenders)
 		{
-			if (partrend->getPartSpaceTree())
-			{
-				aabb.push(partrend->getPartSpaceTree()->space);
-			}
+			aabb.push(partrend->getPartAABB());
 		}
 		return aabb;
 	}
-	Space::SpaceTree *mPreMeshModelRender::getPartSpaceTree(QString partName)
+	Space::AABB mPreMeshModelRender::getPartAABB(QString partName)
 	{
-		return _partRenders.value(partName)->getPartSpaceTree();
+		return _partRenders.value(partName)->getPartAABB();
 	}
-	mPreMeshPartRender::mPreMeshPartRender(std::shared_ptr<mxr::Group> parent, QString partName)
+	mPreMeshPartRender::mPreMeshPartRender(std::shared_ptr<mxr::Group> parent, QString partName):_parent(parent)
 	{
+		_geode = MakeAsset<Geode>();
+		_parent->addChild(_geode);
+
 		_facerend = MakeAsset<mGroupRender2<Vec3Array, Vec3Array>>(_geode);
 		_facetransparentnodeformationrend = MakeAsset<mGroupRender1<Vec3Array>>(_geode);
 		_edgelinerend = MakeAsset<mGroupRender1<Vec3Array>>(_geode);
@@ -252,7 +252,7 @@ namespace MPreRend
 	mPreMeshPartRender::~mPreMeshPartRender()
 	{
 		_parent->removeChild(_geode);
-		Space::destoryTree(_spaceTree);
+		//Space::destoryTree(_spaceTree);
 	}
 	void mPreMeshPartRender::setFaceStateSet(std::shared_ptr<mxr::StateSet> faceStateSet)
 	{
@@ -279,9 +279,9 @@ namespace MPreRend
 	{
 		_pointrend->setStateSet(pointStateSet);
 	}
-	Space::SpaceTree * mPreMeshPartRender::getPartSpaceTree()
+	Space::AABB mPreMeshPartRender::getPartAABB()
 	{
-		return nullptr;
+		return _aabb;
 	}
 
 	QVector<int> quadToTriIndex{ 0, 1, 2, 2, 3, 0 };
@@ -289,7 +289,9 @@ namespace MPreRend
 	void mPreMeshPartRender::appendPart()
 	{
 		QVector3D color;
-		//color = MeshMessage::getInstance()->getPartcolor(_partName);//获取部件颜色
+		QColor c = MeshMessage::getInstance()->getPartcolor(_partName);
+		//color = QVector3D(c.red(), c.green(), c.blue()); //获取部件颜色
+		color = QVector3D(1, 1, 1);
 		
 		//实体(获取实体)
 		QVector<MXGeoSolid*> geoSolids = MeshMessage::getInstance()->getGeoSolidSamePart(_partName);
@@ -321,8 +323,10 @@ namespace MPreRend
 			_pointrend->_vertex0->append(QVector3D(mesh->vx(), mesh->vy(), mesh->vz()));
 			_pointrend->_vertex1->append(color);	
 		}
-		
 
+		QPair<QVector3D, QVector3D> box = MeshMessage::getInstance()->getBoundBoxSamePart(_partName);
+		
+		_aabb.push(box.first, box.second);
 	}
 	void mPreMeshPartRender::setShowFuntion(ShowFuntion showFuntion)
 	{

@@ -52,6 +52,7 @@
 #include <QRect>
 
 #include "mIMxdbFile1.h"
+#include "mIFluentBCMeshFile.h"
 
 using namespace MDataPost;
 using namespace MxFunctions;
@@ -597,6 +598,19 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			break;
 		}
 		case Qt::Key_F3://读一个文件，其中有面和矢量信息
+		case Qt::Key_F4://读msh文件
+		{
+			if (_preRend == nullptr)
+			{
+				return;
+			}
+			QString filename = QFileDialog::getOpenFileName(this, "选择msh文件", qApp->applicationDirPath(), "*.msh");
+			QFileInfo info(filename);
+			
+			MIOFile::mIFluentBCMeshFile *file = new MIOFile::mIFluentBCMeshFile();
+			file->ReadBCMeshFile(filename);
+
+		}
 		{
 			if (_preRend == nullptr)
 			{

@@ -312,8 +312,8 @@ namespace MPreRend
 		}
 		if (MeshMessage::getInstance()->getAllPartNames().size() > 0)
 		{
-			auto model = MeshMessage::getInstance()->getBoundBoxAllPart();
-			aabb.push(model.first, model.second);
+			auto model = _meshModelRender->getModelAABB();
+			aabb.push(model);
 			hasModel = true;
 		}
 		return hasModel;

@@ -63,8 +63,7 @@ namespace MPreRend
 		void setLineStateSet(std::shared_ptr<mxr::StateSet> lineStateSet);
 		void setPointStateSet(std::shared_ptr<mxr::StateSet> pointStateSet);
 
-		Space::SpaceTree* getPartSpaceTree();
-		//MDataGeo::mGeoPartData1 *getpartData() { return _partData; };
+		Space::AABB getPartAABB();
 
 		void appendPart(/*mGeoModelData1 *geoModelData*/);
 
@@ -100,7 +99,7 @@ namespace MPreRend
 		//MDataGeo::mGeoPartData1 *_partData;
 		QString _partName;
 
-		Space::SpaceTree *_spaceTree;
+		Space::AABB _aabb;
 	};
 	class RENDVIEW_EXPORT mPreMeshModelRender
 	{
@@ -130,7 +129,8 @@ namespace MPreRend
 
 		Space::AABB getModelAABB();
 
-		Space::SpaceTree *getPartSpaceTree(QString partName);
+		Space::AABB getPartAABB(QString partName);
+
 
 	private:
 		shared_ptr<mxr::Group> _parent;//¸¸½Úµã
