@@ -3,6 +3,7 @@
 #include <fstream>
 #include <stdio.h>
 #include <iostream>
+#include <qdebug.h>
 
 //BasicData
 #include "MeshMessage.h"
@@ -413,7 +414,7 @@ namespace MIOFile
 							QString partName2 = QString::fromStdString(partname2);
 							_globalMeshId++;
 							geoFacePartName[zoneID] = partName1;
-							MXMeshTriangle * mesh = new MXMeshTriangle(this->getVertex(face_point[1], allVertexData), this->getVertex(face_point[2], allVertexData), this->getVertex(face_point[3], allVertexData), _globalMeshId);
+							MXMeshTriangle * mesh = new MXMeshTriangle(this->getVertex(face_point[1], allVertexData), this->getVertex(face_point[2], allVertexData), this->getVertex(face_point[3], allVertexData), _globalMeshId);						
 							geoTriFaceData[zoneID].append(mesh);
 						}
 						else
@@ -638,6 +639,10 @@ namespace MIOFile
 							_globalMeshId++;
 							MXMeshQuadrangle * mesh = new MXMeshQuadrangle(this->getVertex(face_point[1], allVertexData), this->getVertex(face_point[2], allVertexData), this->getVertex(face_point[3], allVertexData), this->getVertex(face_point[4], allVertexData), _globalMeshId);
 							geoQuadFaceData[zoneID].append(mesh);
+							for (int i = 0; i < 4; i++)
+							{
+								qDebug() << mesh->getVertex(i)->getNum();
+							}
 							//Faceinfo.push_back(face_point[0]);
 							//Faceinfo.push_back(face_point[1]);
 							//Faceinfo.push_back(face_point[2]);
@@ -881,13 +886,25 @@ namespace MIOFile
 		//db->getFluidCommonSettingData()->_partNum = partnum;
 		//db->getFluidCommonSettingData()->_nodeNum = nodenum;
 
+		//int nodeID = 1;
 		//MXReadData *readData = MeshMessage::getInstance()->getReadData();
 		//QString partName = "part1";
 		//MXMeshTriangle *tri;
-		///*******************Ãæ**************/
+		//MXMeshQuadrangle *quad;
+		//QVector<MXMeshTriangle*> tris;
+		//QVector<MXMeshQuadrangle*> quads;
+		/////*******************Ãæ**************/
 		//_globalFaceId++;
-		//tri = new MXMeshTriangle(new MXMeshVertex(0, 0, 0, 1), new MXMeshVertex(0, 1, 0, 2), new MXMeshVertex(1, 0, 0, 3), 1);
-		//readData->CreateGeoFace(partName, 1, QVector<MXMeshTriangle*>{tri}, QVector<MXMeshQuadrangle*>{});
+		//tri = new MXMeshTriangle(new MXMeshVertex(0, 0, 0, ++nodeID), new MXMeshVertex(0, 1, 0, ++nodeID), new MXMeshVertex(1, 0, 0, ++nodeID), ++_globalMeshId);tris.append(tri);
+		//for (int i = 0; i < 3; ++i)
+		//{
+		//	int pntid = tri->getVertex(i)->getNum();
+		//	qDebug() << pntid;
+		//}
+
+		//tri = new MXMeshTriangle(new MXMeshVertex(1, 1, 0, ++nodeID), new MXMeshVertex(0, 1, 0, ++nodeID), new MXMeshVertex(1, 0, 0, ++nodeID), ++_globalMeshId); tris.append(tri);
+		//quad = new MXMeshQuadrangle(new MXMeshVertex(0, 0, 1, ++nodeID), new MXMeshVertex(1, 0, 1, ++nodeID), new MXMeshVertex(1, 1, 1, ++nodeID), new MXMeshVertex(0, 1, 1, ++nodeID), ++_globalMeshId);quads.append(quad);
+		//readData->CreateGeoFace(partName, _globalFaceId, tris, quads);
 
 	}
 	MXMeshVertex * mIFluentBCMeshFile::getVertex(int id, QHash<int, MXMeshVertex*> &vertexs)

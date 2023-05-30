@@ -389,6 +389,24 @@ namespace MPreRend
 		{
 			return;
 		}
+		if (face->type() == 1)//Èý½ÇÐÎ
+		{
+			_facerend->_vertex0->append(face->getAllVertexsOfMFace());
+			_facerend->_vertex1->append(QVector<QVector3D>(3, color));
+
+			_facelinerend->_vertex1->append(QVector<float>(3, 1.0f));
+		}
+		else
+		{
+			auto vertexs = face->getAllVertexsOfMFace();
+			for (int i = 0; i < 6; i++)
+			{
+				int index = quadToTriIndex.at(i);
+				_facerend->_vertex0->append(vertexs.at(index));
+				_facerend->_vertex1->append(color);
+			}
+			_facelinerend->_vertex1->append(QVector<float>(6, 0.0f));
+		}
 	}
 	void mPreMeshPartRender::getGeoFaceData(MXGeoFace * geoFace, QVector3D color)
 	{
@@ -410,7 +428,7 @@ namespace MPreRend
 					continue;
 				}
 				_facerend->_vertex0->append(mesh->getallVertexs1());
-				_facerend->_vertex1->append(color);
+				_facerend->_vertex1->append(QVector<QVector3D>(3, color));
 
 				_facelinerend->_vertex1->append(QVector<float>(3, 1.0f));
 			}
