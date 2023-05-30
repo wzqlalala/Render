@@ -53,6 +53,7 @@ namespace MPreRend
 		//qDebug() << "mPreRender" << QString::number(long long int(context), 16);
 
 		_rendStatus = make_shared<mPreRendStatus>();
+		_rendStatus->_showFunction = SmoothShaded;
 		_pointTexture = mTextureManage::GetInstance()->GetTexture("GeoPoint.png", 3);
 		_geoModelData = new mGeoModelData1();
 		_geoModelRender = MakeAsset<mPreGeoModelRender>(parent, _rendStatus, _geoModelData);

@@ -609,20 +609,6 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			
 			MIOFile::mIFluentBCMeshFile *file = new MIOFile::mIFluentBCMeshFile();
 			file->ReadBCMeshFile(filename);
-
-		}
-		{
-			if (_preRend == nullptr)
-			{
-				return;
-			}
-			//_postRender = make_shared<MPostRend::mPostRender>(_postRend->getApplication(), _postRend->getRoot());
-			_preRender = _preRend->getPreRender();
-			if (readTxtFile())
-			{
-				return;
-			}
-			//_preRend->slotResetOrthoAndCamera();
 			break;
 		}
 		case Qt::Key_0:

@@ -18,7 +18,7 @@ namespace MPreRend
 
 	public:
 		//显示模式
-		ShowFuntion _showFunction = ElementFace;
+		ShowFuntion _showFunction = SmoothShaded;
 
 		//拾取模式
 		PickFilter _pickFilter;

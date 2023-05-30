@@ -290,8 +290,8 @@ namespace MPreRend
 	{
 		QVector3D color;
 		QColor c = MeshMessage::getInstance()->getPartcolor(_partName);
-		//color = QVector3D(c.red(), c.green(), c.blue()); //获取部件颜色
-		color = QVector3D(1, 1, 1);
+		color = QVector3D(c.red(), c.green(), c.blue()); //获取部件颜色
+		//color = QVector3D(1, 1, 1);
 		
 		//实体(获取实体)
 		QVector<MXGeoSolid*> geoSolids = MeshMessage::getInstance()->getGeoSolidSamePart(_partName);

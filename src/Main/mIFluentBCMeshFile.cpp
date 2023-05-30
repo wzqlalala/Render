@@ -881,6 +881,14 @@ namespace MIOFile
 		//db->getFluidCommonSettingData()->_partNum = partnum;
 		//db->getFluidCommonSettingData()->_nodeNum = nodenum;
 
+		//MXReadData *readData = MeshMessage::getInstance()->getReadData();
+		//QString partName = "part1";
+		//MXMeshTriangle *tri;
+		///*******************Ãæ**************/
+		//_globalFaceId++;
+		//tri = new MXMeshTriangle(new MXMeshVertex(0, 0, 0, 1), new MXMeshVertex(0, 1, 0, 2), new MXMeshVertex(1, 0, 0, 3), 1);
+		//readData->CreateGeoFace(partName, 1, QVector<MXMeshTriangle*>{tri}, QVector<MXMeshQuadrangle*>{});
+
 	}
 	MXMeshVertex * mIFluentBCMeshFile::getVertex(int id, QHash<int, MXMeshVertex*> &vertexs)
 	{
