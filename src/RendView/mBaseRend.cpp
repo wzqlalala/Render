@@ -348,7 +348,7 @@ namespace MBaseRend
 	{
 		*_multiplyPickMode = multiplyPickMode;
 	}
-	void mBaseRend::setPickFilter(MViewBasic::PickFilter pickFilter)
+	void mBaseRend::setPickFilter(PickFilter pickFilter)
 	{
 		*_pickFilter = pickFilter;
 	}

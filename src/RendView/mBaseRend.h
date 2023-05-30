@@ -28,6 +28,7 @@ namespace mxr
 }
 using namespace std;
 using namespace MViewBasic;
+using namespace MxFunctions;
 namespace MPostRend
 {
 	class mPostRender;
@@ -127,7 +128,7 @@ namespace MBaseRend
 
 		void setMultiplyPickMode(MultiplyPickMode multiplyPickMode);
 
-		void setPickFilter(MViewBasic::PickFilter pickFilter);
+		void setPickFilter(PickFilter pickFilter);
 
 		CameraOperateMode *getCameraOperateMode() { return _cameraMode; };
 

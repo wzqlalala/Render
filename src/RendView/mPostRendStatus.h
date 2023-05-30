@@ -34,7 +34,7 @@ namespace MPostRend
 		ShowFuntion _showFunction = ElementFace;
 
 		//拾取模式
-		MViewBasic::PickFilter _pickFilter;
+		PickFilter _pickFilter;
 
 		//拾取的单元类型过滤器
 		std::set<int> _pickElementTypeFilter;

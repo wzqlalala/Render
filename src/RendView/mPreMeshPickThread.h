@@ -171,7 +171,7 @@ namespace MPreRend
 		/*
 		* 设置当前的拾取过滤器
 		*/
-		void setPickFilter(MViewBasic::PickFilter *pickFilter);
+		void setPickFilter(PickFilter *pickFilter);
 
 		/*
 		 * 开始拾取
@@ -336,7 +336,7 @@ namespace MPreRend
 	private:
 
 		//拾取过滤器
-		MViewBasic::PickFilter *_pickFilter;
+		PickFilter *_pickFilter;
 
 		//拾取模式
 		MViewBasic::PickMode _pickMode;

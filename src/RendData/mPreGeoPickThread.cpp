@@ -255,7 +255,7 @@ namespace MDataGeo
 		_multiplyPickMode = multiplyPickMode;
 	}
 
-	void mPreGeoPickThread::setPickFilter(MViewBasic::PickFilter * pickFilter)
+	void mPreGeoPickThread::setPickFilter(PickFilter * pickFilter)
 	{
 		_pickFilter = pickFilter;
 	}

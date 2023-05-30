@@ -80,15 +80,10 @@ namespace MPreRend
 	}
 	bool mPreMeshModelRender::updateRender()
 	{
-		QList<QPair<ModelOperateEnum, std::set<QString>>> renderState
-		= MeshMessage::getInstance()->getUpdatedRenderState();
-		if (!renderState.empty())
+		if (!MeshMessage::getInstance()->hasUpdatedRenderState())
 		{
 			bool isUpdateCamera{ false };
-			while (!renderState.empty())
-			{
-				isUpdateCamera = isUpdateCamera | updateModelOperate(renderState.takeFirst());
-			}
+			isUpdateCamera = isUpdateCamera | updateModelOperate(MeshMessage::getInstance()->getUpdatedRenderState());
 			return isUpdateCamera;
 		}
 		return false;
@@ -304,7 +299,7 @@ namespace MPreRend
 		}
 
 		//面(获取不属于几何实体的面)
-		QVector<MXGeoFace*> geoFaces = MeshMessage::getInstance()->getGeoFaceSamePart(_partName);
+		QVector<MXGeoFace*> geoFaces = MeshMessage::getInstance()->getFreeGFaceInPart(_partName);
 		for (auto geoFace : geoFaces)
 		{
 			getGeoFaceData(geoFace, color);
@@ -312,7 +307,7 @@ namespace MPreRend
 		_facelinerend->getDrawable()->setVertexAttribArray(0, _facerend->_vertex0);
 
 		//线网格(获取不属于几何面的线)
-		QVector<MXGeoEdge*> geoEdges = MeshMessage::getInstance()->getGeoEdgeSamePart(_partName);
+		QVector<MXGeoEdge*> geoEdges = MeshMessage::getInstance()->getFreeGEdgeInPart(_partName);
 		for (auto geoEdge : geoEdges)
 		{
 			getGeoIndependentEdgeData(geoEdge, color);

@@ -14,8 +14,10 @@
 #include "SpaceTree.h"
 
 #include "mMeshViewEnum.h"
+#include "mBasicEnum.h"
 
 using namespace MViewBasic;
+using namespace MxFunctions;
 using namespace std;
 namespace MDataGeo
 {
@@ -163,7 +165,7 @@ namespace MDataGeo
 		/*
 		* 设置当前的拾取过滤器
 		*/
-		void setPickFilter(MViewBasic::PickFilter *pickFilter);
+		void setPickFilter(PickFilter *pickFilter);
 
 		/*
 		 * 开始拾取
@@ -287,7 +289,7 @@ namespace MDataGeo
 	private:
 
 		//拾取过滤器
-		MViewBasic::PickFilter *_pickFilter;
+		PickFilter *_pickFilter;
 
 		//拾取模式
 		MViewBasic::PickMode _pickMode;

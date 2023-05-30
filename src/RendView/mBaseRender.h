@@ -7,6 +7,7 @@
 #include <QVector2D>
 
 #include "mMeshViewEnum.h"
+#include "mBasicEnum.h"
 namespace mxr
 {
 	class Application;
@@ -17,6 +18,7 @@ namespace MViewBasic
 	class mViewBase;
 }
 using namespace MViewBasic;
+using namespace MxFunctions;
 using namespace std;
 namespace MBaseRend
 {
@@ -39,7 +41,7 @@ namespace MBaseRend
 		virtual void dragSomething(QVector2D pos) {};
 
 		//设置拾取过滤模式
-		void setPickFilter(MViewBasic::PickFilter pickFilter);
+		void setPickFilter(PickFilter pickFilter);
 
 		//设置框选模式
 		void setMultiplyPickMode(MultiplyPickMode multiplyPickMode);

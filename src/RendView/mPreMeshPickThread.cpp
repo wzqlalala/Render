@@ -274,7 +274,7 @@ namespace MPreRend
 		_multiplyPickMode = multiplyPickMode;
 	}
 
-	void mPreMeshPickThread::setPickFilter(MViewBasic::PickFilter * pickFilter)
+	void mPreMeshPickThread::setPickFilter(PickFilter * pickFilter)
 	{
 		_pickFilter = pickFilter;
 	}
@@ -288,6 +288,10 @@ namespace MPreRend
 			QVector<QString> partNames = MeshMessage::getInstance()->getAllPartNames();
 			for (auto partName : partNames)
 			{
+				if (!MeshMessage::getInstance()->getPartMask(partName))
+				{
+					continue;
+				}
 				futures.append(QtConcurrent::run(this, &mPreMeshPickThread::doSoloPick, partName));
 			}
 			while (!futures.empty())
@@ -309,6 +313,10 @@ namespace MPreRend
 			QVector<QString> partNames = MeshMessage::getInstance()->getAllPartNames();
 			for (auto partName : partNames)
 			{
+				if (!MeshMessage::getInstance()->getPartMask(partName))
+				{
+					continue;
+				}
 				futures.append(QtConcurrent::run(this, &mPreMeshPickThread::doMultiplyPick, partName));
 			}
 			while (!futures.empty())

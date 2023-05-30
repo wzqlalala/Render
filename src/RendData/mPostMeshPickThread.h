@@ -14,8 +14,10 @@
 #include "SpaceTree.h"
 
 #include "mMeshViewEnum.h"
+#include "mBasicEnum.h"
 
 using namespace MViewBasic;
+using namespace MxFunctions;
 namespace MDataPost
 {
 	class mOneFrameData1;
@@ -161,7 +163,7 @@ namespace MDataPost
 		/*
 		* 设置当前的拾取过滤器
 		*/
-		void setPickFilter(MViewBasic::PickFilter *pickFilter);
+		void setPickFilter(PickFilter *pickFilter);
 
 		/*
 		 * 开始拾取
@@ -327,7 +329,7 @@ namespace MDataPost
 	private:
 
 		//拾取过滤器
-		MViewBasic::PickFilter *_pickFilter;
+		PickFilter *_pickFilter;
 
 		//拾取模式
 		MViewBasic::PickMode _pickMode;

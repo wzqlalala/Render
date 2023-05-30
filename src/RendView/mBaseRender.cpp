@@ -16,7 +16,7 @@ namespace MBaseRend
 	{
 	}
 
-	void mBaseRender::setPickFilter(MViewBasic::PickFilter pickFilter)
+	void mBaseRender::setPickFilter(PickFilter pickFilter)
 	{
 		if (_baseRend)
 		{

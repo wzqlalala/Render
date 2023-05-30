@@ -309,7 +309,7 @@ namespace MDataPost
 		_multiplyPickMode = multiplyPickMode;
 	}
 
-	void mPostMeshPickThread::setPickFilter(MViewBasic::PickFilter * pickFilter)
+	void mPostMeshPickThread::setPickFilter(PickFilter * pickFilter)
 	{
 		_pickFilter = pickFilter;
 	}
