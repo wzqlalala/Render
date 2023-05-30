@@ -288,7 +288,7 @@ namespace MPreRend
 			QVector<QString> partNames = MeshMessage::getInstance()->getAllPartNames();
 			for (auto partName : partNames)
 			{
-				if (!MeshMessage::getInstance()->getPartMask(partName))
+				if (MeshMessage::getInstance()->getPartMask(partName))
 				{
 					continue;
 				}
@@ -313,7 +313,7 @@ namespace MPreRend
 			QVector<QString> partNames = MeshMessage::getInstance()->getAllPartNames();
 			for (auto partName : partNames)
 			{
-				if (!MeshMessage::getInstance()->getPartMask(partName))
+				if (MeshMessage::getInstance()->getPartMask(partName))
 				{
 					continue;
 				}

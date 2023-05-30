@@ -123,6 +123,7 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			}
 			_postRender->setPostData(dp);
 			_postRender->setRendCurrentFrameData(oneFrameRendData);
+			_postRender->updateAllModelOperate(UpdateVariableValue);
 			//_postRend->addBeforeRender(_postRender);
 			Space::AABB aabb = _postRender->getOneFrameRender()->getModelRender()->getModelAABB();
 			QVector3D center = (aabb.maxEdge + aabb.minEdge) / 2.0;

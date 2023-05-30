@@ -177,7 +177,7 @@ namespace MPostRend
 			GetVariableValue_Mesh3(faceValue, faceHasValue, meshFaces[i], values, type);
 		}
 		_facerend->getDrawable()->getVertexAttribArray(3)->updata(0, faceValue.size() * sizeof(float), faceValue.data());
-		_facerend->getDrawable()->getVertexAttribArray(6)->updata(0, faceHasValue.size() * sizeof(float), faceHasValue.data());
+		//_facerend->getDrawable()->getVertexAttribArray(6)->updata(0, faceHasValue.size() * sizeof(float), faceHasValue.data());
 	}
 
 	void mPostPartRender::setShowFuntion(ShowFuntion showFuntion)

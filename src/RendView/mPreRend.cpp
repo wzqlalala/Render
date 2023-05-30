@@ -27,7 +27,7 @@ namespace MPreRend
 
 	mPreRend::mPreRend(const QString& name):mBaseRend3D(name, Viewport3D)
 	{
-		*_pickFilter = PickFilter::PickGeoPoint;
+		*_pickFilter = PickFilter::PickNode;
 		qDebug() << "Pre Struct";
 
 		//保存单位制
