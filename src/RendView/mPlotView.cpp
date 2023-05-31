@@ -17,6 +17,11 @@
 #include <qwt_plot_panner.h>
 #include <qwt_plot_magnifier.h>
 #include <qwt_scale_engine.h>
+#include "qwt_plot.h"
+#include "qwt_plot_canvas.h"
+#include "qwt_legend.h"
+#include "qwt_plot_legenditem.h"
+#include <qwt_plot_grid.h>
 
 namespace MPlotView
 {

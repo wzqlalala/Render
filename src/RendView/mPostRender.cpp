@@ -432,17 +432,17 @@ namespace MPostRend
 		{
 			_oneFrameRender.reset();
 		}
-		_oneFrameRender = make_shared<mPostOneFrameRender>(_app, _rendStatus, oneFrameData, postOneFrameRendData);
 		if (!_texture)
 		{
 			mPostColorTableData *table = postOneFrameRendData->getRendColorTable();
-			_texture =new Texture(GL_TEXTURE_1D, table->getPostColorTableNum(), 0, 0, GL_RGB8, 1);
+			_texture = new Texture(GL_TEXTURE_1D, table->getPostColorTableNum(), 0, 0, GL_RGB8, 1);
 			_texture->SetData(0, 0, table->getPostColorTableNum(), table->getColorTable());
 			_faceStateSet->setTexture("texture", _texture);
 			_lineStateSet->setTexture("texture", _texture);
 			_pointStateSet->setTexture("texture", _texture);
 			_cuttingPlaneStateSet->setTexture("texture", _texture);
 		}
+		_oneFrameRender = make_shared<mPostOneFrameRender>(_app, _rendStatus, oneFrameData, postOneFrameRendData);
 		_oneFrameRender->setFaceStateSet(_faceStateSet);
 		_oneFrameRender->setFaceTransparentNoDeformationStateSet(_faceTransparentNodeformationStateSet);
 		_oneFrameRender->setFaceTransparentStateSet(_faceTransparentStateSet);

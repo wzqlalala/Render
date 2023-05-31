@@ -3,6 +3,7 @@
 #include "mPostCuttingPlaneRender.h"
 #include "mFontRender.h"
 #include "mArrowRender.h"
+#include "mPostColorTableRender.h"
 
 #include "mPostRendStatus.h"
 #include <renderpch.h>
@@ -89,6 +90,7 @@ namespace MPostRend
 				_cuttingPlaneStateSet->getUniform("maxValue")->SetData(_oneFrameRendData->getCurrentMaxData());
 				_cuttingPlaneStateSet->getUniform("textureCoordRatio")->SetData(_oneFrameRendData->getTextureCoordScale());
 			}
+			_colorTableRender->updatePostColorTable(_oneFrameRendData->getTextureCoordScale());
 			//_modelRender->setTexture(_texture);
 			//_modelRender->setDistancePlane(cutplanes);
 		}
@@ -117,12 +119,18 @@ namespace MPostRend
 		{
 			_modelRender->updateAllModelOperate(postModelOperate);
 		}
+		if (postModelOperate == UpdateMinMax)//¸üÐÂÎÄ×Ö
+		{
+			_colorTableRender->updateText(_oneFrameRendData->getRendColorTable());
+		}
 	}
 
 	void mPostOneFrameRender::setFaceStateSet(std::shared_ptr<mxr::StateSet> faceStateSet)
 	{
 		_faceStateSet = faceStateSet;
 		_modelRender->setFaceStateSet(_faceStateSet);
+
+		_colorTableRender = make_shared<mPostColorTableRender>(_fontRender, _oneFrameRendData->getRendColorTable(), _geode, _faceStateSet->getTexture("texture"));
 	}
 
 	void mPostOneFrameRender::setFaceTransparentStateSet(std::shared_ptr<mxr::StateSet> faceTransparentStateSet)

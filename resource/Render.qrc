@@ -35,5 +35,7 @@
         <file>GLSL/ScreenQuad.glsl</file>
         <file>GLSL/testRend.glsl</file>
         <file>GLSL/PreMeshFaceLine.glsl</file>
+        <file>GLSL/PostTable.glsl</file>
+        <file>GLSL/PostTableLine.glsl</file>
     </qresource>
 </RCC>

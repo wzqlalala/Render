@@ -46,6 +46,7 @@ namespace MPostRend
 	class mPostRendStatus;
 	class mPostModelRender;
 	class mPostCuttingPlaneRender;
+	class mPostColorTableRender;
 	class RENDVIEW_EXPORT mPostOneFrameRender
 	{
 	public:
@@ -133,6 +134,8 @@ namespace MPostRend
 		mPostOneFrameRendData *_oneFrameRendData;//当前帧变量数据
 
 		std::shared_ptr<mPostModelRender> _modelRender;	//模型渲染
+
+		std::shared_ptr<mPostColorTableRender> _colorTableRender;//颜色表渲染
 
 		QVector<std::shared_ptr<mPostCuttingPlaneRender>> _cuttingPlaneRenders;//切面渲染
 

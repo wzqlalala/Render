@@ -12,13 +12,14 @@
 #include <QObject>
 #include <QMouseEvent>
 #include <QHBoxLayout>
-#include "qwt_plot.h"
-#include "qwt_plot_canvas.h"
-#include "qwt_legend.h"
-#include "qwt_plot_legenditem.h"
-#include <qwt_plot_grid.h>
+
 
 using namespace MxFunctions;
+class QwtPlot;
+class QwtPlotCanvas;
+class QwtLegend;
+class QwtPlotLegendItem;
+class QwtPlotGrid;
 namespace MPlotView
 {
 	class mSmoothChart;

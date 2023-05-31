@@ -64,6 +64,10 @@ namespace mxr
 		_textures[_name] = texture;
 	}
 
+	Texture *StateSet::getTexture(std::string _name)
+	{
+		return _textures[_name];
+	}
 
 	void StateSet::Bind()
 	{

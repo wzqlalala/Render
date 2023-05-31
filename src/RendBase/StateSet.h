@@ -30,6 +30,7 @@ namespace mxr
 
 		void removeUniform() {};
 		void setTexture(std::string _name, Texture *texture);
+		Texture *getTexture(std::string _name);
 		void setShader(Shader *shader) { _shader = shader; };
 		void setRenderPass(asset_ref<RenderPass> renderpass) { _renderpass = renderpass; }
 		RenderPass* getRenderPass() { return _renderpass.get(); }
