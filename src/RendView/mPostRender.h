@@ -175,7 +175,10 @@ namespace MPostRend
 
 		void resizeWindow(int w, int h) override;
 
-		/*********************************获取数据***************************************************/		
+		/*********************************获取数据***************************************************/	
+
+		//获取当前帧的节点位置	
+		QVector3D getCurrentNodeVertex(int id);
 
 		//通过零件名称获取单元ID	
 		set<int> getMeshIDsByPartNames(MeshType meshType, set<QString> partNames);
@@ -201,6 +204,10 @@ namespace MPostRend
 
 		//计时器更新	
 		void slot_aniTimer();
+
+	signals:
+
+		void updateAnimationPanelSig(int);
 
 	protected:
 		shared_ptr<mDataPost1> _dataPost;

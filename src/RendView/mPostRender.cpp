@@ -893,6 +893,8 @@ namespace MPostRend
 		{
 			//this->setAnimationFrameID(_frameGUIData->_aniCurrentFrame);
 		}
+		updateAnimationPanelSig(_rendStatus->_aniCurrentFrame);
+
 		emit update();
 	}
 
@@ -903,6 +905,34 @@ namespace MPostRend
 		_oneFrameAnimationRender.reset();
 		//_animationRender.reset();
 		delete _postFrameText;
+	}
+
+	QVector3D mPostRender::getCurrentNodeVertex(int id)
+	{
+		if (_oneFrameRender)
+		{
+			mPostOneFrameRendData* renddata = _oneFrameRender->getOneFrameRendData();
+			if (renddata == nullptr)
+			{
+				return QVector3D();
+			}
+			QHash<int, QVector3D> dispdata = renddata->getNodeDisplacementData();
+			QVector3D dfactor = renddata->getDeformationScale();
+			mOneFrameData1* oneframe = _oneFrameRender->getOneFrameData();
+			if (oneframe == nullptr)
+			{
+				return QVector3D();
+			}
+			mPostMeshNodeData1* nodedata = oneframe->getNodeDataByID(id);
+			if (nodedata != nullptr)
+			{
+				QVector3D nodeCoord = nodedata->getNodeVertex();
+				QVector3D nodeDisp = dispdata.value(id);
+				QVector3D dfactor = renddata->getDeformationScale();
+				return (nodeCoord + nodeDisp * dfactor);
+			}
+		}
+		return QVector3D();
 	}
 
 	set<int> mPostRender::getMeshIDsByPartNames(MeshType meshType, set<QString> partNames)
