@@ -130,6 +130,21 @@ namespace MPostRend
 		//设置线的颜色
 		void setFaceLineColor(QVector4D color);
 
+		/*
+		* 设置光源是否跟随摄像机
+		*/
+		void setLightIsDependentCamera(bool lightIsDependOnCamera);
+
+		/*
+		* 设置光源的位置
+		*/
+		void setLightPosition(QVector3D position);
+
+		/*
+		* 设置光源的参数
+		*/
+		void setLightParameters(QVector3D ambient, QVector3D diffuse, QVector3D specular, float shiness);
+
 		/*********************************切面图*******************************************/
 		
 		//删除切面图	
@@ -156,8 +171,26 @@ namespace MPostRend
 
 		/**********************************动画*********************************************/
 
+		//设置动画帧
+		void setAnimationFrame(int start, int end, int current);
+
+		//设置动画速率
+		void setAnimationFrameRate(int fr);
+
+		//设置动画间隔
+		void setAnimationFrameInterval(int f);
+
+		//设置循环播放
+		void setAnimationLoopPlay(bool istrue);
+
 		//设置瞬态动画的渲染数据	
-		void setRendAnimationFrame(mPostAnimationRendData *allFrameRendData);
+		void setRendAnimationFrame(std::shared_ptr<mPostAnimationRendData> allFrameRendData);
+
+		//设置瞬态动画渲染范围是否统一,真的话则是统一的渲染范围，否的话则把每帧的范围还原为初始值
+		void setAnimationFrameRange(bool isAgreement);
+	
+		//设置瞬态动画渲染自定义范围	
+		void setAnimationFrameRange(float maxValue, float minValue);
 
 		//生成单帧动画
 		void createLinearAnimation(PostMode postMode);
@@ -218,6 +251,7 @@ namespace MPostRend
 
 		//动画帧的渲染
 		QHash<int, shared_ptr<mPostOneFrameRender>> _animationRender;//动画帧
+		shared_ptr<mPostAnimationRendData> _rendAnimationData;
 
 		shared_ptr<mPostOneFrameRender> _oneFrameRender;//单帧
 

@@ -585,6 +585,54 @@ namespace MPostRend
 		_facelineStateSet->getUniform("showColor")->SetData(_rendStatus->_faceLineColor);
 	}
 
+	void mPostRender::setLightIsDependentCamera(bool lightIsDependOnCamera)
+	{
+		_rendStatus->_lightIsDependOnCamera = lightIsDependOnCamera;
+	}
+
+	void mPostRender::setLightPosition(QVector3D position)
+	{
+		_rendStatus->_postLight.lightPosition = position;
+		_faceStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
+		_faceTransparentStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
+		_faceTransparentNodeformationStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
+		_pointStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
+		_cuttingPlaneStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
+
+	}
+
+	void mPostRender::setLightParameters(QVector3D ambient, QVector3D diffuse, QVector3D specular, float shiness)
+	{
+		_rendStatus->_postLight.ambient = ambient;
+		_rendStatus->_postLight.diffuse = diffuse;
+		_rendStatus->_postLight.specular = specular;
+		_rendStatus->_postLight.shiness = shiness;
+		_faceStateSet->getUniform("light.ambient")->SetData(_rendStatus->_postLight.ambient);
+		_faceStateSet->getUniform("light.diffuse")->SetData(_rendStatus->_postLight.diffuse);
+		_faceStateSet->getUniform("light.specular")->SetData(_rendStatus->_postLight.specular);
+		_faceStateSet->getUniform("light.shiness")->SetData(_rendStatus->_postLight.shiness);
+
+		_faceTransparentStateSet->getUniform("light.ambient")->SetData(_rendStatus->_postLight.ambient);
+		_faceTransparentStateSet->getUniform("light.diffuse")->SetData(_rendStatus->_postLight.diffuse);
+		_faceTransparentStateSet->getUniform("light.specular")->SetData(_rendStatus->_postLight.specular);
+		_faceTransparentStateSet->getUniform("light.shiness")->SetData(_rendStatus->_postLight.shiness);
+
+		_faceTransparentNodeformationStateSet->getUniform("light.ambient")->SetData(_rendStatus->_postLight.ambient);
+		_faceTransparentNodeformationStateSet->getUniform("light.diffuse")->SetData(_rendStatus->_postLight.diffuse);
+		_faceTransparentNodeformationStateSet->getUniform("light.specular")->SetData(_rendStatus->_postLight.specular);
+		_faceTransparentNodeformationStateSet->getUniform("light.shiness")->SetData(_rendStatus->_postLight.shiness);
+
+		_pointStateSet->getUniform("light.ambient")->SetData(_rendStatus->_postLight.ambient);
+		_pointStateSet->getUniform("light.diffuse")->SetData(_rendStatus->_postLight.diffuse);
+		_pointStateSet->getUniform("light.specular")->SetData(_rendStatus->_postLight.specular);
+		_pointStateSet->getUniform("light.shiness")->SetData(_rendStatus->_postLight.shiness);
+
+		_cuttingPlaneStateSet->getUniform("light.ambient")->SetData(_rendStatus->_postLight.ambient);
+		_cuttingPlaneStateSet->getUniform("light.diffuse")->SetData(_rendStatus->_postLight.diffuse);
+		_cuttingPlaneStateSet->getUniform("light.specular")->SetData(_rendStatus->_postLight.specular);
+		_cuttingPlaneStateSet->getUniform("light.shiness")->SetData(_rendStatus->_postLight.shiness);
+	}
+
 	void mPostRender::deleteCuttingPlane(int num)
 	{
 		this->makeCurrent();
@@ -735,7 +783,29 @@ namespace MPostRend
 		}
 	}
 
-	void mPostRender::setRendAnimationFrame(mPostAnimationRendData *allFrameRendData)
+	void mPostRender::setAnimationFrame(int start, int end, int current)
+	{
+		_rendStatus->_aniStartFrame = start;
+		_rendStatus->_aniEndFrame = end;
+		_rendStatus->_aniCurrentFrame = current;
+	}
+
+	void mPostRender::setAnimationFrameRate(int fr)
+	{
+		_rendStatus->_aniFrameRate = fr;
+	}
+
+	void mPostRender::setAnimationFrameInterval(int f)
+	{
+		_rendStatus->_aniFrameInterval = f;
+	}
+
+	void mPostRender::setAnimationLoopPlay(bool istrue)
+	{
+		_rendStatus->_aniLoopPlay;
+	}
+
+	void mPostRender::setRendAnimationFrame(std::shared_ptr<mPostAnimationRendData> allFrameRendData)
 	{
 		this->makeCurrent();
 		if (!_dataPost || !allFrameRendData)
@@ -743,7 +813,84 @@ namespace MPostRend
 			return;
 		}
 		deleteAnimation();
+		_rendAnimationData = allFrameRendData;
+		set<int> ids = _rendAnimationData->getRendAnimationIds();
+		QVector<QFuture<void>> futures;
+		for (int id : ids)
+		{
+			std::shared_ptr<mPostOneFrameRender> oneFrameRender = make_shared<mPostOneFrameRender>(_app, _rendStatus, _dataPost->getOneFrameData(id), _rendAnimationData->getRendOneFrameData(id));
+			oneFrameRender->setFaceStateSet(_faceStateSet);
+			oneFrameRender->setFaceTransparentNoDeformationStateSet(_faceTransparentNodeformationStateSet);
+			oneFrameRender->setFaceTransparentStateSet(_faceTransparentStateSet);
+			oneFrameRender->setEdgeLineStateSet(_edgelineStateSet);
+			oneFrameRender->setFaceLineStateSet(_facelineStateSet);
+			oneFrameRender->setLineStateSet(_lineStateSet);
+			oneFrameRender->setPointStateSet(_pointStateSet);
+			oneFrameRender->setTextureCoordScale(1.0);
+			oneFrameRender->setDeformationScale(_rendStatus->_deformFactor);
+			//oneFrameRender->updateAllModelOperate(ImportOperate);
+			//oneFrameRender->bufferThisFrame(_app->GLContext());
+			_animationRender.insert(id, oneFrameRender);
+			futures.append(QtConcurrent::run([oneFrameRender]
+			{
+				oneFrameRender->updateAllModelOperate(ImportOperate);
+			}));
+		}
+		while (!futures.empty())
+		{
+			futures.back().waitForFinished();
+			//futures.back().result()->bufferThisFrame(_app->GLContext());
+			futures.takeLast();
+		}
+		for (auto rend : _animationRender)
+		{
+			//QtConcurrent::run(rend.get(), &mPostOneFrameRender::bufferThisFrame,_app->GLContext());
+			rend->bufferThisFrame(_app->GLContext());
+		}
+		_rendStatus->_postMode = Animation;
+	}
 
+	void mPostRender::setAnimationFrameRange(bool isAgreement)
+	{
+		if (_rendStatus->_postMode == Animation)
+		{
+			if (_rendAnimationData == nullptr)
+			{
+				return;
+			}
+			_rendAnimationData->setAnimationFrameRange(isAgreement);
+			QHashIterator<int, std::shared_ptr<mPostOneFrameRender>> iter(_animationRender);
+			while (iter.hasNext())
+			{
+				iter.next();
+				auto oneFrameRend = iter.value();
+				if (oneFrameRend)
+				{
+					oneFrameRend->updateAllModelOperate(UpdateMinMax);
+				}
+			}
+		}
+	}
+
+	void mPostRender::setAnimationFrameRange(float maxValue, float minValue)
+	{
+		if (_rendStatus->_postMode == Animation)
+		{
+			if (_rendAnimationData == nullptr)
+			{
+				return;
+			}
+			QHashIterator<int, std::shared_ptr<mPostOneFrameRender>> iter(_animationRender);
+			while (iter.hasNext())
+			{
+				iter.next();
+				auto oneFrameRend = iter.value();
+				if (oneFrameRend)
+				{
+					oneFrameRend->setMinMaxData(maxValue, minValue);
+				}
+			}
+		}
 	}
 
 	void mPostRender::createLinearAnimation(PostMode postMode)
@@ -756,7 +903,7 @@ namespace MPostRend
 		deleteAnimation();
 		mPostOneFrameRendData* postOneFrameRendData = _oneFrameRender->getOneFrameRendData();
 		int id = postOneFrameRendData->getRendID();
-		QVector3D deformationScale = postOneFrameRendData->getDeformationScale();
+
 		mOneFrameData1 *oneFrameData = _dataPost->getOneFrameData(id);
 
 		mPostOneFrameRendData *newFrameRendData = new mPostOneFrameRendData(*postOneFrameRendData);
@@ -839,9 +986,10 @@ namespace MPostRend
 	void mPostRender::setTimerOn(bool ison)
 	{
 		mxr::time->start();
+		_rendStatus->_aniIsStart = ison;
 		if (ison)
 		{
-			int interval = 1000 / 30;
+			int interval = 1000 / _rendStatus->_aniFrameRate;
 			_aniTimer->start(interval);
 			_rendStatus->_aniIsStart = true;
 		}
@@ -1253,14 +1401,6 @@ namespace MPostRend
 	{
 		if (_faceStateSet)
 		{
-	/*		_faceStateSet->getUniform("light.position")->SetData(light.lightPosition);
-			_faceStateSet->getUniform("light.ambient")->SetData(light.ambient);
-			_faceStateSet->getUniform("light.diffuse")->SetData(light.diffuse);
-			_faceStateSet->getUniform("light.specular")->SetData(light.specular);
-			_faceStateSet->getUniform("light.shiness")->SetData(light.shiness);
-			_faceStateSet->getUniform("viewPos")->SetData(viewpos);
-			_faceStateSet->getUniform("lightIsOn")->SetData(lightIsOn);*/
-
 			_faceStateSet->getUniform("projection")->SetData(modelView->_projection);
 			_faceStateSet->getUniform("view")->SetData(modelView->_view);
 			_faceStateSet->getUniform("model")->SetData(modelView->_model);
@@ -1293,10 +1433,7 @@ namespace MPostRend
 			_faceTransparentStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
 			_pointStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
 			_cuttingPlaneStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
-			//_faceStateSet->getUniform("light.ambient")->SetData(_rendStatus->_postLight.ambient);
-			//_faceStateSet->getUniform("light.diffuse")->SetData(_rendStatus->_postLight.diffuse);
-			//_faceStateSet->getUniform("light.specular")->SetData(_rendStatus->_postLight.specular);
-			//_faceStateSet->getUniform("light.shiness")->SetData(_rendStatus->_postLight.shiness);
+
 			if (_rendStatus->_lightIsDependOnCamera)
 			{
 				_faceStateSet->getUniform("light.position")->SetData(2 * modelView->_Eye - modelView->_Center);
@@ -1304,14 +1441,6 @@ namespace MPostRend
 				_faceTransparentNodeformationStateSet->getUniform("light.position")->SetData(2 * modelView->_Eye - modelView->_Center);
 				_pointStateSet->getUniform("light.position")->SetData(2 * modelView->_Eye - modelView->_Center);
 				_cuttingPlaneStateSet->getUniform("light.position")->SetData(2 * modelView->_Eye - modelView->_Center);
-			}
-			else
-			{
-				_faceStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
-				_faceTransparentStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
-				_faceTransparentNodeformationStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
-				_pointStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
-				_cuttingPlaneStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
 			}
 
 			_facelineStateSet->getUniform("rightToLeft")->SetData(float(modelView->_Right - modelView->_Left));
