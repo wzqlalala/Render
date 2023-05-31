@@ -35,6 +35,9 @@
 #include "mPostColorTableData.h"
 #include "mPostMeshPickThread.h"
 #include "mPostMeshPickData.h"
+#include "mPostMeshData1.h"
+#include "mPostMeshNodeData1.h"
+#include "mPostMeshPartData1.h"
 
 #include <qmath.h>
 
@@ -900,6 +903,240 @@ namespace MPostRend
 		_oneFrameAnimationRender.reset();
 		//_animationRender.reset();
 		delete _postFrameText;
+	}
+
+	set<int> mPostRender::getMeshIDsByPartNames(MeshType meshType, set<QString> partNames)
+	{
+		set<int> resMeshIDs;
+		if (_oneFrameRender != nullptr)
+		{
+			mOneFrameData1 *oneFrameData = _oneFrameRender->getOneFrameData();
+			if (oneFrameData != nullptr)
+			{
+				if (meshType == MeshBeam)//一维
+				{
+					for (QString partName : partNames)
+					{
+						mPostMeshPartData1 *partData = oneFrameData->getMeshPartDataByPartName(partName);
+						if (partData == nullptr)
+						{
+							continue;
+						}
+						set<int> meshIDs = partData->getMeshIDs1();
+						for (int meshID : meshIDs)
+						{
+							mPostMeshData1 *meshData = oneFrameData->getMeshDataByID(meshID);
+							if (meshData == nullptr)
+							{
+								continue;
+							}
+							if (!meshData->getMeshVisual())
+							{
+								continue;
+							}
+							if (_rendStatus->_pickElementTypeFilter.find(meshData->getElementType()) != _rendStatus->_pickElementTypeFilter.end())
+							{
+								resMeshIDs.insert(meshID);
+							}
+						}
+					}
+				}
+				else if (meshType == MeshTri || meshType == MeshQuad)//二维
+				{
+					for (QString partName : partNames)
+					{
+						mPostMeshPartData1 *partData = oneFrameData->getMeshPartDataByPartName(partName);
+						if (partData == nullptr)
+						{
+							continue;
+						}
+						set<int> meshIDs = partData->getMeshIDs2();
+						for (int meshID : meshIDs)
+						{
+							mPostMeshData1 *meshData = oneFrameData->getMeshDataByID(meshID);
+							if (meshData == nullptr)
+							{
+								continue;
+							}
+							if (!meshData->getMeshVisual())
+							{
+								continue;
+							}
+							if (_rendStatus->_pickElementTypeFilter.find(meshData->getElementType()) != _rendStatus->_pickElementTypeFilter.end())
+							{
+								resMeshIDs.insert(meshID);
+							}
+						}
+					}
+				}
+				else
+				{
+					for (QString partName : partNames)
+					{
+						mPostMeshPartData1 *partData = oneFrameData->getMeshPartDataByPartName(partName);
+						if (partData == nullptr)
+						{
+							continue;
+						}
+						set<int> meshIDs = partData->getMeshIDs3();
+						for (int meshID : meshIDs)
+						{
+							mPostMeshData1 *meshData = oneFrameData->getMeshDataByID(meshID);
+							if (meshData == nullptr)
+							{
+								continue;
+							}
+							if (!meshData->getMeshVisual())
+							{
+								continue;
+							}
+							if (_rendStatus->_pickElementTypeFilter.find(meshData->getElementType()) != _rendStatus->_pickElementTypeFilter.end())
+							{
+								resMeshIDs.insert(meshID);
+							}
+						}
+					}
+				}
+			}
+		}
+		return resMeshIDs;
+	}
+
+	set<int> mPostRender::getAllMeshIDs(MeshType meshType)
+	{
+		set<int> resMeshIDs;
+		if (_oneFrameRender)
+		{
+			mOneFrameData1 *oneFrameData = _oneFrameRender->getOneFrameData();
+
+			if (oneFrameData != nullptr)
+			{
+				set<QString> partNames = oneFrameData->getAllPartNames();
+				if (meshType == MeshBeam)//一维
+				{
+					for (QString partName : partNames)
+					{
+						mPostMeshPartData1 *partData = oneFrameData->getMeshPartDataByPartName(partName);
+						if (partData == nullptr)
+						{
+							continue;
+						}
+						set<int> meshIDs = partData->getMeshIDs1();
+						for (int meshID : meshIDs)
+						{
+							mPostMeshData1 *meshData = oneFrameData->getMeshDataByID(meshID);
+							if (meshData == nullptr)
+							{
+								continue;
+							}
+							if (!meshData->getMeshVisual())
+							{
+								continue;
+							}
+							if (_rendStatus->_pickElementTypeFilter.find(meshData->getElementType()) != _rendStatus->_pickElementTypeFilter.end())
+							{
+								resMeshIDs.insert(meshID);
+							}
+						}
+					}
+				}
+				else if (meshType == MeshTri || meshType == MeshQuad)//二维
+				{
+					for (QString partName : partNames)
+					{
+						mPostMeshPartData1 *partData = oneFrameData->getMeshPartDataByPartName(partName);
+						if (partData == nullptr)
+						{
+							continue;
+						}
+						set<int> meshIDs = partData->getMeshIDs2();
+						for (int meshID : meshIDs)
+						{
+							mPostMeshData1 *meshData = oneFrameData->getMeshDataByID(meshID);
+							if (meshData == nullptr)
+							{
+								continue;
+							}
+							if (!meshData->getMeshVisual())
+							{
+								continue;
+							}
+							if (_rendStatus->_pickElementTypeFilter.find(meshData->getElementType()) != _rendStatus->_pickElementTypeFilter.end())
+							{
+								resMeshIDs.insert(meshID);
+							}
+						}
+					}
+				}
+				else
+				{
+					for (QString partName : partNames)
+					{
+						mPostMeshPartData1 *partData = oneFrameData->getMeshPartDataByPartName(partName);
+						if (partData == nullptr)
+						{
+							continue;
+						}
+						set<int> meshIDs = partData->getMeshIDs3();
+						for (int meshID : meshIDs)
+						{
+							mPostMeshData1 *meshData = oneFrameData->getMeshDataByID(meshID);
+							if (meshData == nullptr)
+							{
+								continue;
+							}
+							if (!meshData->getMeshVisual())
+							{
+								continue;
+							}
+							if (_rendStatus->_pickElementTypeFilter.find(meshData->getElementType()) != _rendStatus->_pickElementTypeFilter.end())
+							{
+								resMeshIDs.insert(meshID);
+							}
+						}
+					}
+				}
+			}
+		}
+		return resMeshIDs;
+	}
+
+	QVector<QVector3D> mPostRender::getNodeVertexByMeshID(int meshID)
+	{
+		QVector<QVector3D> res;
+		if (_oneFrameRender)
+		{
+			mPostOneFrameRendData* renddata = _oneFrameRender->getOneFrameRendData();
+			if (renddata == nullptr)
+			{
+				return res;
+			}
+			QHash<int, QVector3D> dispdata = renddata->getNodeDisplacementData();
+			QVector3D dfactor = renddata->getDeformationScale();
+			mOneFrameData1* oneframe = _oneFrameRender->getOneFrameData();
+			if (oneframe == nullptr)
+			{
+				return res;
+			}
+			//获取单元数据
+			mPostMeshData1* meshdata = oneframe->getMeshDataByID(meshID);
+			if (meshdata == nullptr)
+			{
+				return res;
+			}
+			//获取单元节点
+			QVector<int> nodeIDs = meshdata->getNodeIndex();
+			for (int nodeID : nodeIDs)
+			{
+				mPostMeshNodeData1* nodedata = oneframe->getNodeDataByID(nodeID);
+				if (nodedata == nullptr)
+				{
+					continue;
+				}
+				res.append(nodedata->getNodeVertex() + dispdata.value(nodeID) * dfactor);
+			}
+		}
+		return res;
 	}
 
 	void mPostRender::updateCuttingPlaneUniform()

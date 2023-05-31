@@ -66,6 +66,10 @@ namespace MPostRend
 	{
 		_pointStateSet = pointStateSet;
 	}
+	void mPostModelRender::hideModelRender()
+	{
+		_geode->setNodeMask(1);
+	}
 	mPostModelRender::~mPostModelRender()
 	{
 		_parent->removeChild(_geode);

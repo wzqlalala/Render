@@ -58,6 +58,9 @@ namespace MPostRend
 		void setLineStateSet(std::shared_ptr<mxr::StateSet> lineStateSet);
 		void setPointStateSet(std::shared_ptr<mxr::StateSet> pointStateSet);
 
+		//隐藏模型
+		void hideModelRender();
+
 		//更新缓存
 		void UpdateModelBuffer();
 

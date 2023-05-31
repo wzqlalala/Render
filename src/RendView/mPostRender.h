@@ -3,18 +3,21 @@
 //解决中文乱码
 #pragma execution_character_set("utf-8")
 #include "mBaseRender.h"
-#include "app.h"
+//#include "app.h"
 #include <QObject>
 #include <QTimer>
 #include <QThread>
+#include <QVector3D>
+#include <QPair>
+#include <set>
 #include <QFutureWatcher>
 
 //MViewBasic
 #include "mMeshViewEnum.h"
 
 //MViewBasic
-#include "mMeshViewEnum.h"
-#include "mBasicStructor.h"
+#include "mElementFunction.h"
+//#include "mBasicStructor.h"
 
 namespace mxr
 {
@@ -25,6 +28,7 @@ namespace mxr
 	class StateSet;
 	class Group;
 	class Texture;
+	class Application;
 }
 namespace MViewBasic
 {
@@ -44,6 +48,7 @@ using namespace MViewBasic;
 using namespace MDataPost;
 using namespace MViewBasic;
 using namespace MBaseRend;
+using namespace MxFunctions;
 using namespace std;
 namespace MPostRend
 {
@@ -169,6 +174,19 @@ namespace MPostRend
 		void updateUniform(shared_ptr<mViewBase> modelView, shared_ptr<mViewBase> commonView) override;
 
 		void resizeWindow(int w, int h) override;
+
+		/*********************************获取数据***************************************************/		
+
+		//通过零件名称获取单元ID	
+		set<int> getMeshIDsByPartNames(MeshType meshType, set<QString> partNames);
+
+		
+		//获取全部单元ID
+		set<int> getAllMeshIDs(MeshType meshType);
+
+		
+		//通过单元ID获取节点坐标
+		QVector<QVector3D> getNodeVertexByMeshID(int meshID);
 
 	private:
 

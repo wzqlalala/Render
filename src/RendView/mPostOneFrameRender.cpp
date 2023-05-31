@@ -242,7 +242,7 @@ namespace MPostRend
 	{
 		if (isOnlyShowCuttingPlane)
 		{
-			this->updateAllModelOperate(HideAllPartOperate);
+			_modelRender->hideModelRender();
 		}
 		else
 		{
