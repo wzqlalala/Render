@@ -168,6 +168,8 @@ namespace MPostRend
 
 		void updateUniform(shared_ptr<mViewBase> modelView, shared_ptr<mViewBase> commonView) override;
 
+		void resizeWindow(int w, int h) override;
+
 	private:
 
 		//更新切面的uniform值

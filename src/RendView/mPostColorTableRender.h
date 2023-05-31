@@ -15,7 +15,7 @@ namespace mxr
 }
 namespace MDataPost
 {
-	class mPostColorTableData;
+	class mPostOneFrameRendData;
 }
 namespace MBaseRend
 {
@@ -24,20 +24,25 @@ namespace MBaseRend
 using namespace MDataPost;
 namespace MPostRend
 {
+	class mPostRendStatus;
 	class mPostColorTableRender
 	{
 
 	public:
-		mPostColorTableRender(std::shared_ptr<MBaseRend::mFontRender>, mPostColorTableData *colorTableData, std::shared_ptr<mxr::Group> parent, mxr::Texture *texture);
+		mPostColorTableRender(std::shared_ptr<MBaseRend::mFontRender>, mPostOneFrameRendData *rendData, std::shared_ptr<mPostRendStatus> rendStatus, std::shared_ptr<mxr::Group> parent, mxr::Texture *texture);
 
 		~mPostColorTableRender();
 
 		void updatePostColorTable(float textureCoordRatio);
 
-		void updateText(mPostColorTableData *colorTableData);
+		void updateText(mPostOneFrameRendData *rendData);
+
+		void resizeWindow(mPostOneFrameRendData *rendData);
 	protected:
 
 		std::shared_ptr<MBaseRend::mFontRender> _fontRender;//Œƒ◊÷‰÷»æ
+
+		std::shared_ptr<mPostRendStatus> _rendStatus;
 
 		std::shared_ptr<mxr::Group> _parent;
 		std::shared_ptr<mxr::Geode> _geode;

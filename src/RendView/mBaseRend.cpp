@@ -188,7 +188,20 @@ namespace MBaseRend
 
 		_modelView->SetOrthoByRatio(w, h);
 		_commonView->SetOrthoByRatio(w, h);
+		for (auto baseRender : _beforeRenderArray)
+		{
+			baseRender->resizeWindow(w, h);
+		}
 
+		for (auto baseRender : _renderArray)
+		{
+			baseRender->resizeWindow(w, h);
+		}
+
+		for (auto baseRender : _afterRenderArray)
+		{
+			baseRender->resizeWindow(w, h);
+		}
 		FBO = new QOpenGLFramebufferObject(size(), format);
 
 		update();

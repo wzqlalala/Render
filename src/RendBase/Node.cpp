@@ -30,7 +30,10 @@ namespace mxr
 
 	void Node::removeParent(Group * parent)
 	{
-		_parents.erase(std::find(_parents.begin(), _parents.end(), parent));
+		if (_parents.size() > 0)
+		{
+			_parents.erase(std::find(_parents.begin(), _parents.end(), parent));
+		}
 	}
 
 }

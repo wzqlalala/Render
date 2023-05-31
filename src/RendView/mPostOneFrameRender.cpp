@@ -106,6 +106,14 @@ namespace MPostRend
 		_viewer->noClearRun();
 	}
 
+	void mPostOneFrameRender::resizeWindow(int w, int h)
+	{
+		if (_colorTableRender)
+		{
+			_colorTableRender->resizeWindow(_oneFrameRendData);
+		}
+	}
+
 	void mPostOneFrameRender::updateOneModelOperate(QPair<MViewBasic::PostModelOperateEnum, std::set<QString>> postModelOperates)
 	{
 		if (_modelRender)
@@ -122,7 +130,7 @@ namespace MPostRend
 		}
 		if (postModelOperate == UpdateMinMax)//¸üÐÂÎÄ×Ö
 		{
-			_colorTableRender->updateText(_oneFrameRendData->getRendColorTable());
+			_colorTableRender->updateText(_oneFrameRendData);
 		}
 	}
 
@@ -131,7 +139,7 @@ namespace MPostRend
 		_faceStateSet = faceStateSet;
 		_modelRender->setFaceStateSet(_faceStateSet);
 
-		_colorTableRender = make_shared<mPostColorTableRender>(_fontRender, _oneFrameRendData->getRendColorTable(), _geode, _faceStateSet->getTexture("texture"));
+		_colorTableRender = make_shared<mPostColorTableRender>(_fontRender, _oneFrameRendData, _rendStatus, _geode, _faceStateSet->getTexture("texture"));
 	}
 
 	void mPostOneFrameRender::setFaceTransparentStateSet(std::shared_ptr<mxr::StateSet> faceTransparentStateSet)
@@ -201,7 +209,6 @@ namespace MPostRend
 		{
 			_oneFrameRendData->setMinMaxData(maxValue, minValue);
 			this->updateAllModelOperate(UpdateMinMax);
-
 		}
 	}
 

@@ -45,6 +45,9 @@ namespace MPostRend
 		//渲染范围（0-全部部件范围（自定义）；1-渲染部件范围）
 		int _rangeType = 0;
 
+		//云图-离散阶数
+		int _cloudDiscreteNum = 12;
+
 		//是否离散
 		bool _isdispersed = true;
 
@@ -53,12 +56,6 @@ namespace MPostRend
 
 		//是否渲染颜色表
 		bool _isShowPostColorTable = false;
-
-		//后处理颜色表文字大小
-		float _postColorTableFontSize;
-
-		//后处理颜色表位置行高度比例
-		float _postColorTableRatio;
 
 		//是否开启光照
 		bool _lightIsOn = true;
@@ -77,6 +74,12 @@ namespace MPostRend
 
 		//网格面线的颜色
 		QVector4D _faceLineColor = QVector4D(0.0f, 0.0f, 0.0f, 1.0f);
+
+		//颜色表文字大小
+		float _postColorTableFontSize = 1.0;
+
+		//颜色表位置行高度比例
+		float _postColorTableRatio = 0.05f;
 
 		/*************************************变形图********************************/
 

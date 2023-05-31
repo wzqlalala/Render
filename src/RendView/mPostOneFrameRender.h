@@ -67,6 +67,8 @@ namespace MPostRend
 
 		void updateUniform(shared_ptr<mViewBase> modelView, shared_ptr<mViewBase> commonView);
 
+		void resizeWindow(int w, int h);
+
 		//void UpdateModelBuffer();
 
 		//更新单个部件操作

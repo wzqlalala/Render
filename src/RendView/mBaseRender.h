@@ -40,6 +40,8 @@ namespace MBaseRend
 
 		virtual void dragSomething(QVector2D pos) {};
 
+		virtual void resizeWindow(int w, int h) {};
+
 		//设置拾取过滤模式
 		void setPickFilter(PickFilter pickFilter);
 

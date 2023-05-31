@@ -1068,8 +1068,43 @@ namespace MPostRend
 		{
 			_animationRender.value(_rendStatus->_aniCurrentFrame)->updateUniform(modelView, commonView);
 		}
-		_postFrameText->resizeWindow(modelView->SCR_WIDTH, modelView->SCR_HEIGHT);
 
 		_highLightRender->updateUniform(modelView, commonView);
+	}
+	void mPostRender::resizeWindow(int w, int h)
+	{
+		//自适应文字大小
+		if (h > 600)
+		{
+			_rendStatus->_postColorTableFontSize = 1.0;
+		}
+		else if (h < 600 && h > 350)
+		{
+			_rendStatus->_postColorTableFontSize = h / 1000.0f + 0.4;
+		}
+		else
+		{
+			_rendStatus->_postColorTableFontSize = 0.75;
+		}
+
+		//自适应颜色表的位置
+		_rendStatus->_postColorTableRatio = 0.05f;//一行的高度比例
+		if (h < 600 && h > 350)
+		{
+			_rendStatus->_postColorTableRatio = -h / 5000.0f + 0.17;
+		}
+		else if (h <= 350)
+		{
+			_rendStatus->_postColorTableRatio = 0.1*350.0 / h;
+		}
+		if (_postFrameText)
+		{
+			_postFrameText->resizeWindow(w, h);
+		}
+		if (_oneFrameRender)
+		{
+			_oneFrameRender->resizeWindow(w, h);
+		}
+
 	}
 }
