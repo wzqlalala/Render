@@ -52,6 +52,7 @@ namespace MPostRend
 	class mPostHighLightRender;
 	class mPostOneFrameRender;
 	class mPostAnimationRender;
+	class mPostFrameText;
 	class RENDVIEW_EXPORT mPostRender :public mBaseRender
 	{
 		Q_OBJECT
@@ -70,6 +71,9 @@ namespace MPostRend
 		shared_ptr<mPostOneFrameRender> getOneFrameRender() { return  _oneFrameRender; };
 
 		mPostMeshPickData *getMeshPickData() { return _pickData; };
+	
+		//获取当前屏幕文字渲染的数据
+		mPostFrameText* getPostFrameText();
 
 		//更新高亮渲染
 		void updateHighLightRender();
@@ -191,6 +195,9 @@ namespace MPostRend
 		shared_ptr<mPostOneFrameRender> _oneFrameRender;//单帧
 
 		shared_ptr<mPostOneFrameRender> _oneFrameAnimationRender;//单帧动画
+
+		//屏幕文字数据（除颜色表外）
+		mPostFrameText *_postFrameText;
 
 		mxr::Texture * _texture;
 

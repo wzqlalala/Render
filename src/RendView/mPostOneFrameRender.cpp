@@ -33,6 +33,7 @@ namespace MPostRend
 		_app(app), _rendStatus(rendStatus), _oneFrameData(oneFrameData), _oneFrameRendData(oneFrameRendData)
 	{
 		_cuttingPlaneStateSet = nullptr;
+		_colorTableRender = nullptr;
 
 		_geode = MakeAsset<Geode>();
 		_viewer = nullptr;

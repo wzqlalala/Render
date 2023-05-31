@@ -51,6 +51,11 @@ namespace MPostRend
 	}
 	mPostColorTableRender::~mPostColorTableRender()
 	{
+		if (_geode)
+		{
+			_geode->removeAllChild();
+			_parent->removeChild(_geode);
+		}
 	}
 	void mPostColorTableRender::updatePostColorTable(float textureCoordRatio)
 	{
@@ -65,6 +70,6 @@ namespace MPostRend
 			pos.append(fontText.pos);
 			value.append(fontText.value);
 		}
-		_fontRender->appendFixedFont("colorTable", pos, value);
+		_fontRender->appendFixedFont("colorTable", pos, value, QVector3D(0,0,0));
 	}
 }

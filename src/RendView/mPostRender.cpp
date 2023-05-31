@@ -7,6 +7,7 @@
 #include "mPostHighLightRender.h"
 #include "mFontRender.h"
 #include "mArrowRender.h"
+#include "mPostFrameText.h"
 
 #include <renderpch.h>
 #include "texture.h"
@@ -51,6 +52,7 @@ namespace MPostRend
 		_texture = nullptr;
 		_oneFrameRender = nullptr;
 		_oneFrameAnimationRender = nullptr;
+		_postFrameText = new mPostFrameText(postRend->getFontRender());
 		//_animationId = 0;
 		//_animationRender = nullptr;
 
@@ -360,6 +362,11 @@ namespace MPostRend
 		});
 		w.setFuture(future);
 
+	}
+
+	mPostFrameText * mPostRender::getPostFrameText()
+	{
+		return _postFrameText;
 	}
 
 	void mPostRender::updateHighLightRender()
@@ -892,7 +899,7 @@ namespace MPostRend
 		_oneFrameRender.reset();
 		_oneFrameAnimationRender.reset();
 		//_animationRender.reset();
-		
+		delete _postFrameText;
 	}
 
 	void mPostRender::updateCuttingPlaneUniform()
@@ -1060,7 +1067,8 @@ namespace MPostRend
 		else if (!_animationRender.empty())
 		{
 			_animationRender.value(_rendStatus->_aniCurrentFrame)->updateUniform(modelView, commonView);
-		}	
+		}
+		_postFrameText->resizeWindow(modelView->SCR_WIDTH, modelView->SCR_HEIGHT);
 
 		_highLightRender->updateUniform(modelView, commonView);
 	}
