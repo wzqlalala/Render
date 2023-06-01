@@ -4,6 +4,8 @@
 #include "mFontRender.h"
 #include "mArrowRender.h"
 #include "mPostColorTableRender.h"
+#include "mPostContourRender.h"
+#include "mPostColorTableData.h"
 
 #include "mPostRendStatus.h"
 #include <renderpch.h>
@@ -368,6 +370,58 @@ namespace MPostRend
 			}
 			_arrowRender->appendCommonArrow(QString("vectorGraph%1").arg(type_color[i].first), pos, dir, type_color.at(i).second, _rendStatus->_vectorArrowSize);
 		}
+	}
+	void mPostOneFrameRender::deleteContourGraph()
+	{
+		_postContourRenders.clear();
+	}
+	void mPostOneFrameRender::deleteContourGraph(int i)
+	{
+		if (i >= _postContourRenders.size())
+		{
+			return;
+		}
+		_postContourRenders.removeAt(i);
+	}
+	void mPostOneFrameRender::createContourGraph(std::shared_ptr<mxr::StateSet> lineStateSet, std::shared_ptr<mxr::StateSet> faceStateSet)
+	{
+		deleteContourGraph();
+
+		std::shared_ptr<mPostContourRender> render = MakeAsset<mPostContourRender>(_app, _geode, _oneFrameData, _oneFrameRendData);
+		render->setLineStateSet(faceStateSet);
+		render->setFaceStateSet(faceStateSet);
+		render->resetDrawable();
+		render->updateData(_oneFrameRendData->getCurrentMinData(), _oneFrameRendData->getCurrentMaxData(), _oneFrameRendData->getRendColorTable()->getPostColorTableNum() - 1);
+		_postContourRenders.append(render);
+	}
+	void mPostOneFrameRender::createContourGraph(std::shared_ptr<mxr::StateSet> lineStateSet, std::shared_ptr<mxr::StateSet> faceStateSet, int i, double value, bool isshow)
+	{
+		std::shared_ptr<mPostContourRender> render;
+		if (i == _postContourRenders.size())//Ìí¼Ó
+		{
+			render = MakeAsset<mPostContourRender>(_app, _geode, _oneFrameData, _oneFrameRendData);
+			render->setLineStateSet(faceStateSet);
+			render->setFaceStateSet(faceStateSet);
+			render->resetDrawable();
+			render->setVisiable(isshow);
+			_postContourRenders.append(render);
+		}
+		else//¸üÐÂ
+		{
+			render->resetDrawable();
+			_postContourRenders[i]->updateData(_oneFrameRendData->getCurrentMinData(), _oneFrameRendData->getCurrentMaxData(), QVector<float>{float(value)});
+			_postContourRenders[i]->setVisiable(isshow);
+		}
+		render->setLineStateSet(faceStateSet);
+		render->setFaceStateSet(faceStateSet);
+	}
+	void mPostOneFrameRender::setContourGraph(int i, bool isshow)
+	{
+		if (i >= _postContourRenders.size())
+		{
+			return;
+		}
+		_postContourRenders[i]->setVisiable(isshow);
 	}
 	QPair<QVector<QVector3D>, QVector<QVector3D>> mPostOneFrameRender::getPickingNodeData(std::set<int> nodeIds)
 	{

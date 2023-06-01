@@ -47,6 +47,7 @@ namespace MPostRend
 	class mPostModelRender;
 	class mPostCuttingPlaneRender;
 	class mPostColorTableRender;
+	class mPostContourRender;
 	class RENDVIEW_EXPORT mPostOneFrameRender
 	{
 	public:
@@ -132,6 +133,22 @@ namespace MPostRend
 		//自用
 		void createVectorGraph(QPair<QVector<QVector3D>, QVector<QVector3D>> res);
 
+		/**************************等值线等值面图*********************************************/
+
+		//删除等值线等值面图
+		void deleteContourGraph();
+
+		//删除某一个等值线等值面图
+		void deleteContourGraph(int i);
+
+		//生成等值线等值面图
+		void createContourGraph(std::shared_ptr<mxr::StateSet> lineStateSet, std::shared_ptr<mxr::StateSet> faceStateSet);
+
+		//生成等值线等值面图	
+		void createContourGraph(std::shared_ptr<mxr::StateSet> lineStateSet, std::shared_ptr<mxr::StateSet> faceStateSet, int i, double value, bool isshow = true);
+
+		//设置等值线等值面图的显隐状态	
+		void setContourGraph(int i, bool isshow);
 
 		/*************************************获取数据*******************************************/
 			
@@ -162,6 +179,8 @@ namespace MPostRend
 
 		QVector<std::shared_ptr<mPostCuttingPlaneRender>> _cuttingPlaneRenders;//切面渲染
 
+		QVector<std::shared_ptr<mPostContourRender>> _postContourRenders;//等值线面图渲染
+
 		std::shared_ptr<MBaseRend::mFontRender> _fontRender;//文字渲染
 
 		std::shared_ptr<MBaseRend::mArrowRender> _arrowRender;//箭头渲染
@@ -180,6 +199,10 @@ namespace MPostRend
 		/***********************************切面******************************************************/
 		std::shared_ptr<mxr::StateSet> _cuttingPlaneStateSet;//渲染面的状态
 		std::shared_ptr<mxr::StateSet> _transparentPlaneStateSet;//渲染透明面的状态
+
+		/************************************等值线等值面图*******************************************/
+		std::shared_ptr<mxr::StateSet> _contourLineStateSet;//渲染等值线图的状态
+		std::shared_ptr<mxr::StateSet> _contourFaceStateSet;//渲染等值面图的状态
 
 		/*************************************当前帧渲染********************************************************/
 		std::shared_ptr<mxr::Viewer> _viewer;

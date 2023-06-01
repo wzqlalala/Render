@@ -306,6 +306,43 @@ namespace MPostRend
 		_transparentPlaneStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
 		_transparentPlaneStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
 
+		/**********************************************************等值线等值面**********************************************************/
+		//等值线
+		_contourLineStateSet = MakeAsset<StateSet>();
+		mxr::Shader * countourlineshader = mShaderManage::GetInstance()->GetShader("PostContourLineWithOutDeformation");
+		_cuttingPlaneStateSet->setShader(cuttingplaneshader);
+		_cuttingPlaneStateSet->setDrawMode(GL_LINES);
+		_cuttingPlaneStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
+		_cuttingPlaneStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
+		_cuttingPlaneStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
+
+		_cuttingPlaneStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
+		_cuttingPlaneStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
+		_cuttingPlaneStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
+		_cuttingPlaneStateSet->setUniform(MakeAsset<Uniform>("minValue", float(0)));
+		_cuttingPlaneStateSet->setUniform(MakeAsset<Uniform>("maxValue", float(0)));
+
+		//等值面
+		_contourFaceStateSet = MakeAsset<StateSet>();
+		mxr::Shader * contourfaceshader = mShaderManage::GetInstance()->GetShader("PostContourFaceWithOutDeformation");
+		_contourFaceStateSet->setShader(contourfaceshader);
+		_contourFaceStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
+		_contourFaceStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetFill>(0, 0), 0);
+		_contourFaceStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
+		_contourFaceStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
+		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
+		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
+		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
+		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("lightIsOn", int(1)));
+		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("viewPos", QVector3D()));
+		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("light.position", _rendStatus->_postLight.lightPosition));
+		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("light.ambient", _rendStatus->_postLight.ambient));
+		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("light.diffuse", _rendStatus->_postLight.diffuse));
+		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("light.specular", _rendStatus->_postLight.specular));
+		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("light.shiness", _rendStatus->_postLight.shiness));
+		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("minValue", float(0)));
+		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("maxValue", float(0)));
+
 		//初始化计时器
 		_aniTimer = new QTimer;
 		_aniTimer->setInterval(0);
@@ -451,6 +488,8 @@ namespace MPostRend
 			_lineStateSet->setTexture("texture", _texture);
 			_pointStateSet->setTexture("texture", _texture);
 			_cuttingPlaneStateSet->setTexture("texture", _texture);
+			_contourFaceStateSet->setTexture("texture", _texture);
+			_contourLineStateSet->setTexture("texture", _texture);
 		}
 		_oneFrameRender = make_shared<mPostOneFrameRender>(_app, _rendStatus, oneFrameData, postOneFrameRendData);
 		_oneFrameRender->setFaceStateSet(_faceStateSet);
@@ -1048,6 +1087,7 @@ namespace MPostRend
 
 	void mPostRender::createVectorGraph(QVector<QPair<QString, QVector3D>> type_color, double size)
 	{
+		this->makeCurrent();
 		_rendStatus->_vectorArrowTypeColor = type_color;
 		_rendStatus->_vectorArrowSize = size;
 		_rendStatus->_vectorArrowMethod = "";
@@ -1059,6 +1099,7 @@ namespace MPostRend
 
 	void mPostRender::createVectorGraph(std::set<int> nodeIDs, QVector<QPair<QString, QVector3D>> type_color, double size)
 	{
+		this->makeCurrent();
 		_rendStatus->_vectorArrowNodeIDs = nodeIDs;
 		_rendStatus->_vectorArrowTypeColor = type_color;
 		_rendStatus->_vectorArrowSize = size;
@@ -1071,9 +1112,55 @@ namespace MPostRend
 
 	void mPostRender::deleteVectorGraph()
 	{
+		this->makeCurrent();
 		if (_oneFrameRender)
 		{
 			_oneFrameRender->deleteVectorGraph();
+		}
+	}
+
+	void mPostRender::deleteContourGraph()
+	{
+		this->makeCurrent();
+		if (_oneFrameRender != nullptr)
+		{
+			_oneFrameRender->deleteContourGraph();
+		}
+	}
+
+	void mPostRender::deleteContourGraph(int i)
+	{
+		this->makeCurrent();
+		if (_oneFrameRender != nullptr)
+		{
+			_oneFrameRender->deleteContourGraph(i);
+		}
+	}
+
+	void mPostRender::createContourGraph()
+	{
+		this->makeCurrent();
+		if (_oneFrameRender != nullptr)
+		{
+			_oneFrameRender->createContourGraph(_contourLineStateSet, _contourFaceStateSet);
+		}
+	}
+
+	void mPostRender::createContourGraph(int i, double value, bool isshow)
+	{
+		this->makeCurrent();
+		if (_oneFrameRender != nullptr)
+		{
+			_oneFrameRender->createContourGraph(_contourLineStateSet, _contourFaceStateSet, i, value, isshow);
+		}
+	}
+
+	void mPostRender::setContourGraph(int i, bool isshow)
+	{
+		this->makeCurrent();
+		if (_oneFrameRender != nullptr)
+		{
+			_oneFrameRender->setContourGraph(i, isshow);
 		}
 	}
 
@@ -1083,7 +1170,7 @@ namespace MPostRend
 		_oneFrameRender.reset();
 		_oneFrameAnimationRender.reset();
 		//_animationRender.reset();
-		delete _postFrameText;
+		//delete _postFrameText;
 	}
 
 	QVector3D mPostRender::getCurrentNodeVertex(int id)

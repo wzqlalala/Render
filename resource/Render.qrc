@@ -37,5 +37,7 @@
         <file>GLSL/PreMeshFaceLine.glsl</file>
         <file>GLSL/PostTable.glsl</file>
         <file>GLSL/PostTableLine.glsl</file>
+        <file>GLSL/PostContourFaceWithOutDeformation.glsl</file>
+        <file>GLSL/PostContourLineWithOutDeformation.glsl</file>
     </qresource>
 </RCC>

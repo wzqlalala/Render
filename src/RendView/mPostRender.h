@@ -212,6 +212,24 @@ namespace MPostRend
 		//删除矢量图
 		void deleteVectorGraph();
 
+		/**************************等值线等值面图*********************************************/
+		
+		//删除等值线等值面图
+		void deleteContourGraph();
+
+		//删除某一个等值线等值面图
+		void deleteContourGraph(int i);
+		
+		//生成等值线等值面图
+		void createContourGraph();
+		
+		//生成等值线等值面图	
+		void createContourGraph(int i, double value, bool isshow = true);
+		
+		//设置等值线等值面图的显隐状态	
+		void setContourGraph(int i, bool isshow);
+
+
 		~mPostRender();
 
 		void updateUniform(shared_ptr<mViewBase> modelView, shared_ptr<mViewBase> commonView) override;
@@ -284,6 +302,10 @@ namespace MPostRend
 		/***********************************切面******************************************************/
 		std::shared_ptr<mxr::StateSet> _cuttingPlaneStateSet;//渲染面的状态
 		std::shared_ptr<mxr::StateSet> _transparentPlaneStateSet;//渲染透明面的状态
+
+		/************************************等值线等值面图*******************************************/
+		std::shared_ptr<mxr::StateSet> _contourLineStateSet;//渲染等值线图的状态
+		std::shared_ptr<mxr::StateSet> _contourFaceStateSet;//渲染等值面图的状态
 
 		//计时器
 		QTimer* _aniTimer;

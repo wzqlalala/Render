@@ -448,7 +448,7 @@ namespace MPostRend
 
 	void mPostHighLightRender::setEdgeLineStateSet(std::shared_ptr<mxr::StateSet> edgelineStateSet)
 	{
-		_lineStateSet = edgelineStateSet;
+		//_lineStateSet = edgelineStateSet;
 		//_modelRender->setEdgeLineStateSet(_lineStateSet);
 	}
 
