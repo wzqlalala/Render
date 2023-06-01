@@ -30,6 +30,7 @@ namespace MPreRend
 	{
 		_parent = parent;
 		_geode = MakeAsset<Geode>();
+		_parent->addChild(_geode);
 		//_viewer = nullptr;
 		//_edgelineRender = nullptr;
 		_facelineRender = nullptr;

@@ -2962,10 +2962,10 @@ namespace MIOFile
 				//_byteAmount += 32* sizeof(char);
 
 				//存储
-				ElementType elementtype = getElementType(QString(eletype).toUpper());
-				MeshType meshtype = transformTypeStrToEnum(elementtype);
+				ElementType elementtype = mElementFunction::getElementType(QString(eletype).toUpper());
+				MeshType meshtype = mElementFunction::transformTypeStrToEnum(elementtype);
 				//根据类型获取单元包含的节点个数
-				int elenode = elementNodeCount(elementtype);
+				int elenode = mElementFunction::elementNodeCount(elementtype);
 
 
 				//读取单元包含的节点ID
