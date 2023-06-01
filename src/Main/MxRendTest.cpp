@@ -92,6 +92,7 @@ MxRendTest::MxRendTest(int id)
 
 void MxRendTest::keyPressEvent(QKeyEvent * event)
 {
+	qDebug() << event->key();
 	if (_id % 3 == 1)//ºó´¦Àí
 	{
 		switch (event->key())
@@ -509,22 +510,22 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 				_lineWidth = 1.0f;
 			}
 
-			_postRender->setEdgeLineWidth(_lineWidth);			
+			_postRender->setEdgeLineWidth(_lineWidth);
 			break;
 		}
-		case Qt::Key_0:
+		case Qt::Key_M:
 		{
-			if (_preRend == nullptr)
+			if (_postRend == nullptr)
 			{
 				return;
 			}
-			if (!_testRender)
+			_rate++;
+			if (_rate > 70)
 			{
-				_testRender = make_shared<MBaseRend::mTestRender>(_preRend->getApplication(), _preRend->getRoot());
-				_preRend->addBeforeRender(_testRender);
+				_rate = 10;
 			}
-			_testRender->appendOnePart();
-			_preRend->getCamera()->ResetOrthoAndCamera(QVector3D(0, 0, 0), 5.0);
+			_postRender->setAnimationFrameRate(_rate);
+			break;
 		}
 		default:
 			break;

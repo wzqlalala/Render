@@ -130,6 +130,7 @@ private:
 	//¶¯»­
 	bool _isStartAnimation = false;
 	bool _isLinearAnimation = true;
+	int _rate = 10;
 
 	//Ê°È¡
 	MultiplyPickMode _multuiplyPickMode = MultiplyPickMode::QuadPick;
