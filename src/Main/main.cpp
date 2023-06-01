@@ -22,17 +22,17 @@ int main(int argc, char *argv[])
 	int major = form.majorVersion();
 	int minor = form.minorVersion();
 	*/
-	/*
-	QOffscreenSurface surf;
-	surf.create();
+	
+	//QOffscreenSurface surf;
+	//surf.create();
 
-	QOpenGLContext ctx;
-	ctx.create();
-	ctx.makeCurrent(&surf);
+	//QOpenGLContext ctx;
+	//ctx.create();
+	//ctx.makeCurrent(&surf);
 
-	qDebug() << (const char *)ctx.functions()->glGetString(GL_VERSION);
-	qDebug() << (const char *)ctx.functions()->glGetString(GL_EXTENSIONS);
-	*/
+	//qDebug() << (const char *)ctx.functions()->glGetString(GL_VERSION);
+	//qDebug() << (const char *)ctx.functions()->glGetString(GL_EXTENSIONS);
+	
 	QSurfaceFormat format;
 	format.setMajorVersion(4);
 	format.setMinorVersion(5);
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 	//	// context2´´½¨Ê§°Ü
 	//}
 	//context2->setFormat(format);
-	MxRendTest w0(1);
+	MxRendTest w0(0);
 	//MxRendTest w1(1);
 
 	//MxRendTest w2(2);

@@ -310,17 +310,17 @@ namespace MPostRend
 		//等值线
 		_contourLineStateSet = MakeAsset<StateSet>();
 		mxr::Shader * countourlineshader = mShaderManage::GetInstance()->GetShader("PostContourLineWithOutDeformation");
-		_cuttingPlaneStateSet->setShader(cuttingplaneshader);
-		_cuttingPlaneStateSet->setDrawMode(GL_LINES);
-		_cuttingPlaneStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
-		_cuttingPlaneStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
-		_cuttingPlaneStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
+		_contourLineStateSet->setShader(countourlineshader);
+		_contourLineStateSet->setDrawMode(GL_LINES);
+		_contourLineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
+		_contourLineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
+		_contourLineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
 
-		_cuttingPlaneStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
-		_cuttingPlaneStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
-		_cuttingPlaneStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
-		_cuttingPlaneStateSet->setUniform(MakeAsset<Uniform>("minValue", float(0)));
-		_cuttingPlaneStateSet->setUniform(MakeAsset<Uniform>("maxValue", float(0)));
+		_contourLineStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
+		_contourLineStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
+		_contourLineStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
+		_contourLineStateSet->setUniform(MakeAsset<Uniform>("minValue", float(0)));
+		_contourLineStateSet->setUniform(MakeAsset<Uniform>("maxValue", float(0)));
 
 		//等值面
 		_contourFaceStateSet = MakeAsset<StateSet>();

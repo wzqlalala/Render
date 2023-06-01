@@ -57,14 +57,14 @@ namespace MBaseRend
 
 	mBaseRend::~mBaseRend()
 	{
-		_beforeRenderArray.clear();
-		_renderArray.clear();
-		_afterRenderArray.clear();
+		//_beforeRenderArray.clear();
+		//_renderArray.clear();
+		//_afterRenderArray.clear();
 		int appInstance = mxr::ApplicationInstance::GetInstance().removeApplication(_name);
 		if (appInstance == 0)
 		{
-			//mxr::mShaderManage::GetInstance()->deleteAllShaders();
-			//mxr::mTextureManage::GetInstance()->deleteAllTextures();
+			mxr::mShaderManage::GetInstance()->deleteAllShaders();
+			mxr::mTextureManage::GetInstance()->deleteAllTextures();
 		}
 		qDebug() << "Base Distruct";
 
