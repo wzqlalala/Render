@@ -1046,6 +1046,37 @@ namespace MPostRend
 		emit update();
 	}
 
+	void mPostRender::createVectorGraph(QVector<QPair<QString, QVector3D>> type_color, double size)
+	{
+		_rendStatus->_vectorArrowTypeColor = type_color;
+		_rendStatus->_vectorArrowSize = size;
+		_rendStatus->_vectorArrowMethod = "";
+		if (_oneFrameRender)
+		{
+			_oneFrameRender->createVectorGraph(type_color, size);
+		}
+	}
+
+	void mPostRender::createVectorGraph(std::set<int> nodeIDs, QVector<QPair<QString, QVector3D>> type_color, double size)
+	{
+		_rendStatus->_vectorArrowNodeIDs = nodeIDs;
+		_rendStatus->_vectorArrowTypeColor = type_color;
+		_rendStatus->_vectorArrowSize = size;
+		_rendStatus->_vectorArrowMethod = "";
+		if (_oneFrameRender)
+		{
+			_oneFrameRender->createVectorGraph(nodeIDs, type_color, size);
+		}
+	}
+
+	void mPostRender::deleteVectorGraph()
+	{
+		if (_oneFrameRender)
+		{
+			_oneFrameRender->deleteVectorGraph();
+		}
+	}
+
 	mPostRender::~mPostRender()
 	{
 		this->makeCurrent();

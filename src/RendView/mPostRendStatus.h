@@ -153,6 +153,23 @@ namespace MPostRend
 
 		//动画-是否开启
 		bool _aniIsStart;
+
+		/***********************************矢量图**********************************/
+
+		//矢量图-节点类型（全部或者拾取）
+		QString _vectorArrowNodeType = QString("全部");
+
+		//矢量图-拾取节点ID
+		std::set<int> _vectorArrowNodeIDs;
+
+		//矢量图-矢量图的箭头类型和颜色
+		QVector<QPair<QString, QVector3D>> _vectorArrowTypeColor;
+
+		//箭头大小的方式
+		QString _vectorArrowMethod;
+
+		//矢量图-矢量图的箭头大小
+		double _vectorArrowSize = 1.0f;
 	};
 }
 

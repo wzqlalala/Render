@@ -118,6 +118,27 @@ namespace MPostRend
 		//设置是否实时显示平面
 		void setIsShowPlane(bool isShow);
 
+		/*********************************矢量图*******************************************/
+
+		//生成矢量图
+		void createVectorGraph(QVector<QPair<QString, QVector3D>> type_color, double size);
+
+		//指定节点ID生成矢量图		
+		void createVectorGraph(std::set<int> nodeIDs, QVector<QPair<QString, QVector3D>> type_color, double size);
+
+		//删除矢量图
+		void deleteVectorGraph();
+
+		//自用
+		void createVectorGraph(QPair<QVector<QVector3D>, QVector<QVector3D>> res);
+
+
+		/*************************************获取数据*******************************************/
+			
+		//获得拾取到的的点		
+		QPair<QVector<QVector3D>, QVector<QVector3D>>  getPickingNodeData(std::set<int> nodeIds);
+
+
 	private:
 
 		void initial();

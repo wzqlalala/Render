@@ -24,6 +24,7 @@
 
 #include "mPostOneFrameRendData.h"
 #include "mOneFrameData1.h"
+#include "mPostMeshNodeData1.h"
 
 using namespace mxr;
 using namespace std;
@@ -305,6 +306,100 @@ namespace MPostRend
 			cuttingPlane->setIsShowCuttingPlane(isShow);
 		}
 		//_isShowPlane = isShow;
+	}
+	void mPostOneFrameRender::createVectorGraph(QVector<QPair<QString, QVector3D>> type_color, double size)
+	{
+		QPair<QVector<QVector3D>, QVector<QVector3D>> res;	//通过原模型生成节点
+		createVectorGraph(res);
+	}
+	void mPostOneFrameRender::createVectorGraph(std::set<int> nodeIDs, QVector<QPair<QString, QVector3D>> type_color, double size)
+	{
+		QPair<QVector<QVector3D>, QVector<QVector3D>> res = this->getPickingNodeData(nodeIDs);//通过拾取节点生成
+		createVectorGraph(res);
+	}
+	void mPostOneFrameRender::deleteVectorGraph()
+	{
+		_arrowRender->clearAllRender();
+	}
+	void mPostOneFrameRender::createVectorGraph(QPair<QVector<QVector3D>, QVector<QVector3D>> res)
+	{
+		QVector<QPair<QString, QVector3D>> type_color = _rendStatus->_vectorArrowTypeColor;
+		for (int i = 0; i < type_color.size(); ++i)
+		{
+			QVector<QVector3D> pos;
+			QVector<QVector3D> dir;
+			for (int j = 0; j < res.first.size(); ++j)
+			{
+				QVector3D d = res.second[j];
+				pos.append(res.first[j]);
+				if (type_color[i].first == "X")
+				{
+					d = QVector3D(d.x(), 0, 0);
+				}
+				else if (type_color[i].first == "Y")
+				{
+					d = QVector3D(0, d.y(), 0);
+
+				}
+				else if (type_color[i].first == "Z")
+				{
+					d = QVector3D(0, 0, d.z());
+
+				}
+				else if (type_color[i].first == "XY")
+				{
+					d = QVector3D(d.x(), d.y(), 0);
+
+				}
+				else if (type_color[i].first == "XZ")
+				{
+					d = QVector3D(d.x(), 0, d.z());
+
+				}
+				else if (type_color[i].first == "YZ")
+				{
+					d = QVector3D(0, d.y(), d.z());
+				}
+				else if (type_color[i].first == "XYZ")
+				{
+					d = QVector3D(d.x(), d.y(), d.z());
+				}
+				dir.append(d);
+			}
+			_arrowRender->appendCommonArrow(QString("vectorGraph%1").arg(type_color[i].first), pos, dir, type_color.at(i).second, _rendStatus->_vectorArrowSize);
+		}
+	}
+	QPair<QVector<QVector3D>, QVector<QVector3D>> mPostOneFrameRender::getPickingNodeData(std::set<int> nodeIds)
+	{
+		if (_oneFrameData == nullptr)
+		{
+			return QPair<QVector<QVector3D>, QVector<QVector3D>>();
+		}
+
+		if (_oneFrameRendData == nullptr)
+		{
+			return QPair<QVector<QVector3D>, QVector<QVector3D>>();
+		}
+
+		QVector<QVector3D> resVertexs;
+		QVector<QVector3D> resValues;
+
+		QHash<int, QVector3D> values = _oneFrameRendData->getVectorRendData();
+		const QHash<int, QVector3D> &dis = _oneFrameRendData->getNodeDisplacementData();
+		QVector3D deformationScale = _oneFrameRendData->getDeformationScale();
+
+		for (auto nodeID : nodeIds)
+		{
+			mPostMeshNodeData1 *nodeData = _oneFrameData->getNodeDataByID(nodeID);
+			if (nodeData == nullptr)
+			{
+				continue;
+			}
+			resVertexs.append(nodeData->getNodeVertex() + deformationScale * dis.value(nodeID));
+			resValues.append(values.value(nodeID));
+		}
+
+		return QPair<QVector<QVector3D>, QVector<QVector3D>>{ resVertexs, resValues};
 	}
 	void mPostOneFrameRender::initial()
 	{

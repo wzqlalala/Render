@@ -201,6 +201,16 @@ namespace MPostRend
 		//控制计时器开关		
 		void setTimerOn(bool ison);
 
+		/**************************矢量图*********************************************/
+		
+		//生成矢量图	
+		void createVectorGraph(QVector<QPair<QString, QVector3D>> type_color, double size);
+		
+		//指定节点ID生成矢量图		
+		void createVectorGraph(std::set<int> nodeIDs, QVector<QPair<QString, QVector3D>> type_color, double size);
+
+		//删除矢量图
+		void deleteVectorGraph();
 
 		~mPostRender();
 
