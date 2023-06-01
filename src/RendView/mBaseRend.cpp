@@ -63,8 +63,8 @@ namespace MBaseRend
 		int appInstance = mxr::ApplicationInstance::GetInstance().removeApplication(_name);
 		if (appInstance == 0)
 		{
-			mxr::mShaderManage::GetInstance()->deleteAllShaders();
-			mxr::mTextureManage::GetInstance()->deleteAllTextures();
+			//mxr::mShaderManage::GetInstance()->deleteAllShaders();
+			//mxr::mTextureManage::GetInstance()->deleteAllTextures();
 		}
 		qDebug() << "Base Distruct";
 

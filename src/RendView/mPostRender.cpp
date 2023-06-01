@@ -56,8 +56,8 @@ namespace MPostRend
 		_oneFrameRender = nullptr;
 		_oneFrameAnimationRender = nullptr;
 		_postFrameText = new mPostFrameText(postRend->getFontRender());
-		//_animationId = 0;
-		//_animationRender = nullptr;
+		////_animationId = 0;
+		////_animationRender = nullptr;
 
 		_rendStatus = make_shared<mPostRendStatus>();
 
@@ -1169,6 +1169,7 @@ namespace MPostRend
 		this->makeCurrent();
 		_oneFrameRender.reset();
 		_oneFrameAnimationRender.reset();
+		_highLightRender.reset();
 		//_animationRender.reset();
 		//delete _postFrameText;
 	}
