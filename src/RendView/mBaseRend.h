@@ -73,6 +73,8 @@ namespace MBaseRend
 
 		void setCameraType(CameraType cameratype);
 
+		shared_ptr<mBackGroundRender> getBackGroundRender();
+
 		shared_ptr<mBaseRender> getFirstBeforeRender() { 
 			if (!_beforeRenderArray.empty()) {
 				return _beforeRenderArray.first();
@@ -225,7 +227,7 @@ namespace MBaseRend
 
 		std::shared_ptr<mxr::Application> _app;
 
-		std::shared_ptr< mBackGroundRender> _bgRend;
+		std::shared_ptr<mBackGroundRender> _bgRend;
 
 		std::shared_ptr<mViewBase> _modelView;
 

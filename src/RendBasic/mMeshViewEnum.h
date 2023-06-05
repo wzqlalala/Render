@@ -188,16 +188,6 @@ namespace MViewBasic
 	};
 
 	/*
-	 * 背景色模式：纯色，从左到右渐变，从上到下渐变
-	 */
-	enum BackGroundMode
-	{
-		PureColor,
-		GradientL_R,
-		GradientT_B,
-	};
-
-	/*
 	 * 云图显示模式，节点还是网格
 	 */
 	enum NodeOrElement

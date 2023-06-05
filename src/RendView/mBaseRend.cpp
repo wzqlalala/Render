@@ -245,6 +245,10 @@ namespace MBaseRend
 			this->setCursor(Qt::BlankCursor);
 		}
 	}
+	shared_ptr<mBackGroundRender> mBaseRend::getBackGroundRender()
+	{
+		return _bgRend;
+	}
 	void mBaseRend::addBeforeRender(shared_ptr<mBaseRender> baseRender)
 	{
 		if (_beforeRenderArray.contains(baseRender))

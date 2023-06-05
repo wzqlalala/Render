@@ -5,17 +5,16 @@
 #include <QOpenGLShaderProgram>
 
 //MViewBasic
-#include "mMeshViewEnum.h"
-
-#include "app.h"
+#include "mBasicEnum.h"
 
 namespace mxr
 {
 	class Drawable;
 	class Shader;
 	class Group;
+	class Application;
 }
-
+using namespace MxFunctions;
 namespace MBaseRend
 {
 	class RENDVIEW_EXPORT mBackGroundRender : public QObject
@@ -34,11 +33,11 @@ namespace MBaseRend
 		/*
 		 * 设置背景的显示模式
 		 */
-		void setBackGroundMode(MViewBasic::BackGroundMode backgroundmode);
+		void setBackGroundMode(BackGroundMode backgroundmode);
 		/*
 		 * 获取背景的显示模式
 		 */
-		MViewBasic::BackGroundMode getBackGroundMode();
+		BackGroundMode getBackGroundMode();
 		/*
 		 * 设置上下或者左右的颜色
 		 */
@@ -63,6 +62,6 @@ namespace MBaseRend
 		//背景矩形的颜色值
 		QVector<QVector3D> _backGroundColor;
 		//渲染背景的模式
-		MViewBasic::BackGroundMode _backGroundMode;
+		BackGroundMode _backGroundMode;
 	};
 }

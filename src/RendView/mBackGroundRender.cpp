@@ -5,7 +5,6 @@
 #include "mShaderManage.h"
 
 using namespace mxr;
-using namespace MViewBasic;
 namespace MBaseRend
 {
 	float id = 1;
