@@ -101,7 +101,7 @@ namespace MPreRend
 			//{
 			//	continue;
 			//}
-			//if (!partData->getPartVisual())
+			if (!MeshMessage::getInstance()->getPartMask(partName))
 			{
 				hidePartNames.insert(partName);
 			}
@@ -375,11 +375,11 @@ namespace MPreRend
 				getMFaceData(face, color);
 			}
 			//±ß½çÏß
-			//QSet<MXGeoEdge*> geoEdges = geoFace->getPVTEdgesOnFace();
-			//for (auto geoEdge : geoEdges)
-			//{
-			//	getGeoEdgeData(geoEdge);
-			//}
+			QVector<MEdge*> edges = geoSolid->boundaryMeshEdges;
+			for (auto edge : edges)
+			{
+				getMEdgeData(edge);
+			}
 			
 		}
 	}
@@ -407,6 +407,15 @@ namespace MPreRend
 			}
 			_facelinerend->_vertex1->append(QVector<float>(6, 0.0f));
 		}
+	}
+	void mPreMeshPartRender::getMEdgeData(MEdge * edge)
+	{
+		if (edge == nullptr)
+		{
+			return;
+		}
+		_edgelinerend->_vertex0->append(edge->getVerOfMEdge(0)->getNodeVertex());
+		_edgelinerend->_vertex0->append(edge->getVerOfMEdge(1)->getNodeVertex());
 	}
 	void mPreMeshPartRender::getGeoFaceData(MXGeoFace * geoFace, QVector3D color)
 	{
