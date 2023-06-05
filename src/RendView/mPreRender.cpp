@@ -359,9 +359,9 @@ namespace MPreRend
 	{
 		this->makeCurrent();
 		_rendStatus->_showFunction = showFuntion;
-		if (_geoModelRender)
+		if (_meshModelRender)
 		{
-			_geoModelRender->setShowFuntion(showFuntion);
+			_meshModelRender->setShowFuntion(showFuntion);
 		}
 	}
 

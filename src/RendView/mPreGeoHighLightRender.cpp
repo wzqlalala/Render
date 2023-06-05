@@ -318,14 +318,15 @@ namespace MPreRend
 		mxr::Shader * meshlineshader = mShaderManage::GetInstance()->GetShader("PreHighLightGeoMeshLine");
 		_lineStateSet->setShader(meshlineshader);
 		_lineStateSet->setDrawMode(GL_LINES);
-		_lineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
+		_lineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 0);
 		//_lineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(mxr::PolygonMode::FRONT_AND_BACK, mxr::PolygonMode::FILL), 1);
 		_lineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetFill>(-1, -1), 1);
 		_lineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(mxr::PolygonMode::FRONT_AND_BACK, mxr::PolygonMode::FILL), 1);
-		//_lineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
+		_lineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
 
 		_lineStateSet->setUniform(MakeAsset<Uniform>("pvm", QMatrix4x4()));
-		_lineStateSet->setUniform(MakeAsset<Uniform>("showColor", QVector3D(1, 1, 1)));
+		_lineStateSet->setUniform(MakeAsset<Uniform>("showColor", QVector4D(1, 1, 1, 0.8)));
+		_lineStateSet->setUniform(MakeAsset<Uniform>("lineWidth", 3.0f));
 
 		_pointStateSet = MakeAsset<StateSet>();
 		mxr::Shader * pointshader = mShaderManage::GetInstance()->GetShader("PreHighLightGeoPoint");

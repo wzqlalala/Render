@@ -219,6 +219,14 @@ namespace MPreRend
 			{
 				iter->setShowFuntion(showFuntion);
 			}
+			//if (showFuntion == WireFrame)
+			//{
+			//	_faceStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(mxr::PolygonMode::FRONT_AND_BACK, mxr::PolygonMode::LINE), 1);
+			//}
+			//else
+			//{
+			//	_faceStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(mxr::PolygonMode::FRONT_AND_BACK, mxr::PolygonMode::FILL), 1);
+			//}
 		}
 	}
 
@@ -345,6 +353,12 @@ namespace MPreRend
 		else if (showFuntion == SmoothShaded)
 		{
 			_facerend->getDrawable()->setNodeMask(0);
+			_facelinerend->getDrawable()->setNodeMask(0);
+			_edgelinerend->getDrawable()->setNodeMask(0);
+		}
+		else if (showFuntion == WireFrame)
+		{
+			_facerend->getDrawable()->setNodeMask(1);
 			_facelinerend->getDrawable()->setNodeMask(0);
 			_edgelinerend->getDrawable()->setNodeMask(0);
 		}
