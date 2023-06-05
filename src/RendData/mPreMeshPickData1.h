@@ -16,6 +16,7 @@
 class MXMeshElement;
 class MXMeshVertex;
 class MFace;
+class MEdge;
 namespace MDataPre
 {	
 	using namespace std;
@@ -81,6 +82,38 @@ namespace MDataPre
 			depth = FLT_MAX;
 		}
 	};
+
+	struct MeshLineDepthBuffer
+	{
+		MEdge *meshline;
+		float depth;
+		MeshLineDepthBuffer()
+		{
+			meshline = nullptr;
+			depth = FLT_MAX;
+		}
+		void initial()
+		{
+			meshline = nullptr;
+			depth = FLT_MAX;
+		}
+	};
+
+	struct MeshLineSetDepthBuffer
+	{
+		set<MEdge*> meshlines;
+		float depth;
+		MeshLineSetDepthBuffer()
+		{
+			depth = FLT_MAX;
+		}
+		void initial()
+		{
+			meshlines.clear();
+			depth = FLT_MAX;
+		}
+	};
+
 	struct MeshElementDepthBuffer
 	{
 		MXMeshElement *element;
@@ -145,42 +178,42 @@ namespace MDataPre
 		//拾取时调用
 		void setSoloPickNodeData(MXMeshVertex* nodeid, float depth);
 		void setSoloPickMeshData(MXMeshElement* meshid, float depth);
-		void setSoloPickMeshLineData(int meshlineid, float depth);
+		void setSoloPickMeshLineData(MEdge* meshlineid, float depth);
 		void setSoloPickMeshFaceData(MFace* meshfaceid, float depth);
 		void setSoloPickMeshPartData(QString partName, float depth);
 		void setSoloPickNodeByPartData(set<MXMeshVertex*> nodeids, float depth);
 		void setSoloPickMeshByPartData(set<MXMeshElement*> meshids, float depth);
-		void setSoloPickMeshLineByPartData(set<int> meshLineids, float depth);
+		void setSoloPickMeshLineByPartData(set<MEdge*> meshLineids, float depth);
 		void setSoloPickMeshFaceByPartData(set<MFace*> meshFaceids, float depth);
 		void setSoloPickMeshDataByAngle(MXMeshElement* meshid, QString partName,float depth);
-		void setSoloPickMeshLineDataByAngle(int meshlineid, QString partName, float depth);
+		void setSoloPickMeshLineDataByAngle(void* meshlineid, QString partName, float depth);
 		void setSoloPickMeshFaceDataByAngle(void* meshfaceid, QString partName, float depth);
 
 		void setMultiplyPickNodeData(set<MXMeshVertex*> nodeids);
 		void setMultiplyPickNodeData(QVector<MXMeshVertex*> nodeids);
 		void setMultiplyPickMeshData(set<MXMeshElement*> meshids);
-		void setMultiplyPickMeshLineData(set<int> meshlineids);
+		void setMultiplyPickMeshLineData(set<MEdge*> meshlineids);
 		void setMultiplyPickMeshFaceData(set<MFace*> meshfaceids);
 		void setMultiplyPickMeshPartData(QString partNames);
 
 		//一次性高亮，清除上一次高亮
 		void setAllPickNodeData(set<MXMeshVertex*> nodeids);
 		void setAllPickMeshData(set<MXMeshElement*> meshids);
-		void setAllPickMeshLineData(set<int> meshlineids);
+		void setAllPickMeshLineData(set<MEdge*> meshlineids);
 		void setAllPickMeshFaceData(set<MFace*> meshfaceids);
 		void setAllPickMeshPartData(set<QString> partNames);
 
 		//累积高亮
 		void setAddPickNodeData(set<MXMeshVertex*> nodeids);
 		void setAddPickMeshData(set<MXMeshElement*> meshids);
-		void setAddPickMeshLineData(set<int> meshlineids);
+		void setAddPickMeshLineData(set<MEdge*> meshlineids);
 		void setAddPickMeshFaceData(set<MFace*> meshfaceids);
 		void setAddPickMeshPartData(set<QString> partNames);
 
 		//减少高亮
 		void setReducePickNodeData(set<MXMeshVertex*> nodeids);
 		void setReducePickMeshData(set<MXMeshElement*> meshids);
-		void setReducePickMeshLineData(set<int> meshlineids);
+		void setReducePickMeshLineData(set<MEdge*> meshlineids);
 		void setReducePickMeshFaceData(set<MFace*> meshfaceids);
 		void setReducePickMeshPartData(set<QString> partNames);
 
@@ -200,7 +233,7 @@ namespace MDataPre
 		set<MXMeshElement*> getPickMeshIDs();
 
 		//获取拾取后的单元线编号
-		set<int> getPickMeshLineIDs();
+		set<MEdge*> getPickMeshLineIDs();
 
 		//获取拾取后的单元面编号
 		set<MFace*> getPickMeshFaceIDs();
@@ -233,7 +266,7 @@ namespace MDataPre
 
 		MeshElementDepthBuffer _meshBuffer;//当前单元编号
 
-		IDDepthBuffer _meshLineBuffer;//当前单元线编号
+		MeshLineDepthBuffer _meshLineBuffer;//当前单元线编号
 
 		MeshFaceDepthBuffer _meshFaceBuffer;//当前单元面编号
 
@@ -243,7 +276,7 @@ namespace MDataPre
 
 		MeshElementSetDepthBuffer _meshBuffers;//按部件拾取单元的编号
 
-		IDSetDepthBuffer _meshLineBuffers;//按部件拾取单元线的编号
+		MeshLineSetDepthBuffer _meshLineBuffers;//按部件拾取单元线的编号
 
 		MeshFaceSetDepthBuffer _meshFaceBuffers;//按部件拾取单元面的编号
 
@@ -258,7 +291,7 @@ namespace MDataPre
 		set<MXMeshVertex*> _pickNodes;//最终拾取到的节点
 		QVector<MXMeshVertex*> _pickNodesOrder;//最终拾取到的节点（保留拾取顺序）
 		set<MXMeshElement*> _pickMeshs;//最终拾取到的单元
-		set<int> _pickMeshLines;//最终拾取到的单元线
+		set<MEdge*> _pickMeshLines;//最终拾取到的单元线
 		set<MFace*> _pickMeshFaces;//最终拾取到的单元面
 		set<QString> _pickParts;//最终拾取到的部件
 

@@ -25,6 +25,7 @@ class MXGeoFace;
 class MXGeoEdge;
 class MXGeoPoint;
 class MFace;
+class MEdge;
 class MXMeshElement;
 class MXMeshVertex;
 namespace MDataPre
@@ -244,7 +245,7 @@ namespace MPreRend
 		void SoloPickMeshPart(QString partName);
 		void SoloPickNodeByPart(QString partName);
 		void SoloPickAnyMeshByPart(QString partName);
-		//void SoloPickMeshLineByPart(QString partName);
+		void SoloPickMeshLineByPart(QString partName);
 		void SoloPickMeshFaceByPart(QString partName);
 		//void SoloPickNodeByLine(QString partName);
 		//void SoloPickMeshByLine(QString partName);
@@ -256,7 +257,7 @@ namespace MPreRend
 		void SoloPickNodeByFaceAngle(QString partName);
 		//void SoloPick1DMeshByAngle(QString partName);
 		void SoloPick2DMeshByAngle(QString partName);
-		//void SoloPickMeshLineByAngle(QString partName);
+		void SoloPickMeshLineByAngle(QString partName);
 		void SoloPickMeshFaceByAngle(QString partName);
 
 		//¿òÑ¡Ê°È¡
@@ -322,6 +323,7 @@ namespace MPreRend
 		set<MXMeshVertex*> getAllNodesByPartName(QString partName);
 		set<MXMeshElement*> getAllMeshsByPartName(QString partName);
 		set<MFace*> getAllMeshFacesByPartName(QString partName);
+		set<MEdge*> getAllMeshLinesByPartName(QString partName);
 
 	signals:
 		/*

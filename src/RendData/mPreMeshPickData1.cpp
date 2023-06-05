@@ -41,14 +41,14 @@ namespace MDataPre
 		}
 	}
 
-	void mPreMeshPickData1::setSoloPickMeshLineData(int meshlineid, float depth)
+	void mPreMeshPickData1::setSoloPickMeshLineData(MEdge* meshlineid, float depth)
 	{
 		if (meshlineid != 0)
 		{
 			if (depth < _meshLineBuffer.depth)
 			{
 				_meshLineBuffer.depth = depth;
-				_meshLineBuffer.id = meshlineid;
+				_meshLineBuffer.meshline = meshlineid;
 			}
 		}
 	}
@@ -101,14 +101,14 @@ namespace MDataPre
 		}
 	}
 
-	void mPreMeshPickData1::setSoloPickMeshLineByPartData(set<int> meshLineids, float depth)
+	void mPreMeshPickData1::setSoloPickMeshLineByPartData(set<MEdge*> meshLineids, float depth)
 	{
 		if (meshLineids.size() != 0)
 		{
 			if (depth < _meshLineBuffers.depth)
 			{
 				_meshLineBuffers.depth = depth;
-				_meshLineBuffers.ids = meshLineids;
+				_meshLineBuffers.meshlines = meshLineids;
 			}
 		}
 	}
@@ -138,16 +138,16 @@ namespace MDataPre
 		}
 	}
 
-	void mPreMeshPickData1::setSoloPickMeshLineDataByAngle(int meshlineid, QString partName, float depth)
+	void mPreMeshPickData1::setSoloPickMeshLineDataByAngle(void* meshlineid, QString partName, float depth)
 	{
 		if (meshlineid != 0)
 		{
-			//if (depth < _meshLinePartNameBuffers.depth)
-			//{
-			//	_meshLinePartNameBuffers.depth = depth;
-			//	_meshLinePartNameBuffers.partName = partName;
-			//	_meshLinePartNameBuffers.ptr = meshlineid;
-			//}
+			if (depth < _meshLinePartNameBuffers.depth)
+			{
+				_meshLinePartNameBuffers.depth = depth;
+				_meshLinePartNameBuffers.partName = partName;
+				_meshLinePartNameBuffers.ptr = meshlineid;
+			}
 		}
 	}
 
@@ -190,14 +190,14 @@ namespace MDataPre
 
 			_meshBuffer.initial();
 		}
-		if (_meshLineBuffer.id != 0)
+		if (_meshLineBuffer.meshline != 0)
 		{
 			switch (_pickFunction)
 			{
 			case 0:
-				_pickMeshLines.insert(_meshLineBuffer.id); break;
+				_pickMeshLines.insert(_meshLineBuffer.meshline); break;
 			case 1:
-				_pickMeshLines.erase(_meshLineBuffer.id); break;
+				_pickMeshLines.erase(_meshLineBuffer.meshline); break;
 			}
 			_meshLineBuffer.initial();
 		}
@@ -233,9 +233,9 @@ namespace MDataPre
 			setMultiplyPickMeshData(_meshBuffers.elements);
 			_meshBuffers.initial();
 		}
-		if (_meshLineBuffers.ids.size() != 0)
+		if (_meshLineBuffers.meshlines.size() != 0)
 		{
-			setMultiplyPickMeshLineData(_meshLineBuffers.ids);
+			setMultiplyPickMeshLineData(_meshLineBuffers.meshlines);
 			_meshLineBuffers.initial();
 		}
 		if (_meshFaceBuffers.meshfaces.size() != 0)
@@ -303,7 +303,7 @@ namespace MDataPre
 		}
 	}
 
-	void mPreMeshPickData1::setMultiplyPickMeshLineData(std::set<int> meshlineids)
+	void mPreMeshPickData1::setMultiplyPickMeshLineData(std::set<MEdge*> meshlineids)
 	{
 		if (_pickFunction == 0)
 		{
@@ -361,7 +361,7 @@ namespace MDataPre
 		_pickMeshs = meshids;
 	}
 
-	void mPreMeshPickData1::setAllPickMeshLineData(set<int> meshlineids)
+	void mPreMeshPickData1::setAllPickMeshLineData(set<MEdge*> meshlineids)
 	{
 		_pickMeshLines = meshlineids;
 	}
@@ -386,7 +386,7 @@ namespace MDataPre
 		_pickMeshs.insert(meshids.begin(), meshids.end());
 	}
 
-	void mPreMeshPickData1::setAddPickMeshLineData(set<int> meshlineids)
+	void mPreMeshPickData1::setAddPickMeshLineData(set<MEdge*> meshlineids)
 	{
 		_pickMeshLines.insert(meshlineids.begin(), meshlineids.end());
 	}
@@ -417,7 +417,7 @@ namespace MDataPre
 		}
 	}
 
-	void mPreMeshPickData1::setReducePickMeshLineData(set<int> meshlineids)
+	void mPreMeshPickData1::setReducePickMeshLineData(set<MEdge*> meshlineids)
 	{
 		for (auto iter = meshlineids.begin(); iter != meshlineids.end(); ++iter)
 		{
@@ -456,7 +456,7 @@ namespace MDataPre
 		return _pickMeshs;
 	}
 
-	set<int> mPreMeshPickData1::getPickMeshLineIDs()
+	set<MEdge*> mPreMeshPickData1::getPickMeshLineIDs()
 	{
 		return _pickMeshLines;
 	}

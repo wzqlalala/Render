@@ -427,17 +427,18 @@ namespace MPreRend
 			case PickFilter::PickWedge:SoloPickMeshTypeFilter(partName, QVector<MeshType>{MeshWedge}); break;
 			case PickFilter::PickHex:SoloPickMeshTypeFilter(partName, QVector<MeshType>{MeshHex}); break;
 			case PickFilter::PickAnyMesh:SoloPickAnyMesh(partName); break;
+			case PickFilter::PickMeshLine:SoloPickMeshLine(partName); break;
 			case PickFilter::PickMeshFace:SoloPickMeshFace(partName); break;
 			case PickFilter::PickMeshPart:SoloPickMeshPart(partName); break;
 			case PickFilter::PickNodeByPart:SoloPickNodeByPart(partName); break;
 			case PickFilter::PickAnyMeshByPart:SoloPickAnyMeshByPart(partName); break;
-			//case PickFilter::PickMeshLineByPart:SoloPickMeshLineByPart(partName); break;
+			case PickFilter::PickMeshLineByPart:SoloPickMeshLineByPart(partName); break;
 			case PickFilter::PickMeshFaceByPart:SoloPickMeshFaceByPart(partName); break;
 			//case PickFilter::PickNodeByLineAngle:SoloPickNodeByLineAngle(partName); break;
 			case PickFilter::PickNodeByFaceAngle:SoloPickNodeByFaceAngle(partName); break;
 			//case PickFilter::Pick1DMeshByAngle:SoloPick1DMeshByAngle(partName); break;
 			case PickFilter::Pick2DMeshByAngle:SoloPick2DMeshByAngle(partName); break;
-			//case PickFilter::PickMeshLineByAngle:SoloPickMeshLineByAngle(partName); break;
+			case PickFilter::PickMeshLineByAngle:SoloPickMeshLineByAngle(partName); break;
 			case PickFilter::PickMeshFaceByAngle:SoloPickMeshFaceByAngle(partName); break;
 			default:break;
 			}
@@ -628,6 +629,17 @@ namespace MPreRend
 		}
 		return picks;
 	}
+	set<MEdge*> mPreMeshPickThread::getAllMeshLinesByPartName(QString partName)
+	{
+		set<MEdge*> picks;
+		QVector<MXGeoSolid*> geoSolids = MeshMessage::getInstance()->getGeoSolidSamePart(partName);
+		for (auto geoSolid : geoSolids)
+		{
+			QVector<MEdge*> medges = geoSolid->boundaryMeshEdges;
+			picks.insert(medges.begin(), medges.end());
+		}
+		return picks;
+	}
 	void mPreMeshPickThread::SoloPickMeshTypeFilter(QString partName, QVector<MeshType> filter)
 	{
 		MXMeshElement* _pickMesh = nullptr;
@@ -704,7 +716,7 @@ namespace MPreRend
 				}
 				QVector<QVector2D> tempQVector2D;
 				std::set<float> depthlist;
-				QVector<QVector3D> vertexs;
+				QVector<QVector3D> vertexs = mesh->getallVertexs1();
 				WorldvertexToScreenvertex(vertexs, tempQVector2D, depthlist);
 				if (mPickToolClass::IsLineIntersectionWithQuad(tempQVector2D, soloQuad, MeshBeam) && *depthlist.begin() < _meshdepth)
 				{
@@ -848,7 +860,7 @@ namespace MPreRend
 			{
 				num = 4;
 			}
-			QVector<QVector3D> vertexs;
+			QVector<QVector3D> vertexs = mesh->getallVertexs1();
 			if (vertexs.size() == 3 ? mPickToolClass::rayTriangleIntersect(_origin, _dir, vertexs, uv, t) : mPickToolClass::rayQuadIntersect(_origin, _dir, vertexs, uv, t))
 			{
 				if (t < _meshdepth)
@@ -870,7 +882,7 @@ namespace MPreRend
 			}
 			QVector<QVector2D> tempQVector2D;
 			std::set<float> depthlist;
-			QVector<QVector3D> vertexs;
+			QVector<QVector3D> vertexs = mesh->getallVertexs1();
 			WorldvertexToScreenvertex(vertexs, tempQVector2D, depthlist);
 			if (mPickToolClass::IsLineIntersectionWithQuad(tempQVector2D, soloQuad, MeshBeam) && *depthlist.begin() < _meshdepth)
 			{
@@ -889,6 +901,34 @@ namespace MPreRend
 		pickMutex.unlock();
 
 	}
+	void mPreMeshPickThread::SoloPickMeshLine(QString partName)
+	{
+		MEdge* _pickMesh = nullptr;
+		float _meshdepth = FLT_MAX;
+		float depth = FLT_MAX;
+
+		//获取边界线
+		set<MEdge*> medges = this->getAllMeshLinesByPartName(partName);
+		for (auto edge : medges)
+		{
+			QVector<QVector2D> tempQVector2D;
+			std::set<float> depthlist;
+			QVector<QVector3D> vertexs = edge->getAllVertexs();
+			WorldvertexToScreenvertex(vertexs, tempQVector2D, depthlist);
+			if (mPickToolClass::IsLineIntersectionWithQuad(tempQVector2D, soloQuad, MeshBeam) && *depthlist.begin() < _meshdepth)
+			{
+				_meshdepth = *depthlist.begin();
+				_pickMesh = edge;
+			}
+		}
+		if (_pickMesh == nullptr)
+		{
+			return;
+		}
+		pickMutex.lock();
+		_pickData->setSoloPickMeshLineData(_pickMesh, _meshdepth);
+		pickMutex.unlock();
+	}
 	void mPreMeshPickThread::SoloPickMeshFace(QString partName)
 	{
 		MFace* _pickmeshface = nullptr;
@@ -898,7 +938,7 @@ namespace MPreRend
 		float t;
 
 		//获取单元面
-		QVector<MFace*> mfaces /*= MeshMessage::getInstance()->getsa*/;
+		QVector<MFace*> mfaces = MeshMessage::getInstance()->getSurfaceMeshSamePart(partName);
 		for (auto mface : mfaces)
 		{
 			//获取所有节点
@@ -961,6 +1001,17 @@ namespace MPreRend
 		_pickData->setSoloPickMeshByPartData(this->getAllMeshsByPartName(partName), depth);
 		pickMutex.unlock();
 	}
+	void mPreMeshPickThread::SoloPickMeshLineByPart(QString partName)
+	{
+		float depth = FLT_MAX;
+		if (!isSoloPickMeshPart(partName, depth))
+		{
+			return;
+		}
+		pickMutex.lock();
+		_pickData->setSoloPickMeshLineByPartData(this->getAllMeshLinesByPartName(partName), depth);
+		pickMutex.unlock();
+	}
 	void mPreMeshPickThread::SoloPickMeshFaceByPart(QString partName)
 	{
 		float depth = FLT_MAX;
@@ -994,7 +1045,7 @@ namespace MPreRend
 			{
 				num = 4;
 			}
-			QVector<QVector3D> vertexs;
+			QVector<QVector3D> vertexs = mesh->getallVertexs1();
 			if (num == 3 ? mPickToolClass::rayTriangleIntersect(_origin, _dir, vertexs, uv, t) : mPickToolClass::rayQuadIntersect(_origin, _dir, vertexs, uv, t))
 			{
 				if (t < _meshdepth)
@@ -1011,6 +1062,34 @@ namespace MPreRend
 		}
 		pickMutex.lock();
 		_pickData->setSoloPickMeshDataByAngle(_pickMesh, partName, _meshdepth);
+		pickMutex.unlock();
+	}
+	void mPreMeshPickThread::SoloPickMeshLineByAngle(QString partName)
+	{
+		MEdge* _pickMesh = nullptr;
+		float _meshdepth = FLT_MAX;
+		float depth = FLT_MAX;
+
+		//获取边界线
+		set<MEdge*> medges = this->getAllMeshLinesByPartName(partName);
+		for (auto edge : medges)
+		{
+			QVector<QVector2D> tempQVector2D;
+			std::set<float> depthlist;
+			QVector<QVector3D> vertexs = edge->getAllVertexs();
+			WorldvertexToScreenvertex(vertexs, tempQVector2D, depthlist);
+			if (mPickToolClass::IsLineIntersectionWithQuad(tempQVector2D, soloQuad, MeshBeam) && *depthlist.begin() < _meshdepth)
+			{
+				_meshdepth = *depthlist.begin();
+				_pickMesh = edge;
+			}
+		}
+		if (_pickMesh == nullptr)
+		{
+			return;
+		}
+		pickMutex.lock();
+		_pickData->setSoloPickMeshLineDataByAngle(_pickMesh, partName, _meshdepth);
 		pickMutex.unlock();
 	}
 	void mPreMeshPickThread::SoloPickMeshFaceByAngle(QString partName)
@@ -1287,6 +1366,29 @@ namespace MPreRend
 		_pickData->setMultiplyPickMeshData(picks);
 		pickMutex.unlock();
 	}
+	void mPreMeshPickThread::MultiplyPickMeshLineByPart(QString partName, bool isAllIn)
+	{
+		QString _partName;
+		if (isAllIn)
+		{
+			_partName = partName;
+		}
+		else
+		{
+			if (isMultiplyPickMeshPart(partName))
+			{
+				_partName = partName;
+			}
+		}
+		if (_partName.isEmpty())
+		{
+			return;
+		}
+		set<MEdge*> picks = this->getAllMeshLinesByPartName(partName);
+		pickMutex.lock();
+		_pickData->setMultiplyPickMeshLineData(picks);
+		pickMutex.unlock();
+	}
 	void mPreMeshPickThread::MultiplyPickMeshFaceByPart(QString partName, bool isAllIn)
 	{
 		QString _partName;
@@ -1511,7 +1613,95 @@ namespace MPreRend
 	}
 	void mPreMeshPickThread::SoloPickMeshLineByAngle()
 	{
+		QPair<QString, void*> partNameMeshLine = _pickData->getSoloPickMeshLineDataByAngle();
+		MEdge* meshLineData = static_cast<MEdge*>(partNameMeshLine.second);
+		if (meshLineData == 0)
+		{
+			return;
+		}
 
+		//拾取到的单元面ID
+		std::set<MEdge*> pickMeshLineIDs;
+		//判断过的单元面ID
+		std::set<MEdge*> judgeMeshLineIDs;
+		//存储相邻单元面ID的队列
+		QQueue<MEdge*> queue;
+		//存储相邻单元的方向的队列
+		QQueue<QVector3D> queueDirection;
+		//方向
+		QVector3D direction, lastDirection;
+		//角度值
+		float angleValue;
+
+		if (meshLineData != nullptr)
+		{
+			QVector<QVector3D> vertexs = meshLineData->getAllVertexs();
+
+			lastDirection = (vertexs.at(1) - vertexs.at(0)).normalized();
+			//if (!_oneFrameData->getMeshDataByID(meshID)->getMeshVisual())
+			{
+				//lastDirection = -lastDirection;
+			}
+
+			queue.enqueue(meshLineData);
+			queueDirection.enqueue(lastDirection);
+
+		}
+
+		while (!queue.isEmpty() && !queueDirection.isEmpty())
+		{
+			meshLineData = queue.dequeue();
+			lastDirection = queueDirection.dequeue();
+			if (!judgeMeshLineIDs.insert(meshLineData).second)
+			{
+				continue;
+			}
+
+			if (meshLineData != nullptr)
+			{
+				QVector<QVector3D> vertexs = meshLineData->getAllVertexs();
+				if (vertexs.size() < 3)
+				{
+					return;
+				}
+				direction = (vertexs.at(1) - vertexs.at(0)).normalized();
+				float x = QVector3D::dotProduct(direction, lastDirection);
+				if (x > 1.0)
+				{
+					angleValue = 0;
+				}
+				else
+				{
+					angleValue = fabs(180 * acos(x) / 3.1415926);
+				}
+				if (_pickAngleValue > angleValue)
+				{
+					if (pickMeshLineIDs.insert(meshLineData).second)
+					{						
+						//单元表面
+						set<MFace*> adjacentMeshFaceIDs;
+						adjacentMeshFaceIDs.insert(meshLineData->_inMFace[0]);
+						adjacentMeshFaceIDs.insert(meshLineData->_inMFace[1]);
+						for (auto face : adjacentMeshFaceIDs)
+						{
+							for (auto edge : face->_edges)
+							{
+								queueDirection.enqueue(direction);
+								queue.enqueue(edge);
+							}
+						}		
+						//二维网格
+
+
+					}
+				}
+
+			}
+
+		}
+
+
+		_pickData->setMultiplyPickMeshLineData(pickMeshLineIDs);
 	}
 	void mPreMeshPickThread::SoloPick2DMeshByAngle()
 	{
@@ -1708,8 +1898,6 @@ namespace MPreRend
 
 
 		_pickData->setMultiplyPickMeshFaceData(pickMeshFaceIDs);
-
-		return;
 	}
 	bool mPreMeshPickThread::isSoloPickMeshPart(QString partName, float & depth)
 	{
