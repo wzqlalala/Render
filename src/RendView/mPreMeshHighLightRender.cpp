@@ -253,6 +253,16 @@ namespace MPreRend
 			}
 		}
 
+		set<MEdge*> meshlineids = _meshPickData->getPickMeshLineIDs();
+		for (auto iter : meshlineids)
+		{
+			if (iter == nullptr)
+			{
+				continue;
+			}
+			QVector<QVector3D> vertexs = iter->getAllVertexs();
+			_lineRender->_vertex0->append(vertexs);
+		}
 		
 		set<MFace*> meshfaceids = _meshPickData->getPickMeshFaceIDs();
 		for (auto iter : meshfaceids)

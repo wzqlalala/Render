@@ -264,6 +264,7 @@ namespace MPreRend
 		void MultiplyPickNode(QString partName, bool isAllIn = false);
 		void MultiplyPickAnyMesh(QString partName, bool isAllIn = false);
 		void MultiplyPickMeshTypeFilter(QString partName, QVector<MeshType> filters, bool isAllIn = false);
+		void MultiplyPickMeshLine(QString partName, bool isAllIn = false);
 		void MultiplyPickMeshFace(QString partName, bool isAllIn = false);
 		void MultiplyPickMeshPart(QString partName, bool isAllIn = false);
 		void MultiplyPickNodeByPart(QString partName, bool isAllIn = false);

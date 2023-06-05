@@ -476,6 +476,7 @@ namespace MPreRend
 			case PickFilter::PickWedge:MultiplyPickMeshTypeFilter(partName, QVector<MeshType>{MeshWedge}, isAllIn); break;
 			case PickFilter::PickHex:MultiplyPickMeshTypeFilter(partName, QVector<MeshType>{MeshHex}, isAllIn); break;
 			case PickFilter::PickAnyMesh:MultiplyPickAnyMesh(partName, isAllIn); break;
+			case PickFilter::PickMeshLine:MultiplyPickMeshLine(partName, isAllIn); break;
 			case PickFilter::PickMeshFace:MultiplyPickMeshFace(partName, isAllIn); break;
 			case PickFilter::PickMeshPart:MultiplyPickMeshPart(partName, isAllIn); break;
 			default:break;
@@ -1259,6 +1260,35 @@ namespace MPreRend
 		}
 		pickMutex.lock();
 		_pickData->setMultiplyPickMeshData(pickmeshs);
+		pickMutex.unlock();
+	}
+	void mPreMeshPickThread::MultiplyPickMeshLine(QString partName, bool isAllIn)
+	{
+		set<MEdge*> pickmeshlines;
+		if (isAllIn)
+		{
+			pickmeshlines = this->getAllMeshLinesByPartName(partName);
+		}
+		else
+		{
+			//»ñÈ¡Íø¸ñ
+			set<MEdge*> meshlines = this->getAllMeshLinesByPartName(partName);
+			for (auto meshline : meshlines)
+			{
+				QVector<QVector3D> vertexs = meshline->getAllVertexs();
+				if (_pick->get1DMeshIsInPick(vertexs))
+				{
+					pickmeshlines.insert(meshline);
+				}
+			}
+		}
+
+		if (pickmeshlines.size() == 0)
+		{
+			return;
+		}
+		pickMutex.lock();
+		_pickData->setMultiplyPickMeshLineData(pickmeshlines);
 		pickMutex.unlock();
 	}
 	void mPreMeshPickThread::MultiplyPickMeshFace(QString partName, bool isAllIn)
