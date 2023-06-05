@@ -398,10 +398,12 @@ namespace MPreRend
 		_facelineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 0);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::LINE), 1);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(-1, -1), 1);
+		_facelineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
 
 		_facelineStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
 		_facelineStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
 		_facelineStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
+		_facelineStateSet->setUniform(MakeAsset<Uniform>("showColor", QVector4D(1, 1, 1, 0.8)));
 
 		//edgeline
 		_lineStateSet = MakeAsset<StateSet>();
@@ -410,10 +412,12 @@ namespace MPreRend
 		_lineStateSet->setDrawMode(GL_LINES);
 		_lineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 0);
 		_lineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(mxr::PolygonMode::FRONT_AND_BACK, mxr::PolygonMode::FILL), 1);
+		_lineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
 
 		_lineStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
 		_lineStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
 		_lineStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
+		_lineStateSet->setUniform(MakeAsset<Uniform>("showColor", QVector4D(1,1,1,0.8)));
 
 		_pointStateSet = MakeAsset<StateSet>();
 		mxr::Shader * pointshader = mShaderManage::GetInstance()->GetShader("PostHighLightPoint");

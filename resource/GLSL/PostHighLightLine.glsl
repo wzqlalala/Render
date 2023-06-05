@@ -17,12 +17,12 @@ void main()
 
 #ifdef fragment_shader
 
-
+uniform vec4 showColor;
 out vec4 FragColor;
 
 void main()
 {	
-    FragColor = vec4(1,1,1,1);
+    FragColor = showColor;
 } 
 
 #endif
