@@ -233,6 +233,7 @@ namespace MPreRend
 			_meshPickThread->setMatrix(_baseRend->getCamera()->getPVMValue());
 			_meshPickThread->setWidget(_baseRend->getCamera()->SCR_WIDTH, _baseRend->getCamera()->SCR_HEIGHT);
 			_meshPickThread->setPickMode(*_baseRend->getCurrentPickMode(), *_baseRend->getMultiplyPickMode());
+			_meshPickThread->setPickAngleValue(_baseRend->getPickAngle());
 			if (*_baseRend->getCurrentPickMode() == PickMode::SoloPick)
 			{
 				float depth = this->getDepth(poses.first());

@@ -130,6 +130,8 @@ namespace MBaseRend
 
 		void setPickFilter(PickFilter pickFilter);
 
+		void setPickAngle(double angle);
+
 		CameraOperateMode *getCameraOperateMode() { return _cameraMode; };
 
 		PickMode *getCurrentPickMode() { return _pickMode; };//当前拾取模式
@@ -137,6 +139,8 @@ namespace MBaseRend
 		MultiplyPickMode *getMultiplyPickMode() { return _multiplyPickMode; };//框选拾取模式
 
 		PickFilter *getPickFilter() { return _pickFilter; };//拾取过滤模式
+
+		double getPickAngle() { return _pickAngle; };
 
 		PickFuntion getPickFuntion()
 		{
@@ -296,6 +300,8 @@ namespace MBaseRend
 		MultiplyPickMode *_multiplyPickMode;//框选拾取模式
 
 		PickFilter *_pickFilter;//当前拾取过滤模式
+
+		double _pickAngle;//当前拾取的角度
 
 		static QHash<QPair<Qt::MouseButton, Qt::KeyboardModifiers>, CameraOperateMode> _cameraKeys;
 

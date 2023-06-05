@@ -40,7 +40,7 @@ namespace MPreRend
 
 		mBasePick(QMatrix4x4 pvm, int w, int h) { _pvm = pvm; _width = w; _height = h; };
 
-		virtual bool getPickIsIntersectionWithAABB(AABB aabb) = 0;
+		virtual bool getPickIsIntersectionWithAABB(Space::AABB aabb) = 0;
 
 		virtual bool get2DAnd3DMeshCenterIsInPick(QVector3D pointCenter) = 0;//0维和2维和3维
 
@@ -50,7 +50,7 @@ namespace MPreRend
 
 		virtual bool isAABBPointIsAllInPick(QVector<QVector2D> ap) = 0;//判断点是否全部
 
-		//将AABB的八个顶点转化为二维屏幕的点
+		//将Space::AABB的八个顶点转化为二维屏幕的点
 		QVector<QVector2D> getAABBToScreenVertex(QVector3D minEdge, QVector3D maxEdge);
 		//将屏幕坐标转化为世界坐标
 		QVector3D ScreenvertexToWorldvertex(QVector3D vertex);
@@ -78,7 +78,7 @@ namespace MPreRend
 			_boxXY_2 = _multiQuad.first() - _center; _boxXY_2[0] = qAbs(_boxXY_2[0]); _boxXY_2[1] = qAbs(_boxXY_2[1]);
 		};
 
-		bool getPickIsIntersectionWithAABB(AABB aabb) override;
+		bool getPickIsIntersectionWithAABB(Space::AABB aabb) override;
 
 		bool get2DAnd3DMeshCenterIsInPick(QVector3D pointCenter) override;//0维和2维和3维
 
@@ -103,7 +103,7 @@ namespace MPreRend
 			_center = (_multiQuad.first() + _multiQuad.last()) / 2.0;
 		};
 
-		bool getPickIsIntersectionWithAABB(AABB aabb) override;
+		bool getPickIsIntersectionWithAABB(Space::AABB aabb) override;
 
 		bool get2DAnd3DMeshCenterIsInPick(QVector3D pointCenter) override;//0维和2维和3维
 
@@ -134,7 +134,7 @@ namespace MPreRend
 			_centerDirection = centerDirection;
 		};
 
-		bool getPickIsIntersectionWithAABB(AABB aabb) override;
+		bool getPickIsIntersectionWithAABB(Space::AABB aabb) override;
 
 		bool get2DAnd3DMeshCenterIsInPick(QVector3D pointCenter) override;//0维和2维和3维
 

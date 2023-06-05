@@ -369,6 +369,11 @@ namespace MBaseRend
 		*_pickFilter = pickFilter;
 	}
 
+	void mBaseRend::setPickAngle(double angle)
+	{
+		_pickAngle = angle;
+	}
+
 	void mBaseRend::GetPointDepthAtMouse()
 	{
 		glReadPixels(nowX, SCR_HEIGHT - nowY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &BufDepth);//OpenGL像素坐标原点左下角 BufDepth范围（0,1）
