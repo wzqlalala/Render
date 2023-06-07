@@ -949,7 +949,7 @@ namespace MPreRend
 			{
 				num = 4;
 			}
-			QVector<QVector3D> vertexs;
+			QVector<QVector3D> vertexs = mface->getAllVertexsOfMFace();
 			if (vertexs.size() == 3 ? mPickToolClass::rayTriangleIntersect(_origin, _dir, vertexs, uv, t) : mPickToolClass::rayQuadIntersect(_origin, _dir, vertexs, uv, t))
 			{
 				if (t < _meshdepth)
