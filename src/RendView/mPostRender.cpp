@@ -1164,6 +1164,35 @@ namespace MPostRend
 		}
 	}
 
+	void mPostRender::setSphereData(QVector3D center, float radius)
+	{
+	}
+
+	void mPostRender::deleteStreamLine()
+	{
+	}
+
+	void mPostRender::setStreamLineShowForm(int streamLineShowForm)
+	{
+	}
+
+	void mPostRender::setIntergrateDirection(int intergrateDirection)
+	{
+	}
+
+	void mPostRender::setIsShowSphere(bool isShow)
+	{
+	}
+
+	QVector3D mPostRender::getDragSphereCenter()
+	{
+		return QVector3D();
+	}
+
+	void mPostRender::createStreamLine(QVector3D center, float radius, int streamLineNum, float ratio)
+	{
+	}
+
 	mPostRender::~mPostRender()
 	{
 		this->makeCurrent();

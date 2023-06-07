@@ -229,6 +229,28 @@ namespace MPostRend
 		//设置等值线等值面图的显隐状态	
 		void setContourGraph(int i, bool isshow);
 
+		/**************************流线图*********************************************/
+
+		//设置积分球的参数
+		void setSphereData(QVector3D center, float radius);
+
+		//删除流线图
+		void deleteStreamLine();
+
+		//设置流线的显示形式
+		void setStreamLineShowForm(int streamLineShowForm = 0);//0代表线条，1代表点
+
+		//设置流线图积分方向
+		void setIntergrateDirection(int intergrateDirection = 0);//0代表双向，1代表正向，2代表反向
+
+		//设置是否显示流线积分球
+		void setIsShowSphere(bool isShow);
+
+		//获取流线积分球的位置
+		QVector3D getDragSphereCenter();
+
+		//生成流线图
+		void createStreamLine(QVector3D center, float radius, int streamLineNum = 500, float ratio = 0.1);//中心，半径，流线密度（数量）,积分比例
 
 		~mPostRender();
 
