@@ -272,6 +272,7 @@ namespace MPreRend
 		void MultiplyPickMeshLineByPart(QString partName, bool isAllIn = false);
 		void MultiplyPickMeshFaceByPart(QString partName, bool isAllIn = false);
 
+		void SoloPickNodePath();//通过路径拾取
 		//通过角度拾取
 		void SoloPickNodeByLineAngle();
 		void SoloPickNodeByFaceAngle();

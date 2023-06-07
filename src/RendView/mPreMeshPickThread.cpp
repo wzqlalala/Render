@@ -302,7 +302,7 @@ namespace MPreRend
 
 			_pickData->setSoloPickData();
 			if (*_pickFilter == PickFilter::PickNodeByLineAngle || *_pickFilter == PickFilter::PickNodeByFaceAngle || *_pickFilter == PickFilter::Pick2DMeshByAngle || *_pickFilter == PickFilter::Pick1DMeshByAngle
-				|| *_pickFilter == PickFilter::PickMeshLineByAngle || *_pickFilter == PickFilter::PickMeshFaceByAngle)
+				|| *_pickFilter == PickFilter::PickMeshLineByAngle || *_pickFilter == PickFilter::PickMeshFaceByAngle || *_pickFilter == PickFilter::PickNodePath)
 			{
 				//做后续的拾取
 				QtConcurrent::run(this, &mPreMeshPickThread::doAnglePick).waitForFinished();
@@ -416,7 +416,9 @@ namespace MPreRend
 			switch (*_pickFilter)
 			{
 			case PickFilter::PickNothing:; break;
-			case PickFilter::PickNode:SoloPickNode(partName); break;
+			case PickFilter::PickNode:
+			case PickFilter::PickNodeOrder:
+			case PickFilter::PickNodePath:SoloPickNode(partName); break;
 			case PickFilter::PickPoint:SoloPickMeshTypeFilter(partName, QVector<MeshType>{MeshPoint}); break;
 			case PickFilter::Pick1DMesh:SoloPickMeshTypeFilter(partName, QVector<MeshType>{MeshBeam}); break;
 			case PickFilter::Pick2DMesh:SoloPickMeshTypeFilter(partName, QVector<MeshType>{MeshTri, MeshQuad}); break;
@@ -489,6 +491,7 @@ namespace MPreRend
 		switch (*_pickFilter)
 		{
 		case PickFilter::PickNothing:break;
+		case PickFilter::PickNodePath:SoloPickNodePath(); break;
 		case PickFilter::PickNodeByLineAngle:SoloPickNodeByLineAngle(); break;
 		case PickFilter::PickNodeByFaceAngle:SoloPickNodeByFaceAngle(); break;
 		case PickFilter::Pick1DMeshByAngle:SoloPick1DMeshByAngle(); break;
@@ -1441,6 +1444,32 @@ namespace MPreRend
 		pickMutex.lock();
 		_pickData->setMultiplyPickMeshFaceData(picks);
 		pickMutex.unlock();
+	}
+	void mPreMeshPickThread::SoloPickNodePath()
+	{
+		QVector<MXMeshVertex*> nodeIDs = _pickData->getPickNodeIDsOrder();
+		if (nodeIDs.size() < 2)
+		{
+			return;
+		}
+
+		QVector<int> res;
+
+		MXMeshVertex* lastNodeID = nodeIDs.takeLast();
+		MXMeshVertex* firstNodeID = nodeIDs.last();
+
+		QVector3D lastVertex = lastNodeID->getNodeVertex();
+
+		QVector3D dirction = (lastVertex - firstNodeID->getNodeVertex()).normalized();
+		//节点ID
+		QQueue<MXMeshVertex*> queue;
+		//存储相邻单元的方向的队列
+		QQueue<QVector3D> queueDirection;
+		queue.enqueue(firstNodeID);
+		queueDirection.enqueue(dirction);
+		//判断维度
+
+		
 	}
 	void mPreMeshPickThread::SoloPickNodeByLineAngle()
 	{
