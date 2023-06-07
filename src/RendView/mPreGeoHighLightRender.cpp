@@ -237,7 +237,13 @@ namespace MPreRend
 			pointVertex.append(iter1.value());
 		}
 
-		pointVertex.append(_geoPickData->getPickVertexOnScreenDatas());
+		QVector<QVector3D> vertexs = _geoPickData->getPickVertexOnScreenDatas();
+		for (int i = 0; i < vertexs.size() - 1; i++)
+		{
+			lineVertex.append(vertexs.at(i));
+			lineVertex.append(vertexs.at(i + 1));
+		}
+		pointVertex.append(vertexs);
 		_pointRender->_vertex0->append(pointVertex);
 		_lineRender->_vertex0->append(lineVertex);
 		_faceRender->_vertex0->append(faceVertex);
