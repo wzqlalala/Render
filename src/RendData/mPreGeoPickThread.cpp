@@ -347,7 +347,8 @@ namespace MDataGeo
 			switch (*_pickFilter)
 			{
 			case PickFilter::PickNothing:; break;
-			case PickFilter::PickGeoPoint:SoloPickGeoPoint(partData); break;
+			case PickFilter::PickGeoPoint:
+			case PickFilter::PickGeoPointOrder:SoloPickGeoPoint(partData); break;
 			case PickFilter::PickGeoLine:SoloPickGeoLine(partData); break;
 			case PickFilter::PickGeoFace:SoloPickGeoFace(partData); break;
 			case PickFilter::PickGeoSolid:SoloPickGeoSolid(partData); break;
@@ -1232,7 +1233,14 @@ namespace MDataGeo
 					futures.back().waitForFinished();
 					futures.takeLast();
 				}
-				_pickData->setSoloPickData();
+				if (*_pickFilter == PickFilter::PickGeoPointOrder)
+				{
+					_pickData->setSoloOrderPickData();
+				}
+				else
+				{
+					_pickData->setSoloPickData();
+				}
 			}
 
 		}

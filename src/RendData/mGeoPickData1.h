@@ -67,11 +67,17 @@ namespace MDataGeo
 		void setReducePickGeoSolidData(set<int> Solidids);
 		void setReducePickGeoPartData(set<QString> partNames);
 
-		//单选拾取完成后调用
+		//单选不保留顺序拾取完成后调用
 		void setSoloPickData();
+
+		//单选保留顺序拾取完成后调用
+		void setSoloOrderPickData();
 
 		//获取拾取后的几何点编号
 		set<int> getPickPointIDs();
+
+		//获取拾取后的节点编号(保留拾取顺序)
+		QVector<int> getPickPointIDsOrder();
 
 		//获取拾取后的几何线编号
 		set<int> getPickLineIDs();
@@ -139,6 +145,7 @@ namespace MDataGeo
 		NameDepthBuffer _partPointBuffer;//当前部件几何点编号
 
 		set<int> _pickPoints;//最终拾取到的几何点
+		QVector<int> _pickPointsOrder;//最终拾取到的节点（保留拾取顺序）
 		set<int> _pickLines;//最终拾取到的几何线
 		set<int> _pickFaces;//最终拾取到的几何面
 		set<int> _pickSolids;//最终拾取到的几何体

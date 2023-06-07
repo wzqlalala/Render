@@ -299,13 +299,19 @@ namespace MPreRend
 				futures.back().waitForFinished();
 				futures.takeLast();
 			}
-
-			_pickData->setSoloPickData();
-			if (*_pickFilter == PickFilter::PickNodeByLineAngle || *_pickFilter == PickFilter::PickNodeByFaceAngle || *_pickFilter == PickFilter::Pick2DMeshByAngle || *_pickFilter == PickFilter::Pick1DMeshByAngle
-				|| *_pickFilter == PickFilter::PickMeshLineByAngle || *_pickFilter == PickFilter::PickMeshFaceByAngle || *_pickFilter == PickFilter::PickNodePath)
+			if (*_pickFilter == PickFilter::PickNodeOrder)
 			{
-				//做后续的拾取
-				QtConcurrent::run(this, &mPreMeshPickThread::doAnglePick).waitForFinished();
+				_pickData->setSoloOrderPickData();
+			}
+			else
+			{
+				_pickData->setSoloPickData();
+				if (*_pickFilter == PickFilter::PickNodeByLineAngle || *_pickFilter == PickFilter::PickNodeByFaceAngle || *_pickFilter == PickFilter::Pick2DMeshByAngle || *_pickFilter == PickFilter::Pick1DMeshByAngle
+					|| *_pickFilter == PickFilter::PickMeshLineByAngle || *_pickFilter == PickFilter::PickMeshFaceByAngle || *_pickFilter == PickFilter::PickNodePath)
+				{
+					//做后续的拾取
+					QtConcurrent::run(this, &mPreMeshPickThread::doAnglePick).waitForFinished();
+				}
 			}
 		}
 		else

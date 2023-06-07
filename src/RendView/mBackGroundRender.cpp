@@ -68,11 +68,11 @@ namespace MBaseRend
 		color2 = color2 / 255.0;
 		if (_backGroundMode == GradientL_R)
 		{
-			_backGroundColor = QVector<QVector3D>{ color1,color1,color2, color1, color2, color2 };//左下，左上，右上，右下
+			_backGroundColor = QVector<QVector3D>{ color1,color1, color2, color2 };//左下，左上，右上，右下
 		}
 		else if (_backGroundMode == GradientT_B)
 		{
-			_backGroundColor = QVector<QVector3D>{ color2,color1,color1, color2,color1,color2 };//左下，左上，右上，右下
+			_backGroundColor = QVector<QVector3D>{ color2,color1,color1,color2 };//左下，左上，右上，右下
 		}
 		
 		//更新
@@ -94,11 +94,14 @@ namespace MBaseRend
 		}
 	}
 
-	void mBackGroundRender::setPureColor(QVector3D color)
+	void mBackGroundRender::setPureColor(QVector3D c)
 	{
-		color = color / 255.0;
-		_backGroundColor = QVector<QVector3D>{ color,color,color, color,color,color };//左下，左上，右上，右下
+		c = c / 255.0;
+		_backGroundColor = QVector<QVector3D>{ c,c,c,c };//左下，左上，右上，右下
 		
+		//更新
+		Array* color = _drawable->getVertexAttribArray(1);
+		color->updata(0, _backGroundColor.size() * sizeof(QVector3D), _backGroundColor.data());
 	}
 
 	void mBackGroundRender::getPureColor(QVector3D& color)

@@ -12,6 +12,7 @@
 #include "mArrowRender.h"
 #include "mModelView.h"
 #include "mBaseRend2D.h"
+#include "mBackGroundRender.h"
 
 //MLableRend
 #include"mLableRendController_pre.h"
@@ -611,6 +612,16 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			
 			MIOFile::mIFluentBCMeshFile *file = new MIOFile::mIFluentBCMeshFile();
 			file->ReadBCMeshFile(filename);
+			break;
+		}
+		case Qt::Key_F5://¶ÁmshÎÄ¼þ
+		{
+			if (_preRend == nullptr)
+			{
+				return;
+			}
+			_preRend->getBackGroundRender()->setBackGroundMode(PureColor);
+			_preRend->getBackGroundRender()->setPureColor(QVector3D(255, 255, 255));
 			break;
 		}
 		case Qt::Key_0:

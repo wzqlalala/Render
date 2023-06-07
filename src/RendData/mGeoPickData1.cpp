@@ -452,9 +452,30 @@ namespace MDataGeo
 		}
 	}
 
+	void mGeoPickData1::setSoloOrderPickData()
+	{
+		if (_pointBuffer.id != 0)
+		{
+			_pickPointsOrder.removeOne(_pointBuffer.id);
+			switch (_pickFunction)
+			{
+			case 0:
+				_pickPointsOrder.append(_pointBuffer.id); break;
+			case 1:
+				break;
+			}
+			_pointBuffer.initial();
+		}
+	}
+
 	set<int> mGeoPickData1::getPickPointIDs()
 	{
 		return _pickPoints;
+	}
+
+	QVector<int> mGeoPickData1::getPickPointIDsOrder()
+	{
+		return _pickPointsOrder;
 	}
 
 	set<int> mGeoPickData1::getPickLineIDs()
