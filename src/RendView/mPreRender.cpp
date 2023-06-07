@@ -255,6 +255,7 @@ namespace MPreRend
 		}
 		break;
 		case PickFilter::PickGeoPoint:
+		case PickFilter::PickGeoPointOrder:
 		case PickFilter::PickGeoLine:
 		case PickFilter::PickGeoFace:
 		case PickFilter::PickGeoSolid:

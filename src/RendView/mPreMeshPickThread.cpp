@@ -647,7 +647,19 @@ namespace MPreRend
 		{
 			QVector<MEdge*> medges = geoSolid->boundaryMeshEdges;
 			picks.insert(medges.begin(), medges.end());
+			for (auto geoFace : geoSolid->getface())
+			{
+				medges = geoFace->boundaryMeshEdgesInGface;
+				picks.insert(medges.begin(), medges.end());
+			}
 		}
+		QVector<MXGeoFace*> geoFaces = MeshMessage::getInstance()->getFreeGFaceInPart(partName);
+		for (auto geoFace : geoFaces)
+		{
+			QVector<MEdge*> medges = geoFace->boundaryMeshEdgesInGface;
+			picks.insert(medges.begin(), medges.end());
+		}
+
 		return picks;
 	}
 	void mPreMeshPickThread::SoloPickMeshTypeFilter(QString partName, QVector<MeshType> filter)
@@ -1756,8 +1768,54 @@ namespace MPreRend
 							}
 						}		
 						//¶þÎ¬Íø¸ñ
-
-
+						set<MXMeshElement*> adjacentMeshIDs;
+						adjacentMeshIDs.insert(meshLineData->_linkEleMents_2D[0]);
+						adjacentMeshIDs.insert(meshLineData->_linkEleMents_2D[1]);
+						for (auto mesh : adjacentMeshIDs)
+						{
+							QVector<MEdge*> edges;
+							edges.reserve(4);
+							switch (mesh->getMeshType())
+							{
+							case MeshTri:
+							{
+								MXMeshTriangle *tri = dynamic_cast<MXMeshTriangle*>(mesh);
+								if (tri)
+								{
+									for (int i = 0; i < 3; i++)
+									{
+										if (tri->_edge[i])
+										{
+											edges.append(tri->_edge[i]);
+										}
+									}
+								}
+							}
+							break;
+							case MeshQuad:
+							{
+								MXMeshQuadrangle *quad = dynamic_cast<MXMeshQuadrangle*>(mesh);
+								if (quad)
+								{
+									for (int i = 0; i < 4; i++)
+									{
+										if (quad->_edge[i])
+										{
+											edges.append(quad->_edge[i]);
+										}
+									}
+								}
+							}
+							break;
+							default:
+								break;
+							}
+							for (auto edge : edges)
+							{
+								queueDirection.enqueue(direction);
+								queue.enqueue(edge);
+							}
+						}
 					}
 				}
 

@@ -170,6 +170,17 @@ namespace MPreRend
 			pointVertex.append(geoPointData->getGeoPointVertex());
 		}
 
+		QVector<int> pointorderids = _geoPickData->getPickPointIDsOrder();
+		for (auto iter : pointorderids)
+		{
+			MDataGeo::mGeoPointData1* geoPointData = _geoModelData->getGeoPointDataByID(iter);
+			if (geoPointData == nullptr)
+			{
+				continue;
+			}
+			pointVertex.append(geoPointData->getGeoPointVertex());
+		}
+
 		set<int> lineids = _geoPickData->getPickLineIDs();
 		for (auto iter = lineids.begin(); iter != lineids.end(); ++iter)
 		{

@@ -472,10 +472,10 @@ namespace MPreRend
 			}
 
 			//±ß½çÏß
-			QSet<MXGeoEdge*> geoEdges = geoFace->getPVTEdgesOnFace();
-			for (auto geoEdge : geoEdges)
+			QVector<MEdge*> edges = geoFace->boundaryMeshEdgesInGface;
+			for (auto edge : edges)
 			{
-				getGeoEdgeData(geoEdge);
+				getMEdgeData(edge);
 			}
 		}
 	}
