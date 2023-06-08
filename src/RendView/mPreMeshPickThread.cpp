@@ -1116,7 +1116,7 @@ namespace MPreRend
 	}
 	void mPreMeshPickThread::SoloPickMeshFaceByAngle(QString partName)
 	{
-		MXMeshElement* _pickMesh = nullptr;
+		MFace* _pickMesh = nullptr;
 		float _meshdepth = FLT_MAX;
 		float depth = FLT_MAX;
 		float uv[2];
@@ -1133,7 +1133,7 @@ namespace MPreRend
 				if (t < _meshdepth)
 				{
 					_meshdepth = t;
-					_pickMesh = mface->_linkEleMents_3D[0];
+					_pickMesh = mface;
 				}
 			}
 		}
