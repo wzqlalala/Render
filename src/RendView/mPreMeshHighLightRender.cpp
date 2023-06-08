@@ -310,11 +310,26 @@ namespace MPreRend
 					{
 						continue;
 					}
-					_lineRender->_vertex0->append(QVector3D(meshLine->getVertex(0)->vx(), meshLine->getVertex(0)->vy(), meshLine->getVertex(0)->vz()));
-					_lineRender->_vertex0->append(QVector3D(meshLine->getVertex(1)->vx(), meshLine->getVertex(1)->vy(), meshLine->getVertex(1)->vz()));
+					_lineRender->_vertex0->append(meshLine->getallVertexs1());
 				}
 			}
-
+			QVector<MEdge*> picks;
+			QVector<MXGeoSolid*> geoSolids = MeshMessage::getInstance()->getGeoSolidSamePart(partName);
+			for (auto geoSolid : geoSolids)
+			{
+				QVector<MEdge*> medges = geoSolid->boundaryMeshEdges;
+				picks.append(medges);
+			}
+			QVector<MXGeoFace*> geoFaces = MeshMessage::getInstance()->getFreeGFaceInPart(partName);
+			for (auto geoFace : geoFaces)
+			{
+				QVector<MEdge*> medges = geoFace->boundaryMeshEdgesInGface;
+				picks.append(medges);
+			}
+			for (auto medge : picks)
+			{
+				_lineRender->_vertex0->append(medge->getAllVertexs());
+			}
 			QVector<MXGeoPoint*> geoPoints = MeshMessage::getInstance()->getGeoPointSamePart(partName);
 			//µãÍø¸ñ
 			for (auto geoPoint : geoPoints)

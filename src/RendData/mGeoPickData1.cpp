@@ -511,6 +511,7 @@ namespace MDataGeo
 	void mGeoPickData1::clearAllPickData()
 	{
 		_pickPoints.clear();
+		_pickPointsOrder.clear();
 		_pickLines.clear();
 		_pickFaces.clear();
 		_pickSolids.clear();

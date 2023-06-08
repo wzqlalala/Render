@@ -647,11 +647,11 @@ namespace MPreRend
 		{
 			QVector<MEdge*> medges = geoSolid->boundaryMeshEdges;
 			picks.insert(medges.begin(), medges.end());
-			for (auto geoFace : geoSolid->getface())
-			{
-				medges = geoFace->boundaryMeshEdgesInGface;
-				picks.insert(medges.begin(), medges.end());
-			}
+			//for (auto geoFace : geoSolid->getface())
+			//{
+			//	medges = geoFace->boundaryMeshEdgesInGface;
+			//	picks.insert(medges.begin(), medges.end());
+			//}
 		}
 		QVector<MXGeoFace*> geoFaces = MeshMessage::getInstance()->getFreeGFaceInPart(partName);
 		for (auto geoFace : geoFaces)

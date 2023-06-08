@@ -290,7 +290,11 @@ namespace MPostRend
 
 	signals:
 
+		//动画帧数更新
 		void updateAnimationPanelSig(int);
+
+		//拾取完成
+		void finishedPickSig();
 
 	protected:
 		shared_ptr<mDataPost1> _dataPost;

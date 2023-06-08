@@ -399,6 +399,7 @@ namespace MPostRend
 			//qDebug() << "拾取完成";
 			QObject::disconnect(&w, 0, 0, 0);//断开信号
 			emit update();
+			emit finishedPickSig();
 		});
 		w.setFuture(future);
 
