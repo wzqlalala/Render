@@ -97,6 +97,18 @@ namespace MPostRend
 				_cuttingPlaneStateSet->getUniform("maxValue")->SetData(_oneFrameRendData->getCurrentMaxData());
 				_cuttingPlaneStateSet->getUniform("textureCoordRatio")->SetData(_oneFrameRendData->getTextureCoordScale());
 			}
+			if (_contourLineStateSet)
+			{
+				_contourLineStateSet->getUniform("isEquivariance")->SetData(_rendStatus->_isEquivariance);
+				_contourLineStateSet->getUniform("minValue")->SetData(_oneFrameRendData->getCurrentMinData());
+				_contourLineStateSet->getUniform("maxValue")->SetData(_oneFrameRendData->getCurrentMaxData());
+			}
+			if (_contourFaceStateSet)
+			{
+				_contourFaceStateSet->getUniform("isEquivariance")->SetData(_rendStatus->_isEquivariance);
+				_contourFaceStateSet->getUniform("minValue")->SetData(_oneFrameRendData->getCurrentMinData());
+				_contourFaceStateSet->getUniform("maxValue")->SetData(_oneFrameRendData->getCurrentMaxData());
+			}
 			_colorTableRender->updatePostColorTable(_oneFrameRendData->getTextureCoordScale());
 			//_modelRender->setTexture(_texture);
 			//_modelRender->setDistancePlane(cutplanes);
@@ -388,10 +400,12 @@ namespace MPostRend
 	}
 	void mPostOneFrameRender::createContourGraph(std::shared_ptr<mxr::StateSet> lineStateSet, std::shared_ptr<mxr::StateSet> faceStateSet)
 	{
+		_contourLineStateSet = lineStateSet;
+		_contourFaceStateSet = faceStateSet;
 		deleteContourGraph();
 
 		std::shared_ptr<mPostContourRender> render = MakeAsset<mPostContourRender>(_app, _geode, _oneFrameData, _oneFrameRendData);
-		render->setLineStateSet(faceStateSet);
+		render->setLineStateSet(lineStateSet);
 		render->setFaceStateSet(faceStateSet);
 		//render->resetDrawable();
 		render->updateData(_oneFrameRendData->getCurrentMinData(), _oneFrameRendData->getCurrentMaxData(), _oneFrameRendData->getRendColorTable()->getPostColorTableNum() - 1);
@@ -399,6 +413,8 @@ namespace MPostRend
 	}
 	void mPostOneFrameRender::createContourGraph(std::shared_ptr<mxr::StateSet> lineStateSet, std::shared_ptr<mxr::StateSet> faceStateSet, int i, double value, bool isshow)
 	{
+		_contourLineStateSet = lineStateSet;
+		_contourFaceStateSet = faceStateSet;
 		std::shared_ptr<mPostContourRender> render;
 		if (i == _postContourRenders.size())//Ìí¼Ó
 		{
@@ -415,7 +431,7 @@ namespace MPostRend
 			_postContourRenders[i]->updateData(_oneFrameRendData->getCurrentMinData(), _oneFrameRendData->getCurrentMaxData(), QVector<float>{float(value)});
 			_postContourRenders[i]->setVisiable(isshow);
 		}
-		render->setLineStateSet(faceStateSet);
+		render->setLineStateSet(lineStateSet);
 		render->setFaceStateSet(faceStateSet);
 	}
 	void mPostOneFrameRender::setContourGraph(int i, bool isshow)
@@ -449,6 +465,7 @@ namespace MPostRend
 	}
 	void mPostOneFrameRender::createStreamLine(std::shared_ptr<mxr::StateSet> lineStateSet, std::shared_ptr<mxr::StateSet> pointStateSet, QVector3D center, float radius, int streamLineNum, float ratio)
 	{
+		_streamlinePointStateSet = pointStateSet;
 		if (!_postStreamLineRender)
 		{
 			_postStreamLineRender = MakeAsset<mPostStreamLineRender>(_app, _geode, _oneFrameData, _rendStatus, _oneFrameRendData, streamLineNum, ratio);

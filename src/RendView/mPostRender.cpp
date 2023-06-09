@@ -321,6 +321,7 @@ namespace MPostRend
 		_contourLineStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
 		_contourLineStateSet->setUniform(MakeAsset<Uniform>("minValue", float(0)));
 		_contourLineStateSet->setUniform(MakeAsset<Uniform>("maxValue", float(0)));
+		_contourLineStateSet->setUniform(MakeAsset<Uniform>("isEquivariance", int(0)));
 
 		//等值面
 		_contourFaceStateSet = MakeAsset<StateSet>();
@@ -342,6 +343,7 @@ namespace MPostRend
 		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("light.shiness", _rendStatus->_postLight.shiness));
 		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("minValue", float(0)));
 		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("maxValue", float(0)));
+		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("isEquivariance", int(0)));
 
 		//流线的点
 		_streamlinePointStateSet = MakeAsset<StateSet>();
@@ -365,6 +367,7 @@ namespace MPostRend
 		_streamlinePointStateSet->setUniform(MakeAsset<Uniform>("light.diffuse", _rendStatus->_postLight.diffuse));
 		_streamlinePointStateSet->setUniform(MakeAsset<Uniform>("light.specular", _rendStatus->_postLight.specular));
 		_streamlinePointStateSet->setUniform(MakeAsset<Uniform>("light.shiness", _rendStatus->_postLight.shiness));
+		_streamlinePointStateSet->setUniform(MakeAsset<Uniform>("isEquivariance", int(0)));
 
 		//初始化计时器
 		_aniTimer = new QTimer;
