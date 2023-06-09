@@ -48,6 +48,7 @@ namespace MPostRend
 	class mPostCuttingPlaneRender;
 	class mPostColorTableRender;
 	class mPostContourRender;
+	class mPostStreamLineRender;
 	class RENDVIEW_EXPORT mPostOneFrameRender
 	{
 	public:
@@ -150,6 +151,20 @@ namespace MPostRend
 		//设置等值线等值面图的显隐状态	
 		void setContourGraph(int i, bool isshow);
 
+		/**************************流线图*********************************************/
+
+		//删除流线图
+		void deleteStreamLine();
+
+		//设置流线的显示形式
+		void setStreamLineShowForm(int streamLineShowForm = 0);//0代表线条，1代表点
+
+		//设置流线图积分方向
+		void setIntergrateDirection(int intergrateDirection = 0);//0代表双向，1代表正向，2代表反向
+
+		//生成流线图
+		void createStreamLine(std::shared_ptr<mxr::StateSet> lineStateSet, std::shared_ptr<mxr::StateSet> pointStateSet, QVector3D center, float radius, int streamLineNum = 500, float ratio = 0.1);//中心，半径，流线密度（数量）,积分比例
+
 		/*************************************获取数据*******************************************/
 			
 		//获得拾取到的的点		
@@ -180,6 +195,8 @@ namespace MPostRend
 		QVector<std::shared_ptr<mPostCuttingPlaneRender>> _cuttingPlaneRenders;//切面渲染
 
 		QVector<std::shared_ptr<mPostContourRender>> _postContourRenders;//等值线面图渲染
+
+		std::shared_ptr<mPostStreamLineRender> _postStreamLineRender;//流线图渲染
 
 		std::shared_ptr<MBaseRend::mFontRender> _fontRender;//文字渲染
 

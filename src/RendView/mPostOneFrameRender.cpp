@@ -6,6 +6,7 @@
 #include "mPostColorTableRender.h"
 #include "mPostContourRender.h"
 #include "mPostColorTableData.h"
+#include "mPostStreamLineRender.h"
 
 #include "mPostRendStatus.h"
 #include <renderpch.h>
@@ -37,6 +38,8 @@ namespace MPostRend
 	{
 		_cuttingPlaneStateSet = nullptr;
 		_colorTableRender = nullptr;
+		_postStreamLineRender = nullptr;
+
 
 		_geode = MakeAsset<Geode>();
 		_viewer = nullptr;
@@ -422,6 +425,35 @@ namespace MPostRend
 			return;
 		}
 		_postContourRenders[i]->setVisiable(isshow);
+	}
+	void mPostOneFrameRender::deleteStreamLine()
+	{
+		if (_postStreamLineRender)
+		{
+			_postStreamLineRender.reset();
+		}
+	}
+	void mPostOneFrameRender::setStreamLineShowForm(int streamLineShowForm)
+	{
+		if (_postStreamLineRender)
+		{
+			_postStreamLineRender->setStreamLineShowForm(streamLineShowForm);
+		}
+	}
+	void mPostOneFrameRender::setIntergrateDirection(int intergrateDirection)
+	{
+		if (_postStreamLineRender)
+		{
+			_postStreamLineRender->setIntergrateDirection(intergrateDirection);
+		}
+	}
+	void mPostOneFrameRender::createStreamLine(std::shared_ptr<mxr::StateSet> lineStateSet, std::shared_ptr<mxr::StateSet> pointStateSet, QVector3D center, float radius, int streamLineNum, float ratio)
+	{
+		if (_postStreamLineRender)
+		{
+			_postStreamLineRender = MakeAsset<mPostStreamLineRender>(_app, _geode, _oneFrameData, _rendStatus, _oneFrameRendData, streamLineNum, ratio);
+			_postStreamLineRender->setSphereParameter(center, radius);
+		}
 	}
 	QPair<QVector<QVector3D>, QVector<QVector3D>> mPostOneFrameRender::getPickingNodeData(std::set<int> nodeIds)
 	{

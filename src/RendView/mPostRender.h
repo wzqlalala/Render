@@ -330,8 +330,11 @@ namespace MPostRend
 		std::shared_ptr<mxr::StateSet> _transparentPlaneStateSet;//渲染透明面的状态
 
 		/************************************等值线等值面图*******************************************/
-		std::shared_ptr<mxr::StateSet> _contourLineStateSet;//渲染等值线图的状态
+		std::shared_ptr<mxr::StateSet> _contourLineStateSet;//渲染等值线图的状态(同样适用于流线图的线的状态)
 		std::shared_ptr<mxr::StateSet> _contourFaceStateSet;//渲染等值面图的状态
+
+		/************************************流线图*******************************************/
+		std::shared_ptr<mxr::StateSet> _streamlinePointStateSet;//渲染流线图点的状态
 
 		//计时器
 		QTimer* _aniTimer;

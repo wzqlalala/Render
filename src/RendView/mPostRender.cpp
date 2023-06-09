@@ -343,6 +343,29 @@ namespace MPostRend
 		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("minValue", float(0)));
 		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("maxValue", float(0)));
 
+		//流线的点
+		_streamlinePointStateSet = MakeAsset<StateSet>();
+		mxr::Shader * streamlinepointshader = mShaderManage::GetInstance()->GetShader("PostStreamLinePointWithOutDeformation");
+		_streamlinePointStateSet->setShader(streamlinepointshader);
+		_streamlinePointStateSet->setDrawMode(GL_POINTS);
+		_streamlinePointStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
+		_streamlinePointStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
+		_streamlinePointStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
+
+		_streamlinePointStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
+		_streamlinePointStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
+		_streamlinePointStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
+		_streamlinePointStateSet->setUniform(MakeAsset<Uniform>("minValue", float(0)));
+		_streamlinePointStateSet->setUniform(MakeAsset<Uniform>("maxValue", float(0)));
+		_streamlinePointStateSet->setUniform(MakeAsset<Uniform>("PointSize", _rendStatus->_pointSize));
+		_streamlinePointStateSet->setUniform(MakeAsset<Uniform>("lightIsOn", int(1)));
+		_streamlinePointStateSet->setUniform(MakeAsset<Uniform>("viewPos", QVector3D()));
+		_streamlinePointStateSet->setUniform(MakeAsset<Uniform>("light.position", _rendStatus->_postLight.lightPosition));
+		_streamlinePointStateSet->setUniform(MakeAsset<Uniform>("light.ambient", _rendStatus->_postLight.ambient));
+		_streamlinePointStateSet->setUniform(MakeAsset<Uniform>("light.diffuse", _rendStatus->_postLight.diffuse));
+		_streamlinePointStateSet->setUniform(MakeAsset<Uniform>("light.specular", _rendStatus->_postLight.specular));
+		_streamlinePointStateSet->setUniform(MakeAsset<Uniform>("light.shiness", _rendStatus->_postLight.shiness));
+
 		//初始化计时器
 		_aniTimer = new QTimer;
 		_aniTimer->setInterval(0);
@@ -1167,31 +1190,60 @@ namespace MPostRend
 
 	void mPostRender::setSphereData(QVector3D center, float radius)
 	{
+		_rendStatus->_sphereCenter = center;
+		_rendStatus->_sphereRadius = radius;
 	}
 
 	void mPostRender::deleteStreamLine()
 	{
+		if (_oneFrameRender)
+		{
+			_oneFrameRender->deleteStreamLine();
+		}
 	}
 
 	void mPostRender::setStreamLineShowForm(int streamLineShowForm)
 	{
+		_rendStatus->_streamLineStyle = streamLineShowForm;
+		if (_oneFrameRender)
+		{
+			_oneFrameRender->setStreamLineShowForm(streamLineShowForm);
+		}
 	}
 
 	void mPostRender::setIntergrateDirection(int intergrateDirection)
 	{
+		_rendStatus->_streamLineDirection = intergrateDirection;
+		if (_oneFrameRender)
+		{
+			_oneFrameRender->setIntergrateDirection(intergrateDirection);
+		}
+		for (auto render : _animationRender)
+		{
+			render->setIntergrateDirection(intergrateDirection);
+		}
 	}
 
 	void mPostRender::setIsShowSphere(bool isShow)
 	{
+		_rendStatus->_streamLineSphere = isShow;
 	}
 
 	QVector3D mPostRender::getDragSphereCenter()
 	{
-		return QVector3D();
+		return _rendStatus->_sphereCenter;
 	}
 
 	void mPostRender::createStreamLine(QVector3D center, float radius, int streamLineNum, float ratio)
 	{
+		if (_oneFrameRender)
+		{
+			_oneFrameRender->createStreamLine(_contourLineStateSet, _streamlinePointStateSet, center, radius, streamLineNum, ratio);
+		}
+		for (auto render : _animationRender)
+		{
+			render->createStreamLine(_contourLineStateSet, _streamlinePointStateSet, center, radius, streamLineNum, ratio);
+		}
 	}
 
 	mPostRender::~mPostRender()
@@ -1577,11 +1629,15 @@ namespace MPostRend
 			_transparentPlaneStateSet->getUniform("projection")->SetData(modelView->_projection);
 			_transparentPlaneStateSet->getUniform("view")->SetData(modelView->_view);
 			_transparentPlaneStateSet->getUniform("model")->SetData(modelView->_model);
+			_streamlinePointStateSet->getUniform("projection")->SetData(modelView->_projection);
+			_streamlinePointStateSet->getUniform("view")->SetData(modelView->_view);
+			_streamlinePointStateSet->getUniform("model")->SetData(modelView->_model);
 
 			_faceStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
 			_faceTransparentStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
 			_pointStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
 			_cuttingPlaneStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
+			_streamlinePointStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
 
 			if (_rendStatus->_lightIsDependOnCamera)
 			{
@@ -1590,6 +1646,7 @@ namespace MPostRend
 				_faceTransparentNodeformationStateSet->getUniform("light.position")->SetData(2 * modelView->_Eye - modelView->_Center);
 				_pointStateSet->getUniform("light.position")->SetData(2 * modelView->_Eye - modelView->_Center);
 				_cuttingPlaneStateSet->getUniform("light.position")->SetData(2 * modelView->_Eye - modelView->_Center);
+				_streamlinePointStateSet->getUniform("light.position")->SetData(2 * modelView->_Eye - modelView->_Center);
 			}
 
 			_facelineStateSet->getUniform("rightToLeft")->SetData(float(modelView->_Right - modelView->_Left));

@@ -170,6 +170,38 @@ namespace MPostRend
 
 		//矢量图-矢量图的箭头大小
 		double _vectorArrowSize = 1.0f;
+
+		/***********************************流线图**********************************/
+
+		//流线图-球心
+		QString _streamLineCenter;
+
+		//流线图-半径
+		QString _streamLineRadius;
+
+		//流线图-流线图矢量名字
+		QString _streamLineVectorName;
+
+		//流线图-流线密度
+		int _streamLineNum;
+
+		//流线图-流线积分比例
+		float _streamLineRatio;
+
+		//流线图-流线样式
+		int _streamLineStyle;
+
+		//流线图-积分方向
+		int _streamLineDirection;
+
+		//流线图-积分球
+		bool _streamLineSphere;
+
+		//流线图-积分球中心
+		QVector3D _sphereCenter;
+
+		//流线图-积分球半径
+		float _sphereRadius;
 	};
 }
 
