@@ -438,6 +438,7 @@ namespace MPreRend
 			if (MeshMessage::getInstance()->IsReadFileMark())
 			{
 				_baseRend->slotResetOrthoAndCamera();
+				MeshMessage::getInstance()->setReadFileMark(false);
 			}
 			else
 			{
