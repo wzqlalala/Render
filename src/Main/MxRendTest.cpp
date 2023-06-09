@@ -135,6 +135,17 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			_postRender->setShowFuntion(ElementFace);
 			break;
 		}
+		case Qt::Key_F3:
+		{
+			if (_postRend == nullptr)
+			{
+				return;
+			}
+			QVector3D center(0, 0, 0);
+			float radius = 1.0;
+			_postRender->createStreamLine(center, radius, 500, 0.1);
+			break;
+		}
 		case Qt::Key_Tab:
 		{
 			if (_postRend == nullptr)

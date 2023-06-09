@@ -449,10 +449,11 @@ namespace MPostRend
 	}
 	void mPostOneFrameRender::createStreamLine(std::shared_ptr<mxr::StateSet> lineStateSet, std::shared_ptr<mxr::StateSet> pointStateSet, QVector3D center, float radius, int streamLineNum, float ratio)
 	{
-		if (_postStreamLineRender)
+		if (!_postStreamLineRender)
 		{
 			_postStreamLineRender = MakeAsset<mPostStreamLineRender>(_app, _geode, _oneFrameData, _rendStatus, _oneFrameRendData, streamLineNum, ratio);
 			_postStreamLineRender->setSphereParameter(center, radius);
+			_postStreamLineRender->OrganizeModeldata();
 		}
 	}
 	QPair<QVector<QVector3D>, QVector<QVector3D>> mPostOneFrameRender::getPickingNodeData(std::set<int> nodeIds)
