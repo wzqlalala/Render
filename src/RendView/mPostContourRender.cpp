@@ -602,7 +602,10 @@ namespace MPostRend
 				{
 					res.append(vertexs[2] + t * (vertexs[3] - vertexs[2]));
 				}
-
+				if (res.size() == 0)
+				{
+					continue;
+				}
 				QVector3D normal = QVector3D::crossProduct((res.at(1) - res.at(0)).normalized(), (res.at(2) - res.at(1)).normalized()).normalized();
 				if (res.size() == 3)
 				{
