@@ -130,19 +130,16 @@ namespace MPostRend
 		//设置线的颜色
 		void setFaceLineColor(QVector4D color);
 
-		/*
-		* 设置光源是否跟随摄像机
-		*/
+		//设置是否开启光源
+		void setLightIsOn(bool isOn);
+		
+		//设置光源是否跟随摄像机	
 		void setLightIsDependentCamera(bool lightIsDependOnCamera);
-
-		/*
-		* 设置光源的位置
-		*/
+	
+		//设置光源的位置
 		void setLightPosition(QVector3D position);
-
-		/*
-		* 设置光源的参数
-		*/
+		
+		//设置光源的参数		
 		void setLightParameters(QVector3D ambient, QVector3D diffuse, QVector3D specular, float shiness);
 
 		/*********************************切面图*******************************************/
@@ -155,7 +152,6 @@ namespace MPostRend
 
 		//仅仅只显示切面的图，不显示其他单元的云图
 		void setOnlyShowCuttingPlane(bool isOnlyShowCuttingPlane);
-
 
 		//设置是否开启某一个切面或者切割图
 		void setIsShowCuttingPlane(int num, bool isShow);

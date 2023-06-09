@@ -648,6 +648,16 @@ namespace MPostRend
 		_facelineStateSet->getUniform("showColor")->SetData(_rendStatus->_faceLineColor);
 	}
 
+	void mPostRender::setLightIsOn(bool isOn)
+	{
+		_faceStateSet->getUniform("lightIsOn")->SetData(int(isOn));
+		_faceTransparentStateSet->getUniform("lightIsOn")->SetData(int(isOn));
+		_faceTransparentNodeformationStateSet->getUniform("lightIsOn")->SetData(int(isOn));
+		_pointStateSet->getUniform("lightIsOn")->SetData(int(isOn));
+		_cuttingPlaneStateSet->getUniform("lightIsOn")->SetData(int(isOn));
+		_streamlinePointStateSet->getUniform("lightIsOn")->SetData(int(isOn));
+	}
+
 	void mPostRender::setLightIsDependentCamera(bool lightIsDependOnCamera)
 	{
 		_rendStatus->_lightIsDependOnCamera = lightIsDependOnCamera;
@@ -661,6 +671,7 @@ namespace MPostRend
 		_faceTransparentNodeformationStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
 		_pointStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
 		_cuttingPlaneStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
+		_streamlinePointStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
 
 	}
 
@@ -694,6 +705,11 @@ namespace MPostRend
 		_cuttingPlaneStateSet->getUniform("light.diffuse")->SetData(_rendStatus->_postLight.diffuse);
 		_cuttingPlaneStateSet->getUniform("light.specular")->SetData(_rendStatus->_postLight.specular);
 		_cuttingPlaneStateSet->getUniform("light.shiness")->SetData(_rendStatus->_postLight.shiness);
+
+		_streamlinePointStateSet->getUniform("light.ambient")->SetData(_rendStatus->_postLight.ambient);
+		_streamlinePointStateSet->getUniform("light.diffuse")->SetData(_rendStatus->_postLight.diffuse);
+		_streamlinePointStateSet->getUniform("light.specular")->SetData(_rendStatus->_postLight.specular);
+		_streamlinePointStateSet->getUniform("light.shiness")->SetData(_rendStatus->_postLight.shiness);
 	}
 
 	void mPostRender::deleteCuttingPlane(int num)
