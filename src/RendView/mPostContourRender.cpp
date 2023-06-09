@@ -26,6 +26,7 @@ namespace MPostRend
 {
 	mPostContourRender::mPostContourRender(std::shared_ptr<mxr::Application> app, std::shared_ptr<mxr::Group> parent, mOneFrameData1 *oneFrameData, mPostOneFrameRendData *currentFrameRendData)
 	{
+		_app = app;
 		_parent = parent;
 		_oneFrameData = oneFrameData;
 		_currentFrameRendData = currentFrameRendData;
@@ -54,7 +55,7 @@ namespace MPostRend
 
 	void mPostContourRender::updateData(float minValue, float maxValue, int num)
 	{
-		resetDrawable();
+		//resetDrawable();
 		_isShow = true;
 
 		float step = (maxValue - minValue) / (num + 1);
@@ -63,12 +64,15 @@ namespace MPostRend
 		{
 			_contourValues.append(_contourValues.last() + step);
 		}
-		QtConcurrent::run(this, &mPostContourRender::createPostContourData);
+		QFuture<void> future;
+		future = QtConcurrent::run(this, &mPostContourRender::createPostContourData);
+		QObject::connect(&w, &QFutureWatcher<void>::finished, this, &mPostContourRender::finishedWork);
+		w.setFuture(future);
+
 	}
 
 	void mPostContourRender::updateData(float minValue, float maxValue, QVector<float> values)
 	{
-		resetDrawable();
 		_contourValues = values;
 
 		if (values.size() == 1)
@@ -80,7 +84,10 @@ namespace MPostRend
 			}
 		}
 
-		QtConcurrent::run(this, &mPostContourRender::createPostContourData);
+		QFuture<void> future;
+		future = QtConcurrent::run(this, &mPostContourRender::createPostContourData);
+		QObject::connect(&w, &QFutureWatcher<void>::finished, this, &mPostContourRender::finishedWork);
+		w.setFuture(future);
 	}
 
 	void mPostContourRender::setVisiable(bool isshow)
@@ -149,12 +156,6 @@ namespace MPostRend
 			_linevertexvalues.append(futures1.back().result().values);
 			futures1.takeLast();
 		}
-
-		_lineDrawable->setVertexAttribArray(0, MakeAsset<mxr::Vec3Array>(_linevertexs));
-		_lineDrawable->setVertexAttribArray(1, MakeAsset<mxr::FloatArray>(_linevertexvalues));
-
-		_faceDrawable->setVertexAttribArray(0, MakeAsset<mxr::Vec3Array>(_facevertexs));
-		_faceDrawable->setVertexAttribArray(1, MakeAsset<mxr::FloatArray>(_facevertexvalues));
 	}
 
 	void mPostContourRender::resetDrawable()
@@ -175,6 +176,19 @@ namespace MPostRend
 		_faceDrawable->setStateSet(_faceStateSet);
 		_geode->addChild(_lineDrawable);
 		_geode->addChild(_faceDrawable);
+	}
+
+	void mPostContourRender::finishedWork()
+	{
+		resetDrawable();
+
+		_app->GLContext()->makeCurrent(_app->GLContext()->surface());
+
+		_lineDrawable->setVertexAttribArray(0, MakeAsset<mxr::Vec3Array>(_linevertexs));
+		_lineDrawable->setVertexAttribArray(1, MakeAsset<mxr::FloatArray>(_linevertexvalues));
+
+		_faceDrawable->setVertexAttribArray(0, MakeAsset<mxr::Vec3Array>(_facevertexs));
+		_faceDrawable->setVertexAttribArray(1, MakeAsset<mxr::FloatArray>(_facevertexvalues));
 	}
 
 	VertexData2 mPostContourRender::calculateContour3D(QVector<MDataPost::mPostMeshData1*> meshDatas)

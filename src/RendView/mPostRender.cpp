@@ -514,6 +514,7 @@ namespace MPostRend
 			_cuttingPlaneStateSet->setTexture("texture", _texture);
 			_contourFaceStateSet->setTexture("texture", _texture);
 			_contourLineStateSet->setTexture("texture", _texture);
+			_streamlinePointStateSet->setTexture("texture", _texture);
 		}
 		_oneFrameRender = make_shared<mPostOneFrameRender>(_app, _rendStatus, oneFrameData, postOneFrameRendData);
 		_oneFrameRender->setFaceStateSet(_faceStateSet);
@@ -1659,6 +1660,7 @@ namespace MPostRend
 			_faceTransparentStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
 			_pointStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
 			_cuttingPlaneStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
+			_contourFaceStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
 			_streamlinePointStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
 
 			if (_rendStatus->_lightIsDependOnCamera)
@@ -1668,6 +1670,7 @@ namespace MPostRend
 				_faceTransparentNodeformationStateSet->getUniform("light.position")->SetData(2 * modelView->_Eye - modelView->_Center);
 				_pointStateSet->getUniform("light.position")->SetData(2 * modelView->_Eye - modelView->_Center);
 				_cuttingPlaneStateSet->getUniform("light.position")->SetData(2 * modelView->_Eye - modelView->_Center);
+				_contourFaceStateSet->getUniform("light.position")->SetData(2 * modelView->_Eye - modelView->_Center);
 				_streamlinePointStateSet->getUniform("light.position")->SetData(2 * modelView->_Eye - modelView->_Center);
 			}
 

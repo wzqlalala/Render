@@ -393,7 +393,7 @@ namespace MPostRend
 		std::shared_ptr<mPostContourRender> render = MakeAsset<mPostContourRender>(_app, _geode, _oneFrameData, _oneFrameRendData);
 		render->setLineStateSet(faceStateSet);
 		render->setFaceStateSet(faceStateSet);
-		render->resetDrawable();
+		//render->resetDrawable();
 		render->updateData(_oneFrameRendData->getCurrentMinData(), _oneFrameRendData->getCurrentMaxData(), _oneFrameRendData->getRendColorTable()->getPostColorTableNum() - 1);
 		_postContourRenders.append(render);
 	}

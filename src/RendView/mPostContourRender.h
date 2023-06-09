@@ -8,6 +8,7 @@
 #include <QHash>
 #include <QVector>
 #include <QVector3D>
+#include <QFutureWatcher>
 
 namespace mxr
 {
@@ -38,8 +39,9 @@ namespace MPostRend
 		QVector<QVector3D> vertexs;
 		QVector<float> values;
 	};
-	class RENDVIEW_EXPORT mPostContourRender
+	class RENDVIEW_EXPORT mPostContourRender:public QObject
 	{
+		Q_OBJECT
 	public:
 
 		mPostContourRender(std::shared_ptr<mxr::Application> app, std::shared_ptr<mxr::Group> parent, mOneFrameData1 *oneFrameData, mPostOneFrameRendData *currentFrameRendData = nullptr);
@@ -59,6 +61,10 @@ namespace MPostRend
 		void createPostContourData();
 
 		void resetDrawable();
+
+	private slots:
+
+		void finishedWork();
 
 	private:
 
@@ -106,6 +112,8 @@ namespace MPostRend
 		//int _facenum;
 		QVector<QVector3D> _facevertexs;
 		QVector<float> _facevertexvalues;
+
+		QFutureWatcher<void> w;
 	};
 
 

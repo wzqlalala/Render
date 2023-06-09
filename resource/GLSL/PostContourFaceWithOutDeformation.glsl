@@ -29,7 +29,6 @@ in VS_OUT {
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
-uniform vec4 planes[8];
 
 out vec3 Normal;
 out vec3 FragPos;
