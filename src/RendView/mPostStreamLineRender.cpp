@@ -1011,6 +1011,7 @@ namespace MPostRend
 	{
 		_app = app;
 		_parent = parent;
+		_rendStatus = rendStatus;
 
 		_lineDrawable = nullptr;
 
@@ -1081,7 +1082,7 @@ namespace MPostRend
 	void mPostStreamLineRender::OrganizeModeldata()
 	{
 		_postStreamLineData->OrganizeModeldata();
-
+		this->setStreamLineShowForm(_rendStatus->_streamLineStyle);
 		this->setIntergrateDirection(_rendStatus->_streamLineDirection);
 	}
 }
