@@ -1078,11 +1078,11 @@ namespace MPostRend
 			_lineDrawable->setVertexAttribArray(0, MakeAsset<mxr::Vec3Array>(_postStreamLineData->getBackwardStreamLineVertex()));
 			_lineDrawable->setVertexAttribArray(1, MakeAsset<mxr::FloatArray>(_postStreamLineData->getBackwardStreamLineTexture()));
 		}
+		this->setStreamLineShowForm(_rendStatus->_streamLineStyle);
 	}
 	void mPostStreamLineRender::OrganizeModeldata()
 	{
 		_postStreamLineData->OrganizeModeldata();
-		this->setStreamLineShowForm(_rendStatus->_streamLineStyle);
 		this->setIntergrateDirection(_rendStatus->_streamLineDirection);
 	}
 }

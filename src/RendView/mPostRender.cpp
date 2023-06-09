@@ -1645,6 +1645,12 @@ namespace MPostRend
 			_transparentPlaneStateSet->getUniform("projection")->SetData(modelView->_projection);
 			_transparentPlaneStateSet->getUniform("view")->SetData(modelView->_view);
 			_transparentPlaneStateSet->getUniform("model")->SetData(modelView->_model);
+			_contourLineStateSet->getUniform("projection")->SetData(modelView->_projection);
+			_contourLineStateSet->getUniform("view")->SetData(modelView->_view);
+			_contourLineStateSet->getUniform("model")->SetData(modelView->_model);
+			_contourFaceStateSet->getUniform("projection")->SetData(modelView->_projection);
+			_contourFaceStateSet->getUniform("view")->SetData(modelView->_view);
+			_contourFaceStateSet->getUniform("model")->SetData(modelView->_model);
 			_streamlinePointStateSet->getUniform("projection")->SetData(modelView->_projection);
 			_streamlinePointStateSet->getUniform("view")->SetData(modelView->_view);
 			_streamlinePointStateSet->getUniform("model")->SetData(modelView->_model);

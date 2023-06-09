@@ -452,6 +452,8 @@ namespace MPostRend
 		if (!_postStreamLineRender)
 		{
 			_postStreamLineRender = MakeAsset<mPostStreamLineRender>(_app, _geode, _oneFrameData, _rendStatus, _oneFrameRendData, streamLineNum, ratio);
+			_postStreamLineRender->setLineStateSet(lineStateSet);
+			_postStreamLineRender->setPointStateSet(pointStateSet);
 			_postStreamLineRender->setSphereParameter(center, radius);
 			_postStreamLineRender->OrganizeModeldata();
 		}
