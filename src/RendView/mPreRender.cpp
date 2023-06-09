@@ -435,7 +435,14 @@ namespace MPreRend
 		}
 		if (isUpdateCamera)
 		{
-			_baseRend->slotUpdateOrthoAndCamera();
+			if (MeshMessage::getInstance()->IsReadFileMark())
+			{
+				_baseRend->slotResetOrthoAndCamera();
+			}
+			else
+			{
+				_baseRend->slotUpdateOrthoAndCamera();
+			}
 		}
 
 		_geoHighLightRender->updateUniform(modelView, commonView);
