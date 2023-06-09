@@ -401,7 +401,7 @@ namespace MDataGeo
 		if (qFuzzyCompare(_depth, 1.0f))//ПаµИ
 		{
 			//auto vertexs = _pickData->getPickVertexOnScreenDatas();
-			float d = 0.5;
+			float d = 0.1;
 			//if (!vertexs.empty())
 			//{
 			//	WorldvertexToScreenvertex(vertexs.last(), d);			
