@@ -58,6 +58,7 @@ namespace MPostRend
 	class mPostOneFrameRender;
 	class mPostAnimationRender;
 	class mPostFrameText;
+	class mPostDragRender;
 	class RENDVIEW_EXPORT mPostRender :public mBaseRender
 	{
 		Q_OBJECT
@@ -306,6 +307,10 @@ namespace MPostRend
 		shared_ptr<mPostOneFrameRender> _oneFrameRender;//单帧
 
 		shared_ptr<mPostOneFrameRender> _oneFrameAnimationRender;//单帧动画
+
+		//拖拽的物体
+		QVector<shared_ptr<mPostDragRender>> _dragRenders;
+		shared_ptr<mPostDragRender> _currentDragRender;
 
 		//屏幕文字数据（除颜色表外）
 		mPostFrameText *_postFrameText;

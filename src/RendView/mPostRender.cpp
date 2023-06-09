@@ -55,6 +55,7 @@ namespace MPostRend
 		_texture = nullptr;
 		_oneFrameRender = nullptr;
 		_oneFrameAnimationRender = nullptr;
+		_currentDragRender = nullptr;
 		_postFrameText = new mPostFrameText(postRend->getFontRender());
 		////_animationId = 0;
 		////_animationRender = nullptr;
@@ -383,15 +384,24 @@ namespace MPostRend
 	bool mPostRender::getIsDragSomething(QVector2D pos)
 	{
 		//判断是否有物体被拖拽
+		for (auto render : _dragRenders)
+		{
+
+		}
 		return false;
 	}
 	void mPostRender::dragSomething(QVector2D pos)
 	{
 		//拖拽物体并更新物体
+		if (_currentDragRender)
+		{
+			//_currentDragRender->move(pos);
+		}
 	}
 	QTime time;
 	void mPostRender::startPick(QVector<QVector2D> poses)
 	{
+		_currentDragRender = nullptr;
 		QTime time;
 		time.start();
 		makeCurrent();

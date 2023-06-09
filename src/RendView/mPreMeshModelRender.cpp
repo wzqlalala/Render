@@ -446,7 +446,7 @@ namespace MPreRend
 		{
 			for (auto mesh : geoFace->_mTriangles)
 			{
-				if (mesh == nullptr)
+				if (mesh == nullptr || mesh->getMask())
 				{
 					continue;
 				}
@@ -457,7 +457,7 @@ namespace MPreRend
 			}
 			for (auto mesh : geoFace->_mQuadangles)
 			{
-				if (mesh == nullptr)
+				if (mesh == nullptr || mesh->getMask())
 				{
 					continue;
 				}
@@ -483,7 +483,7 @@ namespace MPreRend
 	{
 		for (auto mesh : geoEdge->_mLines)
 		{
-			if (mesh == nullptr)
+			if (mesh == nullptr || mesh->getMask())
 			{
 				continue;
 			}
@@ -497,7 +497,7 @@ namespace MPreRend
 	{
 		for (auto mesh : geoEdge->_mLines)
 		{
-			if (mesh == nullptr)
+			if (mesh == nullptr || mesh->getMask())
 			{
 				continue;
 			}
