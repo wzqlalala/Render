@@ -155,6 +155,26 @@ namespace MPreRend
 		_pointStateSet->setUniform(MakeAsset<Uniform>("PointSize", 10));
 		_pointStateSet->setTexture("sprite_texture",_pointTexture);
 
+		//node
+		_nodeStateSet = MakeAsset<StateSet>();
+		mxr::Shader * pointshader = mShaderManage::GetInstance()->GetShader("PostHighLightPoint");
+		_nodeStateSet->setShader(pointshader);
+		_nodeStateSet->setDrawMode(GL_POINTS);
+		_nodeStateSet->setAttributeAndModes(MakeAsset<Depth>(), 0);
+		_nodeStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(mxr::PolygonMode::FRONT_AND_BACK, mxr::PolygonMode::FILL), 1);
+
+		_nodeStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
+		_nodeStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
+		_nodeStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
+		_nodeStateSet->setUniform(MakeAsset<Uniform>("lightIsOn", int(1)));
+		_nodeStateSet->setUniform(MakeAsset<Uniform>("viewPos", QVector3D()));
+		_nodeStateSet->setUniform(MakeAsset<Uniform>("light.position", _rendStatus->_postLight.lightPosition));
+		_nodeStateSet->setUniform(MakeAsset<Uniform>("light.ambient", _rendStatus->_postLight.ambient));
+		_nodeStateSet->setUniform(MakeAsset<Uniform>("light.diffuse", _rendStatus->_postLight.diffuse));
+		_nodeStateSet->setUniform(MakeAsset<Uniform>("light.specular", _rendStatus->_postLight.specular));
+		_nodeStateSet->setUniform(MakeAsset<Uniform>("light.shiness", _rendStatus->_postLight.shiness));
+		_nodeStateSet->setUniform(MakeAsset<Uniform>("PointSize", _rendStatus->_nodeSize));
+
 		_geoModelRender->setFaceStateSet(_faceStateSet);
 		_geoModelRender->setIndependentLineStateSet(_independentlineStateSet);
 		_geoModelRender->setDotLineStateSet(_dotlineStateSet);
@@ -166,6 +186,7 @@ namespace MPreRend
 		_meshModelRender->setFaceLineStateSet(_facelineStateSet);
 		_meshModelRender->setLineStateSet(_independentlineStateSet);
 		_meshModelRender->setPointStateSet(_pointStateSet);
+		_meshModelRender->setNodeStateSet(_nodeStateSet);
 
 		//³õÊ¼»¯¸ßÁÁäÖÈ¾
 		_geoPickData = new mGeoPickData1();
@@ -364,6 +385,12 @@ namespace MPreRend
 		{
 			_meshModelRender->setShowFuntion(showFuntion);
 		}
+	}
+
+	void mPreRender::setNodeSize(int size)
+	{
+		_rendStatus->_nodeSize = size;
+
 	}
 
 	void mPreRender::setPointSize(int size)

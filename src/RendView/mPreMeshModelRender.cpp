@@ -73,6 +73,10 @@ namespace MPreRend
 	{
 		_pointStateSet = pointStateSet;
 	}
+	void mPreMeshModelRender::setNodeStateSet(std::shared_ptr<mxr::StateSet> stateset)
+	{
+		_nodeStateSet = stateset;
+	}
 	mPreMeshModelRender::~mPreMeshModelRender()
 	{
 		_parent->removeChild(_geode);
