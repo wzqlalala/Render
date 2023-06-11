@@ -258,6 +258,11 @@ namespace MPreRend
 			if (*_baseRend->getCurrentPickMode() == PickMode::SoloPick)
 			{
 				float depth = this->getDepth(poses.first());
+				GLenum error = QOpenGLContext::currentContext()->functions()->glGetError();
+				if (error != 0)
+				{
+					qDebug() << error;
+				}
 				_meshPickThread->setLocation(poses.first(), depth);
 			}
 			else

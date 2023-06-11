@@ -141,8 +141,9 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			{
 				return;
 			}
-			QVector3D center(0, 0, 0);
-			float radius = 1.0;
+			QVector3D center(2,1,1);
+			float radius = 5.0;
+			_postRender->setSphereData(center, radius);
 			_postRender->createStreamLine(center, radius, 500, 0.1);
 			break;
 		}

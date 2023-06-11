@@ -40,5 +40,6 @@
         <file>GLSL/PostContourFaceWithOutDeformation.glsl</file>
         <file>GLSL/PostContourLineWithOutDeformation.glsl</file>
         <file>GLSL/PostStreamLinePointWithOutDeformation.glsl</file>
+        <file>GLSL/Common.glsl</file>
     </qresource>
 </RCC>

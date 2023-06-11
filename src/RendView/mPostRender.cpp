@@ -8,6 +8,7 @@
 #include "mFontRender.h"
 #include "mArrowRender.h"
 #include "mPostFrameText.h"
+#include "mPostDragRender.h"
 
 #include <renderpch.h>
 #include "texture.h"
@@ -379,29 +380,57 @@ namespace MPostRend
 		_pickData = new mPostMeshPickData;
 		_highLightRender = make_shared<mPostHighLightRender>(_rendStatus, _pickData);
 
+		//添加积分球
+		shared_ptr<mPostSphereRender> sphereRender = MakeAsset<mPostSphereRender>("积分球", _app, _parent);
+		_dragRenders.insert("积分球",sphereRender);
+
 		//this->doneCurrent();
 	}
 	bool mPostRender::getIsDragSomething(QVector2D pos)
 	{
+		this->makeCurrent();
+		float depth = this->getDepth(pos);
+		GLenum error = QOpenGLContext::currentContext()->functions()->glGetError();
+		if (error != 0)
+		{
+			qDebug() << error;
+		}
+		QMatrix4x4 matrix = _baseRend->getCamera()->getPVMValue();
 		//判断是否有物体被拖拽
 		for (auto render : _dragRenders)
 		{
-
+			if (render->pointIsIn(pos, depth, matrix, _baseRend->getCamera()->SCR_WIDTH, _baseRend->getCamera()->SCR_HEIGHT))
+			{
+				_currentDragRender = render;
+				return true;
+			}
 		}
 		return false;
 	}
 	void mPostRender::dragSomething(QVector2D pos)
 	{
+		this->makeCurrent();
+		float depth = this->getDepth(pos);
+		GLenum error = QOpenGLContext::currentContext()->functions()->glGetError();
+		if (error != 0)
+		{
+			qDebug() << error;
+		}
+		QMatrix4x4 matrix = _baseRend->getCamera()->getPVMValue();
 		//拖拽物体并更新物体
 		if (_currentDragRender)
 		{
-			//_currentDragRender->move(pos);
+			_currentDragRender->move(pos, matrix, _baseRend->getCamera()->SCR_WIDTH, _baseRend->getCamera()->SCR_HEIGHT);
 		}
 	}
 	QTime time;
 	void mPostRender::startPick(QVector<QVector2D> poses)
 	{
-		_currentDragRender = nullptr;
+		if (_currentDragRender != nullptr)
+		{
+			_currentDragRender = nullptr;
+			return;
+		}
 		QTime time;
 		time.start();
 		makeCurrent();
@@ -417,8 +446,12 @@ namespace MPostRend
 		_thread->setPickMode(*_baseRend->getCurrentPickMode(), *_baseRend->getMultiplyPickMode());
 		if (*_baseRend->getCurrentPickMode() == PickMode::SoloPick)
 		{		
-			float depth;
-			QOpenGLContext::currentContext()->functions()->glReadPixels(poses.first().x(), _baseRend->getCamera()->SCR_HEIGHT - poses.first().y(), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+			float depth = this->getDepth(poses.first());
+			GLenum error = QOpenGLContext::currentContext()->functions()->glGetError();
+			if (error != 0)
+			{
+				qDebug() << error;
+			}
 			_thread->setLocation(poses.first(), depth);
 		}
 		else
@@ -1222,6 +1255,15 @@ namespace MPostRend
 	{
 		_rendStatus->_sphereCenter = center;
 		_rendStatus->_sphereRadius = radius;
+		auto render = _dragRenders["积分球"];
+		if (render)
+		{
+			auto sphereRender = dynamic_pointer_cast<mPostSphereRender>(render);
+			if (sphereRender)
+			{
+				sphereRender->setSphereData(center, radius);
+			}
+		}
 	}
 
 	void mPostRender::deleteStreamLine()
@@ -1257,6 +1299,7 @@ namespace MPostRend
 	void mPostRender::setIsShowSphere(bool isShow)
 	{
 		_rendStatus->_streamLineSphere = isShow;
+
 	}
 
 	QVector3D mPostRender::getDragSphereCenter()
@@ -1707,6 +1750,11 @@ namespace MPostRend
 		else if (!_animationRender.empty())
 		{
 			_animationRender.value(_rendStatus->_aniCurrentFrame)->updateUniform(modelView, commonView);
+		}
+
+		for (auto render : _dragRenders)
+		{
+			render->updateUniform(modelView);
 		}
 
 		_highLightRender->updateUniform(modelView, commonView);
