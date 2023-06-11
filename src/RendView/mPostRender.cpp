@@ -428,6 +428,7 @@ namespace MPostRend
 	{
 		if (_currentDragRender != nullptr)
 		{
+			emit finishedDragSig();
 			_currentDragRender = nullptr;
 			return;
 		}

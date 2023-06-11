@@ -293,6 +293,9 @@ namespace MPostRend
 		//拾取完成
 		void finishedPickSig();
 
+		//拖拽完成
+		void finishedDragSig();
+
 	protected:
 		shared_ptr<mDataPost1> _dataPost;
 
