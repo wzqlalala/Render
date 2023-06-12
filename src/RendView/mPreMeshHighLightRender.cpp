@@ -352,9 +352,7 @@ namespace MPreRend
 		_facelineStateSet->getUniform("projection")->SetData(modelView->_projection);
 		_facelineStateSet->getUniform("view")->SetData(modelView->_view);
 		_facelineStateSet->getUniform("model")->SetData(modelView->_model);
-		_lineStateSet->getUniform("projection")->SetData(modelView->_projection);
-		_lineStateSet->getUniform("view")->SetData(modelView->_view);
-		_lineStateSet->getUniform("model")->SetData(modelView->_model);
+		_lineStateSet->getUniform("pvm")->SetData(modelView->getPVMValue());
 		_pointStateSet->getUniform("projection")->SetData(modelView->_projection);
 		_pointStateSet->getUniform("view")->SetData(modelView->_view);
 		_pointStateSet->getUniform("model")->SetData(modelView->_model);
@@ -422,17 +420,17 @@ namespace MPreRend
 
 		//edgeline
 		_lineStateSet = MakeAsset<StateSet>();
-		mxr::Shader * meshlineshader = mShaderManage::GetInstance()->GetShader("PostHighLightLine");
+		mxr::Shader * meshlineshader = mShaderManage::GetInstance()->GetShader("PreHighLightGeoMeshLine");
 		_lineStateSet->setShader(meshlineshader);
 		_lineStateSet->setDrawMode(GL_LINES);
 		_lineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 0);
+		_lineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetFill>(-1, -1), 1);
 		_lineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(mxr::PolygonMode::FRONT_AND_BACK, mxr::PolygonMode::FILL), 1);
 		_lineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
 
-		_lineStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
-		_lineStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
-		_lineStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
+		_lineStateSet->setUniform(MakeAsset<Uniform>("pvm", QMatrix4x4()));
 		_lineStateSet->setUniform(MakeAsset<Uniform>("showColor", QVector4D(1,1,1,0.8)));
+		_lineStateSet->setUniform(MakeAsset<Uniform>("lineWidth", 3.0f));
 
 		_pointStateSet = MakeAsset<StateSet>();
 		mxr::Shader * pointshader = mShaderManage::GetInstance()->GetShader("PostHighLightPoint");

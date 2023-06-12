@@ -1766,7 +1766,7 @@ namespace MPreRend
 					{
 						angleValue = fabs(180 * acos(x) / 3.1415926);
 					}
-					if (_pickAngleValue > angleValue)
+					if (_pickAngleValue > angleValue || _pickAngleValue > (180 - angleValue))
 					{
 						int num = meshData->getNumVertices();
 						for (int i = 0; i < num; i++)
@@ -1784,7 +1784,6 @@ namespace MPreRend
 				}
 
 			}
-			_pickData->setMultiplyPickNodeData(pickNodeIDs);
 		}
 		else
 		{
@@ -1846,7 +1845,7 @@ namespace MPreRend
 					{
 						angleValue = fabs(180 * acos(x) / 3.1415926);
 					}
-					if (_pickAngleValue > angleValue)
+					if (_pickAngleValue > angleValue || _pickAngleValue > (180 - angleValue))
 					{
 						for (int i = 0; i < 2; i++)
 						{
@@ -1865,6 +1864,7 @@ namespace MPreRend
 
 			}
 		}
+		_pickData->setMultiplyPickNodeData(pickNodeIDs);
 
 	}
 	void mPreMeshPickThread::SoloPickNodeByFaceAngle()
@@ -2097,7 +2097,7 @@ namespace MPreRend
 				{
 					angleValue = fabs(180 * acos(x) / 3.1415926);
 				}
-				if (_pickAngleValue > angleValue)
+				if (_pickAngleValue > angleValue || _pickAngleValue > (180 - angleValue))
 				{
 					if (pickMeshIDs.insert(meshData).second)
 					{
@@ -2181,7 +2181,7 @@ namespace MPreRend
 				{
 					angleValue = fabs(180 * acos(x) / 3.1415926);
 				}
-				if (_pickAngleValue > angleValue)
+				if (_pickAngleValue > angleValue || _pickAngleValue > (180 - angleValue))
 				{
 					if (pickMeshLineIDs.insert(meshLineData).second)
 					{						
