@@ -1948,10 +1948,6 @@ namespace MPreRend
 				}
 
 			}
-
-			pickMutex.lock();
-			_pickData->setMultiplyPickNodeData(pickNodeIDs);
-			pickMutex.unlock();
 		}
 		else
 		{
@@ -2032,6 +2028,10 @@ namespace MPreRend
 
 			}
 		}
+
+		pickMutex.lock();
+		_pickData->setMultiplyPickNodeData(pickNodeIDs);
+		pickMutex.unlock();
 
 	}
 	void mPreMeshPickThread::SoloPick1DMeshByAngle()
