@@ -261,6 +261,7 @@ namespace MPreRend
 	{
 		_isfinished = false;
 		_pickData = pickData;
+		_pickAngleValue = 60;
 		
 	}
 
@@ -1931,38 +1932,11 @@ namespace MPreRend
 				{
 					if (pickMeshIDs.insert(meshData).second)
 					{
-						if (meshData->getMeshType() == MeshTri)
+						set<MXMeshElement*> adjacentMeshIDs = meshData->linkElements();
+						for (auto mesh : adjacentMeshIDs)
 						{
-							MXMeshTriangle *meshTri = dynamic_cast<MXMeshTriangle*>(meshData);
-							if (meshTri == nullptr)
-							{
-								continue;
-							}
-							set<MXMeshElement*> adjacentMeshIDs;
-							for (int i = 0; i < 3; i++)
-							{
-								adjacentMeshIDs.insert(meshTri->_edge[i]->_linkEleMents_2D[0]);
-								adjacentMeshIDs.insert(meshTri->_edge[i]->_linkEleMents_2D[1]);
-							}						
-						}
-						else if (meshData->getMeshType() == MeshQuad)
-						{
-							MXMeshQuadrangle *meshQuad = dynamic_cast<MXMeshQuadrangle*>(meshData);
-							if (meshQuad == nullptr)
-							{
-								continue;
-							}
-							set<MXMeshElement*> adjacentMeshIDs;
-							for (int i = 0; i < 4; i++)
-							{
-								adjacentMeshIDs.insert(meshQuad->_edge[i]->_linkEleMents_2D[0]);
-								adjacentMeshIDs.insert(meshQuad->_edge[i]->_linkEleMents_2D[1]);
-							}
-							for (auto mesh : adjacentMeshIDs)
-							{
-								queueDirection.enqueue(direction);
-								queue.enqueue(mesh);
-							}
+							queueDirection.enqueue(direction);
+							queue.enqueue(mesh);
 						}
 					}
 				}

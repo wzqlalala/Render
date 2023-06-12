@@ -303,7 +303,7 @@ namespace MBaseRend
 
 		PickFilter *_pickFilter;//当前拾取过滤模式
 
-		double _pickAngle;//当前拾取的角度
+		double _pickAngle = 60;//当前拾取的角度
 
 		static QHash<QPair<Qt::MouseButton, Qt::KeyboardModifiers>, CameraOperateMode> _cameraKeys;
 
