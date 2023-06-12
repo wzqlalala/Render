@@ -430,6 +430,29 @@ namespace MPreRend
 
 	void mPreRender::updateUniform(shared_ptr<mViewBase> modelView, shared_ptr<mViewBase> commonView)
 	{
+		//检测模型数据更新模型渲染
+		bool isUpdateCamera{ false };
+		if (_geoModelRender)
+		{
+			isUpdateCamera = isUpdateCamera | _geoModelRender->updateRender();
+		}
+		if (_meshModelRender)
+		{
+			isUpdateCamera = isUpdateCamera | _meshModelRender->updateRender();
+		}
+		if (isUpdateCamera)
+		{
+			if (MeshMessage::getInstance()->IsReadFileMark())
+			{
+				_baseRend->slotResetOrthoAndCamera();
+				MeshMessage::getInstance()->setReadFileMark(false);
+			}
+			else
+			{
+				_baseRend->slotUpdateOrthoAndCamera();
+			}
+		}
+
 		if (_faceStateSet)
 		{
 			QMatrix4x4 pvm = modelView->getPVMValue();
@@ -460,29 +483,7 @@ namespace MPreRend
 			_facelineStateSet->getUniform("rightToLeft")->SetData(float(modelView->_Right - modelView->_Left));
 			_edgelineStateSet->getUniform("rightToLeft")->SetData(float(modelView->_Right - modelView->_Left));
 		}
-		//检测模型数据更新模型渲染
-		bool isUpdateCamera{ false };
-		if (_geoModelRender)
-		{
-			isUpdateCamera = isUpdateCamera | _geoModelRender->updateRender();
-		}
-		if (_meshModelRender)
-		{
-			isUpdateCamera = isUpdateCamera | _meshModelRender->updateRender();
-		}
-		if (isUpdateCamera)
-		{
-			if (MeshMessage::getInstance()->IsReadFileMark())
-			{
-				_baseRend->slotResetOrthoAndCamera();
-				MeshMessage::getInstance()->setReadFileMark(false);
-			}
-			else
-			{
-				_baseRend->slotUpdateOrthoAndCamera();
-			}
-		}
-
+	
 		_geoHighLightRender->updateUniform(modelView, commonView);
 		_meshHighLightRender->updateUniform(modelView, commonView);
 	}
