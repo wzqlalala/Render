@@ -121,6 +121,7 @@ namespace MPreRend
 		void setFaceLineStateSet(std::shared_ptr<mxr::StateSet> facelineStateSet);
 		void setLineStateSet(std::shared_ptr<mxr::StateSet> lineStateSet);
 		void setPointStateSet(std::shared_ptr<mxr::StateSet> pointStateSet);
+		void setNodeStateSet(std::shared_ptr<mxr::StateSet> stateset);
 
 		//更新缓存
 		void UpdateModelBuffer();
@@ -157,6 +158,8 @@ namespace MPreRend
 		std::shared_ptr<mxr::StateSet> _pointStateSet;//渲染点的状态
 
 		std::shared_ptr<mxr::StateSet> _edgelineStateSet;//渲染边界线的状态
+
+		std::shared_ptr<mxr::StateSet> _nodeStateSet;//渲染节点的状态
 
 		//零件的顺序
 		QList<QString> _partOrder;

@@ -92,6 +92,9 @@ namespace MPreRend
 		//设置当前的显示模式	
 		void setShowFuntion(ShowFuntion shoFuntion);
 
+		//设置节点的大小
+		void setNodeSize(int size);
+
 		//设置点的大小
 		void setPointSize(int size);
 
@@ -134,8 +137,9 @@ namespace MPreRend
 		std::shared_ptr<mxr::StateSet> _independentlineStateSet;//渲染独立线的状态
 		std::shared_ptr<mxr::StateSet> _dotlineStateSet;//渲染虚线的状态
 		std::shared_ptr<mxr::StateSet> _edgelineStateSet;//渲染边界线的状态
-		std::shared_ptr<mxr::StateSet> _pointStateSet;//渲染点的状态
+		std::shared_ptr<mxr::StateSet> _pointStateSet;//渲染点网格的状态
 		std::shared_ptr<mxr::StateSet> _facelineStateSet;//渲染面线的状态
+		std::shared_ptr<mxr::StateSet> _nodeStateSet;
 
 		//计时器
 		QTimer* _aniTimer;

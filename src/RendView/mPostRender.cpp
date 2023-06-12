@@ -8,6 +8,7 @@
 #include "mFontRender.h"
 #include "mArrowRender.h"
 #include "mPostFrameText.h"
+#include "mPostDragRender.h"
 
 #include <renderpch.h>
 #include "texture.h"
@@ -55,6 +56,7 @@ namespace MPostRend
 		_texture = nullptr;
 		_oneFrameRender = nullptr;
 		_oneFrameAnimationRender = nullptr;
+		_currentDragRender = nullptr;
 		_postFrameText = new mPostFrameText(postRend->getFontRender());
 		////_animationId = 0;
 		////_animationRender = nullptr;
@@ -321,6 +323,7 @@ namespace MPostRend
 		_contourLineStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
 		_contourLineStateSet->setUniform(MakeAsset<Uniform>("minValue", float(0)));
 		_contourLineStateSet->setUniform(MakeAsset<Uniform>("maxValue", float(0)));
+		_contourLineStateSet->setUniform(MakeAsset<Uniform>("isEquivariance", int(0)));
 
 		//等值面
 		_contourFaceStateSet = MakeAsset<StateSet>();
@@ -342,6 +345,7 @@ namespace MPostRend
 		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("light.shiness", _rendStatus->_postLight.shiness));
 		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("minValue", float(0)));
 		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("maxValue", float(0)));
+		_contourFaceStateSet->setUniform(MakeAsset<Uniform>("isEquivariance", int(0)));
 
 		//流线的点
 		_streamlinePointStateSet = MakeAsset<StateSet>();
@@ -365,6 +369,7 @@ namespace MPostRend
 		_streamlinePointStateSet->setUniform(MakeAsset<Uniform>("light.diffuse", _rendStatus->_postLight.diffuse));
 		_streamlinePointStateSet->setUniform(MakeAsset<Uniform>("light.specular", _rendStatus->_postLight.specular));
 		_streamlinePointStateSet->setUniform(MakeAsset<Uniform>("light.shiness", _rendStatus->_postLight.shiness));
+		_streamlinePointStateSet->setUniform(MakeAsset<Uniform>("isEquivariance", int(0)));
 
 		//初始化计时器
 		_aniTimer = new QTimer;
@@ -375,20 +380,58 @@ namespace MPostRend
 		_pickData = new mPostMeshPickData;
 		_highLightRender = make_shared<mPostHighLightRender>(_rendStatus, _pickData);
 
+		//添加积分球
+		shared_ptr<mPostSphereRender> sphereRender = MakeAsset<mPostSphereRender>("积分球", _app, _parent);
+		_dragRenders.insert("积分球",sphereRender);
+
 		//this->doneCurrent();
 	}
 	bool mPostRender::getIsDragSomething(QVector2D pos)
 	{
+		this->makeCurrent();
+		float depth = this->getDepth(pos);
+		GLenum error = QOpenGLContext::currentContext()->functions()->glGetError();
+		if (error != 0)
+		{
+			qDebug() << error;
+		}
+		QMatrix4x4 matrix = _baseRend->getCamera()->getPVMValue();
 		//判断是否有物体被拖拽
+		for (auto render : _dragRenders)
+		{
+			if (render->pointIsIn(pos, depth, matrix, _baseRend->getCamera()->SCR_WIDTH, _baseRend->getCamera()->SCR_HEIGHT))
+			{
+				_currentDragRender = render;
+				return true;
+			}
+		}
 		return false;
 	}
 	void mPostRender::dragSomething(QVector2D pos)
 	{
+		this->makeCurrent();
+		float depth = this->getDepth(pos);
+		GLenum error = QOpenGLContext::currentContext()->functions()->glGetError();
+		if (error != 0)
+		{
+			qDebug() << error;
+		}
+		QMatrix4x4 matrix = _baseRend->getCamera()->getPVMValue();
 		//拖拽物体并更新物体
+		if (_currentDragRender)
+		{
+			_currentDragRender->move(pos, matrix, _baseRend->getCamera()->SCR_WIDTH, _baseRend->getCamera()->SCR_HEIGHT);
+		}
 	}
 	QTime time;
 	void mPostRender::startPick(QVector<QVector2D> poses)
 	{
+		if (_currentDragRender != nullptr)
+		{
+			emit finishedDragSig();
+			_currentDragRender = nullptr;
+			return;
+		}
 		QTime time;
 		time.start();
 		makeCurrent();
@@ -404,8 +447,12 @@ namespace MPostRend
 		_thread->setPickMode(*_baseRend->getCurrentPickMode(), *_baseRend->getMultiplyPickMode());
 		if (*_baseRend->getCurrentPickMode() == PickMode::SoloPick)
 		{		
-			float depth;
-			QOpenGLContext::currentContext()->functions()->glReadPixels(poses.first().x(), _baseRend->getCamera()->SCR_HEIGHT - poses.first().y(), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+			float depth = this->getDepth(poses.first());
+			GLenum error = QOpenGLContext::currentContext()->functions()->glGetError();
+			if (error != 0)
+			{
+				qDebug() << error;
+			}
 			_thread->setLocation(poses.first(), depth);
 		}
 		else
@@ -1209,6 +1256,15 @@ namespace MPostRend
 	{
 		_rendStatus->_sphereCenter = center;
 		_rendStatus->_sphereRadius = radius;
+		auto render = _dragRenders["积分球"];
+		if (render)
+		{
+			auto sphereRender = dynamic_pointer_cast<mPostSphereRender>(render);
+			if (sphereRender)
+			{
+				sphereRender->setSphereData(center, radius);
+			}
+		}
 	}
 
 	void mPostRender::deleteStreamLine()
@@ -1244,6 +1300,7 @@ namespace MPostRend
 	void mPostRender::setIsShowSphere(bool isShow)
 	{
 		_rendStatus->_streamLineSphere = isShow;
+
 	}
 
 	QVector3D mPostRender::getDragSphereCenter()
@@ -1694,6 +1751,11 @@ namespace MPostRend
 		else if (!_animationRender.empty())
 		{
 			_animationRender.value(_rendStatus->_aniCurrentFrame)->updateUniform(modelView, commonView);
+		}
+
+		for (auto render : _dragRenders)
+		{
+			render->updateUniform(modelView);
 		}
 
 		_highLightRender->updateUniform(modelView, commonView);

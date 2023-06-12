@@ -35,6 +35,9 @@ namespace MPreRend
 		//光照参数
 		PostLight _postLight;
 
+		//节点的大小
+		int _nodeSize = 1;
+
 		//点的大小
 		int _pointSize = 1;
 

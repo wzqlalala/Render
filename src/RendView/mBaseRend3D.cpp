@@ -58,6 +58,8 @@ namespace MBaseRend
 				*_viewOperateMode = ViewOperateMode::PickOperate;
 				if (*_pickMode == PickMode::SoloPick)
 				{
+					makeCurrent();
+					FBO->bind();
 					for (auto render : _beforeRenderArray)
 					{
 						if (render->getIsDragSomething(QVector2D(nowX, nowY)))
@@ -82,6 +84,7 @@ namespace MBaseRend
 							break;
 						}
 					}
+					FBO->release();
 				}
 				else if (*_pickMode == PickMode::MultiplyPick)
 				{
@@ -114,7 +117,7 @@ namespace MBaseRend
 			}
 			else if (*_viewOperateMode == ViewOperateMode::PickOperate)
 			{
-				if (*_pickMode == PickMode::SoloPick)
+				if (*_pickMode == PickMode::SoloPick || *_pickMode == PickMode::DragPick)
 				{
 					_polygonVertexs.append(QVector2D(nowX, nowY));
 					for (auto render : _beforeRenderArray)
@@ -230,6 +233,8 @@ namespace MBaseRend
 			{
 				if (*_pickMode == PickMode::DragPick)
 				{
+					makeCurrent();
+					FBO->bind();
 					for (auto render : _beforeRenderArray)
 					{
 						render->dragSomething(QVector2D(nowX, nowY));
@@ -242,6 +247,7 @@ namespace MBaseRend
 					{
 						render->dragSomething(QVector2D(nowX, nowY));
 					}
+					FBO->release();
 				}
 				else if (*_pickMode == PickMode::MultiplyPick)
 				{

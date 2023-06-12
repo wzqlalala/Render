@@ -607,6 +607,10 @@ namespace MPreRend
 		QVector<MXMeshElement*> meshs = MeshMessage::getInstance()->getElementsSamePart(partName);
 		for (auto mesh : meshs)
 		{
+			if (mesh->getMask())
+			{
+				continue;
+			}
 			int num = mesh->getNumVertices();
 			for (int i = 0; i < num; ++i)
 			{
@@ -624,7 +628,15 @@ namespace MPreRend
 	{
 		set<MXMeshElement*> picks;
 		QVector<MXMeshElement*> meshs = MeshMessage::getInstance()->getElementsSamePart(partName);
-		picks.insert(meshs.begin(), meshs.end());
+		for (auto mesh : meshs)
+		{
+			if (mesh->getMask())
+			{
+				continue;
+			}
+			picks.insert(mesh);
+		}
+
 		return picks;
 	}
 	set<MFace*> mPreMeshPickThread::getAllMeshFacesByPartName(QString partName)
@@ -795,6 +807,10 @@ namespace MPreRend
 		for (auto mesh : meshs)
 		{
 			int num = 3;
+			if (mesh->getMask())
+			{
+				continue;
+			}
 			if (mesh->getMeshType() == MeshQuad)
 			{
 				num = 4;
@@ -820,6 +836,10 @@ namespace MPreRend
 		for (auto mesh : meshs)
 		{
 			int num = 2;
+			if (mesh->getMask())
+			{
+				continue;
+			}
 			if (mesh->getMeshType() != MeshBeam)
 			{
 				continue;
@@ -1062,7 +1082,11 @@ namespace MPreRend
 		QVector<MXMeshElement*> meshs = MeshMessage::getInstance()->getElementsSameDimAndPart(partName, 2);
 		for (auto mesh : meshs)
 		{
-			int num = 3;
+			int num = 3;			
+			if (mesh->getMask())
+			{
+				continue;
+			}
 			if (mesh->getMeshType() == MeshQuad)
 			{
 				num = 4;
@@ -1158,6 +1182,10 @@ namespace MPreRend
 			QVector<MXMeshElement*> meshs = MeshMessage::getInstance()->getElementsSamePart(partName);
 			for (auto mesh : meshs)
 			{
+				if (mesh->getMask())
+				{
+					continue;
+				}
 				int num = mesh->getNumVertices();
 				for (int i = 0; i < num; ++i)
 				{
@@ -1197,6 +1225,10 @@ namespace MPreRend
 			for (auto mesh : meshs)
 			{
 				QVector<QVector3D> vertexs = mesh->getallVertexs1();
+				if (mesh->getMask())
+				{
+					continue;
+				}
 				switch (mesh->getMeshType())
 				{
 				case MeshBeam:
@@ -1236,6 +1268,10 @@ namespace MPreRend
 			QVector<MXMeshElement*> meshs = MeshMessage::getInstance()->getElementsSamePart(partName);
 			for (auto mesh : meshs)
 			{
+				if (mesh->getMask())
+				{
+					continue;
+				}
 				if (!filters.contains(mesh->getMeshType()))
 				{
 					continue;
@@ -1249,6 +1285,10 @@ namespace MPreRend
 			QVector<MXMeshElement*> meshs = MeshMessage::getInstance()->getElementsSamePart(partName);
 			for (auto mesh : meshs)
 			{
+				if (mesh->getMask())
+				{
+					continue;
+				}
 				if (!filters.contains(mesh->getMeshType()))
 				{
 					continue;

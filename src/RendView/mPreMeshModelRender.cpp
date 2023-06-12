@@ -73,6 +73,10 @@ namespace MPreRend
 	{
 		_pointStateSet = pointStateSet;
 	}
+	void mPreMeshModelRender::setNodeStateSet(std::shared_ptr<mxr::StateSet> stateset)
+	{
+		_nodeStateSet = stateset;
+	}
 	mPreMeshModelRender::~mPreMeshModelRender()
 	{
 		_parent->removeChild(_geode);
@@ -447,7 +451,7 @@ namespace MPreRend
 		{
 			for (auto mesh : geoFace->_mTriangles)
 			{
-				if (mesh == nullptr)
+				if (mesh == nullptr || mesh->getMask())
 				{
 					continue;
 				}
@@ -458,7 +462,7 @@ namespace MPreRend
 			}
 			for (auto mesh : geoFace->_mQuadangles)
 			{
-				if (mesh == nullptr)
+				if (mesh == nullptr || mesh->getMask())
 				{
 					continue;
 				}
@@ -484,7 +488,7 @@ namespace MPreRend
 	{
 		for (auto mesh : geoEdge->_mLines)
 		{
-			if (mesh == nullptr)
+			if (mesh == nullptr || mesh->getMask())
 			{
 				continue;
 			}
@@ -498,7 +502,7 @@ namespace MPreRend
 	{
 		for (auto mesh : geoEdge->_mLines)
 		{
-			if (mesh == nullptr)
+			if (mesh == nullptr || mesh->getMask())
 			{
 				continue;
 			}

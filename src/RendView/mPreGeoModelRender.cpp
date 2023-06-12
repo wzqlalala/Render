@@ -65,6 +65,7 @@ namespace MPreRend
 	{
 		_pointStateSet = stateset;
 	}
+
 	mPreGeoModelRender::~mPreGeoModelRender()
 	{
 		_parent->removeChild(_geode);
