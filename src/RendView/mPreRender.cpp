@@ -212,6 +212,10 @@ namespace MPreRend
 	}
 	void mPreRender::startPick(QVector<QVector2D> poses)
 	{
+		if (*_baseRend->getCurrentPickMode() == PickMode::MultiplyPick && *_baseRend->getMultiplyPickMode() == MultiplyPickMode::NoPick)
+		{
+			return;
+		}
 		makeCurrent();
 		QFuture<void> future;
 		switch (*_baseRend->getPickFilter())
