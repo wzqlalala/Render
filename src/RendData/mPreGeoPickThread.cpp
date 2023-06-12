@@ -342,7 +342,7 @@ namespace MDataGeo
 		//判断该部件是否存在碰撞
 		//判断点选是否在部件的包围盒内
 		QVector3D worldVertex = _p;
-		if (partData->getGeoShapeType() == 7)//点部件
+		//if (partData->getGeoShapeType() == 7)//点部件
 		{
 			switch (*_pickFilter)
 			{
@@ -351,7 +351,7 @@ namespace MDataGeo
 			default:break;
 			}
 		}
-		else
+		//else
 		{
 			if (partData->getGeoPartAABB().ContainPoint(_p))
 			{
