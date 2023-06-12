@@ -231,6 +231,7 @@ namespace MPreRend
 		case PickFilter::PickHex:
 		case PickFilter::PickPyramid:
 		case PickFilter::PickNode:
+		case PickFilter::PickNodePath:
 		case PickFilter::PickNodeOrder:
 		case PickFilter::PickAnyMesh:
 		case PickFilter::PickMeshLine:

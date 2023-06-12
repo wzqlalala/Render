@@ -304,6 +304,25 @@ namespace MPreRend
 			{
 				_pickData->setSoloOrderPickData();
 			}
+			else if (*_pickFilter == PickFilter::PickNodePath)
+			{
+				int size = _pickData->getPickNodeIDsOrder().size();
+				_pickData->setSoloOrderPickData();
+				int size1 = _pickData->getPickNodeIDsOrder().size();
+				if (size == size1)//没有拾取到
+				{
+					return;
+				}
+				else if (size == (size1 + 1) || size1 == 1)//减选或者第一个点
+				{
+					return;
+				}
+				else//加选
+				{
+					//做后续的拾取
+					QtConcurrent::run(this, &mPreMeshPickThread::SoloPickNodePath).waitForFinished();
+				}
+			}
 			else
 			{
 				_pickData->setSoloPickData();
@@ -443,9 +462,9 @@ namespace MPreRend
 			case PickFilter::PickAnyMeshByPart:SoloPickAnyMeshByPart(partName); break;
 			case PickFilter::PickMeshLineByPart:SoloPickMeshLineByPart(partName); break;
 			case PickFilter::PickMeshFaceByPart:SoloPickMeshFaceByPart(partName); break;
-			//case PickFilter::PickNodeByLineAngle:SoloPickNodeByLineAngle(partName); break;
+			case PickFilter::PickNodeByLineAngle:SoloPickNodeByLineAngle(partName); break;
 			case PickFilter::PickNodeByFaceAngle:SoloPickNodeByFaceAngle(partName); break;
-			//case PickFilter::Pick1DMeshByAngle:SoloPick1DMeshByAngle(partName); break;
+			case PickFilter::Pick1DMeshByAngle:SoloPick1DMeshByAngle(partName); break;
 			case PickFilter::Pick2DMeshByAngle:SoloPick2DMeshByAngle(partName); break;
 			case PickFilter::PickMeshLineByAngle:SoloPickMeshLineByAngle(partName); break;
 			case PickFilter::PickMeshFaceByAngle:SoloPickMeshFaceByAngle(partName); break;
@@ -1066,10 +1085,53 @@ namespace MPreRend
 		_pickData->setSoloPickMeshFaceByPartData(this->getAllMeshFacesByPartName(partName), depth);
 		pickMutex.unlock();
 	}
+	void mPreMeshPickThread::SoloPickNodeByLineAngle(QString partName)
+	{
+		SoloPick1DMeshByAngle(partName);
+		SoloPickMeshLineByAngle(partName);
+	}
 	void mPreMeshPickThread::SoloPickNodeByFaceAngle(QString partName)
 	{
 		SoloPick2DMeshByAngle(partName);
 		SoloPickMeshFaceByAngle(partName);
+	}
+	void mPreMeshPickThread::SoloPick1DMeshByAngle(QString partName)
+	{
+		MXMeshElement* _pickMesh = nullptr;
+		float _meshdepth = FLT_MAX;
+
+		//获取一维网格
+		QVector<MXMeshElement*> meshs = MeshMessage::getInstance()->getElementsSameDimAndPart(partName, 1);
+		for (auto mesh : meshs)
+		{
+			int num = 2;
+			if (mesh->getMask())
+			{
+				continue;
+			}
+			if (mesh->getMeshType() != MeshBeam)
+			{
+				continue;
+			}
+			QVector<QVector2D> tempQVector2D;
+			std::set<float> depthlist;
+			QVector<QVector3D> vertexs = mesh->getallVertexs1();
+			WorldvertexToScreenvertex(vertexs, tempQVector2D, depthlist);
+			if (mPickToolClass::IsLineIntersectionWithQuad(tempQVector2D, soloQuad, MeshBeam) && *depthlist.begin() < _meshdepth)
+			{
+				_meshdepth = *depthlist.begin();
+				_pickMesh = mesh;
+			}
+		}
+
+
+		if (_pickMesh == nullptr)
+		{
+			return;
+		}
+		pickMutex.lock();
+		_pickData->setSoloPickMeshDataByAngle(_pickMesh, partName, _meshdepth);
+		pickMutex.unlock();
 	}
 	void mPreMeshPickThread::SoloPick2DMeshByAngle(QString partName)
 	{
@@ -1512,7 +1574,7 @@ namespace MPreRend
 			return;
 		}
 
-		QVector<int> res;
+		QVector<MXMeshVertex*> res;
 
 		MXMeshVertex* lastNodeID = nodeIDs.takeLast();
 		MXMeshVertex* firstNodeID = nodeIDs.last();
@@ -1527,11 +1589,282 @@ namespace MPreRend
 		queue.enqueue(firstNodeID);
 		queueDirection.enqueue(dirction);
 		//判断维度
+		QVector<MXMeshElement*> test = firstNodeID->_linkElements_2D;
+		if (!test.isEmpty())//二维
+		{
+			while (!queue.empty())
+			{
+				MXMeshVertex* nodeData = queue.dequeue();
+				QVector3D lastDirection = queueDirection.dequeue();
+				QVector<MXMeshElement*> meshIDs = nodeData->_linkElements_2D;
+				float maxCosValue = 0.0;
+				MXMeshVertex* NodeIDData = nullptr;
+				QVector3D dirc;
+				for (auto meshData : meshIDs)
+				{
+					if (meshData == nullptr)
+					{
+						continue;
+					}
+					nodeIDs = meshData->lineNodes(nodeData);
+					for (auto node : nodeIDs)
+					{
+						if (node == lastNodeID)
+						{
+							NodeIDData = lastNodeID;
+							break;
+						}
+						if (res.contains(node))
+						{
+							break;
+						}
+						dirction = (node->getNodeVertex() - nodeData->getNodeVertex()).normalized();
+						//dirction = (lastVertex - node->getNodeVertex()).normalized();
+						float cosValue = QVector3D::dotProduct(dirction, lastDirection);
+						if (cosValue >= maxCosValue)
+						{
+							NodeIDData = node;
+							maxCosValue = cosValue;
+							dirc = (lastVertex - node->getNodeVertex()).normalized();
+						}
+					}
+					if (NodeIDData == lastNodeID)
+					{
+						NodeIDData = nullptr;
+						break;
+					}
+				}
+				if (NodeIDData != nullptr)
+				{
+					queue.enqueue(NodeIDData);
+					queueDirection.enqueue(dirc);
+					res.append(NodeIDData);
+				}
+			}
 
-		
+
+		}
+		else if(!firstNodeID->linkMFaces.isEmpty())
+		{
+			while (!queue.empty())
+			{
+				MXMeshVertex* nodeData = queue.dequeue();
+				QVector3D lastDirection = queueDirection.dequeue();
+				QVector<MFace*> meshFaceIDs = nodeData->linkMFaces;
+				float maxCosValue = 0.0;
+				MXMeshVertex* NodeIDData = nullptr;
+				QVector3D dirc;
+				for (auto meshFaceData : meshFaceIDs)
+				{
+					if (meshFaceData == nullptr)
+					{
+						continue;
+					}
+					nodeIDs = meshFaceData->lineNodes(nodeData);
+					for (auto node : nodeIDs)
+					{
+						if (node == lastNodeID)
+						{
+							NodeIDData = lastNodeID;
+							break;
+						}
+						if (res.contains(node))
+						{
+							break;
+						}
+						dirction = (node->getNodeVertex() - nodeData->getNodeVertex()).normalized();
+						//dirction = (lastVertex - node->getNodeVertex()).normalized();
+						float cosValue = QVector3D::dotProduct(dirction, lastDirection);
+						if (cosValue >= maxCosValue)
+						{
+							NodeIDData = node;
+							maxCosValue = cosValue;
+							dirc = (lastVertex - node->getNodeVertex()).normalized();
+						}
+					}
+					if (NodeIDData == lastNodeID)
+					{
+						NodeIDData = nullptr;
+						break;
+					}
+				}
+				if (NodeIDData != nullptr)
+				{
+					queue.enqueue(NodeIDData);
+					queueDirection.enqueue(dirc);
+					res.append(NodeIDData);
+				}
+			}
+
+		}
+		res.append(lastNodeID);
+		_pickData->setMultiplyPickNodeData(res);
+
 	}
 	void mPreMeshPickThread::SoloPickNodeByLineAngle()
 	{
+		QPair<PickObjectType, QPair<QString, void*>> pickObjectID = _pickData->getSoloPickNodeDataByLineAngle();
+		QString partName = pickObjectID.second.first;
+		//拾取到的节点
+		std::set<MXMeshVertex*> pickNodeIDs;
+		if (pickObjectID.first == PickObjectType::Mesh1D)
+		{
+			MXMeshElement* meshData = static_cast<MXMeshElement*>(pickObjectID.second.second);
+			if (meshData == nullptr)
+			{
+				return;
+			}
+			//判断过的单元ID
+			std::set<MXMeshElement*> judgeMeshIDs;
+			//存储相邻单元ID的队列
+			QQueue<MXMeshElement*> queue;
+			//存储相邻单元的方向的队列
+			QQueue<QVector3D> queueDirection;
+			//方向
+			QVector3D direction, lastDirection;
+			//角度值
+			float angleValue;
+
+			if (meshData != nullptr)
+			{
+				QVector<QVector3D> vertexs = meshData->getallVertexs1();
+
+				lastDirection = (vertexs.at(1) - vertexs.at(0)).normalized();
+				//if (!_oneFrameData->getMeshDataByID(meshID)->getMeshVisual())
+				{
+					//lastDirection = -lastDirection;
+				}
+
+				queue.enqueue(meshData);
+				queueDirection.enqueue(lastDirection);
+
+			}
+
+			while (!queue.isEmpty() && !queueDirection.isEmpty())
+			{
+				meshData = queue.dequeue();
+				lastDirection = queueDirection.dequeue();
+				if (!judgeMeshIDs.insert(meshData).second)
+				{
+					continue;
+				}
+
+				if (meshData != nullptr)
+				{
+					QVector<QVector3D> vertexs = meshData->getallVertexs1();
+					if (vertexs.size() < 2)
+					{
+						return;
+					}
+					direction = (vertexs.at(1) - vertexs.at(0)).normalized();
+					float x = QVector3D::dotProduct(direction, lastDirection);
+					if (x > 1.0)
+					{
+						angleValue = 0;
+					}
+					else
+					{
+						angleValue = fabs(180 * acos(x) / 3.1415926);
+					}
+					if (_pickAngleValue > angleValue)
+					{
+						int num = meshData->getNumVertices();
+						for (int i = 0; i < num; i++)
+						{
+							pickNodeIDs.insert(meshData->getVertex(i));
+						}
+						//单元表面
+						set<MXMeshElement*> adjacentMeshIDs = meshData->linkElements();
+						for (auto mesh : adjacentMeshIDs)
+						{
+							queue.enqueue(mesh);
+							queueDirection.enqueue(direction);
+						}
+					}
+				}
+
+			}
+			_pickData->setMultiplyPickNodeData(pickNodeIDs);
+		}
+		else
+		{
+			MEdge* meshLineData = static_cast<MEdge*>(pickObjectID.second.second);
+			if (meshLineData == nullptr)
+			{
+				return;
+			}
+
+			//判断过的单元边ID
+			std::set<MEdge*> judgeMeshLineIDs;
+			//存储相邻单元边ID的队列
+			QQueue<MEdge*> queue;
+			//存储相邻单元边的方向的队列
+			QQueue<QVector3D> queueDirection;
+			//方向
+			QVector3D direction, lastDirection;
+			//角度值
+			float angleValue;
+
+			if (meshLineData != nullptr)
+			{
+				QVector<QVector3D> vertexs = meshLineData->getAllVertexs();
+
+				lastDirection = (vertexs.at(1) - vertexs.at(0)).normalized();
+				//if (!_oneFrameData->getMeshDataByID(meshID)->getMeshVisual())
+				{
+					//lastDirection = -lastDirection;
+				}
+
+				queue.enqueue(meshLineData);
+				queueDirection.enqueue(lastDirection);
+
+			}
+
+			while (!queue.isEmpty() && !queueDirection.isEmpty())
+			{
+				meshLineData = queue.dequeue();
+				lastDirection = queueDirection.dequeue();
+				if (!judgeMeshLineIDs.insert(meshLineData).second)
+				{
+					continue;
+				}
+
+				if (meshLineData != nullptr)
+				{
+					QVector<QVector3D> vertexs = meshLineData->getAllVertexs();
+					if (vertexs.size() < 2)
+					{
+						return;
+					}
+					direction = (vertexs.at(1) - vertexs.at(0)).normalized();
+					float x = QVector3D::dotProduct(direction, lastDirection);
+					if (x > 1.0)
+					{
+						angleValue = 0;
+					}
+					else
+					{
+						angleValue = fabs(180 * acos(x) / 3.1415926);
+					}
+					if (_pickAngleValue > angleValue)
+					{
+						for (int i = 0; i < 2; i++)
+						{
+							pickNodeIDs.insert(meshLineData->getVerOfMEdge(i));
+						}
+						//单元边
+						set<MEdge*> adjacentMeshFaceIDs = meshLineData->linkMEdges();
+						for (auto meshline : adjacentMeshFaceIDs)
+						{
+							queue.enqueue(meshline);
+							queueDirection.enqueue(direction);
+						}
+					}
+
+				}
+
+			}
+		}
 
 	}
 	void mPreMeshPickThread::SoloPickNodeByFaceAngle()
@@ -1599,42 +1932,18 @@ namespace MPreRend
 					}
 					if (_pickAngleValue > angleValue)
 					{
-						if (meshData->getMeshType() == MeshTri)
+						int n = meshData->getNumVertices();
+						for (int i = 0; i < n; i++)
 						{
-							MXMeshTriangle *meshTri = dynamic_cast<MXMeshTriangle*>(meshData);
-							if (meshTri == nullptr)
-							{
-								continue;
-							}
-							set<MXMeshElement*> adjacentMeshIDs;
-							for (int i = 0; i < 3; i++)
-							{
-								pickNodeIDs.insert(meshData->getVertex(i));
-								adjacentMeshIDs.insert(meshTri->_edge[i]->_linkEleMents_2D[0]);
-								adjacentMeshIDs.insert(meshTri->_edge[i]->_linkEleMents_2D[1]);
-							}
-						}
-						else if (meshData->getMeshType() == MeshQuad)
-						{
-							MXMeshQuadrangle *meshQuad = dynamic_cast<MXMeshQuadrangle*>(meshData);
-							if (meshQuad == nullptr)
-							{
-								continue;
-							}
-							set<MXMeshElement*> adjacentMeshIDs;
-							for (int i = 0; i < 4; i++)
-							{
-								pickNodeIDs.insert(meshData->getVertex(i));
-								adjacentMeshIDs.insert(meshQuad->_edge[i]->_linkEleMents_2D[0]);
-								adjacentMeshIDs.insert(meshQuad->_edge[i]->_linkEleMents_2D[1]);
-							}
-							for (auto mesh : adjacentMeshIDs)
-							{
-								queueDirection.enqueue(direction);
-								queue.enqueue(mesh);
-							}
+							pickNodeIDs.insert(meshData->getVertex(i));
 						}
 
+						set<MXMeshElement*> adjacentMeshIDs = meshData->linkElements();
+						for (auto mesh : adjacentMeshIDs)
+						{
+							queueDirection.enqueue(direction);
+							queue.enqueue(mesh);
+						}
 					}
 				}
 
@@ -1706,12 +2015,12 @@ namespace MPreRend
 					}
 					if (_pickAngleValue > angleValue)
 					{
-						set<MFace*> adjacentMeshFaceIDs;
-						for (auto edge : meshFaceData->_edges)
+						int n = meshFaceData->type() == 1 ? 3 : 4;
+						for (int i = 0; i < n; i++)
 						{
-							adjacentMeshFaceIDs.insert(edge->_inMFace[0]);
-							adjacentMeshFaceIDs.insert(edge->_inMFace[1]);
+							pickNodeIDs.insert(meshFaceData->getVertex(i));
 						}
+						set<MFace*> adjacentMeshFaceIDs = meshFaceData->linkMFaces();
 						for (auto meshface : adjacentMeshFaceIDs)
 						{
 							queueDirection.enqueue(direction);
@@ -1727,7 +2036,87 @@ namespace MPreRend
 	}
 	void mPreMeshPickThread::SoloPick1DMeshByAngle()
 	{
+		QPair<QString, void*> partNameMesh = _pickData->getSoloPickMeshLineDataByAngle();
+		MXMeshElement* meshData = static_cast<MXMeshElement*>(partNameMesh.second);
+		if (meshData == 0)
+		{
+			return;
+		}
 
+		//拾取到的单元ID
+		std::set<MXMeshElement*> pickMeshIDs;
+		//判断过的单元ID
+		std::set<MXMeshElement*> judgeMeshIDs;
+		//存储相邻单元ID的队列
+		QQueue<MXMeshElement*> queue;
+		//存储相邻单元的方向的队列
+		QQueue<QVector3D> queueDirection;
+		//方向
+		QVector3D direction, lastDirection;
+		//角度值
+		float angleValue;
+
+		if (meshData != nullptr)
+		{
+			QVector<QVector3D> vertexs = meshData->getallVertexs1();
+
+			lastDirection = (vertexs.at(1) - vertexs.at(0)).normalized();
+			//if (!_oneFrameData->getMeshDataByID(meshID)->getMeshVisual())
+			{
+				//lastDirection = -lastDirection;
+			}
+
+			queue.enqueue(meshData);
+			queueDirection.enqueue(lastDirection);
+
+		}
+
+		while (!queue.isEmpty() && !queueDirection.isEmpty())
+		{
+			meshData = queue.dequeue();
+			lastDirection = queueDirection.dequeue();
+			if (!judgeMeshIDs.insert(meshData).second)
+			{
+				continue;
+			}
+
+			if (meshData != nullptr)
+			{
+				QVector<QVector3D> vertexs = meshData->getallVertexs1();
+				if (vertexs.size() < 2)
+				{
+					return;
+				}
+				direction = (vertexs.at(1) - vertexs.at(0)).normalized();
+				float x = QVector3D::dotProduct(direction, lastDirection);
+				if (x > 1.0)
+				{
+					angleValue = 0;
+				}
+				else
+				{
+					angleValue = fabs(180 * acos(x) / 3.1415926);
+				}
+				if (_pickAngleValue > angleValue)
+				{
+					if (pickMeshIDs.insert(meshData).second)
+					{
+						//单元表面
+						set<MXMeshElement*> adjacentMeshIDs = meshData->linkElements();
+						for (auto mesh : adjacentMeshIDs)
+						{
+							queue.enqueue(mesh);
+							queueDirection.enqueue(direction);
+						}
+					}
+				}
+
+			}
+
+		}
+
+
+		_pickData->setMultiplyPickMeshData(pickMeshIDs);
 	}
 	void mPreMeshPickThread::SoloPickMeshLineByAngle()
 	{
@@ -1778,7 +2167,7 @@ namespace MPreRend
 			if (meshLineData != nullptr)
 			{
 				QVector<QVector3D> vertexs = meshLineData->getAllVertexs();
-				if (vertexs.size() < 3)
+				if (vertexs.size() < 2)
 				{
 					return;
 				}
@@ -1797,65 +2186,11 @@ namespace MPreRend
 					if (pickMeshLineIDs.insert(meshLineData).second)
 					{						
 						//单元表面
-						set<MFace*> adjacentMeshFaceIDs;
-						adjacentMeshFaceIDs.insert(meshLineData->_inMFace[0]);
-						adjacentMeshFaceIDs.insert(meshLineData->_inMFace[1]);
-						for (auto face : adjacentMeshFaceIDs)
+						set<MEdge*> adjacentMeshFaceIDs = meshLineData->linkMEdges();
+						for (auto meshline : adjacentMeshFaceIDs)
 						{
-							for (auto edge : face->_edges)
-							{
-								queueDirection.enqueue(direction);
-								queue.enqueue(edge);
-							}
-						}		
-						//二维网格
-						set<MXMeshElement*> adjacentMeshIDs;
-						adjacentMeshIDs.insert(meshLineData->_linkEleMents_2D[0]);
-						adjacentMeshIDs.insert(meshLineData->_linkEleMents_2D[1]);
-						for (auto mesh : adjacentMeshIDs)
-						{
-							QVector<MEdge*> edges;
-							edges.reserve(4);
-							switch (mesh->getMeshType())
-							{
-							case MeshTri:
-							{
-								MXMeshTriangle *tri = dynamic_cast<MXMeshTriangle*>(mesh);
-								if (tri)
-								{
-									for (int i = 0; i < 3; i++)
-									{
-										if (tri->_edge[i])
-										{
-											edges.append(tri->_edge[i]);
-										}
-									}
-								}
-							}
-							break;
-							case MeshQuad:
-							{
-								MXMeshQuadrangle *quad = dynamic_cast<MXMeshQuadrangle*>(mesh);
-								if (quad)
-								{
-									for (int i = 0; i < 4; i++)
-									{
-										if (quad->_edge[i])
-										{
-											edges.append(quad->_edge[i]);
-										}
-									}
-								}
-							}
-							break;
-							default:
-								break;
-							}
-							for (auto edge : edges)
-							{
-								queueDirection.enqueue(direction);
-								queue.enqueue(edge);
-							}
+							queue.enqueue(meshline);
+							queueDirection.enqueue(direction);
 						}
 					}
 				}
@@ -2015,12 +2350,7 @@ namespace MPreRend
 				{
 					if (pickMeshFaceIDs.insert(meshFaceData).second)
 					{
-						set<MFace*> adjacentMeshFaceIDs;
-						for (auto edge : meshFaceData->_edges)
-						{
-							adjacentMeshFaceIDs.insert(edge->_inMFace[0]);
-							adjacentMeshFaceIDs.insert(edge->_inMFace[1]);
-						}
+						set<MFace*> adjacentMeshFaceIDs = meshFaceData->linkMFaces();
 						for (auto meshface : adjacentMeshFaceIDs)
 						{
 							queueDirection.enqueue(direction);
