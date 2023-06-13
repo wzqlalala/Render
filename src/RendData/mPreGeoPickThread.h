@@ -58,7 +58,7 @@ namespace MDataGeo
 	protected:
 		QMatrix4x4 _pvm;
 		int _width, _height;
-		MViewBasic::MultiplyPickMode _multiplyPickMode;
+		MxFunctions::MultiplyPickMode _multiplyPickMode;
 
 	};
 
@@ -295,7 +295,7 @@ namespace MDataGeo
 		MViewBasic::PickMode _pickMode;
 
 		//框选拾取模式
-		MViewBasic::MultiplyPickMode _multiplyPickMode;
+		MxFunctions::MultiplyPickMode _multiplyPickMode;
 
 		//窗口大小
 		int _Win_WIDTH, _Win_HEIGHT;

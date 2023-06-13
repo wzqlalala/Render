@@ -271,9 +271,9 @@ namespace MIOFile
 			return;
 		}
 
-		QHash<int, QVector<MXMeshTriangle*>> geoTriFaceData;
-		QHash<int, QVector<MXMeshQuadrangle*>> geoQuadFaceData;
-		QHash<int, QString> geoFacePartName;
+		QHash<int,QPair<QVector<MXMeshTriangle*>, QVector<MXMeshQuadrangle*>>> geoFaceData;
+		//QHash<int, QVector<MXMeshQuadrangle*>> geoFaceData;
+		QHash<QString, set<int>> geoFacePartName;
 		QHash<int, MXMeshVertex*> allVertexData;
 
 		while (!file_fp.eof()) {
@@ -413,9 +413,9 @@ namespace MIOFile
 							QString partName1 = QString::fromStdString(partname1);
 							QString partName2 = QString::fromStdString(partname2);
 							_globalMeshId++;
-							geoFacePartName[zoneID] = partName1;
+							geoFacePartName[partName1].insert(zoneID);
 							MXMeshTriangle * mesh = new MXMeshTriangle(this->getVertex(face_point[1], allVertexData), this->getVertex(face_point[2], allVertexData), this->getVertex(face_point[3], allVertexData), _globalMeshId);						
-							geoTriFaceData[zoneID].append(mesh);
+							geoFaceData[zoneID].first.append(mesh);
 						}
 						else
 						{
@@ -429,9 +429,9 @@ namespace MIOFile
 							//创建面
 							QString partName = QString::fromStdString(partname1);
 							_globalMeshId++;
-							geoFacePartName[zoneID] = partName;
+							geoFacePartName[partName].insert(zoneID);
 							MXMeshTriangle * mesh = new MXMeshTriangle(this->getVertex(face_point[1], allVertexData), this->getVertex(face_point[2], allVertexData), this->getVertex(face_point[3], allVertexData), _globalMeshId);
-							geoTriFaceData[zoneID].append(mesh);
+							geoFaceData[zoneID].first.append(mesh);
 						}
 
 
@@ -467,9 +467,9 @@ namespace MIOFile
 							QString partName1 = QString::fromStdString(partname1);
 							QString partName2 = QString::fromStdString(partname2);
 							_globalMeshId++;
-							geoFacePartName[zoneID] = partName1;
+							geoFacePartName[partName1].insert(zoneID);
 							MXMeshQuadrangle * mesh = new MXMeshQuadrangle(this->getVertex(face_point[1], allVertexData), this->getVertex(face_point[2], allVertexData), this->getVertex(face_point[3], allVertexData), this->getVertex(face_point[4], allVertexData), _globalMeshId);
-							geoQuadFaceData[zoneID].append(mesh);
+							geoFaceData[zoneID].second.append(mesh);
 						}
 						else
 						{
@@ -483,9 +483,9 @@ namespace MIOFile
 							//创建面
 							QString partName = QString::fromStdString(partname1);
 							_globalMeshId++;
-							geoFacePartName[zoneID] = partName;
+							geoFacePartName[partName].insert(zoneID);
 							MXMeshQuadrangle * mesh = new MXMeshQuadrangle(this->getVertex(face_point[1], allVertexData), this->getVertex(face_point[2], allVertexData), this->getVertex(face_point[3], allVertexData), this->getVertex(face_point[4], allVertexData), _globalMeshId);
-							geoQuadFaceData[zoneID].append(mesh);
+							geoFaceData[zoneID].second.append(mesh);
 						}
 					}
 					else if(facetype == 0)
@@ -522,10 +522,10 @@ namespace MIOFile
 								//创建面
 								QString partName1 = QString::fromStdString(partname1);
 								QString partName2 = QString::fromStdString(partname2);
-								geoFacePartName[zoneID] = partName1;
+								geoFacePartName[partName1].insert(zoneID);
 								_globalMeshId++;
 								MXMeshTriangle * mesh = new MXMeshTriangle(this->getVertex(face_point[1], allVertexData), this->getVertex(face_point[2], allVertexData), this->getVertex(face_point[3], allVertexData), _globalMeshId);
-								geoTriFaceData[zoneID].append(mesh);
+								geoFaceData[zoneID].first.append(mesh);
 							}
 							else
 							{
@@ -538,10 +538,10 @@ namespace MIOFile
 								}
 								//创建面
 								QString partName = QString::fromStdString(partname1);
-								geoFacePartName[zoneID] = partName;
+								geoFacePartName[partName].insert(zoneID);
 								_globalMeshId++;
 								MXMeshTriangle * mesh = new MXMeshTriangle(this->getVertex(face_point[1], allVertexData), this->getVertex(face_point[2], allVertexData), this->getVertex(face_point[3], allVertexData), _globalMeshId);
-								geoTriFaceData[zoneID].append(mesh);
+								geoFaceData[zoneID].first.append(mesh);
 							}
 						}
 						else if (ftype == 4)
@@ -576,9 +576,9 @@ namespace MIOFile
 								QString partName1 = QString::fromStdString(partname1);
 								QString partName2 = QString::fromStdString(partname2);
 								_globalMeshId++;
-								geoFacePartName[zoneID] = partName1;
+								geoFacePartName[partName1].insert(zoneID);
 								MXMeshQuadrangle * mesh = new MXMeshQuadrangle(this->getVertex(face_point[1], allVertexData), this->getVertex(face_point[2], allVertexData), this->getVertex(face_point[3], allVertexData), this->getVertex(face_point[4], allVertexData), _globalMeshId);
-								geoQuadFaceData[zoneID].append(mesh);
+								geoFaceData[zoneID].second.append(mesh);
 							}
 							else
 							{
@@ -592,9 +592,9 @@ namespace MIOFile
 								//创建面
 								QString partName = QString::fromStdString(partname1);
 								_globalMeshId++;
-								geoFacePartName[zoneID] = partName;
+								geoFacePartName[partName].insert(zoneID);
 								MXMeshQuadrangle * mesh = new MXMeshQuadrangle(this->getVertex(face_point[1], allVertexData), this->getVertex(face_point[2], allVertexData), this->getVertex(face_point[3], allVertexData), this->getVertex(face_point[4], allVertexData), _globalMeshId);
-								geoQuadFaceData[zoneID].append(mesh);
+								geoFaceData[zoneID].second.append(mesh);
 							}
 						}
 					}
@@ -615,7 +615,7 @@ namespace MIOFile
 							}
 							_globalMeshId++;
 							MXMeshTriangle * mesh = new MXMeshTriangle(this->getVertex(face_point[1], allVertexData), this->getVertex(face_point[2], allVertexData), this->getVertex(face_point[3], allVertexData),  _globalMeshId);
-							geoTriFaceData[zoneID].append(mesh);
+							geoFaceData[zoneID].first.append(mesh);
 							//Faceinfo.push_back(face_point[0]);
 							//Faceinfo.push_back(face_point[1]);
 							//Faceinfo.push_back(face_point[2]);
@@ -638,7 +638,7 @@ namespace MIOFile
 							}
 							_globalMeshId++;
 							MXMeshQuadrangle * mesh = new MXMeshQuadrangle(this->getVertex(face_point[1], allVertexData), this->getVertex(face_point[2], allVertexData), this->getVertex(face_point[3], allVertexData), this->getVertex(face_point[4], allVertexData), _globalMeshId);
-							geoQuadFaceData[zoneID].append(mesh);
+							geoFaceData[zoneID].second.append(mesh);
 							for (int i = 0; i < 4; i++)
 							{
 								qDebug() << mesh->getVertex(i)->getNum();
@@ -668,7 +668,7 @@ namespace MIOFile
 								}
 								_globalMeshId++;
 								MXMeshTriangle * mesh = new MXMeshTriangle(this->getVertex(face_point[1], allVertexData), this->getVertex(face_point[2], allVertexData), this->getVertex(face_point[3], allVertexData), _globalMeshId);
-								geoTriFaceData[zoneID].append(mesh);
+								geoFaceData[zoneID].first.append(mesh);
 								//Faceinfo.push_back(face_point[0]);
 								//Faceinfo.push_back(face_point[1]);
 								//Faceinfo.push_back(face_point[2]);
@@ -688,7 +688,7 @@ namespace MIOFile
 								}
 								_globalMeshId++;
 								MXMeshQuadrangle * mesh = new MXMeshQuadrangle(this->getVertex(face_point[1], allVertexData), this->getVertex(face_point[2], allVertexData), this->getVertex(face_point[3], allVertexData), this->getVertex(face_point[4], allVertexData), _globalMeshId);
-								geoQuadFaceData[zoneID].append(mesh);
+								geoFaceData[zoneID].second.append(mesh);
 							}
 							else {
 								cout << "面的类型不正确。" << endl; fflush(stdout); exit(-1);
@@ -771,9 +771,9 @@ namespace MIOFile
 
 
 		//打开cas文件再次读入
-		for (auto meshs : geoTriFaceData)
+		for (auto meshs : geoFaceData)
 		{
-			for (auto mesh : meshs)
+			for (auto mesh : meshs.first)
 			{
 				for (int i = 0;i < 3 ;++i)
 				{
@@ -782,9 +782,9 @@ namespace MIOFile
 				}
 			}
 		}
-		for (auto meshs : geoQuadFaceData)
+		for (auto meshs : geoFaceData)
 		{
-			for (auto mesh : meshs)
+			for (auto mesh : meshs.second)
 			{
 				for (int i = 0; i < 4; ++i)
 				{
@@ -872,11 +872,16 @@ namespace MIOFile
 		mGlobalSignals::getInstance()->outputMessageSig(0, QString("节点读取成功。"));
 
 		MXReadData *readData=MeshMessage::getInstance()->getReadData();
-		QHashIterator<int, QString> iter(geoFacePartName);
+		QHashIterator<QString,set<int>> iter(geoFacePartName);
 		while (iter.hasNext())
 		{
 			iter.next();
-			readData->CreateGeoFace(iter.value(), iter.key(), geoTriFaceData.value(iter.key()), geoQuadFaceData.value(iter.key()));
+			QHash<int, QPair<QVector<MXMeshTriangle*>, QVector<MXMeshQuadrangle*>>> values;
+			for (auto id : iter.value())
+			{
+				values.insert(id, geoFaceData.value(id));
+			}
+			readData->CreateGeoFace(iter.key(), values);
 		}
 
 		file_fp.close();

@@ -160,22 +160,6 @@ namespace MViewBasic
 		//DragMaxLine,
 	};
 
-	enum class MultiplyPickMode
-	{
-		/**************框选模式***********/
-		//禁用框选
-		NoPick,
-
-		//矩形框选（角点）
-		QuadPick,
-
-		//圆形框选(圆心和半径)
-		RoundPick,
-
-		//多边形框选（多段线）
-		PolygonPick,
-	};
-
 	/*
 	* 显示模式：边界线模式，透视线框模式，网格面，网格面和线
 	*/

@@ -45,11 +45,9 @@ namespace MViewBasic
 		void Translate(float xoffset, float yoffset);//平移
 		void Rotate(float xoffset, float yoffset, RotateType rotateType = Rotate_XY, float sensitivity = 0.25);//旋转
 		void Rotate_ByBotton(float angle);//绕着垂直屏幕的轴旋转固定角度	
-		void ZoomAtMouse_Bywheel(int posX, int posY, int rollervalue, ScalePerspectice scalePerspectice, float sensitivity = 1.2) override;//跟随鼠标点缩放（滚轮缩放）
 		void ZoomAtFrameCenter(int CenterposX, int CenterposY, float sensitivity = 2.0);//根据框选中心缩放
 		void ZoomAtViewCenter_ByBotton(ScaleDirection scaleDirection, float sensitivity = 2);//根据视角中心缩放(鼠标点击一次缩放一次 不连续)
 		void ZoomAtViewCenter_ByPercent(float percent);//根据视角中心缩放(按百分比缩放 例如缩放0.1)
-		void ZoomAtViewCenter_ByMove(int FirstPosx, int FirstPosy, int nowPosx, int nowPosy,float sensitivity = 1.1);	//根据视角中心缩放（鼠标移动缩放，连续）
 		//设置视角																													
 		void SetPerspective(Perspective type);	//设置观察视角
 		void FitView(QVector3D center);		//调整视角使模型充满整个视图

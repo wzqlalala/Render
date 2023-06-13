@@ -65,7 +65,7 @@ namespace MPreRend
 	protected:
 		QMatrix4x4 _pvm;
 		int _width, _height;
-		MViewBasic::MultiplyPickMode _multiplyPickMode;
+		MxFunctions::MultiplyPickMode _multiplyPickMode;
 
 	};
 
@@ -253,9 +253,9 @@ namespace MPreRend
 		//void SoloPickNodeByFace(QString partName);
 		//void SoloPickMeshByFace(QString partName);
 		//void SoloPickMeshFaceByFace(QString partName);
-		//void SoloPickNodeByLineAngle(QString partName);
+		void SoloPickNodeByLineAngle(QString partName);
 		void SoloPickNodeByFaceAngle(QString partName);
-		//void SoloPick1DMeshByAngle(QString partName);
+		void SoloPick1DMeshByAngle(QString partName);
 		void SoloPick2DMeshByAngle(QString partName);
 		void SoloPickMeshLineByAngle(QString partName);
 		void SoloPickMeshFaceByAngle(QString partName);
@@ -346,7 +346,7 @@ namespace MPreRend
 		MViewBasic::PickMode _pickMode;
 
 		//框选拾取模式
-		MViewBasic::MultiplyPickMode _multiplyPickMode;
+		MxFunctions::MultiplyPickMode _multiplyPickMode;
 
 		//拾取角度
 		float _pickAngleValue = 60;

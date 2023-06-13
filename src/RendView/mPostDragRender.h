@@ -29,13 +29,13 @@ namespace MViewBasic
 using namespace mxr;
 namespace MPostRend
 {
-
+	class mPostRendStatus;
 	class RENDVIEW_EXPORT mPostDragRender :public QObject
 	{
 		Q_OBJECT
 
 	public:
-		mPostDragRender(QString name, std::shared_ptr<mxr::Application> app, std::shared_ptr<mxr::Group> parent);
+		mPostDragRender(QString name, std::shared_ptr<mxr::Application> app, std::shared_ptr<mxr::Group> parent, std::shared_ptr<mPostRendStatus> rendStatus);
 
 		~mPostDragRender() {};
 
@@ -59,6 +59,8 @@ namespace MPostRend
 		std::shared_ptr<mxr::Drawable> _drawable;
 		std::shared_ptr<mxr::StateSet> _stateSet;
 
+		std::shared_ptr<mPostRendStatus> _rendStatus;
+
 	};
 
 	class RENDVIEW_EXPORT mPostSphereRender :public mPostDragRender
@@ -66,7 +68,7 @@ namespace MPostRend
 		Q_OBJECT
 
 	public:
-		mPostSphereRender(QString name, std::shared_ptr<Application> app, std::shared_ptr<Group> parent);
+		mPostSphereRender(QString name, std::shared_ptr<Application> app, std::shared_ptr<Group> parent, std::shared_ptr<mPostRendStatus> rendStatus);
 
 		void setSphereData(QVector3D center, float radius);
 
@@ -82,8 +84,8 @@ namespace MPostRend
 		static QVector<QVector3D> _sphereVertexs;
 		static QVector<uint> _sphereIndexs;
 
-		QVector3D _sphereCenter;
-		float _sphereRadius;
+		//QVector3D _sphereCenter;
+		//float _sphereRadius;
 		//拖拽点的位置相对于球心的位置，x,y代表处于乘以矩阵后的像素（范围为-1~1）
 		QVector2D _relativePosition;
 		//球心深度（范围为-1~1）

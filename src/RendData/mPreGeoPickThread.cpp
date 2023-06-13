@@ -299,11 +299,11 @@ namespace MDataGeo
 		//multiQuad = pickQuad;
 		switch (_multiplyPickMode)
 		{
-		case MViewBasic::MultiplyPickMode::QuadPick:_pick = make_shared<mQuadPick>(_pvm, _Win_WIDTH, _Win_HEIGHT, pickQuad);
+		case MxFunctions::MultiplyPickMode::QuadPick:_pick = make_shared<mQuadPick>(_pvm, _Win_WIDTH, _Win_HEIGHT, pickQuad);
 			break;
-		case MViewBasic::MultiplyPickMode::PolygonPick:_pick = make_shared<mPolygonPick>(_pvm, _Win_WIDTH, _Win_HEIGHT, pickQuad);
+		case MxFunctions::MultiplyPickMode::PolygonPick:_pick = make_shared<mPolygonPick>(_pvm, _Win_WIDTH, _Win_HEIGHT, pickQuad);
 			break;
-		case MViewBasic::MultiplyPickMode::RoundPick:_pick = make_shared<mRoundPick>(_pvm, _Win_WIDTH, _Win_HEIGHT, pickQuad.first(), pickQuad.last(), direction);
+		case MxFunctions::MultiplyPickMode::RoundPick:_pick = make_shared<mRoundPick>(_pvm, _Win_WIDTH, _Win_HEIGHT, pickQuad.first(), pickQuad.last(), direction);
 			break;
 		default:
 			break;
@@ -342,24 +342,36 @@ namespace MDataGeo
 		//判断该部件是否存在碰撞
 		//判断点选是否在部件的包围盒内
 		QVector3D worldVertex = _p;
-		if (partData->getGeoPartAABB().ContainPoint(_p))
+		//if (partData->getGeoShapeType() == 7)//点部件
 		{
 			switch (*_pickFilter)
 			{
-			case PickFilter::PickNothing:; break;
 			case PickFilter::PickGeoPoint:
 			case PickFilter::PickGeoPointOrder:SoloPickGeoPoint(partData); break;
-			case PickFilter::PickGeoLine:SoloPickGeoLine(partData); break;
-			case PickFilter::PickGeoFace:SoloPickGeoFace(partData); break;
-			case PickFilter::PickGeoSolid:SoloPickGeoSolid(partData); break;
-			case PickFilter::PickGeoPart:SoloPickGeoPart(partData); break;
-			case PickFilter::PickGeoPointByPart:SoloPickGeoPointByPart(partData); break;
-			case PickFilter::PickGeoLineByPart:SoloPickGeoLineByPart(partData); break;
-			case PickFilter::PickGeoFaceByPart:SoloPickGeoFaceByPart(partData); break;
-			case PickFilter::PickGeoSolidByPart:SoloPickGeoSolidByPart(partData); break;
-			case PickFilter::pickVertexOnGeoLine:SoloPickVertexOnGeoLine(partData); break;
-			case PickFilter::pickVertexOnGeoFace:SoloPickVertexOnGeoFace(partData); break;
 			default:break;
+			}
+		}
+		//else
+		{
+			if (partData->getGeoPartAABB().ContainPoint(_p))
+			{
+				switch (*_pickFilter)
+				{
+				case PickFilter::PickNothing:; break;
+				/*case PickFilter::PickGeoPoint:
+				case PickFilter::PickGeoPointOrder:SoloPickGeoPoint(partData); break;*/
+				case PickFilter::PickGeoLine:SoloPickGeoLine(partData); break;
+				case PickFilter::PickGeoFace:SoloPickGeoFace(partData); break;
+				case PickFilter::PickGeoSolid:SoloPickGeoSolid(partData); break;
+				case PickFilter::PickGeoPart:SoloPickGeoPart(partData); break;
+				case PickFilter::PickGeoPointByPart:SoloPickGeoPointByPart(partData); break;
+				case PickFilter::PickGeoLineByPart:SoloPickGeoLineByPart(partData); break;
+				case PickFilter::PickGeoFaceByPart:SoloPickGeoFaceByPart(partData); break;
+				case PickFilter::PickGeoSolidByPart:SoloPickGeoSolidByPart(partData); break;
+				case PickFilter::pickVertexOnGeoLine:SoloPickVertexOnGeoLine(partData); break;
+				case PickFilter::pickVertexOnGeoFace:SoloPickVertexOnGeoFace(partData); break;
+				default:break;
+				}
 			}
 		}
 	}
@@ -422,8 +434,8 @@ namespace MDataGeo
 	void mPreGeoPickThread::SoloPickGeoPoint(mGeoPartData1 *partData)
 	{
 		int id = 0;
-		float depth = 1.0;
-		float depth1 = 1.0f;
+		float depth = FLT_MAX;
+		float depth1 = FLT_MAX;
 		////MDataGeo::mGeoPartData1 *partData = _geoModelData->getGeoPartDataByPartName(_partName);
 		if (partData == nullptr)
 		{

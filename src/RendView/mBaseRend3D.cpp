@@ -1,5 +1,6 @@
 #include "mBaseRend3D.h"
 #include "mBaseRender.h"
+#include "mShapeRender.h"
 //工具类
 #include"mViewToolClass.h"
 //视图类
@@ -27,6 +28,9 @@ namespace MBaseRend
 	void mBaseRend3D::initializeGL()
 	{
 		mBaseRend::initializeGL();
+
+		_shapeRender = make_shared<mShapeRender>(_app, _afterroot, this);
+		this->addAfterRender(_shapeRender);
 	}
 
 	void mBaseRend3D::paintGL()
@@ -179,6 +183,30 @@ namespace MBaseRend
 			*_cameraMode = CameraOperateMode::NoCameraOperate;
 			*_pickMode = PickMode::NoPick;
 		}
+		if (ifGetRotateCenter)
+		{
+			makeCurrent();
+			FBO->bind();
+			int posx = event->pos().x(); //QT像素坐标原点左上角
+			int posy = event->pos().y();
+			glReadPixels(event->pos().x(), SCR_HEIGHT - event->pos().y(), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &BufDepth);
+			float Depth = 0.0;
+			if (abs(BufDepth - 1.0) < 0.1)
+				Depth = 0;
+			else
+				Depth = (BufDepth - 0.5) * 2;//将深度值范围从0.1转换到-1.1
+			QVector3D Center = mViewToolClass::PixelToModelPosition(posx, posy, _modelView->_projection, _modelView->_view, _modelView->_model, SCR_WIDTH, SCR_HEIGHT, Depth);
+			_center_now = Center;
+			_shapeRender->appendXPointShape("RotateCenter", { Center }, QVector3D(1, 1, 0));
+			FBO->release();
+			ifGetRotateCenter = false;
+		}
+		else
+		{
+			//设置旋转中心隐藏
+			_shapeRender->setXPointIsShow("RotateCenter", false);//隐藏
+
+		}
 		update();
 	}
 
@@ -269,6 +297,10 @@ namespace MBaseRend
 					}
 				}
 			}
+			else if (ifZoomByMouseMove == true && ifGetRotateCenter == false)
+			{
+				_modelView->ZoomAtViewCenter_ByMove(Posx_Firstmouse, Posy_Firstmouse, nowX, nowY);
+			}
 		}
 		else
 		{
@@ -310,5 +342,88 @@ namespace MBaseRend
 			view1->handle(e);
 		}
 		return QWidget::event(e);
+	}
+
+		//设置视图*旋转中心*类型
+	void mBaseRend3D::SetRotateCenterToPoint()
+	{
+		ifGetRotateCenter = true;
+		ifRotateAtViewCenter = false;
+		_shapeRender->deleteXPointShape("RotateCenter");
+
+	}
+	void mBaseRend3D::SetRotateCenterToViewCenter()
+	{
+		ifGetRotateCenter = false;
+		ifRotateAtViewCenter = true;
+		//获取屏幕中心的坐标
+		QVector3D ViewCenter = mViewToolClass::NormToModelPosition(QVector3D(0, 0, 0), _modelView->_projection, _modelView->_view, _modelView->_model);
+		//找新的旋转半径
+		float maxRadius = mViewToolClass::GetMaxRadius(_aabb.minEdge.x(), _aabb.maxEdge.x(), _aabb.minEdge.y(), _aabb.maxEdge.x(), _aabb.minEdge.z(), _aabb.maxEdge.z(), ViewCenter);
+		auto view = dynamic_pointer_cast<mModelView>(_modelView);
+		if (view)
+		{
+			view->SetRotateCenterToViewCenter(ViewCenter, maxRadius);
+		}
+		_center_now = ViewCenter;
+		//传递旋转中心数据
+		QVector3D centerPos = mViewToolClass::PixelToModelPosition(SCR_WIDTH / 2, SCR_HEIGHT / 2, _modelView->_projection, _modelView->_view, _modelView->_model, SCR_WIDTH, SCR_HEIGHT);
+		_shapeRender->appendXPointShape("RotateCenter", { centerPos }, QVector3D(1, 1, 0));
+		update();
+
+
+	}
+	void mBaseRend3D::SetRotateCenterToModelCenter()
+	{
+		ifGetRotateCenter = false;
+		ifRotateAtViewCenter = false;
+		auto view = dynamic_pointer_cast<mModelView>(_modelView);
+		if (view)
+		{
+			view->SetRotateCenterToModelCenter(_center_model, _maxRadius_model);
+		}
+		_center_now = _center_model;
+		//传递旋转中心数据
+		_shapeRender->appendXPointShape("RotateCenter", { _center_model }, QVector3D(1, 1, 0));
+		update();
+
+
+	}
+	void mBaseRend3D::slotSetRotate_ByButton(float angle)
+	{
+		SetRotate_ByButton(angle);
+	}
+	void mBaseRend3D::SetRotate_ByButton(float angle)
+	{
+		auto view = dynamic_pointer_cast<mModelView>(_modelView);
+		if (view)
+		{
+			view->Rotate_ByBotton(angle);
+		}
+		auto view1 = dynamic_pointer_cast<mCommonView>(_commonView);
+		if (view1)
+		{
+			view1->Rotate_ByBotton(angle);
+		}
+		update();
+	}
+
+	//设置视图*旋转*类型
+	void mBaseRend3D::SetRotateType(RotateType rotateType)
+	{
+		if (rotateType == Rotate_XY)
+		{
+			ifRotateAtXY = true;
+			ifRotateAtZ = false;
+			ifTranslateXY = false;
+			ifZoomByMouseMove = false;
+		}
+		else if (rotateType == Rotate_Z)
+		{
+			ifRotateAtXY = false;
+			ifRotateAtZ = true;
+			ifTranslateXY = false;
+			ifZoomByMouseMove = false;
+		}
 	}
 }

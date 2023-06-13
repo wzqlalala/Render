@@ -131,9 +131,9 @@ namespace MDataPre
 		{
 			if (depth < _meshPartNameBuffers.depth)
 			{
-				//_meshPartNameBuffers.depth = depth;
-				//_meshPartNameBuffers.partName = partName;
-				//_meshPartNameBuffers. = meshid;
+				_meshPartNameBuffers.depth = depth;
+				_meshPartNameBuffers.partName = partName;
+				_meshPartNameBuffers.ptr = meshid;
 			}
 		}
 	}

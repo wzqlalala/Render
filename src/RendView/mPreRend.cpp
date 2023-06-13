@@ -27,7 +27,7 @@ namespace MPreRend
 
 	mPreRend::mPreRend(const QString& name):mBaseRend3D(name, Viewport3D)
 	{
-		*_pickFilter = PickFilter::pickVertexOnGeoFace;
+		*_pickFilter = PickFilter::PickNodeByFaceAngle;
 		qDebug() << "Pre Struct";
 
 		//保存单位制
@@ -175,6 +175,7 @@ namespace MPreRend
 	void mPreRend::GetModelSizePara(bool isModelCenter)
 	{
 		Space::AABB aabb;
+
 		if (!this->getPreRender()->getModelAABB(aabb))
 		{
 			aabb = Space::AABB();

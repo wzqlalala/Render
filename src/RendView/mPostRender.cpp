@@ -381,7 +381,7 @@ namespace MPostRend
 		_highLightRender = make_shared<mPostHighLightRender>(_rendStatus, _pickData);
 
 		//添加积分球
-		shared_ptr<mPostSphereRender> sphereRender = MakeAsset<mPostSphereRender>("积分球", _app, _parent);
+		shared_ptr<mPostSphereRender> sphereRender = MakeAsset<mPostSphereRender>("积分球", _app, _parent, _rendStatus);
 		_dragRenders.insert("积分球",sphereRender);
 
 		//this->doneCurrent();
@@ -421,6 +421,7 @@ namespace MPostRend
 		if (_currentDragRender)
 		{
 			_currentDragRender->move(pos, matrix, _baseRend->getCamera()->SCR_WIDTH, _baseRend->getCamera()->SCR_HEIGHT);
+			emit finishedDragSig();
 		}
 	}
 	QTime time;
@@ -428,7 +429,7 @@ namespace MPostRend
 	{
 		if (_currentDragRender != nullptr)
 		{
-			emit finishedDragSig();
+			//emit finishedDragSig();
 			_currentDragRender = nullptr;
 			return;
 		}
