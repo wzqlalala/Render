@@ -2153,7 +2153,15 @@ namespace MDataPost
 
 	int mOneFrameData1::getOneFrameElementAmount()
 	{
-		return _meshData1.size();
+		int sum = 0;
+		for (auto iter : _meshData2)
+		{
+			if (iter != nullptr)
+			{
+				sum++;
+			}
+		}
+		return _meshData1.size() + sum;
 	}
 
 	void mOneFrameData1::setOneFrameModalValue(double freq, double eig)
