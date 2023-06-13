@@ -185,6 +185,22 @@ namespace MBaseRend
 			value->setIsShow(isShow);
 		}
 	}
+	void mFontRender::setCommonFontColor(QString key, QVector3D color)
+	{
+		auto value = _commonFonts.value(key);
+		if (value)
+		{
+			value->setData(0, color);
+		}
+	}
+	void mFontRender::setCommonFontSize(QString key, float size)
+	{
+		auto value = _commonFonts.value(key);
+		if (value)
+		{
+			value->setData(1, size);
+		}
+	}
 	void mFontRender::appendGloabalAxisFont()
 	{
 		makeCurrent();
@@ -389,6 +405,34 @@ namespace MBaseRend
 			_Type->append(QVector<float>(4 * txt.at(i).size(), type));
 		}
 		_drawable->setVertexAttribArray(location, _Type);
+	}
+
+	void mBaseFont::setData(int location, QVector3D data)
+	{
+		if (!_drawable)
+		{
+			return;
+		}
+		Array *array = _drawable->getVertexAttribArray(location);
+		if (array)
+		{
+			QVector<QVector3D> datas(array->size(), data);
+			array->updata(datas.data());
+		}
+	}
+
+	void mBaseFont::setData(int location, float data)
+	{
+		if (!_drawable)
+		{
+			return;
+		}
+		Array *array = _drawable->getVertexAttribArray(location);
+		if (array)
+		{
+			QVector<float> datas(array->size(), data);
+			array->updata(datas.data());
+		}
 	}
 
 }

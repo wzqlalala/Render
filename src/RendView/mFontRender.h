@@ -63,6 +63,9 @@ namespace MBaseRend
 		void AppendFontVector3(QVector<QString> txt, QVector3D color, int location);
 		void AppendFontInt(QVector<QString> txt, int type, int location);
 
+		void setData(int location, QVector3D data);
+		void setData(int location, float data);
+
 	protected:
 
 		std::shared_ptr<mxr::Group> _parent;
@@ -88,6 +91,8 @@ namespace MBaseRend
 
 		void appendCommonFont(QString key, QVector<QVector3D> pos, QVector<QString> txt, QVector3D color = QVector3D(1, 1, 1), float size = 1.0);//添加固定文字显示
 		void setCommonFontIsShow(QString key, bool isShow);
+		void setCommonFontColor(QString key, QVector3D color);
+		void setCommonFontSize(QString key, float size);
 
 		void appendGloabalAxisFont();//添加全局坐标系文字显示
 

@@ -872,6 +872,7 @@ namespace MIOFile
 		mGlobalSignals::getInstance()->outputMessageSig(0, QString("节点读取成功。"));
 
 		MXReadData *readData=MeshMessage::getInstance()->getReadData();
+		readData->CreateVertex(allVertexData);
 		QHashIterator<QString,set<int>> iter(geoFacePartName);
 		while (iter.hasNext())
 		{
