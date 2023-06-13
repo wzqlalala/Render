@@ -183,14 +183,6 @@ namespace MBaseRend
 		void SetZoomAtFrameCenter();//设置绕着选取框中心进行缩放（不连续）
 		//视图自适应
 		void FitView();
-		//设置旋转中心为视图中心
-		void SetRotateCenterToViewCenter();
-		//设置旋转中心为视图上一点
-		void SetRotateCenterToPoint();
-		//设置旋转中心为几何中心
-		void SetRotateCenterToModelCenter();
-		//设置点击按钮绕着垂直屏幕轴旋转
-		void SetRotate_ByButton(float angle);
 		//设置屏幕中心缩放(按键进行缩放，不连续)
 		void SetZoomAtViewCenter_ByButton(ScaleDirection);
 		//设置屏幕中心缩放(按百分比)
@@ -204,13 +196,8 @@ namespace MBaseRend
 
 		//设置屏幕中心缩放(鼠标移动进行缩放，连续)
 		void SetZoomAtViewCenter_ByMove();
-		//设置点击鼠标中键进行旋转类型
-		void SetRotateType(RotateType);
 		//设置点击鼠标中键进行平移
 		void SetTranslateXY();
-
-		//设置自定义角度旋转槽函数
-		void slotSetRotate_ByButton(float angle);
 
 		//获取模型参数
 		virtual void GetModelSizePara(bool isModelCenter) {};//是否以模型几何中心为中心

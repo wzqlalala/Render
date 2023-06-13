@@ -60,8 +60,159 @@ namespace MViewBasic
 		_projection.ortho(_Left, _Right, _Bottom, _Top, _NearPlane, _FarPlane);
 		_view.lookAt(_Eye, _Center, _Up);
 	}
-	void mViewBase::ZoomAtMouse_Bywheel(int posX, int posY, int yoffset, ScalePerspectice scalePerspectice, float sensitivity)
+	void mViewBase::ZoomAtMouse_Bywheel(int posX, int posY, int rollervalue, ScalePerspectice scalePerspectice, float sensitivity)
+	{double ZoomAtPointXv = (posX - SCR_WIDTH / 2)* (_Right - _Left) / SCR_WIDTH;
+		double ZoomAtPointYv = -(posY - SCR_HEIGHT / 2)* (_Top - _Bottom) / SCR_HEIGHT;
+		//缩放过后鼠标点的视口坐标
+		double ZoomAtPointXv_end;
+		double ZoomAtPointYv_end;
+		//视口的宽度和高度
+		double width = _Right - _Left;
+		double height = _Top - _Bottom;
+		//视口的中心点坐标
+		double Zerox = (_Left + _Right) / 2;
+		double Zeroy = (_Bottom + _Top) / 2;
+		//设置缩放的方向
+		if (scalePerspectice == Eye)
+		{
+			if (rollervalue <= 0)
+			{
+
+				//缩放过后鼠标点的视口坐标
+				ZoomAtPointXv_end = ZoomAtPointXv * sensitivity;
+				ZoomAtPointYv_end = ZoomAtPointYv * sensitivity;
+				//缩放
+				width *= sensitivity;
+				height *= sensitivity;
+				//绕着视口中心缩放后的视口的边界坐标
+				_Left = Zerox - width / 2;
+				_Right = Zerox + width / 2;
+				_Bottom = Zeroy - height / 2;
+				_Top = Zeroy + height / 2;
+
+				//绕着鼠标中心缩放后的视口的边界坐标（最终）
+
+				_Left += ZoomAtPointXv - ZoomAtPointXv_end;
+				_Right += ZoomAtPointXv - ZoomAtPointXv_end;
+				_Bottom += ZoomAtPointYv - ZoomAtPointYv_end;
+				_Top += ZoomAtPointYv - ZoomAtPointYv_end;
+
+				_ScaleProportion *= sensitivity;
+
+			}
+			else
+			{
+				ZoomAtPointXv_end = ZoomAtPointXv / sensitivity;
+				ZoomAtPointYv_end = ZoomAtPointYv / sensitivity;
+
+				width /= sensitivity;
+				height /= sensitivity;
+
+				_Left = Zerox - width / 2;
+				_Right = Zerox + width / 2;
+				_Bottom = Zeroy - height / 2;
+				_Top = Zeroy + height / 2;
+
+				_Left += ZoomAtPointXv - ZoomAtPointXv_end;
+				_Right += ZoomAtPointXv - ZoomAtPointXv_end;
+				_Bottom += ZoomAtPointYv - ZoomAtPointYv_end;
+				_Top += ZoomAtPointYv - ZoomAtPointYv_end;
+
+				_ScaleProportion /= sensitivity;
+			}
+		}
+		else if (scalePerspectice == Model)
+		{
+			if (rollervalue > 0)
+			{
+
+				//缩放过后鼠标点的视口坐标
+				ZoomAtPointXv_end = ZoomAtPointXv * sensitivity;
+				ZoomAtPointYv_end = ZoomAtPointYv * sensitivity;
+				//缩放
+				width *= sensitivity;
+				height *= sensitivity;
+				//绕着视口中心缩放后的视口的边界坐标
+				_Left = Zerox - width / 2;
+				_Right = Zerox + width / 2;
+				_Bottom = Zeroy - height / 2;
+				_Top = Zeroy + height / 2;
+
+				//绕着鼠标中心缩放后的视口的边界坐标（最终）
+
+				_Left += ZoomAtPointXv - ZoomAtPointXv_end;
+				_Right += ZoomAtPointXv - ZoomAtPointXv_end;
+				_Bottom += ZoomAtPointYv - ZoomAtPointYv_end;
+				_Top += ZoomAtPointYv - ZoomAtPointYv_end;
+
+				_ScaleProportion *= sensitivity;
+
+			}
+			else
+			{
+				ZoomAtPointXv_end = ZoomAtPointXv / sensitivity;
+				ZoomAtPointYv_end = ZoomAtPointYv / sensitivity;
+
+				width /= sensitivity;
+				height /= sensitivity;
+
+				_Left = Zerox - width / 2;
+				_Right = Zerox + width / 2;
+				_Bottom = Zeroy - height / 2;
+				_Top = Zeroy + height / 2;
+
+				_Left += ZoomAtPointXv - ZoomAtPointXv_end;
+				_Right += ZoomAtPointXv - ZoomAtPointXv_end;
+				_Bottom += ZoomAtPointYv - ZoomAtPointYv_end;
+				_Top += ZoomAtPointYv - ZoomAtPointYv_end;
+
+				_ScaleProportion /= sensitivity;
+			}
+		}
+
+
+		//还原通过屏幕大小设置正交投影前的参数，用于保存模型当前的变换位置。
+		ReturnOrthoByRatio();
+		SetPVMValue();
+	}
+	void mViewBase::ZoomAtViewCenter_ByMove(int FirstPosx, int FirstPosy, int nowPosx, int nowPosy, float sensitivity)
 	{
+		if (IfFirstMouse == true)
+		{
+			width_firstmouse = _Right - _Left;
+			height_firstmouse = _Top - _Bottom;
+			IfFirstMouse = false;
+		}
+		QVector2D ViewCenter = QVector2D((_Left + _Right) / 2, (_Top + _Bottom) / 2);//视图中心的视图坐标
+		int offset = (nowPosx - FirstPosx)+ (FirstPosy -nowPosy);
+		float width,height;
+		float Sens;//最终灵敏度
+		if (offset >= 0)
+		{
+			float value = offset / (SCR_WIDTH + SCR_HEIGHT) * 9+1 ;//将offset值的范围映射到(1-10)
+			Sens = value * sensitivity;
+			width = width_firstmouse / Sens;
+			height = height_firstmouse/ Sens;
+			_ScaleProportion /= sensitivity;
+			
+		}
+		else if (offset < 0)
+		{
+			float value = -offset / (SCR_WIDTH + SCR_HEIGHT) * 9+1 ;//将offset值的范围映射到(1-10)
+			Sens = value * sensitivity;
+			width = width_firstmouse * Sens;
+			height = height_firstmouse * Sens;
+			_ScaleProportion *= sensitivity;
+
+		}
+		_Left = ViewCenter.x() - width / 2;
+		_Right = ViewCenter.x() + width / 2;
+		_Bottom = ViewCenter.y() - height / 2;
+		_Top = ViewCenter.y() + height / 2;
+
+		//还原通过屏幕大小设置正交投影前的参数，用于保存模型当前的变换位置。
+		ReturnOrthoByRatio();
+		SetPVMValue();
 	}
 	void mViewBase::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch)
 	{

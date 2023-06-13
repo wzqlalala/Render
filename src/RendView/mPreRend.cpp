@@ -175,6 +175,7 @@ namespace MPreRend
 	void mPreRend::GetModelSizePara(bool isModelCenter)
 	{
 		Space::AABB aabb;
+
 		if (!this->getPreRender()->getModelAABB(aabb))
 		{
 			aabb = Space::AABB();

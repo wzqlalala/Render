@@ -408,25 +408,6 @@ namespace MBaseRend
 		ifZoomByMouseMove = true;
 
 	}
-
-	//设置视图*旋转*类型
-	void mBaseRend::SetRotateType(RotateType rotateType)
-	{
-		if (rotateType == Rotate_XY)
-		{
-			ifRotateAtXY = true;
-			ifRotateAtZ = false;
-			ifTranslateXY = false;
-			ifZoomByMouseMove = false;
-		}
-		else if (rotateType == Rotate_Z)
-		{
-			ifRotateAtXY = false;
-			ifRotateAtZ = true;
-			ifTranslateXY = false;
-			ifZoomByMouseMove = false;
-		}
-	}
 	//设置视图*移动*类型
 	void mBaseRend::SetTranslateXY()
 	{
@@ -462,69 +443,7 @@ namespace MBaseRend
 
 		update();
 	}
-	//设置视图*旋转中心*类型
-	void mBaseRend::SetRotateCenterToPoint()
-	{
-		ifGetRotateCenter = true;
-		ifRotateAtViewCenter = false;
-		//_lableRendController_common->deleteLableRendData<X_Point_Common>("RotateCenter");
 
-	}
-	void mBaseRend::SetRotateCenterToViewCenter()
-	{
-		ifGetRotateCenter = false;
-		ifRotateAtViewCenter = true;
-		//获取屏幕中心的坐标
-		QVector3D ViewCenter = mViewToolClass::NormToModelPosition(QVector3D(0, 0, 0), _modelView->_projection, _modelView->_view, _modelView->_model);
-		//找新的旋转半径
-		//float maxRadius = mViewToolClass::GetMaxRadius(_left, _right, _bottom, _top, _back, _front, ViewCenter);
-		auto view = dynamic_pointer_cast<mModelView>(_modelView);
-		if (view)
-		{
-			//view->SetRotateCenterToViewCenter(ViewCenter, maxRadius);
-		}
-		_center_now = ViewCenter;
-		//传递旋转中心数据
-		QVector3D centerPos = mViewToolClass::PixelToModelPosition(SCR_WIDTH / 2, SCR_HEIGHT / 2, _modelView->_projection, _modelView->_view, _modelView->_model, SCR_WIDTH, SCR_HEIGHT);
-		//_lableRendController_common->appendLableRendData<X_Point_Common>("RotateCenter", { centerPos });
-		update();
-
-
-	}
-	void mBaseRend::SetRotateCenterToModelCenter()
-	{
-		ifGetRotateCenter = false;
-		ifRotateAtViewCenter = false;
-		auto view = dynamic_pointer_cast<mModelView>(_modelView);
-		if (view)
-		{
-			view->SetRotateCenterToModelCenter(_center_model, _maxRadius_model);
-		}
-		_center_now = _center_model;
-		//传递旋转中心数据
-		//_lableRendController_common->appendLableRendData<X_Point_Common>("RotateCenter", { _center_model });
-		update();
-
-
-	}
-	void mBaseRend::slotSetRotate_ByButton(float angle)
-	{
-		SetRotate_ByButton(angle);
-	}
-	void mBaseRend::SetRotate_ByButton(float angle)
-	{
-		auto view = dynamic_pointer_cast<mModelView>(_modelView);
-		if (view)
-		{
-			view->Rotate_ByBotton(angle);
-		}
-		auto view1 = dynamic_pointer_cast<mCommonView>(_commonView);
-		if (view1)
-		{
-			view1->Rotate_ByBotton(angle);
-		}
-		update();
-	}
 	//设置视图*视角*类型
 	void mBaseRend::SetPerspective(Perspective pers)
 	{
