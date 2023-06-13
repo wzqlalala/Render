@@ -189,6 +189,7 @@ namespace MBaseRend
 			FBO->bind();
 			int posx = event->pos().x(); //QT像素坐标原点左上角
 			int posy = event->pos().y();
+			QVector3D Center = mViewToolClass::PixelToModelPosition(posx, posy, _modelView->_projection, _modelView->_view, _modelView->_model, SCR_WIDTH, SCR_HEIGHT, BufDepth);
 			float Depth = 0.0;
 			if (abs(BufDepth - 1.0) < 0.1)
 				Depth = 0;
@@ -196,7 +197,6 @@ namespace MBaseRend
 				Depth = (BufDepth - 0.5) * 2;//将深度值范围从0.1转换到-1.1
 			float depth;
 			glReadPixels(event->pos().x(), SCR_HEIGHT - event->pos().y(), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
-			QVector3D Center = mViewToolClass::PixelToModelPosition(posx, posy, _modelView->_projection, _modelView->_view, _modelView->_model, SCR_WIDTH, SCR_HEIGHT, Depth);
 			_center_now = Center;
 			_shapeRender->appendXPointShape("RotateCenter", { Center }, QVector3D(1, 1, 0));
 			FBO->release();
