@@ -187,6 +187,7 @@ namespace MBaseRend
 	}
 	void mFontRender::setCommonFontColor(QString key, QVector3D color)
 	{
+		makeCurrent();
 		auto value = _commonFonts.value(key);
 		if (value)
 		{
@@ -195,6 +196,7 @@ namespace MBaseRend
 	}
 	void mFontRender::setCommonFontSize(QString key, float size)
 	{
+		makeCurrent();
 		auto value = _commonFonts.value(key);
 		if (value)
 		{
@@ -416,8 +418,13 @@ namespace MBaseRend
 		Array *array = _drawable->getVertexAttribArray(location);
 		if (array)
 		{
-			QVector<QVector3D> datas(array->size(), data);
+			QVector<QVector3D> datas(array->size()/3.0, data);
 			array->updata(datas.data());
+		}
+		GLenum error = QOpenGLContext::currentContext()->functions()->glGetError();
+		if (error != 0)
+		{
+			qDebug() << error;
 		}
 	}
 
@@ -432,6 +439,11 @@ namespace MBaseRend
 		{
 			QVector<float> datas(array->size(), data);
 			array->updata(datas.data());
+		}
+		GLenum error = QOpenGLContext::currentContext()->functions()->glGetError();
+		if (error != 0)
+		{
+			qDebug() << error;
 		}
 	}
 

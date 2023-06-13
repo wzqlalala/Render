@@ -637,7 +637,7 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			file->ReadBCMeshFile(filename);
 			break;
 		}
-		case Qt::Key_F5://¶ÁmshÎÄ¼þ
+		case Qt::Key_F5:
 		{
 			if (_preRend == nullptr)
 			{
@@ -645,6 +645,33 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			}
 			_preRend->getBackGroundRender()->setBackGroundMode(PureColor);
 			_preRend->getBackGroundRender()->setPureColor(QVector3D(255, 255, 255));
+			break;
+		}
+		case Qt::Key_F6:
+		{
+			if (_preRend == nullptr)
+			{
+				return;
+			}
+			_preRend->getFontRender()->appendCommonFont("1", QVector<QVector3D>{QVector3D(0, 0, 0)}, QVector<QString>{"h"});
+			break;
+		}
+		case Qt::Key_F7:
+		{
+			if (_preRend == nullptr)
+			{
+				return;
+			}
+			_preRend->getFontRender()->setCommonFontColor("1", QVector3D(1, 0, 0));
+			break;
+		}
+		case Qt::Key_F8:
+		{
+			if (_preRend == nullptr)
+			{
+				return;
+			}
+			_preRend->getFontRender()->setCommonFontSize("1", 2.0);
 			break;
 		}
 		case Qt::Key_0:

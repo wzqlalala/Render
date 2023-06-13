@@ -110,7 +110,7 @@ namespace mxr
 			{
 				//T *data;
 				//QVector<T> data(size());
-				_buffer->GetData(_attribute._start, size() * sizeof(T), data);
+				_buffer->GetData(_attribute._start, size() * 4, data);
 			}
 		}
 
@@ -118,7 +118,7 @@ namespace mxr
 		{
 			if (_buffer)
 			{
-				_buffer->SetData(_attribute._start, size() * sizeof(T), data);
+				_buffer->SetData(_attribute._start, size() * 4, data);
 			}
 		}
 

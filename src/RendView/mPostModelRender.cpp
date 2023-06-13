@@ -224,11 +224,11 @@ namespace MPostRend
 			{
 				QVector3D color = _oneFrameData->getMeshPartColor(partName);
 				Array *array = _partRenders[partName]->getFaceDrawable()->getVertexAttribArray(1);
-				array->updata(QVector<QVector3D>(array->size(), color).data());
+				array->updata(QVector<QVector3D>(array->size()/3, color).data());
 				array = _partRenders[partName]->getLineDrawable()->getVertexAttribArray(1);
-				array->updata(QVector<QVector3D>(array->size(), color).data());
+				array->updata(QVector<QVector3D>(array->size()/3, color).data());
 				array = _partRenders[partName]->getPointDrawable()->getVertexAttribArray(1);
-				array->updata(QVector<QVector3D>(array->size(), color).data());
+				array->updata(QVector<QVector3D>(array->size()/3, color).data());
 			}
 		}
 	}
