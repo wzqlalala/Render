@@ -421,6 +421,7 @@ namespace MPostRend
 		if (_currentDragRender)
 		{
 			_currentDragRender->move(pos, matrix, _baseRend->getCamera()->SCR_WIDTH, _baseRend->getCamera()->SCR_HEIGHT);
+			emit finishedDragSig();
 		}
 	}
 	QTime time;
@@ -428,7 +429,7 @@ namespace MPostRend
 	{
 		if (_currentDragRender != nullptr)
 		{
-			emit finishedDragSig();
+			//emit finishedDragSig();
 			_currentDragRender = nullptr;
 			return;
 		}

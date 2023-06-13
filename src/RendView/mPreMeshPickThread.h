@@ -65,7 +65,7 @@ namespace MPreRend
 	protected:
 		QMatrix4x4 _pvm;
 		int _width, _height;
-		MViewBasic::MultiplyPickMode _multiplyPickMode;
+		MxFunctions::MultiplyPickMode _multiplyPickMode;
 
 	};
 
@@ -346,7 +346,7 @@ namespace MPreRend
 		MViewBasic::PickMode _pickMode;
 
 		//框选拾取模式
-		MViewBasic::MultiplyPickMode _multiplyPickMode;
+		MxFunctions::MultiplyPickMode _multiplyPickMode;
 
 		//拾取角度
 		float _pickAngleValue = 60;

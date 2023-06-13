@@ -56,7 +56,7 @@ namespace MDataPost
 	protected:
 		QMatrix4x4 _pvm;
 		int _width, _height;
-		MViewBasic::MultiplyPickMode _multiplyPickMode;
+		MxFunctions::MultiplyPickMode _multiplyPickMode;
 
 	};
 
@@ -335,7 +335,7 @@ namespace MDataPost
 		MViewBasic::PickMode _pickMode;
 
 		//框选拾取模式
-		MViewBasic::MultiplyPickMode _multiplyPickMode;
+		MxFunctions::MultiplyPickMode _multiplyPickMode;
 
 		//拾取的单元类型过滤器
 		std::set<int> _pickElementTypeFilter;

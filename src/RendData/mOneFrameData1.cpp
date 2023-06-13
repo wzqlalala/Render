@@ -13,7 +13,7 @@
 #include <qguiapplication.h>
 
 
-//MxFunction
+//MxFunctions
 #include "mGlobalVarible.h"
 
 #include "mGlobalVarible.h"
