@@ -412,24 +412,24 @@ namespace MDataGeo
 	void mPreGeoPickThread::SoloPickScreen()
 	{
 		//if (qFuzzyCompare(_depth, 1.0f))//ПаµИ
-		//{
+		{
 			//auto vertexs = _pickData->getPickVertexOnScreenDatas();
-			//float d = 0.1;
+			float d = 0.1;
 			//if (!vertexs.empty())
 			//{
 			//	WorldvertexToScreenvertex(vertexs.last(), d);			
 			//}
-		//	QVector3D v = ScreenvertexToWorldvertex(QVector3D(_pos, d));
-		//	_pickData->setSoloPickVertexOnScreenData(v);
-		//}
+			QVector3D v = ScreenvertexToWorldvertex(QVector3D(_pos, d));
+			_pickData->setSoloPickVertexOnScreenData(v);
+		}
 		//else
-		//{
+		{
 			//QVector3D v = ScreenvertexToWorldvertex(QVector3D(_pos, _depth));
 			//float d;
 			//QVector2D p = WorldvertexToScreenvertex(v, d);
 
-			_pickData->setSoloPickVertexOnScreenData(_p);
-		//}
+			//_pickData->setSoloPickVertexOnScreenData(_p);
+		}
 	}
 
 	void mPreGeoPickThread::SoloPickGeoPoint(mGeoPartData1 *partData)
