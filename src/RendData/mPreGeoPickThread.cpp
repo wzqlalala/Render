@@ -451,7 +451,7 @@ namespace MDataGeo
 		{
 			MDataGeo::mGeoPointData1* geoPointData = _geoModelData->getGeoPointDataByID(pointID);
 			QVector2D ap1 = WorldvertexToScreenvertex(geoPointData->getGeoPointVertex(), depth1);
-			if (fabs(ap1.x() - _pos.x()) <= 3 && fabs(ap1.y() - _pos.y()) <= 3 && depth1 < depth)
+			if (fabs(ap1.x() - _pos.x()) <= 5 && fabs(ap1.y() - _pos.y()) <= 5 && depth1 < depth)
 			{
 				depth = depth1;
 				id = pointID;
