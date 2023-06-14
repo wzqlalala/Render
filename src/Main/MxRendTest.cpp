@@ -1040,25 +1040,25 @@ bool MxRendTest::createGeo(MDataGeo::mGeoModelData1 * geoModelData)
 	vertexs = QVector<QVector3D>{ QVector3D(1,1,0),QVector3D(0,1,0),QVector3D(1,0,0) };
 	geoFaceData->appendGeoFaceData(_globalFaceId, vertexs);
 	geoPartData->appendGeoFaceID(_globalFaceId);
-	///*******************边界线**************/
-	//_globalLineId++;
-	//geoLineData = new mGeoLineData1(geoModelData, partName, _globalLineId);
-	//geoLineData->setGeoLineProperty(GeoLineProperty::EdgeOnFace);
-	//vertexs = QVector<QVector3D>{ QVector3D(0,0,0),QVector3D(0,1,0)};
-	//geoLineData->appendGeoLineData(_globalLineId, vertexs);
-	//geoPartData->appendGeoLineID(_globalLineId);
-	//_globalLineId++;
-	//geoLineData = new mGeoLineData1(geoModelData, partName, _globalLineId);
-	//geoLineData->setGeoLineProperty(GeoLineProperty::EdgeOnFace);
-	//vertexs = QVector<QVector3D>{ QVector3D(0,1,0),QVector3D(1,0,0) };
-	//geoLineData->appendGeoLineData(_globalLineId, vertexs);
-	//geoPartData->appendGeoLineID(_globalLineId);
-	//_globalLineId++;
-	//geoLineData = new mGeoLineData1(geoModelData, partName, _globalLineId);
-	//geoLineData->setGeoLineProperty(GeoLineProperty::EdgeOnFace);
-	//vertexs = QVector<QVector3D>{ QVector3D(1,0,0),QVector3D(0,0,0) };
-	//geoLineData->appendGeoLineData(_globalLineId, vertexs);
-	//geoPartData->appendGeoLineID(_globalLineId);
+	/*******************边界线**************/
+	_globalLineId++;
+	geoLineData = new mGeoLineData1(geoModelData, partName, _globalLineId);
+	geoLineData->setGeoLineProperty(GeoLineProperty::EdgeOnFace);
+	vertexs = QVector<QVector3D>{ QVector3D(0,0,0),QVector3D(0,1,0)};
+	geoLineData->appendGeoLineData(_globalLineId, vertexs);
+	geoPartData->appendGeoLineID(_globalLineId);
+	_globalLineId++;
+	geoLineData = new mGeoLineData1(geoModelData, partName, _globalLineId);
+	geoLineData->setGeoLineProperty(GeoLineProperty::EdgeOnFace);
+	vertexs = QVector<QVector3D>{ QVector3D(0,1,0),QVector3D(1,0,0) };
+	geoLineData->appendGeoLineData(_globalLineId, vertexs);
+	geoPartData->appendGeoLineID(_globalLineId);
+	_globalLineId++;
+	geoLineData = new mGeoLineData1(geoModelData, partName, _globalLineId);
+	geoLineData->setGeoLineProperty(GeoLineProperty::EdgeOnFace);
+	vertexs = QVector<QVector3D>{ QVector3D(1,0,0),QVector3D(0,0,0) };
+	geoLineData->appendGeoLineData(_globalLineId, vertexs);
+	geoPartData->appendGeoLineID(_globalLineId);
 
 	/**********部件*****************************************************************************************/
 	//_globalPartId++;
@@ -1082,21 +1082,21 @@ bool MxRendTest::createGeo(MDataGeo::mGeoModelData1 * geoModelData)
 	//geoLineData->appendGeoLineData(_globalLineId, vertexs);
 	//geoPartData->appendGeoLineID(_globalLineId);
 
-	/**********部件*****************************************************************************************/
-	_globalPartId++;
-	partName = "part4";
-	geoPartData = new mGeoPartData1(geoModelData, partName, _globalPartId);
-	geoPartData->setGeoShapeType(7);
-	/*****************点***********/
-	_globalPointId++;
-	geoPointData = new mGeoPointData1(geoModelData, partName, _globalPointId);
-	geoPointData->setPointData(_globalPointId, QVector3D(1, 2, 3));
-	geoPartData->appendGeoPointID(_globalPointId);
-	
-	_globalPointId++;
-	geoPointData = new mGeoPointData1(geoModelData, partName, _globalPointId);
-	geoPointData->setPointData(_globalPointId, QVector3D(0, 0, 0));
-	geoPartData->appendGeoPointID(_globalPointId);
+	///**********部件*****************************************************************************************/
+	//_globalPartId++;
+	//partName = "part4";
+	//geoPartData = new mGeoPartData1(geoModelData, partName, _globalPartId);
+	//geoPartData->setGeoShapeType(7);
+	///*****************点***********/
+	//_globalPointId++;
+	//geoPointData = new mGeoPointData1(geoModelData, partName, _globalPointId);
+	//geoPointData->setPointData(_globalPointId, QVector3D(1, 2, 3));
+	//geoPartData->appendGeoPointID(_globalPointId);
+	//
+	//_globalPointId++;
+	//geoPointData = new mGeoPointData1(geoModelData, partName, _globalPointId);
+	//geoPointData->setPointData(_globalPointId, QVector3D(0, 0, 0));
+	//geoPartData->appendGeoPointID(_globalPointId);
 	
 	return true;
 }

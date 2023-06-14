@@ -275,7 +275,7 @@ namespace MDataGeo
 	void mPreGeoPickThread::setLocation(const QVector2D& pos, float depth)
 	{
 		_pos = pos;
-		soloQuad = QVector<QVector2D>{ QVector2D(pos.x() + 5,pos.y() + 5),QVector2D(pos.x() + 5,pos.y() - 5),QVector2D(pos.x() - 5,pos.y() - 5),QVector2D(pos.x() - 5,pos.y() + 5) };
+		soloQuad = QVector<QVector2D>{ QVector2D(pos.x() + 8,pos.y() + 8),QVector2D(pos.x() + 8,pos.y() - 8),QVector2D(pos.x() - 8,pos.y() - 8),QVector2D(pos.x() - 8,pos.y() + 8) };
 		_depth = depth;
 		_p = ScreenvertexToWorldvertex(QVector3D(pos, depth));
 		_origin = ScreenvertexToWorldvertex(QVector3D(pos, -1.0));
@@ -348,6 +348,7 @@ namespace MDataGeo
 			{
 			case PickFilter::PickGeoPoint:
 			case PickFilter::PickGeoPointOrder:SoloPickGeoPoint(partData); break;
+			case PickFilter::PickGeoLine:SoloPickGeoLine(partData); break;
 			default:break;
 			}
 		}
@@ -359,8 +360,8 @@ namespace MDataGeo
 				{
 				case PickFilter::PickNothing:; break;
 				/*case PickFilter::PickGeoPoint:
-				case PickFilter::PickGeoPointOrder:SoloPickGeoPoint(partData); break;*/
-				case PickFilter::PickGeoLine:SoloPickGeoLine(partData); break;
+				case PickFilter::PickGeoPointOrder:SoloPickGeoPoint(partData); break;
+				case PickFilter::PickGeoLine:SoloPickGeoLine(partData); break;*/
 				case PickFilter::PickGeoFace:SoloPickGeoFace(partData); break;
 				case PickFilter::PickGeoSolid:SoloPickGeoSolid(partData); break;
 				case PickFilter::PickGeoPart:SoloPickGeoPart(partData); break;
@@ -485,7 +486,7 @@ namespace MDataGeo
 		for (int lineID : lineIDs)
 		{
 			MDataGeo::mGeoLineData1* geoLineData = _geoModelData->getGeoLineDataByID(lineID);
-			if (geoLineData->getGeoLineAABB().ContainPoint(_p))
+			//if (geoLineData->getGeoLineAABB().ContainPoint(_p))
 			{
 				for (int j = 0; j < geoLineData->getGeoLineVertex().size(); j += 2)
 				{
