@@ -1021,44 +1021,44 @@ bool MxRendTest::createGeo(MDataGeo::mGeoModelData1 * geoModelData)
 	QVector<QVector3D> vertexs;
 
 	/**********部件*****************************************************************************************/
-	_globalPartId++;
-	partName = "part1";
-	geoPartData = new mGeoPartData1(geoModelData, partName, _globalPartId);
-	/*******************面**************/
-	_globalFaceId++;
-	geoFaceData = new mGeoFaceData1(geoModelData, partName, _globalFaceId);
-	vertexs = QVector<QVector3D>{ QVector3D(0,0,0),QVector3D(0,1,0),QVector3D(1,0,0) };
-	geoFaceData->appendGeoFaceData(_globalFaceId, vertexs);
-	geoPartData->appendGeoFaceID(_globalFaceId);
-	/**********部件*****************************************************************************************/
-	_globalPartId++;
-	partName = "part2";
-	geoPartData = new mGeoPartData1(geoModelData, partName, _globalPartId);
-	/*******************面**************/
-	_globalFaceId++;
-	geoFaceData = new mGeoFaceData1(geoModelData, partName, _globalFaceId);
-	vertexs = QVector<QVector3D>{ QVector3D(1,1,0),QVector3D(0,1,0),QVector3D(1,0,0) };
-	geoFaceData->appendGeoFaceData(_globalFaceId, vertexs);
-	geoPartData->appendGeoFaceID(_globalFaceId);
-	/*******************边界线**************/
-	_globalLineId++;
-	geoLineData = new mGeoLineData1(geoModelData, partName, _globalLineId);
-	geoLineData->setGeoLineProperty(GeoLineProperty::EdgeOnFace);
-	vertexs = QVector<QVector3D>{ QVector3D(0,0,0),QVector3D(0,1,0)};
-	geoLineData->appendGeoLineData(_globalLineId, vertexs);
-	geoPartData->appendGeoLineID(_globalLineId);
-	_globalLineId++;
-	geoLineData = new mGeoLineData1(geoModelData, partName, _globalLineId);
-	geoLineData->setGeoLineProperty(GeoLineProperty::EdgeOnFace);
-	vertexs = QVector<QVector3D>{ QVector3D(0,1,0),QVector3D(1,0,0) };
-	geoLineData->appendGeoLineData(_globalLineId, vertexs);
-	geoPartData->appendGeoLineID(_globalLineId);
-	_globalLineId++;
-	geoLineData = new mGeoLineData1(geoModelData, partName, _globalLineId);
-	geoLineData->setGeoLineProperty(GeoLineProperty::EdgeOnFace);
-	vertexs = QVector<QVector3D>{ QVector3D(1,0,0),QVector3D(0,0,0) };
-	geoLineData->appendGeoLineData(_globalLineId, vertexs);
-	geoPartData->appendGeoLineID(_globalLineId);
+	//_globalPartId++;
+	//partName = "part1";
+	//geoPartData = new mGeoPartData1(geoModelData, partName, _globalPartId);
+	///*******************面**************/
+	//_globalFaceId++;
+	//geoFaceData = new mGeoFaceData1(geoModelData, partName, _globalFaceId);
+	//vertexs = QVector<QVector3D>{ QVector3D(0,0,0),QVector3D(0,1,0),QVector3D(1,0,0) };
+	//geoFaceData->appendGeoFaceData(_globalFaceId, vertexs);
+	//geoPartData->appendGeoFaceID(_globalFaceId);
+	///**********部件*****************************************************************************************/
+	//_globalPartId++;
+	//partName = "part2";
+	//geoPartData = new mGeoPartData1(geoModelData, partName, _globalPartId);
+	///*******************面**************/
+	//_globalFaceId++;
+	//geoFaceData = new mGeoFaceData1(geoModelData, partName, _globalFaceId);
+	//vertexs = QVector<QVector3D>{ QVector3D(1,1,0),QVector3D(0,1,0),QVector3D(1,0,0) };
+	//geoFaceData->appendGeoFaceData(_globalFaceId, vertexs);
+	//geoPartData->appendGeoFaceID(_globalFaceId);
+	///*******************边界线**************/
+	//_globalLineId++;
+	//geoLineData = new mGeoLineData1(geoModelData, partName, _globalLineId);
+	//geoLineData->setGeoLineProperty(GeoLineProperty::EdgeOnFace);
+	//vertexs = QVector<QVector3D>{ QVector3D(0,0,0),QVector3D(0,1,0)};
+	//geoLineData->appendGeoLineData(_globalLineId, vertexs);
+	//geoPartData->appendGeoLineID(_globalLineId);
+	//_globalLineId++;
+	//geoLineData = new mGeoLineData1(geoModelData, partName, _globalLineId);
+	//geoLineData->setGeoLineProperty(GeoLineProperty::EdgeOnFace);
+	//vertexs = QVector<QVector3D>{ QVector3D(0,1,0),QVector3D(1,0,0) };
+	//geoLineData->appendGeoLineData(_globalLineId, vertexs);
+	//geoPartData->appendGeoLineID(_globalLineId);
+	//_globalLineId++;
+	//geoLineData = new mGeoLineData1(geoModelData, partName, _globalLineId);
+	//geoLineData->setGeoLineProperty(GeoLineProperty::EdgeOnFace);
+	//vertexs = QVector<QVector3D>{ QVector3D(1,0,0),QVector3D(0,0,0) };
+	//geoLineData->appendGeoLineData(_globalLineId, vertexs);
+	//geoPartData->appendGeoLineID(_globalLineId);
 
 	/**********部件*****************************************************************************************/
 	//_globalPartId++;
@@ -1097,6 +1097,31 @@ bool MxRendTest::createGeo(MDataGeo::mGeoModelData1 * geoModelData)
 	//geoPointData = new mGeoPointData1(geoModelData, partName, _globalPointId);
 	//geoPointData->setPointData(_globalPointId, QVector3D(0, 0, 0));
 	//geoPartData->appendGeoPointID(_globalPointId);
+	/**********部件*****************************************************************************************/
+	_globalPartId++;
+	partName = "part5";
+	geoPartData = new mGeoPartData1(geoModelData, partName, _globalPartId);
+	/*******************面**************/
+	_globalFaceId++;
+	geoFaceData = new mGeoFaceData1(geoModelData, partName, _globalFaceId);
+	vertexs = QVector<QVector3D>{ QVector3D(0,0,0),QVector3D(1,0,0),QVector3D(1,1,1) };
+	geoFaceData->appendGeoFaceData(_globalFaceId, vertexs);
+	geoPartData->appendGeoFaceID(_globalFaceId);
+	_globalFaceId++;
+	geoFaceData = new mGeoFaceData1(geoModelData, partName, _globalFaceId);
+	vertexs = QVector<QVector3D>{ QVector3D(1,0,0),QVector3D(0,1,0),QVector3D(1,1,1) };
+	geoFaceData->appendGeoFaceData(_globalFaceId, vertexs);
+	geoPartData->appendGeoFaceID(_globalFaceId);
+	_globalFaceId++;
+	//geoFaceData = new mGeoFaceData1(geoModelData, partName, _globalFaceId);
+	//vertexs = QVector<QVector3D>{ QVector3D(0,0,0),QVector3D(0,1,0),QVector3D(1,1,1) };
+	//geoFaceData->appendGeoFaceData(_globalFaceId, vertexs);
+	//geoPartData->appendGeoFaceID(_globalFaceId);
+	//_globalFaceId++;
+	//geoFaceData = new mGeoFaceData1(geoModelData, partName, _globalFaceId);
+	//vertexs = QVector<QVector3D>{ QVector3D(0,0,0),QVector3D(1,0,0),QVector3D(0,1,0) };
+	//geoFaceData->appendGeoFaceData(_globalFaceId, vertexs);
+	//geoPartData->appendGeoFaceID(_globalFaceId);
 	
 	return true;
 }

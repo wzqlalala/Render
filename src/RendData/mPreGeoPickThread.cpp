@@ -740,9 +740,12 @@ namespace MDataGeo
 			{
 				if (mPickToolClass::rayTriangleIntersect(_origin, _dir, geoFaceData->getGeoFaceVertex().mid(j, 3), uv, t))
 				{
-					id = faceID;
-					vertex = geoFaceData->getGeoFaceVertex().at(j) * (1 - uv[0] - uv[1]) + geoFaceData->getGeoFaceVertex().at(j + 1) * uv[0] + geoFaceData->getGeoFaceVertex().at(j + 2) * uv[1];
-					depth = t;
+					if (t < depth)
+					{
+						id = faceID;
+						vertex = geoFaceData->getGeoFaceVertex().at(j) * (1 - uv[0] - uv[1]) + geoFaceData->getGeoFaceVertex().at(j + 1) * uv[0] + geoFaceData->getGeoFaceVertex().at(j + 2) * uv[1];
+						depth = t;
+					}
 				}
 			}
 		}
