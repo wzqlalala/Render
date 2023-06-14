@@ -694,6 +694,43 @@ namespace MPreRend
 
 		return picks;
 	}
+	set<MXMeshVertex*> mPreMeshPickThread::getAllNodesByGeoFace(MXGeoFace * entity)
+	{
+		set<MXMeshVertex*> datas;
+		datas = MeshMessage::getInstance()->getAllNodesByGeoFace(entity);
+		return datas;
+	}
+	set<MXMeshElement*> mPreMeshPickThread::getAllMeshsByGeoFace(MXGeoFace * entity)
+	{
+		set<MXMeshElement*> datas;
+		datas.insert(entity->_mTriangles.begin(), entity->_mTriangles.end());
+		datas.insert(entity->_mQuadangles.begin(), entity->_mQuadangles.end());
+		return datas;
+	}
+	set<MFace*> mPreMeshPickThread::getAllMeshFacesByGeoFace(MXGeoFace * entity)
+	{
+		set<MFace*> datas;
+		datas = MeshMessage::getInstance()->getAllMeshFacesByGeoFace(entity);
+		return datas;
+	}
+	set<MXMeshVertex*> mPreMeshPickThread::getAllNodesByGeoEdge(MXGeoEdge * entity)
+	{
+		set<MXMeshVertex*> datas;
+		datas = MeshMessage::getInstance()->getAllNodesByGeoEdge(entity);
+		return datas;
+	}
+	set<MXMeshElement*> mPreMeshPickThread::getAllMeshsByGeoEdge(MXGeoEdge * entity)
+	{
+		set<MXMeshElement*> datas;
+		datas.insert(entity->_mLines.begin(), entity->_mLines.end());
+		return datas;
+	}
+	set<MEdge*> mPreMeshPickThread::getAllMeshLinesByGeoEdge(MXGeoEdge * entity)
+	{
+		set<MEdge*> datas;
+		datas = MeshMessage::getInstance()->getAllMeshLinesByGeoEdge(entity);
+		return datas;
+	}
 	void mPreMeshPickThread::SoloPickMeshTypeFilter(QString partName, QVector<MeshType> filter)
 	{
 		MXMeshElement* _pickMesh = nullptr;
@@ -967,7 +1004,6 @@ namespace MPreRend
 	{
 		MEdge* _pickMesh = nullptr;
 		float _meshdepth = FLT_MAX;
-		float depth = FLT_MAX;
 
 		//获取边界线
 		set<MEdge*> medges = this->getAllMeshLinesByPartName(partName);
@@ -1004,14 +1040,8 @@ namespace MPreRend
 		for (auto mface : mfaces)
 		{
 			//获取所有节点
-			MeshType meshType = MeshTri;
-			int num = 3;
-			if (meshType == MeshQuad)
-			{
-				num = 4;
-			}
 			QVector<QVector3D> vertexs = mface->getAllVertexsOfMFace();
-			if (vertexs.size() == 3 ? mPickToolClass::rayTriangleIntersect(_origin, _dir, vertexs, uv, t) : mPickToolClass::rayQuadIntersect(_origin, _dir, vertexs, uv, t))
+			if (mface->type() == 1 ? mPickToolClass::rayTriangleIntersect(_origin, _dir, vertexs, uv, t) : mPickToolClass::rayQuadIntersect(_origin, _dir, vertexs, uv, t))
 			{
 				if (t < _meshdepth)
 				{
@@ -1083,6 +1113,138 @@ namespace MPreRend
 		}
 		pickMutex.lock();
 		_pickData->setSoloPickMeshFaceByPartData(this->getAllMeshFacesByPartName(partName), depth);
+		pickMutex.unlock();
+	}
+	void mPreMeshPickThread::SoloPickNodeByLine(QString partName)
+	{
+		float depth = FLT_MAX;
+		float mindepth = FLT_MAX;
+		MXGeoEdge *entity = nullptr;
+		QVector<MXGeoEdge*> geoEdges = MeshMessage::getInstance()->getGeoEdgeSamePart(partName);
+		for (auto geoEdge : geoEdges)
+		{
+			if (isSoloPickGeoLine(geoEdge, depth) && depth < mindepth)
+			{
+				mindepth = depth;
+				entity = geoEdge;
+			}
+		}
+		if (entity == nullptr)
+		{
+			return;
+		}
+		pickMutex.lock();
+		_pickData->setSoloPickNodeByPartData(this->getAllNodesByGeoEdge(entity), depth);
+		pickMutex.unlock();
+	}
+	void mPreMeshPickThread::SoloPickMeshByLine(QString partName)
+	{
+		float depth = FLT_MAX;
+		float mindepth = FLT_MAX;
+		MXGeoEdge *entity = nullptr;
+		QVector<MXGeoEdge*> geoEdges = MeshMessage::getInstance()->getGeoEdgeSamePart(partName);
+		for (auto geoEdge : geoEdges)
+		{
+			if (isSoloPickGeoLine(geoEdge, depth) && depth < mindepth)
+			{
+				mindepth = depth;
+				entity = geoEdge;
+			}
+		}
+		if (entity == nullptr)
+		{
+			return;
+		}
+		pickMutex.lock();
+		_pickData->setSoloPickMeshByPartData(this->getAllMeshsByGeoEdge(entity), depth);
+		pickMutex.unlock();
+	}
+	void mPreMeshPickThread::SoloPickMeshLineByLine(QString partName)
+	{
+		float depth = FLT_MAX;
+		float mindepth = FLT_MAX;
+		MXGeoEdge *entity = nullptr;
+		QVector<MXGeoEdge*> geoEdges = MeshMessage::getInstance()->getGeoEdgeSamePart(partName);
+		for (auto geoEdge : geoEdges)
+		{
+			if (isSoloPickGeoLine(geoEdge, depth) && depth < mindepth)
+			{
+				mindepth = depth;
+				entity = geoEdge;
+			}
+		}
+		if (entity == nullptr)
+		{
+			return;
+		}
+		pickMutex.lock();
+		_pickData->setSoloPickMeshLineByPartData(this->getAllMeshLinesByGeoEdge(entity), depth);
+		pickMutex.unlock();
+	}
+	void mPreMeshPickThread::SoloPickNodeByFace(QString partName)
+	{
+		float depth = FLT_MAX;
+		float mindepth = FLT_MAX;
+		MXGeoFace *entity = nullptr;
+		QVector<MXGeoFace*> geoFaces = MeshMessage::getInstance()->getGeoFaceSamePart(partName);
+		for (auto geoFace : geoFaces)
+		{
+			if (isSoloPickGeoFace(geoFace, depth) && depth < mindepth)
+			{
+				mindepth = depth;
+				entity = geoFace;
+			}
+		}
+		if (entity == nullptr)
+		{
+			return;
+		}
+		pickMutex.lock();
+		_pickData->setSoloPickNodeByPartData(this->getAllNodesByGeoFace(entity), depth);
+		pickMutex.unlock();
+	}
+	void mPreMeshPickThread::SoloPickMeshByFace(QString partName)
+	{
+		float depth = FLT_MAX;
+		float mindepth = FLT_MAX;
+		MXGeoFace *entity = nullptr;
+		QVector<MXGeoFace*> geoFaces = MeshMessage::getInstance()->getGeoFaceSamePart(partName);
+		for (auto geoFace : geoFaces)
+		{
+			if (isSoloPickGeoFace(geoFace, depth) && depth < mindepth)
+			{
+				mindepth = depth;
+				entity = geoFace;
+			}
+		}
+		if (entity == nullptr)
+		{
+			return;
+		}
+		pickMutex.lock();
+		_pickData->setSoloPickMeshByPartData(this->getAllMeshsByGeoFace(entity), depth);
+		pickMutex.unlock();
+	}
+	void mPreMeshPickThread::SoloPickMeshFaceByFace(QString partName)
+	{
+		float depth = FLT_MAX;
+		float mindepth = FLT_MAX;
+		MXGeoFace *entity = nullptr;
+		QVector<MXGeoFace*> geoFaces = MeshMessage::getInstance()->getGeoFaceSamePart(partName);
+		for (auto geoFace : geoFaces)
+		{
+			if (isSoloPickGeoFace(geoFace, depth) && depth < mindepth)
+			{
+				mindepth = depth;
+				entity = geoFace;
+			}
+		}
+		if (entity == nullptr)
+		{
+			return;
+		}
+		pickMutex.lock();
+		_pickData->setSoloPickMeshFaceByPartData(this->getAllMeshFacesByGeoFace(entity), depth);
 		pickMutex.unlock();
 	}
 	void mPreMeshPickThread::SoloPickNodeByLineAngle(QString partName)
@@ -1565,6 +1727,133 @@ namespace MPreRend
 		pickMutex.lock();
 		_pickData->setMultiplyPickMeshFaceData(picks);
 		pickMutex.unlock();
+	}
+	void mPreMeshPickThread::MultiplyPickNodeByLine(QString partName, bool isAllIn)
+	{
+		set<MXMeshVertex*> picks;
+		QVector<MXGeoEdge*> geoEdges = MeshMessage::getInstance()->getGeoEdgeSamePart(partName);
+		for (auto geoEdge : geoEdges)
+		{
+			if (isAllIn || IsMultiplyPickGeoLine(geoEdge))
+			{
+				set<MXMeshVertex*> datas = this->getAllNodesByGeoEdge(geoEdge);
+				picks.insert(datas.begin(), datas.end());
+			}
+		}
+	
+		if (picks.empty())
+		{
+			return;
+		}
+		pickMutex.lock();
+		_pickData->setMultiplyPickNodeData(picks);
+		pickMutex.unlock();
+	}
+	void mPreMeshPickThread::MultiplyPickMeshByLine(QString partName, bool isAllIn)
+	{
+		set<MXMeshElement*> picks;
+		QVector<MXGeoEdge*> geoEdges = MeshMessage::getInstance()->getGeoEdgeSamePart(partName);
+		for (auto geoEdge : geoEdges)
+		{
+			if (isAllIn || IsMultiplyPickGeoLine(geoEdge))
+			{
+				set<MXMeshElement*> datas = this->getAllMeshsByGeoEdge(geoEdge);
+				picks.insert(datas.begin(), datas.end());
+			}
+		}
+
+		if (picks.empty())
+		{
+			return;
+		}
+		pickMutex.lock();
+		_pickData->setMultiplyPickMeshData(picks);
+		pickMutex.unlock();
+	}
+	void mPreMeshPickThread::MultiplyPickMeshLineByLine(QString partName, bool isAllIn)
+	{
+		set<MEdge*> picks;
+		QVector<MXGeoEdge*> geoEdges = MeshMessage::getInstance()->getGeoEdgeSamePart(partName);
+		for (auto geoEdge : geoEdges)
+		{
+			if (isAllIn || IsMultiplyPickGeoLine(geoEdge))
+			{
+				set<MEdge*> datas = this->getAllMeshLinesByGeoEdge(geoEdge);
+				picks.insert(datas.begin(), datas.end());
+			}
+		}
+
+		if (picks.empty())
+		{
+			return;
+		}
+		pickMutex.lock();
+		_pickData->setMultiplyPickMeshLineData(picks);
+		pickMutex.unlock();
+	}
+	void mPreMeshPickThread::MultiplyPickNodeByFace(QString partName, bool isAllIn)
+	{
+		set<MXMeshVertex*> picks;
+		QVector<MXGeoFace*> geoFaces = MeshMessage::getInstance()->getGeoFaceSamePart(partName);
+		for (auto geoFace : geoFaces)
+		{
+			if (isAllIn || IsMultiplyPickGeoFace(geoFace))
+			{
+				set<MXMeshVertex*> datas = this->getAllNodesByGeoFace(geoFace);
+				picks.insert(datas.begin(), datas.end());
+			}
+		}
+
+		if (picks.empty())
+		{
+			return;
+		}
+		pickMutex.lock();
+		_pickData->setMultiplyPickNodeData(picks);
+		pickMutex.unlock();
+	}
+	void mPreMeshPickThread::MultiplyPickMeshByFace(QString partName, bool isAllIn)
+	{
+		set<MXMeshElement*> picks;
+		QVector<MXGeoFace*> geoFaces = MeshMessage::getInstance()->getGeoFaceSamePart(partName);
+		for (auto geoFace : geoFaces)
+		{
+			if (isAllIn || IsMultiplyPickGeoFace(geoFace))
+			{
+				set<MXMeshElement*> datas = this->getAllMeshsByGeoFace(geoFace);
+				picks.insert(datas.begin(), datas.end());
+			}
+		}
+
+		if (picks.empty())
+		{
+			return;
+		}
+		pickMutex.lock();
+		_pickData->setMultiplyPickMeshData(picks);
+		pickMutex.unlock();
+	}
+	void mPreMeshPickThread::MultiplyPickMeshFaceByFace(QString partName, bool isAllIn)
+	{
+		set<MFace*> picks;
+		QVector<MXGeoFace*> geoFaces = MeshMessage::getInstance()->getGeoFaceSamePart(partName);
+		for (auto geoFace : geoFaces)
+		{
+			if (isAllIn || IsMultiplyPickGeoFace(geoFace))
+			{
+				set<MFace*> datas = this->getAllMeshFacesByGeoFace(geoFace);
+				picks.insert(datas.begin(), datas.end());
+			}
+		}
+
+		if (picks.empty())
+		{
+			return;
+		}
+		pickMutex.lock();
+		_pickData->setMultiplyPickMeshFaceData(picks);
+		pickMutex.unlock();
+
 	}
 	void mPreMeshPickThread::SoloPickNodePath()
 	{
@@ -2403,7 +2692,6 @@ namespace MPreRend
 			{
 				QVector<QVector2D> tempQVector2D;
 				std::set<float> depthlist;
-				QVector<QVector3D> vertexs;
 				WorldvertexToScreenvertex(vertexs, tempQVector2D, depthlist);
 				if (mPickToolClass::IsLineIntersectionWithQuad(tempQVector2D, soloQuad, MeshBeam) && *depthlist.begin() < depth)
 				{
@@ -2433,6 +2721,127 @@ namespace MPreRend
 		if (depth != FLT_MAX)
 		{
 			return true;
+		}
+		return false;
+	}
+	bool mPreMeshPickThread::isSoloPickGeoFace(MXGeoFace * geoFaceData, float & depth)
+	{
+		float uv[2];
+		float t;
+		//获取一个几何面上的单元面
+		set<MFace*> mfaces = this->getAllMeshFacesByGeoFace(geoFaceData);
+		for (auto mface : mfaces)
+		{
+			QVector<QVector3D> vertexs = mface->getAllVertexsOfMFace();
+			if (mface->type() == 1 ? mPickToolClass::rayTriangleIntersect(_origin, _dir, vertexs, uv, t) : mPickToolClass::rayQuadIntersect(_origin, _dir, vertexs, uv, t))
+			{
+				if (t < depth)
+				{
+					depth = t;
+				}
+			}
+		}
+
+		//获取二维网格
+		for (auto mesh : geoFaceData->_mTriangles)
+		{
+			if (mesh->getMask())
+			{
+				continue;
+			}
+			QVector<QVector3D> vertexs = mesh->getallVertexs1();
+			if (mPickToolClass::rayTriangleIntersect(_origin, _dir, vertexs, uv, t))
+			{
+				if (t < depth)
+				{
+					depth = t;
+				}
+			}
+		}
+
+		for (auto mesh : geoFaceData->_mQuadangles)
+		{
+			if (mesh->getMask())
+			{
+				continue;
+			}
+			QVector<QVector3D> vertexs = mesh->getallVertexs1();
+			if (mPickToolClass::rayTriangleIntersect(_origin, _dir, vertexs, uv, t))
+			{
+				if (t < depth)
+				{
+					depth = t;
+				}
+			}
+		}
+		if (depth != FLT_MAX)
+		{
+			return true;
+		}
+		return false;
+	}
+	bool mPreMeshPickThread::isSoloPickGeoLine(MXGeoEdge * geoEdgeData, float & depth)
+	{
+		//获取边界线
+		set<MEdge*> medges = this->getAllMeshLinesByGeoEdge(geoEdgeData);
+		for (auto edge : medges)
+		{
+			QVector<QVector2D> tempQVector2D;
+			std::set<float> depthlist;
+			QVector<QVector3D> vertexs = edge->getAllVertexs();
+			WorldvertexToScreenvertex(vertexs, tempQVector2D, depthlist);
+			if (mPickToolClass::IsLineIntersectionWithQuad(tempQVector2D, soloQuad, MeshBeam) && *depthlist.begin() < depth)
+			{
+				depth = *depthlist.begin();
+			}
+		}
+
+		for (auto mesh : geoEdgeData->_mLines)
+		{
+			QVector<QVector3D> vertexs = mesh->getallVertexs1();
+			QVector<QVector2D> tempQVector2D;
+			std::set<float> depthlist;
+			WorldvertexToScreenvertex(vertexs, tempQVector2D, depthlist);
+			if (mPickToolClass::IsLineIntersectionWithQuad(tempQVector2D, soloQuad, MeshBeam) && *depthlist.begin() < depth)
+			{
+				depth = *depthlist.begin();
+			}
+		}
+		if (depth != FLT_MAX)
+		{
+			return true;
+		}
+		return false;
+	}
+	bool mPreMeshPickThread::IsMultiplyPickGeoLine(MXGeoEdge * geoLineData)
+	{
+		for (auto mesh : geoLineData->_mLines)
+		{
+			QVector<QVector3D> vertexs = mesh->getallVertexs1();
+			if (_pick->get1DMeshIsInPick(vertexs))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	bool mPreMeshPickThread::IsMultiplyPickGeoFace(MXGeoFace * geoFaceData)
+	{
+		for (auto mesh : geoFaceData->_mTriangles)
+		{
+			QVector<QVector3D> vertexs = mesh->getallVertexs1();
+			if (_pick->get2DAnd3DMeshCenterIsInPick(this->getCenter(vertexs)))
+			{
+				return true;
+			}
+		}
+		for (auto mesh : geoFaceData->_mQuadangles)
+		{
+			QVector<QVector3D> vertexs = mesh->getallVertexs1();
+			if (_pick->get2DAnd3DMeshCenterIsInPick(this->getCenter(vertexs)))
+			{
+				return true;
+			}
 		}
 		return false;
 	}

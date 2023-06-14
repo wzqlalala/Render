@@ -247,12 +247,12 @@ namespace MPreRend
 		void SoloPickAnyMeshByPart(QString partName);
 		void SoloPickMeshLineByPart(QString partName);
 		void SoloPickMeshFaceByPart(QString partName);
-		//void SoloPickNodeByLine(QString partName);
-		//void SoloPickMeshByLine(QString partName);
-		//void SoloPickMeshLineByLine(QString partName);
-		//void SoloPickNodeByFace(QString partName);
-		//void SoloPickMeshByFace(QString partName);
-		//void SoloPickMeshFaceByFace(QString partName);
+		void SoloPickNodeByLine(QString partName);
+		void SoloPickMeshByLine(QString partName);
+		void SoloPickMeshLineByLine(QString partName);
+		void SoloPickNodeByFace(QString partName);
+		void SoloPickMeshByFace(QString partName);
+		void SoloPickMeshFaceByFace(QString partName);
 		void SoloPickNodeByLineAngle(QString partName);
 		void SoloPickNodeByFaceAngle(QString partName);
 		void SoloPick1DMeshByAngle(QString partName);
@@ -271,6 +271,12 @@ namespace MPreRend
 		void MultiplyPickAnyMeshByPart(QString partName, bool isAllIn = false);
 		void MultiplyPickMeshLineByPart(QString partName, bool isAllIn = false);
 		void MultiplyPickMeshFaceByPart(QString partName, bool isAllIn = false);
+		void MultiplyPickNodeByLine(QString partName, bool isAllIn = false);
+		void MultiplyPickMeshByLine(QString partName, bool isAllIn = false);
+		void MultiplyPickMeshLineByLine(QString partName, bool isAllIn = false);
+		void MultiplyPickNodeByFace(QString partName, bool isAllIn = false);
+		void MultiplyPickMeshByFace(QString partName, bool isAllIn = false);
+		void MultiplyPickMeshFaceByFace(QString partName, bool isAllIn = false);
 
 		void SoloPickNodePath();//通过路径拾取
 		//通过角度拾取
@@ -287,10 +293,16 @@ namespace MPreRend
 		//判断单选是否拾取到该部件
 		bool isSoloPickMeshPart(QString partName, float &depth);
 
+		//判断单选是否拾取到该几何面
+		bool isSoloPickGeoFace(MXGeoFace* geoFaceData, float &depth);
+
+		//判断单选是否拾取到该几何边
+		bool isSoloPickGeoLine(MXGeoEdge* geoEdgeData, float &depth);
+
 
 		/***********框选*********/
 		//判断是否拾取到该几何点
-		bool IsMultiplyPickGeoPoint(MXGeoPoint* geoPointData);
+		//bool IsMultiplyPickGeoPoint(MXGeoPoint* geoPointData);
 
 		//判断是否拾取到该几何线
 		bool IsMultiplyPickGeoLine(MXGeoEdge* geoLineData);
@@ -299,7 +311,7 @@ namespace MPreRend
 		bool IsMultiplyPickGeoFace(MXGeoFace* geoFaceData);
 
 		//判断是否拾取到该几何体
-		bool IsMultiplyPickGeoSolid(MXGeoSolid* geoSolidData);
+		//bool IsMultiplyPickGeoSolid(MXGeoSolid* geoSolidData);
 
 		//判断框选是否拾取到该部件
 		bool isMultiplyPickMeshPart(QString partName);
@@ -326,6 +338,12 @@ namespace MPreRend
 		set<MXMeshElement*> getAllMeshsByPartName(QString partName);
 		set<MFace*> getAllMeshFacesByPartName(QString partName);
 		set<MEdge*> getAllMeshLinesByPartName(QString partName);
+		set<MXMeshVertex*> getAllNodesByGeoFace(MXGeoFace *entity);
+		set<MXMeshElement*> getAllMeshsByGeoFace(MXGeoFace *entity);
+		set<MFace*> getAllMeshFacesByGeoFace(MXGeoFace *entity);
+		set<MXMeshVertex*> getAllNodesByGeoEdge(MXGeoEdge *entity);
+		set<MXMeshElement*> getAllMeshsByGeoEdge(MXGeoEdge *entity);
+		set<MEdge*> getAllMeshLinesByGeoEdge(MXGeoEdge *entity);
 
 	signals:
 		/*
