@@ -2964,6 +2964,10 @@ namespace MIOFile
 				//存储
 				ElementType elementtype = mElementFunction::getElementType(QString(eletype).toUpper());
 				MeshType meshtype = mElementFunction::transformTypeStrToEnum(elementtype);
+				if (meshtype != MeshHex && i >= 3  && meshtype != MeshWedge)
+				{
+					qDebug() << "单元数量为" << elecount;
+				}
 				//根据类型获取单元包含的节点个数
 				int elenode = mElementFunction::elementNodeCount(elementtype);
 
@@ -3029,6 +3033,6 @@ namespace MIOFile
 		//输出信息
 		//mGlobalSignals::getInstance()->outputMessageSig(0, QString("边界线生成成功！"));
 
-		QtConcurrent::run(fd, &mOneFrameData1::calculatePointCell);
+		//QtConcurrent::run(fd, &mOneFrameData1::calculatePointCell);
 	}
 }

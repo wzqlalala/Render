@@ -411,7 +411,7 @@ namespace MDataGeo
 
 	void mPreGeoPickThread::SoloPickScreen()
 	{
-		if (qFuzzyCompare(_depth, 1.0f))//相等
+		//if (qFuzzyCompare(_depth, 1.0f))//相等
 		{
 			//auto vertexs = _pickData->getPickVertexOnScreenDatas();
 			float d = 0.1;
@@ -422,13 +422,13 @@ namespace MDataGeo
 			QVector3D v = ScreenvertexToWorldvertex(QVector3D(_pos, d));
 			_pickData->setSoloPickVertexOnScreenData(v);
 		}
-		else
+		//else
 		{
 			//QVector3D v = ScreenvertexToWorldvertex(QVector3D(_pos, _depth));
 			//float d;
 			//QVector2D p = WorldvertexToScreenvertex(v, d);
 
-			_pickData->setSoloPickVertexOnScreenData(_p);
+			//_pickData->setSoloPickVertexOnScreenData(_p);
 		}
 	}
 
@@ -740,9 +740,12 @@ namespace MDataGeo
 			{
 				if (mPickToolClass::rayTriangleIntersect(_origin, _dir, geoFaceData->getGeoFaceVertex().mid(j, 3), uv, t))
 				{
-					id = faceID;
-					vertex = geoFaceData->getGeoFaceVertex().at(j) * (1 - uv[0] - uv[1]) + geoFaceData->getGeoFaceVertex().at(j + 1) * uv[0] + geoFaceData->getGeoFaceVertex().at(j + 2) * uv[1];
-					depth = t;
+					if (t < depth)
+					{
+						id = faceID;
+						vertex = geoFaceData->getGeoFaceVertex().at(j) * (1 - uv[0] - uv[1]) + geoFaceData->getGeoFaceVertex().at(j + 1) * uv[0] + geoFaceData->getGeoFaceVertex().at(j + 2) * uv[1];
+						depth = t;
+					}
 				}
 			}
 		}
