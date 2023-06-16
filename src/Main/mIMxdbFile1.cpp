@@ -2955,6 +2955,11 @@ namespace MIOFile
 				int eleid;
 				_readf.read((char*)&eleid, sizeof(int));
 				//_byteAmount += sizeof(int);
+				if (eleid == 14777 || eleid == 31620)
+				{
+					qDebug() << "单元ID为" << eleid;
+
+				}
 
 				//读取单元类型
 				char eletype[32];
@@ -2964,10 +2969,10 @@ namespace MIOFile
 				//存储
 				ElementType elementtype = mElementFunction::getElementType(QString(eletype).toUpper());
 				MeshType meshtype = mElementFunction::transformTypeStrToEnum(elementtype);
-				if (meshtype != MeshHex && i >= 3  && meshtype != MeshWedge)
-				{
-					qDebug() << "单元数量为" << elecount;
-				}
+				//if (meshtype != MeshHex && i >= 3  && meshtype != MeshWedge)
+				//{
+				//	qDebug() << "单元数量为" << elecount;
+				//}
 				//根据类型获取单元包含的节点个数
 				int elenode = mElementFunction::elementNodeCount(elementtype);
 

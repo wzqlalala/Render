@@ -163,11 +163,11 @@ namespace MPreRend
 			{
 				QVector3D color = _geoModelData->getGeoPartColor(partName);
 				Array *array = _partRenders[partName]->getFaceDrawable()->getVertexAttribArray(1);
-				array->updata(QVector<QVector3D>(array->size(), color).data());
+				array->updata(QVector<QVector3D>(array->size()/3.0, color).data());
 				array = _partRenders[partName]->getIndependentLineDrawable()->getVertexAttribArray(1);
-				array->updata(QVector<QVector3D>(array->size(), color).data());
+				array->updata(QVector<QVector3D>(array->size()/3.0, color).data());
 				array = _partRenders[partName]->getPointDrawable()->getVertexAttribArray(1);
-				array->updata(QVector<QVector3D>(array->size(), color).data());
+				array->updata(QVector<QVector3D>(array->size()/3.0, color).data());
 			}
 		}
 		else
