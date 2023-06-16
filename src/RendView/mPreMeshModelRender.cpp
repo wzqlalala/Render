@@ -453,6 +453,10 @@ namespace MPreRend
 				{
 					continue;
 				}
+				//if (mesh->getNum() == 230 || mesh->getNum() == 231)
+				//{
+				//	qDebug() << "正在读取数据";
+				//}
 				_facerend->_vertex0->append(mesh->getallVertexs1());
 				_facerend->_vertex1->append(QVector<QVector3D>(3, color));
 
