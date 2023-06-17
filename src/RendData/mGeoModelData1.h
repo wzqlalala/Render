@@ -102,6 +102,12 @@ namespace MDataGeo
 		//判断是否有模型显示
 		bool isShowModel();
 
+		//设置适应视图
+		void setResetCamera(bool is) { _isResetCamera = is; };
+
+		//判断是否需要适应试图
+		bool isResetCamera() { return _isResetCamera; };
+
 		/*
 		 * 部件操作
 		 */
@@ -173,6 +179,9 @@ namespace MDataGeo
 
 		//模型半径
 		//float _modelRadius;
+
+		//是否需要重置视图
+		bool _isResetCamera = false;
 
 		//模型的尺寸
 		Space::AABB _modelSize;

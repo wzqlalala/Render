@@ -442,9 +442,15 @@ namespace MPreRend
 		}
 		if (isUpdateCamera)
 		{
-			if (MeshMessage::getInstance()->IsReadFileMark())
+			if (MeshMessage::getInstance()->IsReadFileMark() || _geoModelData->isResetCamera())
 			{
 				_baseRend->slotResetOrthoAndCamera();
+				mBaseRend3D *rend = dynamic_cast<mBaseRend3D*>(_baseRend);
+				if (rend)
+				{
+					rend->FitView();
+					rend->SetRotateCenterToModelCenter();
+				}
 				MeshMessage::getInstance()->setReadFileMark(false);
 			}
 			else
