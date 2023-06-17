@@ -245,7 +245,7 @@ namespace MPreRend
 	void mPreRend::slotResetOrthoAndCamera()
 	{
 		GetModelSizePara(true);
-		_modelView->ResetOrthoAndCamera(_center_model, _maxRadius_now);
+		_modelView->ResetOrthoAndCamera(_center_model, _maxRadius_model);
 		_modelView->SaveCurrentView();
 		_commonView->SaveCurrentView();
 		//_meshModelRulerRend->UpdateNum();

@@ -24,12 +24,6 @@ namespace MViewBasic
 		float _Ratio_Old;						//上一次的屏幕长宽比
 		float _Ratio_New;						// 目前的屏幕长宽比
 
-		//缩放的比例
-		double _ScaleProportion = 1;
-
-		//当前正交投影的参数(用于移动缩放)
-		float width_firstmouse, height_firstmouse;
-		bool IfFirstMouse = false;
 		//初始化模型视角
 		void InitialModelView();
 		//初始化正交投影

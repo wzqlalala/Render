@@ -73,7 +73,7 @@ namespace MViewBasic
 		//通过屏幕长宽比设置正交投影
 		virtual void SetOrthoByRatio(float scr_width, float scr_height);
 		//通过屏幕长宽比还原正交投影
-		void ReturnOrthoByRatio();
+		virtual void ReturnOrthoByRatio();
 		//设置PVM矩阵的值
 		virtual void SetPVMValue();
 		//获取PVM值
