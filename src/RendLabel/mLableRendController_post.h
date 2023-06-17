@@ -38,10 +38,10 @@ namespace MLableRend
 		void appendFontRendData(const QString &name, const QVector<POS_TXT> &pos_txt, const float size = 1.0,
 			const QVector3D color = QVector3D(255, 255, 255), const bool showState = true, const bool depthState = false, const bool isUpdate = true)
 		{
-			if (_lableRend_common == nullptr) return;
+			if (_lableRend_post == nullptr) return;
 			if (pos_txt.empty()) return;
 			//判断数据是否存在
-			if (_lableRend_common->_lableDataController->isLableDataExist<T>(name))
+			if (_lableRend_post->_lableDataController->isLableDataExist<T>(name))
 			{
 				deleteLableRendData<T>(name);
 			}
@@ -55,7 +55,7 @@ namespace MLableRend
 			t.fontData.setLableSize(size);
 			t.fontData.setLableColor(color);
 			//添加数据库
-			_lableRend_common->_lableDataController->appendLableData<T>(name, t);
+			_lableRend_post->_lableDataController->appendLableData<T>(name, t);
 
 			//渲染更新
 			if (isUpdate)

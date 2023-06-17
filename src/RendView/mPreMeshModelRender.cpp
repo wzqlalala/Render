@@ -175,13 +175,13 @@ namespace MPreRend
 		{
 			for (QString partName : partNames)
 			{
-				QVector3D color/* = _geoModelData->getGeoPartColor(partName)*/;
+				QVector3D color = MeshMessage::getInstance()->getPartColor(partName);
 				Array *array = _partRenders[partName]->getFaceDrawable()->getVertexAttribArray(1);
-				array->updata(QVector<QVector3D>(array->size(), color).data());
+				array->updata(QVector<QVector3D>(array->size()/3.0, color).data());
 				array = _partRenders[partName]->getLineDrawable()->getVertexAttribArray(1);
-				array->updata(QVector<QVector3D>(array->size(), color).data());
+				array->updata(QVector<QVector3D>(array->size()/3.0, color).data());
 				array = _partRenders[partName]->getPointDrawable()->getVertexAttribArray(1);
-				array->updata(QVector<QVector3D>(array->size(), color).data());
+				array->updata(QVector<QVector3D>(array->size()/3.0, color).data());
 			}
 		}
 		else
@@ -300,9 +300,7 @@ namespace MPreRend
 
 	void mPreMeshPartRender::appendPart()
 	{
-		QVector3D color;
-		QColor c = MeshMessage::getInstance()->getPartcolor(_partName);
-		color = QVector3D(c.red(), c.green(), c.blue()); //获取部件颜色
+		QVector3D color = MeshMessage::getInstance()->getPartColor(_partName);
 		//color = QVector3D(1, 1, 1);
 		
 		//实体(获取实体)
@@ -454,6 +452,10 @@ namespace MPreRend
 				{
 					continue;
 				}
+				//if (mesh->getNum() == 230 || mesh->getNum() == 231)
+				//{
+				//	qDebug() << "正在读取数据";
+				//}
 				_facerend->_vertex0->append(mesh->getallVertexs1());
 				_facerend->_vertex1->append(QVector<QVector3D>(3, color));
 

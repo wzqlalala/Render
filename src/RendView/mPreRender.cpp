@@ -212,6 +212,10 @@ namespace MPreRend
 	}
 	void mPreRender::startPick(QVector<QVector2D> poses)
 	{
+		if (*_baseRend->getCurrentPickMode() == PickMode::MultiplyPick && *_baseRend->getMultiplyPickMode() == MultiplyPickMode::NoPick)
+		{
+			return;
+		}
 		makeCurrent();
 		QFuture<void> future;
 		switch (*_baseRend->getPickFilter())
@@ -227,6 +231,7 @@ namespace MPreRend
 		case PickFilter::PickHex:
 		case PickFilter::PickPyramid:
 		case PickFilter::PickNode:
+		case PickFilter::PickNodePath:
 		case PickFilter::PickNodeOrder:
 		case PickFilter::PickAnyMesh:
 		case PickFilter::PickMeshLine:
@@ -425,6 +430,29 @@ namespace MPreRend
 
 	void mPreRender::updateUniform(shared_ptr<mViewBase> modelView, shared_ptr<mViewBase> commonView)
 	{
+		//检测模型数据更新模型渲染
+		bool isUpdateCamera{ false };
+		if (_geoModelRender)
+		{
+			isUpdateCamera = isUpdateCamera | _geoModelRender->updateRender();
+		}
+		if (_meshModelRender)
+		{
+			isUpdateCamera = isUpdateCamera | _meshModelRender->updateRender();
+		}
+		if (isUpdateCamera)
+		{
+			if (MeshMessage::getInstance()->IsReadFileMark())
+			{
+				_baseRend->slotResetOrthoAndCamera();
+				MeshMessage::getInstance()->setReadFileMark(false);
+			}
+			else
+			{
+				_baseRend->slotUpdateOrthoAndCamera();
+			}
+		}
+
 		if (_faceStateSet)
 		{
 			QMatrix4x4 pvm = modelView->getPVMValue();
@@ -455,29 +483,7 @@ namespace MPreRend
 			_facelineStateSet->getUniform("rightToLeft")->SetData(float(modelView->_Right - modelView->_Left));
 			_edgelineStateSet->getUniform("rightToLeft")->SetData(float(modelView->_Right - modelView->_Left));
 		}
-		//检测模型数据更新模型渲染
-		bool isUpdateCamera{ false };
-		if (_geoModelRender)
-		{
-			isUpdateCamera = isUpdateCamera | _geoModelRender->updateRender();
-		}
-		if (_meshModelRender)
-		{
-			isUpdateCamera = isUpdateCamera | _meshModelRender->updateRender();
-		}
-		if (isUpdateCamera)
-		{
-			if (MeshMessage::getInstance()->IsReadFileMark())
-			{
-				_baseRend->slotResetOrthoAndCamera();
-				MeshMessage::getInstance()->setReadFileMark(false);
-			}
-			else
-			{
-				_baseRend->slotUpdateOrthoAndCamera();
-			}
-		}
-
+	
 		_geoHighLightRender->updateUniform(modelView, commonView);
 		_meshHighLightRender->updateUniform(modelView, commonView);
 	}

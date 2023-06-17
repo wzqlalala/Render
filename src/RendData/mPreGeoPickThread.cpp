@@ -275,7 +275,7 @@ namespace MDataGeo
 	void mPreGeoPickThread::setLocation(const QVector2D& pos, float depth)
 	{
 		_pos = pos;
-		soloQuad = QVector<QVector2D>{ QVector2D(pos.x() + 5,pos.y() + 5),QVector2D(pos.x() + 5,pos.y() - 5),QVector2D(pos.x() - 5,pos.y() - 5),QVector2D(pos.x() - 5,pos.y() + 5) };
+		soloQuad = QVector<QVector2D>{ QVector2D(pos.x() + 8,pos.y() + 8),QVector2D(pos.x() + 8,pos.y() - 8),QVector2D(pos.x() - 8,pos.y() - 8),QVector2D(pos.x() - 8,pos.y() + 8) };
 		_depth = depth;
 		_p = ScreenvertexToWorldvertex(QVector3D(pos, depth));
 		_origin = ScreenvertexToWorldvertex(QVector3D(pos, -1.0));
@@ -299,11 +299,11 @@ namespace MDataGeo
 		//multiQuad = pickQuad;
 		switch (_multiplyPickMode)
 		{
-		case MViewBasic::MultiplyPickMode::QuadPick:_pick = make_shared<mQuadPick>(_pvm, _Win_WIDTH, _Win_HEIGHT, pickQuad);
+		case MxFunctions::MultiplyPickMode::QuadPick:_pick = make_shared<mQuadPick>(_pvm, _Win_WIDTH, _Win_HEIGHT, pickQuad);
 			break;
-		case MViewBasic::MultiplyPickMode::PolygonPick:_pick = make_shared<mPolygonPick>(_pvm, _Win_WIDTH, _Win_HEIGHT, pickQuad);
+		case MxFunctions::MultiplyPickMode::PolygonPick:_pick = make_shared<mPolygonPick>(_pvm, _Win_WIDTH, _Win_HEIGHT, pickQuad);
 			break;
-		case MViewBasic::MultiplyPickMode::RoundPick:_pick = make_shared<mRoundPick>(_pvm, _Win_WIDTH, _Win_HEIGHT, pickQuad.first(), pickQuad.last(), direction);
+		case MxFunctions::MultiplyPickMode::RoundPick:_pick = make_shared<mRoundPick>(_pvm, _Win_WIDTH, _Win_HEIGHT, pickQuad.first(), pickQuad.last(), direction);
 			break;
 		default:
 			break;
@@ -342,24 +342,37 @@ namespace MDataGeo
 		//判断该部件是否存在碰撞
 		//判断点选是否在部件的包围盒内
 		QVector3D worldVertex = _p;
-		if (partData->getGeoPartAABB().ContainPoint(_p))
+		//if (partData->getGeoShapeType() == 7)//点部件
 		{
 			switch (*_pickFilter)
 			{
-			case PickFilter::PickNothing:; break;
 			case PickFilter::PickGeoPoint:
 			case PickFilter::PickGeoPointOrder:SoloPickGeoPoint(partData); break;
 			case PickFilter::PickGeoLine:SoloPickGeoLine(partData); break;
-			case PickFilter::PickGeoFace:SoloPickGeoFace(partData); break;
-			case PickFilter::PickGeoSolid:SoloPickGeoSolid(partData); break;
-			case PickFilter::PickGeoPart:SoloPickGeoPart(partData); break;
-			case PickFilter::PickGeoPointByPart:SoloPickGeoPointByPart(partData); break;
-			case PickFilter::PickGeoLineByPart:SoloPickGeoLineByPart(partData); break;
-			case PickFilter::PickGeoFaceByPart:SoloPickGeoFaceByPart(partData); break;
-			case PickFilter::PickGeoSolidByPart:SoloPickGeoSolidByPart(partData); break;
-			case PickFilter::pickVertexOnGeoLine:SoloPickVertexOnGeoLine(partData); break;
-			case PickFilter::pickVertexOnGeoFace:SoloPickVertexOnGeoFace(partData); break;
 			default:break;
+			}
+		}
+		//else
+		{
+			if (partData->getGeoPartAABB().ContainPoint(_p))
+			{
+				switch (*_pickFilter)
+				{
+				case PickFilter::PickNothing:; break;
+				/*case PickFilter::PickGeoPoint:
+				case PickFilter::PickGeoPointOrder:SoloPickGeoPoint(partData); break;
+				case PickFilter::PickGeoLine:SoloPickGeoLine(partData); break;*/
+				case PickFilter::PickGeoFace:SoloPickGeoFace(partData); break;
+				case PickFilter::PickGeoSolid:SoloPickGeoSolid(partData); break;
+				case PickFilter::PickGeoPart:SoloPickGeoPart(partData); break;
+				case PickFilter::PickGeoPointByPart:SoloPickGeoPointByPart(partData); break;
+				case PickFilter::PickGeoLineByPart:SoloPickGeoLineByPart(partData); break;
+				case PickFilter::PickGeoFaceByPart:SoloPickGeoFaceByPart(partData); break;
+				case PickFilter::PickGeoSolidByPart:SoloPickGeoSolidByPart(partData); break;
+				case PickFilter::pickVertexOnGeoLine:SoloPickVertexOnGeoLine(partData); break;
+				case PickFilter::pickVertexOnGeoFace:SoloPickVertexOnGeoFace(partData); break;
+				default:break;
+				}
 			}
 		}
 	}
@@ -398,7 +411,7 @@ namespace MDataGeo
 
 	void mPreGeoPickThread::SoloPickScreen()
 	{
-		if (qFuzzyCompare(_depth, 1.0f))//相等
+		//if (qFuzzyCompare(_depth, 1.0f))//相等
 		{
 			//auto vertexs = _pickData->getPickVertexOnScreenDatas();
 			float d = 0.1;
@@ -409,21 +422,21 @@ namespace MDataGeo
 			QVector3D v = ScreenvertexToWorldvertex(QVector3D(_pos, d));
 			_pickData->setSoloPickVertexOnScreenData(v);
 		}
-		else
+		//else
 		{
 			//QVector3D v = ScreenvertexToWorldvertex(QVector3D(_pos, _depth));
 			//float d;
 			//QVector2D p = WorldvertexToScreenvertex(v, d);
 
-			_pickData->setSoloPickVertexOnScreenData(_p);
+			//_pickData->setSoloPickVertexOnScreenData(_p);
 		}
 	}
 
 	void mPreGeoPickThread::SoloPickGeoPoint(mGeoPartData1 *partData)
 	{
 		int id = 0;
-		float depth = 1.0;
-		float depth1 = 1.0f;
+		float depth = FLT_MAX;
+		float depth1 = FLT_MAX;
 		////MDataGeo::mGeoPartData1 *partData = _geoModelData->getGeoPartDataByPartName(_partName);
 		if (partData == nullptr)
 		{
@@ -438,7 +451,7 @@ namespace MDataGeo
 		{
 			MDataGeo::mGeoPointData1* geoPointData = _geoModelData->getGeoPointDataByID(pointID);
 			QVector2D ap1 = WorldvertexToScreenvertex(geoPointData->getGeoPointVertex(), depth1);
-			if (fabs(ap1.x() - _pos.x()) <= 3 && fabs(ap1.y() - _pos.y()) <= 3 && depth1 < depth)
+			if (fabs(ap1.x() - _pos.x()) <= 5 && fabs(ap1.y() - _pos.y()) <= 5 && depth1 < depth)
 			{
 				depth = depth1;
 				id = pointID;
@@ -473,7 +486,7 @@ namespace MDataGeo
 		for (int lineID : lineIDs)
 		{
 			MDataGeo::mGeoLineData1* geoLineData = _geoModelData->getGeoLineDataByID(lineID);
-			if (geoLineData->getGeoLineAABB().ContainPoint(_p))
+			//if (geoLineData->getGeoLineAABB().ContainPoint(_p))
 			{
 				for (int j = 0; j < geoLineData->getGeoLineVertex().size(); j += 2)
 				{
@@ -727,9 +740,12 @@ namespace MDataGeo
 			{
 				if (mPickToolClass::rayTriangleIntersect(_origin, _dir, geoFaceData->getGeoFaceVertex().mid(j, 3), uv, t))
 				{
-					id = faceID;
-					vertex = geoFaceData->getGeoFaceVertex().at(j) * (1 - uv[0] - uv[1]) + geoFaceData->getGeoFaceVertex().at(j + 1) * uv[0] + geoFaceData->getGeoFaceVertex().at(j + 2) * uv[1];
-					depth = t;
+					if (t < depth)
+					{
+						id = faceID;
+						vertex = geoFaceData->getGeoFaceVertex().at(j) * (1 - uv[0] - uv[1]) + geoFaceData->getGeoFaceVertex().at(j + 1) * uv[0] + geoFaceData->getGeoFaceVertex().at(j + 2) * uv[1];
+						depth = t;
+					}
 				}
 			}
 		}

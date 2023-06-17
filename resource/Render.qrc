@@ -41,6 +41,8 @@
         <file>GLSL/PostContourLineWithOutDeformation.glsl</file>
         <file>GLSL/PostStreamLinePointWithOutDeformation.glsl</file>
         <file>GLSL/Common.glsl</file>
+        <file>GLSL/CommonTextureShape.glsl</file>
+        <file>Icon/XPoint.png</file>
         <file>GLSL/VideoRend.glsl</file>
     </qresource>
 </RCC>

@@ -1,4 +1,4 @@
-#version 330 core
+#version 450 core
 #ifdef vertex_shader
 #include "extfunction.glsl"
 layout (location = 0) in vec3  aColor;				//颜色

@@ -83,7 +83,7 @@ namespace MViewBasic
 		virtual void CallSavedView() {};	//调用保存的视角
 
 		virtual void ZoomAtMouse_Bywheel(int posX, int posY, int yoffset, ScalePerspectice scalePerspectice, float sensitivity = 1.2);
-
+		virtual void ZoomAtViewCenter_ByMove(int FirstPosx, int FirstPosy, int nowPosx, int nowPosy, float sensitivity = 1.1);	//根据视角中心缩放（鼠标移动缩放，连续）
 		virtual void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);
 
 		//模型发生变化后更新视角（保留上一次的旋转特性）

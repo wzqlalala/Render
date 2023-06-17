@@ -119,6 +119,38 @@ namespace MPostRend
 			AppendMesh3(meshFaces[i], values, dis, type);
 		}
 
+		//三维网格遍历计算部件最值
+		QVector<mPostMeshData1*> meshData3 = _partData->getMeshDatas3();
+		for (auto meshData : meshData3)
+		{
+			if (meshData == nullptr)
+			{
+				continue;
+			}
+			if (type == NodeOrElement::PostElement)
+			{
+				if (values.contains(meshData->getMeshID()))
+				{
+					float value = values.value(meshData->getMeshID());
+					_minValue = min(_minValue, value);
+					_maxValue = max(_maxValue, value);
+				}
+			}
+			else
+			{
+				QVector<int> index = meshData->getNodeIndex();
+				for (int nodeID : index)
+				{
+					if (values.contains(nodeID))
+					{
+						float value = values.value(nodeID);
+						_minValue = min(_minValue, value);
+						_maxValue = max(_maxValue, value);
+					}
+				}
+			}
+		}
+
 		qDebug() << "3维网格表面" << meshFaces.size();
 
 		set<int> meshLineIDs = _partData->getMeshLineIDs();
