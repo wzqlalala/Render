@@ -1,4 +1,5 @@
 #include "MxRendTest.h"
+#include "VideoWidget.h"
 #include "ScreenWidget.h"
 #include <QtWidgets/QApplication>
 #include <QOpenGLContext>
@@ -54,10 +55,12 @@ int main(int argc, char *argv[])
 	//	// context2´´½¨Ê§°Ü
 	//}
 	//context2->setFormat(format);
-	MxRendTest w0(1);
+	//MxRendTest w0(1);
 	//MxRendTest w1(1);
 
 	//MxRendTest w2(2);
 	//ScreenWidget::Instance()->showFullScreen();
+	VideoWidget w;
+	w.show();
     return a.exec();
 }
