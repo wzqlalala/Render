@@ -452,6 +452,7 @@ namespace MPreRend
 					rend->SetRotateCenterToModelCenter();
 				}
 				MeshMessage::getInstance()->setReadFileMark(false);
+				_geoModelData->setResetCamera(false);
 			}
 			else
 			{
