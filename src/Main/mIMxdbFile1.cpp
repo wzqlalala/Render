@@ -2955,7 +2955,7 @@ namespace MIOFile
 				int eleid;
 				_readf.read((char*)&eleid, sizeof(int));
 				//_byteAmount += sizeof(int);
-				if (eleid == 14777 || eleid == 31620)
+				if (eleid == 320351 || eleid == 315724)
 				{
 					qDebug() << "µ¥ÔªIDÎª" << eleid;
 

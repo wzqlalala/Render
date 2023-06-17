@@ -1316,7 +1316,8 @@ namespace MDataPost
 		QVector<QPair<QPair<int, int>, mPostMeshFaceData1*>> &face = _meshFace[*itermin];
 		bool isNeibu{ false };
 		QPair<int, int> pair;
-		if (set.size() == 3)
+		int n1 = set.size();
+		if (n1 == 3)
 		{
 			switch (in)
 			{
@@ -1380,15 +1381,19 @@ namespace MDataPost
 		for (int i = 0, n = face.size(); i < n; ++i)
 		{
 			QPair<QPair<int, int>, mPostMeshFaceData1*> f = face.at(i);
+			int n2 = f.second->getNodeIndex().size();
 			if (f.first.first == pair.second && f.first.second == pair.first)//是内部面
 			{
-				f.second->appendMeshID(meshData->getMeshID(), order, set[0]);
-				meshData->appendMeshFace(f.second);
-				//meshData->setMeshFace(order, f.second);
-				face.removeAt(i);
-				f.second->setVisual(false);
-				isNeibu = true;
-				break;
+				if (n1 == n2)
+				{
+					f.second->appendMeshID(meshData->getMeshID(), order, set[0]);
+					meshData->appendMeshFace(f.second);
+					//meshData->setMeshFace(order, f.second);
+					face.removeAt(i);
+					f.second->setVisual(false);
+					isNeibu = true;
+					break;
+				}
 			}
 		}
 		if (!isNeibu)//外部面，重新创建
