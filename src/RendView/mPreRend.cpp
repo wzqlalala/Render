@@ -236,6 +236,10 @@ namespace MPreRend
 		{
 			float t = _maxRadius_now;
 			_maxRadius_now = _aabb.maxEdge.distanceToPoint(_center_now);
+			float max_x = std::max(std::abs(_aabb.minEdge.x() - _center_now.x()), std::abs(_aabb.maxEdge.x() - _center_now.x()));
+			float max_y = std::max(std::abs(_aabb.minEdge.y() - _center_now.y()), std::abs(_aabb.maxEdge.y() - _center_now.y()));
+			float max_z = std::max(std::abs(_aabb.minEdge.z() - _center_now.z()), std::abs(_aabb.maxEdge.z() - _center_now.z()));
+			_maxRadius_now = sqrt(pow(max_x, 2) + pow(max_y, 2) + pow(max_z, 2));
 			if (isinf(_maxRadius_now))
 			{
 				_maxRadius_now = t;
