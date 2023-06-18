@@ -101,11 +101,11 @@ namespace MBaseRend
 	protected:
 
 		//模型参数
-		QVector3D _center_model; //模型中心
-		float _maxRadius_model;//最大旋转半径(以模型中心)
-		QVector3D _center_now = QVector3D(0,0,0); //当前旋转中心
-		float _maxRadius_now = 5.0;//最大旋转半径（以当前中心）
-		Space::AABB _aabb; //模型在X,Y,Z方向上的最大参数
+		//QVector3D _center_model; //模型中心
+		//float _maxRadius_model;//最大旋转半径(以模型中心)
+		//QVector3D _center_now = QVector3D(0,0,0); //当前旋转中心
+		//float _maxRadius_now = 5.0;//最大旋转半径（以当前中心）
+		//Space::AABB _aabb; //模型在X,Y,Z方向上的最大参数
 
 		std::shared_ptr<mShapeRender> _shapeRender;
 

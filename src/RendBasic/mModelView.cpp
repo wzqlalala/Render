@@ -65,6 +65,7 @@ namespace MViewBasic
 		}
 		_Ratio_Old = _Ratio_New;//更新 旧的屏幕大小比例
 		SetPVMValue();
+		qDebug() << _Left << _Right << _Left_res << _Right_res;
 	}
 	void mModelView::ReturnOrthoByRatio()
 	{
