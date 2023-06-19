@@ -328,7 +328,7 @@ namespace MPostRend
 	}
 	void mPostOneFrameRender::createVectorGraph(QVector<QPair<QString, QVector3D>> type_color, double size)
 	{
-		QPair<QVector<QVector3D>, QVector<QVector3D>> res;	//通过原模型生成节点
+		QPair<QVector<QVector3D>, QVector<QVector3D>> res = this->getCuttingNodeData();	//通过原模型生成节点
 		createVectorGraph(res);
 	}
 	void mPostOneFrameRender::createVectorGraph(std::set<int> nodeIDs, QVector<QPair<QString, QVector3D>> type_color, double size)
