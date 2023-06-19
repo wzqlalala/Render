@@ -355,6 +355,8 @@ namespace MPostRend
 		void reverseCuttingPlaneNormal();
 		void updateCuttingPlaneIndex(int index);
 
+		mPostCuttingPlaneData *getCuttingPlaneData();
+
 	private:
 		void UpdateCuttingPlane(int index);
 

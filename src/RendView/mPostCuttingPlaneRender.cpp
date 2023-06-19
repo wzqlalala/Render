@@ -2140,6 +2140,11 @@ namespace MPostRend
 		}
 	}
 
+	mPostCuttingPlaneData * mPostCuttingPlaneRender::getCuttingPlaneData()
+	{
+		return _postCuttingPlaneData;
+	}
+
 	void mPostCuttingPlaneRender::UpdateCuttingPlane(int index)
 	{
 		if (_cuttingPlaneDrawable)
