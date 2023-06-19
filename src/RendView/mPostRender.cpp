@@ -446,6 +446,7 @@ namespace MPostRend
 		_thread->setMatrix(_baseRend->getCamera()->getPVMValue());
 		_thread->setWidget(_baseRend->getCamera()->SCR_WIDTH, _baseRend->getCamera()->SCR_HEIGHT);
 		_thread->setPickMode(*_baseRend->getCurrentPickMode(), *_baseRend->getMultiplyPickMode());
+		_thread->setPickAngleValue(_baseRend->getPickAngle());
 		if (*_baseRend->getCurrentPickMode() == PickMode::SoloPick)
 		{		
 			float depth = this->getDepth(poses.first());
