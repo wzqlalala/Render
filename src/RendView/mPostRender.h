@@ -272,7 +272,7 @@ namespace MPostRend
 		//通过单元ID获取节点坐标
 		QVector<QVector3D> getNodeVertexByMeshID(int meshID);
 
-		//通过切面名称来获取切面的数据
+		//通过切面索引来获取切面的数据
 		template <class T>
 		QPair<QVector<QVector3D>, QVector<T>> getCuttingPlaneData(int cuttingPlaneIndex, QHash<int, T> value, MViewBasic::NodeOrElement nodeOrElement)
 		{
@@ -287,6 +287,12 @@ namespace MPostRend
 			}
 			return result;
 		}
+
+		//通过切面名称来获取切面的顶点数据
+		QVector<QVector3D> getCuttingPlaneData(int cuttingPlaneIndex);
+
+		//通过切面名称来获取切面的法向
+		QVector3D getCuttingPlaneNormal(int cuttingPlaneIndex);
 
 	private:
 

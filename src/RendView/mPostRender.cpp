@@ -1602,6 +1602,32 @@ namespace MPostRend
 		return res;
 	}
 
+	QVector<QVector3D> mPostRender::getCuttingPlaneData(int cuttingPlaneIndex)
+	{
+		QVector<QVector3D> result;
+		if (cuttingPlaneIndex >=  _rendStatus->_cuttingPlanes.size())
+		{
+			return result;
+		}
+		if (_oneFrameRender != nullptr)
+		{
+			result = _oneFrameRender->getCuttingPlaneData(cuttingPlaneIndex);
+		}
+		return result;
+	}
+
+	QVector3D mPostRender::getCuttingPlaneNormal(int cuttingPlaneIndex)
+	{
+		QVector3D result;
+		if (cuttingPlaneIndex >= _rendStatus->_cuttingPlanes.size())
+		{
+			return result;
+		}
+		result = _rendStatus->_cuttingPlanes.at(cuttingPlaneIndex).toVector3D();
+
+		return result;
+	}
+
 	void mPostRender::updateCuttingPlaneUniform()
 	{
 		int cuttingPlaneSize = _rendStatus->_cuttingPlanes.size();

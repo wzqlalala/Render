@@ -185,7 +185,8 @@ namespace MPostRend
 			return result;
 		};
 
-
+		//获取切面三角形数据
+		QVector<QVector3D> getCuttingPlaneData(int index);
 	private:
 
 		void initial();

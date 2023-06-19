@@ -658,6 +658,10 @@ namespace MPostRend
 
 		return QPair<QVector<QVector3D>, QVector<QVector3D>>{ resVertexs, resValues};
 	}
+	QVector<QVector3D> MPostRend::mPostOneFrameRender::getCuttingPlaneData(int index)
+	{
+		return _cuttingPlaneRenders[index]->getCuttingPlaneData()->getTriVertex();
+	}
 	void mPostOneFrameRender::initial()
 	{
 		if (!_viewer)
