@@ -1090,18 +1090,18 @@ bool MxRendTest::createGeo(MDataGeo::mGeoModelData1 * geoModelData)
 	/*****************µã***********/
 	_globalPointId++;
 	geoPointData = new mGeoPointData1(geoModelData, partName, _globalPointId);
-	geoPointData->setPointData(_globalPointId, QVector3D(1, 2, 3));
-	geoPartData->appendGeoPointID(_globalPointId);
-	
-	_globalPointId++;
-	geoPointData = new mGeoPointData1(geoModelData, partName, _globalPointId);
 	geoPointData->setPointData(_globalPointId, QVector3D(0, 0, 0));
 	geoPartData->appendGeoPointID(_globalPointId);
-
-	_globalPointId++;
-	geoPointData = new mGeoPointData1(geoModelData, partName, _globalPointId);
-	geoPointData->setPointData(_globalPointId, QVector3D(100, 100, 100));
-	geoPartData->appendGeoPointID(_globalPointId);
+	
+	//_globalPointId++;
+	//geoPointData = new mGeoPointData1(geoModelData, partName, _globalPointId);
+	//geoPointData->setPointData(_globalPointId, QVector3D(0, 0, 0));
+	//geoPartData->appendGeoPointID(_globalPointId);
+	//
+	//_globalPointId++;
+	//geoPointData = new mGeoPointData1(geoModelData, partName, _globalPointId);
+	//geoPointData->setPointData(_globalPointId, QVector3D(100, 100, 100));
+	//geoPartData->appendGeoPointID(_globalPointId);
 	///**********²¿¼þ*****************************************************************************************/
 	//_globalPartId++;
 	//partName = "part5";
