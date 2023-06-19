@@ -1301,7 +1301,15 @@ namespace MPostRend
 	void mPostRender::setIsShowSphere(bool isShow)
 	{
 		_rendStatus->_streamLineSphere = isShow;
-
+		auto render = _dragRenders["»ý·ÖÇò"];
+		if (render)
+		{
+			auto sphereRender = dynamic_pointer_cast<mPostSphereRender>(render);
+			if (sphereRender)
+			{
+				sphereRender->setIsShow(isShow);
+			}
+		}
 	}
 
 	QVector3D mPostRender::getDragSphereCenter()
