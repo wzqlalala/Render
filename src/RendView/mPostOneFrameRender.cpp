@@ -421,18 +421,12 @@ namespace MPostRend
 			render = MakeAsset<mPostContourRender>(_app, _geode, _oneFrameData, _oneFrameRendData);
 			render->setLineStateSet(faceStateSet);
 			render->setFaceStateSet(faceStateSet);
-			render->resetDrawable();
 			render->setVisiable(isshow);
 			_postContourRenders.append(render);
 		}
-		else//¸üÐÂ
-		{
-			render->resetDrawable();
-			_postContourRenders[i]->updateData(_oneFrameRendData->getCurrentMinData(), _oneFrameRendData->getCurrentMaxData(), QVector<float>{float(value)});
-			_postContourRenders[i]->setVisiable(isshow);
-		}
-		render->setLineStateSet(lineStateSet);
-		render->setFaceStateSet(faceStateSet);
+		//render->resetDrawable();
+		_postContourRenders[i]->updateData(_oneFrameRendData->getCurrentMinData(), _oneFrameRendData->getCurrentMaxData(), QVector<float>{float(value)});
+		_postContourRenders[i]->setVisiable(isshow);
 	}
 	void mPostOneFrameRender::setContourGraph(int i, bool isshow)
 	{

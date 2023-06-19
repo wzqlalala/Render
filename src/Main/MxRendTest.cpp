@@ -537,6 +537,15 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			_postRender->setEdgeLineWidth(_lineWidth);
 			break;
 		}
+		case Qt::Key_N:
+		{
+			if (_postRend == nullptr)
+			{
+				return;
+			}
+			_postRender->createContourGraph(0, 0.0000005);
+			break;
+		}
 		case Qt::Key_M:
 		{
 			if (_postRend == nullptr)
