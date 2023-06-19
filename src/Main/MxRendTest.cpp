@@ -13,6 +13,7 @@
 #include "mModelView.h"
 #include "mBaseRend2D.h"
 #include "mBackGroundRender.h"
+#include "mVideoRender1.h"
 
 //MLableRend
 #include"mLableRendController_pre.h"
@@ -156,6 +157,36 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			QVector3D center(0, 0, 0);
 			float radius = 1.0;
 			_postRender->createContourGraph();
+			break;
+		}
+		case Qt::Key_F5:
+		{
+			if (_postRend == nullptr)
+			{
+				return;
+			}
+			QString filename = QFileDialog::getOpenFileName(this, "Ñ¡Ôñmp4ÎÄ¼þ", qApp->applicationDirPath(), "*.mp4");
+			QFileInfo info(filename);
+			_postRend->getVideoRender()->initialVideo(filename);
+			break;
+		}
+		case Qt::Key_F6:
+		{
+			if (_postRend == nullptr)
+			{
+				return;
+			}
+			_postRend->getVideoRender()->start();
+			break;
+		}
+		case Qt::Key_F7:
+		{
+			if (_postRend == nullptr)
+			{
+				return;
+			}
+			_postRend->getVideoRender()->setIsShow(_isShowVideo);
+			_isShowVideo = !_isShowVideo;
 			break;
 		}
 		case Qt::Key_Tab:

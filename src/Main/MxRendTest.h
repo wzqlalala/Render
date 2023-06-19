@@ -132,6 +132,9 @@ private:
 	bool _isLinearAnimation = true;
 	int _rate = 10;
 
+	// ”∆µ
+	bool _isShowVideo = false;
+
 	// ∞»°
 	MultiplyPickMode _multuiplyPickMode = MultiplyPickMode::QuadPick;
 

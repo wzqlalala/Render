@@ -45,6 +45,7 @@ public:
 	// QThread interface
 	bool Running_;
 	QString Url_;
+	bool isOneFrame{false};
 
 	AVFormatContext *pFormatCtx;
 	AVCodecContext *pCodecCtx;
@@ -78,6 +79,10 @@ namespace MBaseRend
 		~mVideoRender1() {};
 
 		void initialVideo(QString filename);
+
+		void start();
+
+		void stop();
 
 		void setIsShow(bool isShow);
 

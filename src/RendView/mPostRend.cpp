@@ -69,8 +69,8 @@ namespace MPostRend
 		shared_ptr<mPostRender> postRender = make_shared<mPostRender>(_app, _root, this);
 		this->addRender(postRender);	
 
-		shared_ptr<mVideoRender1> videoRender = make_shared<mVideoRender1>(_app, _root);
-		this->addRender(videoRender);
+		_videoRender = make_shared<mVideoRender1>(_app, _root);
+		this->addRender(_videoRender);
 
 		_fontRender->appendGloabalAxisFont();
 		_arrowRender->appendGloabalAxisArrow();
