@@ -2113,6 +2113,7 @@ namespace MPostRend
 
 	void mPostCuttingPlaneRender::setIsShowCuttingPlane(bool isShow)
 	{
+		_isShowCuttingPlane = isShow;
 		if (_transparentPlaneDrawable)
 		{
 			if (isShow)

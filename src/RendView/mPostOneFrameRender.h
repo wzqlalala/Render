@@ -172,6 +172,9 @@ namespace MPostRend
 		//获得拾取到的的点		
 		QPair<QVector<QVector3D>, QVector<QVector3D>>  getPickingNodeData(std::set<int> nodeIds);
 
+		//获取被切剩下的云图的点
+		QPair<QVector<QVector3D>, QVector<QVector3D>>  getCuttingNodeData();
+
 		//获取切面数据
 		template <class T>
 		QPair<QVector<QVector3D>, QVector<T>> getCuttingPlaneData(int index, QHash<int, T> value, MViewBasic::NodeOrElement nodeOrElement)

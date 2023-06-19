@@ -357,6 +357,8 @@ namespace MPostRend
 
 		mPostCuttingPlaneData *getCuttingPlaneData();
 
+		bool _isShowCuttingPlane;
+
 	private:
 		void UpdateCuttingPlane(int index);
 
@@ -373,6 +375,5 @@ namespace MPostRend
 		std::shared_ptr<mxr::Drawable> _transparentPlaneDrawable;
 		std::shared_ptr<mxr::StateSet> _transparentPlaneStateSet;
 
-		bool _isShowCuttingPlane;
 	};
 }

@@ -276,14 +276,14 @@ namespace MPostRend
 		template <class T>
 		QPair<QVector<QVector3D>, QVector<T>> getCuttingPlaneData(int cuttingPlaneIndex, QHash<int, T> value, MViewBasic::NodeOrElement nodeOrElement)
 		{
-			int index = 0;
-			if (index >= _rendStatus->_cuttingPlanes.size())
+			QPair<QVector<QVector3D>, QVector<T>> result;
+			if (cuttingPlaneIndex >= _rendStatus->_cuttingPlanes.size())
 			{
 				return result;
 			}
 			if (_oneFrameRender != nullptr)
 			{
-				result = _oneFrameRender->getCuttingPlaneData(index, value, nodeOrElement);
+				result = _oneFrameRender->getCuttingPlaneData(cuttingPlaneIndex, value, nodeOrElement);
 			}
 			return result;
 		}
