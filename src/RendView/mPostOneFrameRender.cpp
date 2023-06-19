@@ -28,6 +28,8 @@
 #include "mPostOneFrameRendData.h"
 #include "mOneFrameData1.h"
 #include "mPostMeshNodeData1.h"
+#include "mPostMeshPartData1.h"
+#include "mPostMeshData1.h"
 
 using namespace mxr;
 using namespace std;
@@ -517,7 +519,7 @@ namespace MPostRend
 		{
 			if (cuttingPlane != nullptr&&cuttingPlane->_isShowCuttingPlane)
 			{
-				postCuttingNormalVertexs.append({ postCuttingPlaneData->getCuttingPlaneNormal(), postCuttingPlaneData->getCuttingPlaneVertex() });
+				postCuttingNormalVertexs.append({ cuttingPlane->getCuttingPlaneData()->getCuttingPlaneNormal(), cuttingPlane->getCuttingPlaneData()->getCuttingPlaneVertex() });
 			}
 		}
 
@@ -526,7 +528,7 @@ namespace MPostRend
 			return QPair<QVector<QVector3D>, QVector<QVector3D>>();
 		}
 
-		if (_currentFrameRendData == nullptr)
+		if (_oneFrameRendData == nullptr)
 		{
 			return QPair<QVector<QVector3D>, QVector<QVector3D>>();
 		}
@@ -534,9 +536,9 @@ namespace MPostRend
 		QVector<QVector3D> resVertexs;
 		QVector<QVector3D> resValues;
 
-		QHash<int, QVector3D> values = _currentFrameRendData->getVectorRendData();
-		const QHash<int, QVector3D> &dis = _currentFrameRendData->getNodeDisplacementData();
-		QVector3D deformationScale = _currentFrameRendData->getDeformationScale();
+		QHash<int, QVector3D> values = _oneFrameRendData->getVectorRendData();
+		const QHash<int, QVector3D> &dis = _oneFrameRendData->getNodeDisplacementData();
+		QVector3D deformationScale = _oneFrameRendData->getDeformationScale();
 
 		QHashIterator<QString, mPostMeshPartData1*> iter(_oneFrameData->getMeshPartIterator());
 		while (iter.hasNext())
