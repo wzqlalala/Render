@@ -84,13 +84,12 @@ namespace MPreRend
 	}
 	bool mPreMeshModelRender::updateRender()
 	{
-		if (MeshMessage::getInstance()->hasUpdatedRenderState())
+		bool isUpdateCamera{ false };
+		while (MeshMessage::getInstance()->hasUpdatedRenderState())
 		{
-			bool isUpdateCamera{ false };
 			isUpdateCamera = isUpdateCamera | updateModelOperate(MeshMessage::getInstance()->getUpdatedRenderState());
-			return isUpdateCamera;
 		}
-		return false;
+		return isUpdateCamera;
 	}
 	void mPreMeshModelRender::UpdateModelBuffer()
 	{
