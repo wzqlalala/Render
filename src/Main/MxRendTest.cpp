@@ -132,7 +132,7 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			float radius = (aabb.maxEdge - aabb.minEdge).length() / 2.0;
 			_postRend->getCamera()->ResetOrthoAndCamera(center, radius);
 			_postRend->getCamera1()->ResetOrthoAndCamera(center, radius);
-			_postRender->setShowFuntion(ElementFace);
+			_postRender->setShowFuntion(WireFrame);
 			break;
 		}
 		case Qt::Key_F3:

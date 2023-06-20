@@ -201,6 +201,11 @@ namespace MPostRend
 		_facelineStateSet->setUniform(MakeAsset<Uniform>("deformationScale", QVector3D()));
 		_facelineStateSet->setUniform(MakeAsset<Uniform>("showColor", _rendStatus->_faceLineColor));
 		_facelineStateSet->setUniform(MakeAsset<Uniform>("rightToLeft", 0));
+		_facelineStateSet->setUniform(MakeAsset<Uniform>("minValue", float(0)));
+		_facelineStateSet->setUniform(MakeAsset<Uniform>("maxValue", float(0)));
+		_facelineStateSet->setUniform(MakeAsset<Uniform>("isEquivariance", int(0)));
+		_facelineStateSet->setUniform(MakeAsset<Uniform>("textureCoordRatio", float(0)));
+		_facelineStateSet->setUniform(MakeAsset<Uniform>("isAllColor", float(1)));
 		//glLineWidth(10.0);
 
 		//line
@@ -558,6 +563,7 @@ namespace MPostRend
 			_texture = new Texture(GL_TEXTURE_1D, table->getPostColorTableNum(), 0, 0, GL_RGB8, 1);
 			_texture->SetData(0, 0, table->getPostColorTableNum(), table->getColorTable());
 			_faceStateSet->setTexture("texture", _texture);
+			_facelineStateSet->setTexture("texture", _texture);
 			_lineStateSet->setTexture("texture", _texture);
 			_pointStateSet->setTexture("texture", _texture);
 			_cuttingPlaneStateSet->setTexture("texture", _texture);
