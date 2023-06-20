@@ -329,8 +329,11 @@ namespace MPreRend
 		for (auto point : points)
 		{
 			MXMeshVertex *vertex = MeshMessage::getInstance()->getNodeDataByID(point->getNodeID());
-			_pointrend->_vertex0->append(vertex->getNodeVertex());
-			_pointrend->_vertex1->append(color);	
+			if (vertex)
+			{
+				_pointrend->_vertex0->append(vertex->getNodeVertex());
+				_pointrend->_vertex1->append(color);
+			}
 		}
 
 		QPair<QVector3D, QVector3D> box = MeshMessage::getInstance()->getBoundBoxSamePart(_partName);
