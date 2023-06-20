@@ -325,11 +325,11 @@ namespace MPreRend
 		}
 
 		//µãÍø¸ñ
-		QVector<MXGeoPoint*> geoPoints = MeshMessage::getInstance()->getGeoPointSamePart(_partName);
-		for (auto geoPoint : geoPoints)
+		QVector<SpecialElement*> points = MeshMessage::getInstance()->getSpecialElementOfPart(_partName);
+		for (auto point : points)
 		{
-			auto mesh = geoPoint->_mVertex;
-			_pointrend->_vertex0->append(QVector3D(mesh->vx(), mesh->vy(), mesh->vz()));
+			MXMeshVertex *vertex = MeshMessage::getInstance()->getNodeDataByID(point->getNodeID());
+			_pointrend->_vertex0->append(vertex->getNodeVertex());
 			_pointrend->_vertex1->append(color);	
 		}
 
