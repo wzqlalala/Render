@@ -9,6 +9,8 @@
 #include "mMeshViewEnum.h"
 #include "mBasicStructor.h"
 
+#include "mPostCuttingPlaneRender.h"
+
 namespace mxr
 {
 	class Application;
@@ -170,7 +172,21 @@ namespace MPostRend
 		//获得拾取到的的点		
 		QPair<QVector<QVector3D>, QVector<QVector3D>>  getPickingNodeData(std::set<int> nodeIds);
 
+		//获取被切剩下的云图的点
+		QPair<QVector<QVector3D>, QVector<QVector3D>>  getCuttingNodeData();
 
+		//获取切面数据
+		template <class T>
+		QPair<QVector<QVector3D>, QVector<T>> getCuttingPlaneData(int index, QHash<int, T> value, MViewBasic::NodeOrElement nodeOrElement)
+		{
+			QPair<QVector<QVector3D>, QVector<T>> result;
+
+			result = _cuttingPlaneRenders[index]->getCuttingPlaneData()->getCuttingNodeData(value, nodeOrElement);
+			return result;
+		};
+
+		//获取切面三角形数据
+		QVector<QVector3D> getCuttingPlaneData(int index);
 	private:
 
 		void initial();

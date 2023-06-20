@@ -133,7 +133,7 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			float radius = (aabb.maxEdge - aabb.minEdge).length() / 2.0;
 			_postRend->getCamera()->ResetOrthoAndCamera(center, radius);
 			_postRend->getCamera1()->ResetOrthoAndCamera(center, radius);
-			_postRender->setShowFuntion(ElementFace);
+			_postRender->setShowFuntion(WireFrame);
 			break;
 		}
 		case Qt::Key_F3:
@@ -566,6 +566,15 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			}
 
 			_postRender->setEdgeLineWidth(_lineWidth);
+			break;
+		}
+		case Qt::Key_N:
+		{
+			if (_postRend == nullptr)
+			{
+				return;
+			}
+			_postRender->createContourGraph(0, 0.0000005);
 			break;
 		}
 		case Qt::Key_M:
@@ -1121,18 +1130,18 @@ bool MxRendTest::createGeo(MDataGeo::mGeoModelData1 * geoModelData)
 	/*****************µã***********/
 	_globalPointId++;
 	geoPointData = new mGeoPointData1(geoModelData, partName, _globalPointId);
-	geoPointData->setPointData(_globalPointId, QVector3D(1, 2, 3));
-	geoPartData->appendGeoPointID(_globalPointId);
-	
-	_globalPointId++;
-	geoPointData = new mGeoPointData1(geoModelData, partName, _globalPointId);
 	geoPointData->setPointData(_globalPointId, QVector3D(0, 0, 0));
 	geoPartData->appendGeoPointID(_globalPointId);
-
-	_globalPointId++;
-	geoPointData = new mGeoPointData1(geoModelData, partName, _globalPointId);
-	geoPointData->setPointData(_globalPointId, QVector3D(100, 100, 100));
-	geoPartData->appendGeoPointID(_globalPointId);
+	
+	//_globalPointId++;
+	//geoPointData = new mGeoPointData1(geoModelData, partName, _globalPointId);
+	//geoPointData->setPointData(_globalPointId, QVector3D(0, 0, 0));
+	//geoPartData->appendGeoPointID(_globalPointId);
+	//
+	//_globalPointId++;
+	//geoPointData = new mGeoPointData1(geoModelData, partName, _globalPointId);
+	//geoPointData->setPointData(_globalPointId, QVector3D(100, 100, 100));
+	//geoPartData->appendGeoPointID(_globalPointId);
 	///**********²¿¼þ*****************************************************************************************/
 	//_globalPartId++;
 	//partName = "part5";

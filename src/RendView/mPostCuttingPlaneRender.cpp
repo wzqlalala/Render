@@ -2113,6 +2113,7 @@ namespace MPostRend
 
 	void mPostCuttingPlaneRender::setIsShowCuttingPlane(bool isShow)
 	{
+		_isShowCuttingPlane = isShow;
 		if (_transparentPlaneDrawable)
 		{
 			if (isShow)
@@ -2138,6 +2139,11 @@ namespace MPostRend
 			Array *array = _cuttingPlaneDrawable->getVertexAttribArray(2);
 			array->updata(0, array->size() * 4, QVector<float>(array->size(), index).data());
 		}
+	}
+
+	mPostCuttingPlaneData * mPostCuttingPlaneRender::getCuttingPlaneData()
+	{
+		return _postCuttingPlaneData;
 	}
 
 	void mPostCuttingPlaneRender::UpdateCuttingPlane(int index)

@@ -197,6 +197,12 @@ namespace MBaseRend
 				Depth = (BufDepth - 0.5) * 2;//将深度值范围从0.1转换到-1.1
 			QVector3D Center = mViewToolClass::PixelToModelPosition(posx, posy, _modelView->_projection, _modelView->_view, _modelView->_model, SCR_WIDTH, SCR_HEIGHT, Depth);
 			_center_now = Center;
+			float maxRadius = mViewToolClass::GetMaxRadius(_aabb.minEdge.x(), _aabb.maxEdge.x(), _aabb.minEdge.y(), _aabb.maxEdge.x(), _aabb.minEdge.z(), _aabb.maxEdge.z(), _center_now);
+			auto view = dynamic_pointer_cast<mModelView>(_modelView);
+			if (view)
+			{
+				view->SetRotateCenterToPoint(Center, maxRadius);
+			}
 			_shapeRender->appendXPointShape("RotateCenter", { Center }, QVector3D(1, 1, 0));
 			FBO->release();
 			ifGetRotateCenter = false;

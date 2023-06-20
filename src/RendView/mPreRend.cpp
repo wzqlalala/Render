@@ -21,13 +21,14 @@
 #include"mLableDataController_common.cpp"
 
 #include <math.h>
+#include <qglobal.h>
 
 namespace MPreRend
 {
 
 	mPreRend::mPreRend(const QString& name):mBaseRend3D(name, Viewport3D)
 	{
-		*_pickFilter = PickFilter::PickNodeByLineAngle;
+		*_pickFilter = PickFilter::PickGeoPoint;
 		qDebug() << "Pre Struct";
 
 		//保存单位制
@@ -223,7 +224,7 @@ namespace MPreRend
 		//模型中心
 		_center_model = (_aabb.maxEdge + _aabb.minEdge)/2.0;
 		_maxRadius_model = _aabb.maxEdge.distanceToPoint(_aabb.minEdge);
-		if (isinf(_maxRadius_model))
+		if (isinf(_maxRadius_model) || qFuzzyCompare(0, _maxRadius_model))
 		{
 			_maxRadius_model = _maxRadius_now;
 		}
@@ -236,7 +237,11 @@ namespace MPreRend
 		{
 			float t = _maxRadius_now;
 			_maxRadius_now = _aabb.maxEdge.distanceToPoint(_center_now);
-			if (isinf(_maxRadius_now))
+			float max_x = std::max(std::abs(_aabb.minEdge.x() - _center_now.x()), std::abs(_aabb.maxEdge.x() - _center_now.x()));
+			float max_y = std::max(std::abs(_aabb.minEdge.y() - _center_now.y()), std::abs(_aabb.maxEdge.y() - _center_now.y()));
+			float max_z = std::max(std::abs(_aabb.minEdge.z() - _center_now.z()), std::abs(_aabb.maxEdge.z() - _center_now.z()));
+			_maxRadius_now = sqrt(pow(max_x, 2) + pow(max_y, 2) + pow(max_z, 2));
+			if (isinf(_maxRadius_now) || qFuzzyCompare(0, _maxRadius_now))
 			{
 				_maxRadius_now = t;
 			}
@@ -245,7 +250,7 @@ namespace MPreRend
 	void mPreRend::slotResetOrthoAndCamera()
 	{
 		GetModelSizePara(true);
-		_modelView->ResetOrthoAndCamera(_center_model, _maxRadius_now);
+		_modelView->ResetOrthoAndCamera(_center_model, _maxRadius_model);
 		_modelView->SaveCurrentView();
 		_commonView->SaveCurrentView();
 		//_meshModelRulerRend->UpdateNum();
