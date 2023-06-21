@@ -449,4 +449,43 @@ namespace MPostRend
 	{
 		return _partRenders.value(partName)->getPartSpaceTree();
 	}
+	void mPostModelRender::createExplodedGraph()
+	{
+		//找到模型基准部件
+
+		//与基准部件有交叉干涉的都往某方向偏移
+
+		Space::AABB aabb = this->getModelAABB();
+		QVector3D modelCenter = (aabb.maxEdge + aabb.minEdge) / 2.0;
+		for (auto partRender : _partRenders)
+		{
+			Space::AABB aabb1 = partRender->getPartSpaceTree()->space;
+			QVector3D partCenter = (aabb1.maxEdge + aabb1.minEdge) / 2.0;
+			QVector3D dir = partCenter - modelCenter;
+			
+		}
+	}
+	void mPostModelRender::createExplodedGraphByTransplatePart(set<QString> partNames, QVector3D dis)
+	{
+		for (auto partName : partNames)
+		{
+			QVector3D res = _oneFrameRendData->getPartExplodeDis(partName) + dis;
+			_oneFrameRendData->setPartExplodeDis(partName, res);
+			_partRenders[partName]->UpdatePartExplodeDis(res);
+		}
+	}
+	void mPostModelRender::createExplodedGraphByModelCenter(set<QString> partNames, QVector3D factor)
+	{
+		Space::AABB aabb = this->getModelAABB();
+		QVector3D modelCenter = (aabb.maxEdge + aabb.minEdge) / 2.0;
+		for (auto partName : partNames)
+		{
+			Space::AABB aabb1 = this->getPartSpaceTree(partName)->space;
+			QVector3D partCenter = (aabb1.maxEdge + aabb1.minEdge) / 2.0;
+			QVector3D dir = partCenter - modelCenter;
+			QVector3D res = _oneFrameRendData->getPartExplodeDis(partName) + dir * factor;
+			_oneFrameRendData->setPartExplodeDis(partName, res);
+			_partRenders[partName]->UpdatePartExplodeDis(res);
+		}
+	}
 }

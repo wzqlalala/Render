@@ -3,6 +3,7 @@
 #ifdef vertex_shader
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aDisplacement;
+layout (location = 2) in vec3 aExplodeDis;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -19,7 +20,7 @@ out VS_OUT
 
 void main()
 {
-    vs_out.deformationPos = aPos + deformationScale * aDisplacement;
+    vs_out.deformationPos = aPos + deformationScale * aDisplacement + aExplodeDis;
 	gl_Position = projection * view * model * vec4(vs_out.deformationPos, 1.0f);
 
 	for(int i = 0;i < 8; ++i){

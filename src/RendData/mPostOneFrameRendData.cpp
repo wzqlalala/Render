@@ -254,6 +254,25 @@ namespace MDataPost
 	{
 		return _textureCoordScale;
 	}
+
+	void mPostOneFrameRendData::setPartExplodeDis(QString partName, QVector3D partExplodeDis)
+	{
+		_partExplodeDis[partName] = partExplodeDis;
+	}
+
+	QVector3D mPostOneFrameRendData::getPartExplodeDis(QString partName)
+	{
+		if (!_partExplodeDis.contains(partName))
+		{
+			_partExplodeDis[partName] = QVector3D(0, 0, 0);
+			return QVector3D(0, 0, 0);
+		}
+		return _partExplodeDis[partName];
+	}
+	QHash<QString, QVector3D> mPostOneFrameRendData::getExplodeDis()
+	{
+		return _partExplodeDis;
+	}
 	void mPostOneFrameRendData::deleteValueAndDisplacementData()
 	{
 		_value.clear();

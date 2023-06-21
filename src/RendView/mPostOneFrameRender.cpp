@@ -471,6 +471,27 @@ namespace MPostRend
 			_postStreamLineRender->OrganizeModeldata();
 		}
 	}
+	void mPostOneFrameRender::createExplodedGraph()
+	{
+		if (_modelRender)
+		{
+			_modelRender->createExplodedGraph();
+		}
+	}
+	void mPostOneFrameRender::createExplodedGraphByTransplatePart(set<QString> partNames, QVector3D dis)
+	{
+		if (_modelRender)
+		{
+			_modelRender->createExplodedGraphByTransplatePart(partNames, dis);
+		}
+	}
+	void mPostOneFrameRender::createExplodedGraphByModelCenter(set<QString> partNames, QVector3D factor)
+	{
+		if (_modelRender)
+		{
+			_modelRender->createExplodedGraphByModelCenter(partNames, factor);
+		}
+	}
 	QPair<QVector<QVector3D>, QVector<QVector3D>> mPostOneFrameRender::getPickingNodeData(std::set<int> nodeIds)
 	{
 		if (_oneFrameData == nullptr)

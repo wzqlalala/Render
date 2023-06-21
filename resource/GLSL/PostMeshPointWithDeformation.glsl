@@ -6,6 +6,7 @@ layout(location = 1) in vec3 aMaterial;
 layout(location = 2) in float aIsColor;
 layout(location = 3) in float aValue;
 layout(location = 4) in vec3 aDisplacement;
+layout(location = 5) in vec3 aExplodeDis;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -26,7 +27,7 @@ out vec3 FragPos;
 
 void main()
 {
-	vec3 deformationPos = aPos + deformationScale * aDisplacement;
+	vec3 deformationPos = aPos + deformationScale * aDisplacement + aExplodeDis;
 	FragPos = vec3(model * vec4(deformationPos, 1.0));
 	gl_Position = projection * view * vec4(FragPos, 1.0);
 

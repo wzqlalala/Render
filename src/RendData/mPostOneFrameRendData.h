@@ -205,6 +205,21 @@ namespace MDataPost
 		float getTextureCoordScale();
 
 		/*
+		 * 设置部件的爆炸位移
+		 */
+		void setPartExplodeDis(QString partName, QVector3D partExplodeDis);
+
+		/*
+		 * 获取部件的爆炸位移
+		 */
+		QVector3D getPartExplodeDis(QString partName);
+
+		/*
+		 * 获取全部部件的爆炸位移
+		 */
+		QHash<QString, QVector3D> getExplodeDis();
+
+		/*
 		* 删除变量变量数据和和矢量数据和位移数据
 		*/
 		void deleteValueAndDisplacementData();
@@ -259,6 +274,9 @@ namespace MDataPost
 
 		//部件名的最值
 		QHash<QString, QVector2D> _partMinMaxValue;
+
+		//部件的爆炸图位移
+		QHash<QString, QVector3D> _partExplodeDis;
 	};
 
 }

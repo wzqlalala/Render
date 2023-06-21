@@ -158,6 +158,17 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			_postRender->createContourGraph();
 			break;
 		}
+		case Qt::Key_F5:
+		{
+			if (_postRender == nullptr)
+			{
+				return;
+			}
+			//_postRender->createExplodedGraphByTransplatePart(set<QString>{"686_doorfrontsupport3"}, _explodeDis);
+			_postRender->createExplodedGraphByModelCenter(set<QString>{"686_doorfrontsupport3"}, _explodeDis);
+			//_explodeDis += QVector3D(0, 2, 0);
+			break;
+		}
 		case Qt::Key_Tab:
 		{
 			if (_postRend == nullptr)

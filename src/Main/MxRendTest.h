@@ -132,6 +132,9 @@ private:
 	bool _isLinearAnimation = true;
 	int _rate = 10;
 
+	//爆炸图的位移值
+	QVector3D _explodeDis = QVector3D(1, 1, 1);
+
 	//拾取
 	MultiplyPickMode _multuiplyPickMode = MultiplyPickMode::QuadPick;
 
