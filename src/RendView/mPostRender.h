@@ -19,6 +19,9 @@
 #include "mElementFunction.h"
 //#include "mBasicStructor.h"
 
+#include "mPostOneFrameRender.h"
+#include "mPostRendStatus.h"
+
 namespace mxr
 {
 	class Shader;
@@ -262,14 +265,34 @@ namespace MPostRend
 
 		//通过零件名称获取单元ID	
 		set<int> getMeshIDsByPartNames(MeshType meshType, set<QString> partNames);
-
-		
+	
 		//获取全部单元ID
 		set<int> getAllMeshIDs(MeshType meshType);
-
-		
+	
 		//通过单元ID获取节点坐标
 		QVector<QVector3D> getNodeVertexByMeshID(int meshID);
+
+		//通过切面索引来获取切面的数据
+		template <class T>
+		QPair<QVector<QVector3D>, QVector<T>> getCuttingPlaneData(int cuttingPlaneIndex, QHash<int, T> value, MViewBasic::NodeOrElement nodeOrElement)
+		{
+			QPair<QVector<QVector3D>, QVector<T>> result;
+			if (cuttingPlaneIndex >= _rendStatus->_cuttingPlanes.size())
+			{
+				return result;
+			}
+			if (_oneFrameRender != nullptr)
+			{
+				result = _oneFrameRender->getCuttingPlaneData(cuttingPlaneIndex, value, nodeOrElement);
+			}
+			return result;
+		}
+
+		//通过切面名称来获取切面的顶点数据
+		QVector<QVector3D> getCuttingPlaneData(int cuttingPlaneIndex);
+
+		//通过切面名称来获取切面的法向
+		QVector3D getCuttingPlaneNormal(int cuttingPlaneIndex);
 
 	private:
 

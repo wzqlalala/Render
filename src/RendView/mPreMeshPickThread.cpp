@@ -990,6 +990,19 @@ namespace MPreRend
 			}
 		}
 
+		//»ñÈ¡0Î¬Íø¸ñ
+		//QVector<SpecialElement*> meshs0 = MeshMessage::getInstance()->getSpecialElementOfPart(partName);
+		//for (auto mesh : meshs0)
+		//{
+		//	auto vertex = MeshMessage::getInstance()->getNodeDataByID(mesh->getNodeID());
+		//	QVector2D ap1 = WorldvertexToScreenvertex(QVector3D(vertex->vx(), vertex->vy(), vertex->vz()), depth);
+		//	if (fabs(ap1.x() - _pos.x()) <= 5 && fabs(ap1.y() - _pos.y()) <= 5 && depth < _meshdepth)
+		//	{
+		//		_meshdepth = depth;
+		//		//_picknodevertex = vertex;
+		//	}
+		//}
+
 
 		if (_pickMesh == nullptr)
 		{

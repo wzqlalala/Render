@@ -28,6 +28,8 @@
 #include "mPostOneFrameRendData.h"
 #include "mOneFrameData1.h"
 #include "mPostMeshNodeData1.h"
+#include "mPostMeshPartData1.h"
+#include "mPostMeshData1.h"
 
 using namespace mxr;
 using namespace std;
@@ -326,7 +328,7 @@ namespace MPostRend
 	}
 	void mPostOneFrameRender::createVectorGraph(QVector<QPair<QString, QVector3D>> type_color, double size)
 	{
-		QPair<QVector<QVector3D>, QVector<QVector3D>> res;	//通过原模型生成节点
+		QPair<QVector<QVector3D>, QVector<QVector3D>> res = this->getCuttingNodeData();	//通过原模型生成节点
 		createVectorGraph(res);
 	}
 	void mPostOneFrameRender::createVectorGraph(std::set<int> nodeIDs, QVector<QPair<QString, QVector3D>> type_color, double size)
@@ -421,18 +423,12 @@ namespace MPostRend
 			render = MakeAsset<mPostContourRender>(_app, _geode, _oneFrameData, _oneFrameRendData);
 			render->setLineStateSet(faceStateSet);
 			render->setFaceStateSet(faceStateSet);
-			render->resetDrawable();
 			render->setVisiable(isshow);
 			_postContourRenders.append(render);
 		}
-		else//更新
-		{
-			render->resetDrawable();
-			_postContourRenders[i]->updateData(_oneFrameRendData->getCurrentMinData(), _oneFrameRendData->getCurrentMaxData(), QVector<float>{float(value)});
-			_postContourRenders[i]->setVisiable(isshow);
-		}
-		render->setLineStateSet(lineStateSet);
-		render->setFaceStateSet(faceStateSet);
+		//render->resetDrawable();
+		_postContourRenders[i]->updateData(_oneFrameRendData->getCurrentMinData(), _oneFrameRendData->getCurrentMaxData(), QVector<float>{float(value)});
+		_postContourRenders[i]->setVisiable(isshow);
 	}
 	void mPostOneFrameRender::setContourGraph(int i, bool isshow)
 	{
@@ -506,6 +502,165 @@ namespace MPostRend
 		}
 
 		return QPair<QVector<QVector3D>, QVector<QVector3D>>{ resVertexs, resValues};
+	}
+	QPair<QVector<QVector3D>, QVector<QVector3D>> MPostRend::mPostOneFrameRender::getCuttingNodeData()
+	{
+		if (_oneFrameData == nullptr)
+		{
+			return QPair<QVector<QVector3D>, QVector<QVector3D>>();
+		}
+
+		if (_oneFrameRendData == nullptr)
+		{
+			return QPair<QVector<QVector3D>, QVector<QVector3D>>();
+		}
+		QVector<QPair<QVector3D, QVector3D>> postCuttingNormalVertexs;
+		for (auto cuttingPlane : _cuttingPlaneRenders)
+		{
+			if (cuttingPlane != nullptr&&cuttingPlane->_isShowCuttingPlane)
+			{
+				postCuttingNormalVertexs.append({ cuttingPlane->getCuttingPlaneData()->getCuttingPlaneNormal(), cuttingPlane->getCuttingPlaneData()->getCuttingPlaneVertex() });
+			}
+		}
+
+		if (_oneFrameData == nullptr)
+		{
+			return QPair<QVector<QVector3D>, QVector<QVector3D>>();
+		}
+
+		if (_oneFrameRendData == nullptr)
+		{
+			return QPair<QVector<QVector3D>, QVector<QVector3D>>();
+		}
+
+		QVector<QVector3D> resVertexs;
+		QVector<QVector3D> resValues;
+
+		QHash<int, QVector3D> values = _oneFrameRendData->getVectorRendData();
+		const QHash<int, QVector3D> &dis = _oneFrameRendData->getNodeDisplacementData();
+		QVector3D deformationScale = _oneFrameRendData->getDeformationScale();
+
+		QHashIterator<QString, mPostMeshPartData1*> iter(_oneFrameData->getMeshPartIterator());
+		while (iter.hasNext())
+		{
+			iter.next();
+			QString partName = iter.key();
+			mPostMeshPartData1 *partData = iter.value();
+			if (partData == nullptr || !partData->getPartVisual())
+			{
+				continue;
+			}
+
+			//三维网格的节点
+			set<int> meshIDs = partData->getMeshIDs3();
+			for (int meshID : meshIDs)
+			{
+				mPostMeshData1 *meshData = _oneFrameData->getMeshDataByID(meshID);
+				if (meshData == nullptr)
+				{
+					continue;
+				}
+				if (!meshData->getMeshVisual())
+				{
+					continue;
+				}
+				QVector<int> index = meshData->getNodeIndex();
+				for (int j = 0; j < index.size(); ++j)
+				{
+					QVector3D vertex = _oneFrameData->getNodeDataByID(index.at(j))->getNodeVertex() + deformationScale * dis.value(index.at(j));
+
+					bool isCutting{ false };
+					for (QPair<QVector3D, QVector3D> normalVertex : postCuttingNormalVertexs)
+					{
+						if (vertex.distanceToPlane(normalVertex.second, normalVertex.first) < 0)
+						{
+							isCutting = true;
+							break;
+						}
+					}
+					if (!isCutting)//没有被裁剪
+					{
+						resVertexs.append(vertex);
+						resValues.append(values.value(meshData->getNodeIndex().at(j)));
+					}
+
+				}
+			}
+
+			//一维网格的节点
+			meshIDs = partData->getMeshIDs1();
+			for (int meshID : meshIDs)
+			{
+				mPostMeshData1 *meshData = _oneFrameData->getMeshDataByID(meshID);
+				if (meshData == nullptr)
+				{
+					continue;
+				}
+				if (!meshData->getMeshVisual())
+				{
+					continue;
+				}
+				QVector<int> index = meshData->getNodeIndex();
+				for (int j = 0; j < meshData->getNodeIndex().size(); ++j)
+				{
+					QVector3D vertex = _oneFrameData->getNodeDataByID(index.at(j))->getNodeVertex() + deformationScale * dis.value(index.at(j));
+
+					bool isCutting{ false };
+					for (QPair<QVector3D, QVector3D> normalVertex : postCuttingNormalVertexs)
+					{
+						if (vertex.distanceToPlane(normalVertex.second, normalVertex.first) < 0)
+						{
+							isCutting = true;
+							break;
+						}
+					}
+					if (!isCutting)//没有被裁剪
+					{
+						resVertexs.append(vertex);
+						resValues.append(values.value(meshData->getNodeIndex().at(j)));
+					}
+				}
+			}
+
+			//二维网格的节点
+			meshIDs = partData->getMeshIDs2();
+			for (int meshID : meshIDs)
+			{
+				mPostMeshData1 *meshData = _oneFrameData->getMeshDataByID(meshID);
+				if (meshData == nullptr)
+				{
+					continue;
+				}
+				QVector<int> index = meshData->getNodeIndex();
+				for (int j = 0; j < index.size(); ++j)
+				{
+					QVector3D vertex0 = _oneFrameData->getNodeDataByID(index.at(j))->getNodeVertex();
+
+					QVector3D vertex = _oneFrameData->getNodeDataByID(index.at(j))->getNodeVertex() + deformationScale * dis.value(index.at(j));
+
+					bool isCutting{ false };
+					for (QPair<QVector3D, QVector3D> normalVertex : postCuttingNormalVertexs)
+					{
+						if (vertex.distanceToPlane(normalVertex.second, normalVertex.first) < 0)
+						{
+							isCutting = true;
+							break;
+						}
+					}
+					if (!isCutting)//没有被裁剪
+					{
+						resVertexs.append(vertex);
+						resValues.append(values.value(meshData->getNodeIndex().at(j)));
+					}
+				}
+			}
+		}
+
+		return QPair<QVector<QVector3D>, QVector<QVector3D>>{ resVertexs, resValues};
+	}
+	QVector<QVector3D> MPostRend::mPostOneFrameRender::getCuttingPlaneData(int index)
+	{
+		return _cuttingPlaneRenders[index]->getCuttingPlaneData()->getTriVertex();
 	}
 	void mPostOneFrameRender::initial()
 	{

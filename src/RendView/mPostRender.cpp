@@ -201,6 +201,11 @@ namespace MPostRend
 		_facelineStateSet->setUniform(MakeAsset<Uniform>("deformationScale", QVector3D()));
 		_facelineStateSet->setUniform(MakeAsset<Uniform>("showColor", _rendStatus->_faceLineColor));
 		_facelineStateSet->setUniform(MakeAsset<Uniform>("rightToLeft", 0));
+		_facelineStateSet->setUniform(MakeAsset<Uniform>("minValue", float(0)));
+		_facelineStateSet->setUniform(MakeAsset<Uniform>("maxValue", float(0)));
+		_facelineStateSet->setUniform(MakeAsset<Uniform>("isEquivariance", int(0)));
+		_facelineStateSet->setUniform(MakeAsset<Uniform>("textureCoordRatio", float(0)));
+		_facelineStateSet->setUniform(MakeAsset<Uniform>("isAllColor", float(1)));
 		//glLineWidth(10.0);
 
 		//line
@@ -446,6 +451,7 @@ namespace MPostRend
 		_thread->setMatrix(_baseRend->getCamera()->getPVMValue());
 		_thread->setWidget(_baseRend->getCamera()->SCR_WIDTH, _baseRend->getCamera()->SCR_HEIGHT);
 		_thread->setPickMode(*_baseRend->getCurrentPickMode(), *_baseRend->getMultiplyPickMode());
+		_thread->setPickAngleValue(_baseRend->getPickAngle());
 		if (*_baseRend->getCurrentPickMode() == PickMode::SoloPick)
 		{		
 			float depth = this->getDepth(poses.first());
@@ -557,6 +563,7 @@ namespace MPostRend
 			_texture = new Texture(GL_TEXTURE_1D, table->getPostColorTableNum(), 0, 0, GL_RGB8, 1);
 			_texture->SetData(0, 0, table->getPostColorTableNum(), table->getColorTable());
 			_faceStateSet->setTexture("texture", _texture);
+			_facelineStateSet->setTexture("texture", _texture);
 			_lineStateSet->setTexture("texture", _texture);
 			_pointStateSet->setTexture("texture", _texture);
 			_cuttingPlaneStateSet->setTexture("texture", _texture);
@@ -1301,7 +1308,15 @@ namespace MPostRend
 	void mPostRender::setIsShowSphere(bool isShow)
 	{
 		_rendStatus->_streamLineSphere = isShow;
-
+		auto render = _dragRenders["»ý·ÖÇò"];
+		if (render)
+		{
+			auto sphereRender = dynamic_pointer_cast<mPostSphereRender>(render);
+			if (sphereRender)
+			{
+				sphereRender->setIsShow(isShow);
+			}
+		}
 	}
 
 	QVector3D mPostRender::getDragSphereCenter()
@@ -1591,6 +1606,32 @@ namespace MPostRend
 			}
 		}
 		return res;
+	}
+
+	QVector<QVector3D> mPostRender::getCuttingPlaneData(int cuttingPlaneIndex)
+	{
+		QVector<QVector3D> result;
+		if (cuttingPlaneIndex >=  _rendStatus->_cuttingPlanes.size())
+		{
+			return result;
+		}
+		if (_oneFrameRender != nullptr)
+		{
+			result = _oneFrameRender->getCuttingPlaneData(cuttingPlaneIndex);
+		}
+		return result;
+	}
+
+	QVector3D mPostRender::getCuttingPlaneNormal(int cuttingPlaneIndex)
+	{
+		QVector3D result;
+		if (cuttingPlaneIndex >= _rendStatus->_cuttingPlanes.size())
+		{
+			return result;
+		}
+		result = _rendStatus->_cuttingPlanes.at(cuttingPlaneIndex).toVector3D();
+
+		return result;
 	}
 
 	void mPostRender::updateCuttingPlaneUniform()

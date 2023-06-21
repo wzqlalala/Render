@@ -218,7 +218,7 @@ namespace MPostRend
 		std::shared_ptr<mGroupRender5<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array>>  _facerend;//面
 		std::shared_ptr<mGroupRender1<Vec3Array>> _facetransparentnodeformationrend;//变形前透明的面
 		std::shared_ptr<mGroupRender2<Vec3Array, Vec3Array>>  _edgelinerend;//边界线
-		std::shared_ptr<mGroupRender3<Vec3Array, Vec3Array, FloatArray>>  _facelinerend;//面线
+		std::shared_ptr<mGroupRender4<Vec3Array, Vec3Array, FloatArray, FloatArray>>  _facelinerend;//面线
 		std::shared_ptr<mGroupRender5<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array>>  _linerend;//线
 		std::shared_ptr<mGroupRender5<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array>>  _pointrend;//点
 

@@ -40,7 +40,11 @@ namespace MPostRend
 
 	mPostContourRender::~mPostContourRender()
 	{
-		
+		if (_parent)
+		{
+			_parent->removeChild(_geode);
+			_geode->removeAllChild();
+		}
 	}
 
 	void mPostContourRender::setLineStateSet(std::shared_ptr<mxr::StateSet> stateSet)

@@ -43,7 +43,7 @@ namespace MPostRend
 		_facerend = MakeAsset<mGroupRender5<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array>>(_geode);
 		_facetransparentnodeformationrend = MakeAsset<mGroupRender1<Vec3Array>>(_geode);
 		_edgelinerend = MakeAsset<mGroupRender2<Vec3Array, Vec3Array>>(_geode);
-		_facelinerend = MakeAsset<mGroupRender3<Vec3Array, Vec3Array, FloatArray>>(_geode);
+		_facelinerend = MakeAsset<mGroupRender4<Vec3Array, Vec3Array, FloatArray, FloatArray>>(_geode);
 		_linerend = MakeAsset<mGroupRender5<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array>>(_geode);
 		_pointrend = MakeAsset<mGroupRender5<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array>>(_geode);
 	}
@@ -167,8 +167,8 @@ namespace MPostRend
 
 		_facelinerend->getDrawable()->setVertexAttribArray(0, _facerend->_vertex0);
 		_facelinerend->getDrawable()->setVertexAttribArray(1, _facerend->_vertex4);
-
-		qDebug() <<  _facelinerend->_vertex0->size();
+		_facelinerend->getDrawable()->setVertexAttribArray(2, _facerend->_vertex3);
+		//qDebug() <<  _facelinerend->_vertex0->size();
 
 		//calculateSpaceTreeThread(dis);
 	}
@@ -209,6 +209,7 @@ namespace MPostRend
 			GetVariableValue_Mesh3(faceValue, faceHasValue, meshFaces[i], values, type);
 		}
 		_facerend->getDrawable()->getVertexAttribArray(3)->updata(0, faceValue.size() * sizeof(float), faceValue.data());
+		_facelinerend->getDrawable()->getVertexAttribArray(2)->updata(0, faceValue.size() * sizeof(float), faceValue.data());
 		//_facerend->getDrawable()->getVertexAttribArray(6)->updata(0, faceHasValue.size() * sizeof(float), faceHasValue.data());
 	}
 
@@ -231,6 +232,12 @@ namespace MPostRend
 			_facerend->getDrawable()->setNodeMask(0);
 			_facelinerend->getDrawable()->setNodeMask(0);
 			_edgelinerend->getDrawable()->setNodeMask(0);
+		}
+		else if (showFuntion == WireFrame)
+		{
+			_facerend->getDrawable()->setNodeMask(1);
+			_facelinerend->getDrawable()->setNodeMask(0);
+			_edgelinerend->getDrawable()->setNodeMask(1);
 		}
 		else if (showFuntion == WireEdge)
 		{
@@ -481,7 +488,7 @@ namespace MPostRend
 			//QVector3D normal = QVector3D::crossProduct((vertex1 - vertex0).normalized(), (vertex2 - vertex1).normalized()).normalized();
 			//_facerend->_vertex6->append(QVector<QVector3D>(3, normal));
 			//_facerend->_vertex8->append(QVector<float>(3, (float)meshID));
-			_facelinerend->_vertex2->append(QVector<float>(3, 1.0f));
+			_facelinerend->_vertex3->append(QVector<float>(3, 1.0f));
 			//_facelinerend->_vertex3->append(QVector<float>(3, (vertex0 - vertex1).length()));
 		}
 		else if (meshData->getMeshType() == MeshQuad)
@@ -551,7 +558,7 @@ namespace MPostRend
 			//QVector3D normal = QVector3D::crossProduct((vertex1 - vertex0).normalized(), (vertex2 - vertex1).normalized()).normalized();
 			//_facerend->_vertex6->append(QVector<QVector3D>(6, normal));
 			//_facerend->_vertex8->append(QVector<float>(6, (float)meshID));
-			_facelinerend->_vertex2->append(QVector<float>(6, 0.0f));
+			_facelinerend->_vertex3->append(QVector<float>(6, 0.0f));
 			//_facelinerend->_vertex3->append(QVector<float>(6, (vertex0 - vertex1).length()));
 		}
 
@@ -639,7 +646,7 @@ namespace MPostRend
 			//	meshID = meshFaceData->getMeshID2();
 			//}
 			//_facerend->_vertex8->append(QVector<float>(3, (float)meshID));
-			_facelinerend->_vertex2->append(QVector<float>(3, 1.0f));
+			_facelinerend->_vertex3->append(QVector<float>(3, 1.0f));
 			//_facelinerend->_vertex3->append(QVector<float>(3, (vertex0 - vertex1).length()));
 		}
 		else if (num == 4)
@@ -707,7 +714,7 @@ namespace MPostRend
 			//QVector3D normal = QVector3D::crossProduct((vertex1 - vertex0).normalized(), (vertex2 - vertex1).normalized()).normalized();
 			//_facerend->_vertex6->append(QVector<QVector3D>(6, normal));
 			//_facerend->_vertex8->append(QVector<float>(6, (float)meshID));
-			_facelinerend->_vertex2->append(QVector<float>(6, 0.0f));
+			_facelinerend->_vertex3->append(QVector<float>(6, 0.0f));
 			//_facelinerend->_vertex3->append(QVector<float>(6, (vertex0 - vertex1).length()));
 		}
 

@@ -132,7 +132,7 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			float radius = (aabb.maxEdge - aabb.minEdge).length() / 2.0;
 			_postRend->getCamera()->ResetOrthoAndCamera(center, radius);
 			_postRend->getCamera1()->ResetOrthoAndCamera(center, radius);
-			_postRender->setShowFuntion(ElementFace);
+			_postRender->setShowFuntion(WireFrame);
 			break;
 		}
 		case Qt::Key_F3:
@@ -535,6 +535,15 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			}
 
 			_postRender->setEdgeLineWidth(_lineWidth);
+			break;
+		}
+		case Qt::Key_N:
+		{
+			if (_postRend == nullptr)
+			{
+				return;
+			}
+			_postRender->createContourGraph(0, 0.0000005);
 			break;
 		}
 		case Qt::Key_M:

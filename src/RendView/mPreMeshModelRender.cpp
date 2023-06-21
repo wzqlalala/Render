@@ -84,13 +84,12 @@ namespace MPreRend
 	}
 	bool mPreMeshModelRender::updateRender()
 	{
-		if (MeshMessage::getInstance()->hasUpdatedRenderState())
+		bool isUpdateCamera{ false };
+		while (MeshMessage::getInstance()->hasUpdatedRenderState())
 		{
-			bool isUpdateCamera{ false };
 			isUpdateCamera = isUpdateCamera | updateModelOperate(MeshMessage::getInstance()->getUpdatedRenderState());
-			return isUpdateCamera;
 		}
-		return false;
+		return isUpdateCamera;
 	}
 	void mPreMeshModelRender::UpdateModelBuffer()
 	{
@@ -326,12 +325,15 @@ namespace MPreRend
 		}
 
 		//µãÍø¸ñ
-		QVector<MXGeoPoint*> geoPoints = MeshMessage::getInstance()->getGeoPointSamePart(_partName);
-		for (auto geoPoint : geoPoints)
+		QVector<SpecialElement*> points = MeshMessage::getInstance()->getSpecialElementOfPart(_partName);
+		for (auto point : points)
 		{
-			auto mesh = geoPoint->_mVertex;
-			_pointrend->_vertex0->append(QVector3D(mesh->vx(), mesh->vy(), mesh->vz()));
-			_pointrend->_vertex1->append(color);	
+			MXMeshVertex *vertex = MeshMessage::getInstance()->getNodeDataByID(point->getNodeID());
+			if (vertex)
+			{
+				_pointrend->_vertex0->append(vertex->getNodeVertex());
+				_pointrend->_vertex1->append(color);
+			}
 		}
 
 		QPair<QVector3D, QVector3D> box = MeshMessage::getInstance()->getBoundBoxSamePart(_partName);

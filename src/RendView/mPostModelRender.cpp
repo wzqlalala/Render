@@ -391,6 +391,10 @@ namespace MPostRend
 			_faceStateSet->getUniform("minValue")->SetData(minValue);
 			_faceStateSet->getUniform("maxValue")->SetData(maxValue);
 			_faceStateSet->getUniform("textureCoordRatio")->SetData(textureCoordRatio);
+			_facelineStateSet->getUniform("isEquivariance")->SetData(isEquivariance);
+			_facelineStateSet->getUniform("minValue")->SetData(minValue);
+			_facelineStateSet->getUniform("maxValue")->SetData(maxValue);
+			_facelineStateSet->getUniform("textureCoordRatio")->SetData(textureCoordRatio);
 			_lineStateSet->getUniform("isEquivariance")->SetData(isEquivariance);
 			_lineStateSet->getUniform("minValue")->SetData(minValue);
 			_lineStateSet->getUniform("maxValue")->SetData(maxValue);
@@ -409,6 +413,14 @@ namespace MPostRend
 			{
 				iter->setShowFuntion(showFuntion);
 			}
+		}
+		if (showFuntion == WireFrame)
+		{
+			_facelineStateSet->getUniform("isAllColor")->SetData(float(0));
+		}
+		else
+		{
+			_facelineStateSet->getUniform("isAllColor")->SetData(float(1));
 		}
 	}
 	void mPostModelRender::setIsShowInitialShape(bool isShowInitialShape)
