@@ -165,10 +165,27 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 				return;
 			}
 			//_postRender->createExplodedGraphByTransplatePart(set<QString>{"686_doorfrontsupport3"}, _explodeDis);
-			_postRender->createExplodedGraphByModelCenter(set<QString>{"686_doorfrontsupport3"}, _explodeDis);
+			set<QString> names = _postRender->getOneFrameRender()->getOneFrameData()->getAllPartNames();
+			if (names.size() == 0)
+			{
+				return;
+			}
+			_postRender->createExplodedGraphByModelCenter(names, _explodeDis);
+			_postRend->slotUpdateOrthoAndCamera();
 			//_explodeDis += QVector3D(0, 2, 0);
 			break;
 		}
+		case Qt::Key_F6:
+		{
+			if (_postRender == nullptr)
+			{
+				return;
+			}
+			_postRender->createExplodedGraph();
+			_postRend->slotUpdateOrthoAndCamera();
+			break;
+		}
+
 		case Qt::Key_Tab:
 		{
 			if (_postRend == nullptr)
