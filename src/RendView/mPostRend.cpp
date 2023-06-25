@@ -19,7 +19,7 @@ namespace MPostRend
 	mPostRend::mPostRend(const QString& name):mBaseRend3D(name, ViewportPost3D)
 	{
 		*_pickFilter = PickFilter::PickNode;
-		qDebug() << "Post Struct";
+		//qDebug() << "Post Struct";
 
 		//保存单位制
 		QString viewStyle = MAppConfiguration::mAppConfiguration::getInstance()->_viewStyle;
@@ -74,7 +74,7 @@ namespace MPostRend
 		_fontRender->appendGloabalAxisFont();
 		_arrowRender->appendGloabalAxisArrow();
 
-		qDebug() << "Post Initial";
+		//qDebug() << "Post Initial";
 	}
 
 	void mPostRend::paintGL()
@@ -114,7 +114,7 @@ namespace MPostRend
 	mPostRend::~mPostRend()
 	{
 
-		qDebug() << "Post Distruct";
+		//qDebug() << "Post Distruct";
 	}
 	shared_ptr<mPostRender> mPostRend::getPostRender()
 	{

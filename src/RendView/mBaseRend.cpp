@@ -52,7 +52,7 @@ namespace MBaseRend
 		//format.setSamples(4);
 		//setFormat(format);
 		//this->showMaximized();
-		qDebug() << "Base Struct";
+		//qDebug() << "Base Struct";
 	}
 
 	mBaseRend::~mBaseRend()
@@ -66,7 +66,7 @@ namespace MBaseRend
 			//mxr::mShaderManage::GetInstance()->deleteAllShaders();
 			//mxr::mTextureManage::GetInstance()->deleteAllTextures();
 		}
-		qDebug() << "Base Distruct";
+		//qDebug() << "Base Distruct";
 
 	}
 
@@ -133,7 +133,7 @@ namespace MBaseRend
 			qDebug() << error;
 		}
 
-		qDebug() << "Base Initial";
+		//qDebug() << "Base Initial";
 	}
 
 	void mBaseRend::paintGL()
