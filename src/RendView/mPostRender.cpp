@@ -1440,9 +1440,19 @@ namespace MPostRend
 		minRender->setData();
 		_tempHighLightRender->updateHighLightRender(_oneFrameRender->getOneFrameData(), _oneFrameRender->getOneFrameRendData());
 
-		_dragRenders["最小值"]->setIsShow(isshow);
-		_baseRend->getFontRender()->setCommonFontIsShow("min", isshow);
-		_baseRend->getFontRender()->setCommonFontIsShow("最小值", isshow);
+		if (minRender->_ids.size() > 0 && isshow)
+		{
+			_dragRenders["最小值"]->setIsShow(true);
+			_baseRend->getFontRender()->setCommonFontIsShow("min", true);
+			_baseRend->getFontRender()->setCommonFontIsShow("最小值", true);
+		}
+		else if (!isshow)
+		{
+			_dragRenders["最小值"]->setIsShow(false);
+			_baseRend->getFontRender()->setCommonFontIsShow("min", false);
+			_baseRend->getFontRender()->setCommonFontIsShow("最小值", false);
+		}
+
 	}
 
 	void mPostRender::setMaxIsShow(bool isshow)
@@ -1477,10 +1487,19 @@ namespace MPostRend
 		}
 		maxRender->setData();
 		_tempHighLightRender->updateHighLightRender(_oneFrameRender->getOneFrameData(), _oneFrameRender->getOneFrameRendData());
+		if (maxRender->_ids.size() > 0 && isshow)
+		{
+			_dragRenders["最大值"]->setIsShow(true);
+			_baseRend->getFontRender()->setCommonFontIsShow("max", true);
+			_baseRend->getFontRender()->setCommonFontIsShow("最大值", true);
+		}
+		else if (!isshow)
+		{
+			_dragRenders["最大值"]->setIsShow(false);
+			_baseRend->getFontRender()->setCommonFontIsShow("max", false);
+			_baseRend->getFontRender()->setCommonFontIsShow("最大值", false);
+		}
 
-		_dragRenders["最大值"]->setIsShow(isshow);
-		_baseRend->getFontRender()->setCommonFontIsShow("max", isshow);
-		_baseRend->getFontRender()->setCommonFontIsShow("最大值", isshow);
 	}
 
 	void mPostRender::getMinMaxLocation()
