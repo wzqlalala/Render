@@ -455,7 +455,7 @@ namespace MPostRend
 	{
 		QVector<shared_ptr<mPostPartRender>> renders;
 		shared_ptr<mPostPartRender> baseLinePartRender = nullptr;
-		//找到模型基准部件
+		//根据面积最大的找到模型基准部件
 		for (auto partRender : _partRenders)
 		{
 			if (baseLinePartRender == nullptr)
