@@ -132,6 +132,10 @@ private:
 	bool _isLinearAnimation = true;
 	int _rate = 10;
 
+	//最小最大值显隐
+	bool _isShowMin = false;
+	bool _isShowMax = false;
+
 	//拾取
 	MultiplyPickMode _multuiplyPickMode = MultiplyPickMode::QuadPick;
 

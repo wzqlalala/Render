@@ -132,7 +132,7 @@ namespace MPostRend
 
 	void mPostRend::GetModelSizePara(bool isModelCenter)
 	{
-		Space::AABB aabb = this->getPostRender()->getOneFrameRender()->getModelRender()->getModelAABB();
+		Space::AABB aabb = this->getPostRender()->getCurrentModelData();
 	
 		_aabb = aabb;
 		//模型中心

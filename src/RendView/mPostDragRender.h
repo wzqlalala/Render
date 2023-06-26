@@ -49,6 +49,8 @@ namespace MPostRend
 
 		virtual void updateUniform(std::shared_ptr<MViewBasic::mViewBase> modelView);
 
+		void setColor(QVector3D color);
+
 	protected:
 
 		QString _name;
@@ -90,6 +92,38 @@ namespace MPostRend
 		QVector2D _relativePosition;
 		//球心深度（范围为-1~1）
 		float _centerDepth;
+	};
+
+
+	class RENDVIEW_EXPORT mPostMinMaxRender : public mPostDragRender
+	{
+		Q_OBJECT
+
+	public:
+		mPostMinMaxRender(QString name, std::shared_ptr<Application> app, std::shared_ptr<Group> parent, std::shared_ptr<mPostRendStatus> rendStatus);
+
+		void setData();
+
+		bool pointIsIn(QVector2D pos, float depth, QMatrix4x4 pvm, int w, int h) override;
+
+		void move(QVector2D pos, QMatrix4x4 pvm, int w, int h) override;
+
+		void updateUniform(std::shared_ptr<MViewBasic::mViewBase> modelView) override;
+
+		~mPostMinMaxRender();
+
+		//位置
+		QVector3D _pos;
+		//拖拽点的位置相对于原来的位置偏移，x,y代表处于乘以矩阵后的像素（范围为-1~1）
+		QVector2D _relativePosition;
+		//深度（范围为-1~1）
+		float _depth;
+
+		//最值的ID
+		QVector<int> _ids;
+
+		//最值的坐标
+		QVector<QVector3D> _vertexs;
 	};
 }
 

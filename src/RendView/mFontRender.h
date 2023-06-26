@@ -89,7 +89,17 @@ namespace MBaseRend
 		void appendFixedFont(QString key, QVector<QVector2D> pos, QVector<QString> txt, QVector3D color = QVector3D(1,1,1), float size = 1.0);//添加固定文字显示
 		void setFixedFontIsShow(QString key, bool isShow);
 
-		void appendCommonFont(QString key, QVector<QVector3D> pos, QVector<QString> txt, QVector3D color = QVector3D(1, 1, 1), float size = 1.0);//添加固定文字显示
+		void appendCommonFont(QString key, QVector<QVector3D> pos, QVector<QString> txt, QVector3D color = QVector3D(1, 1, 1), float size = 1.0);//添加通用文字显示
+		template<class T>
+		void appendCommonFont(QString key, QVector<QVector3D> pos, QVector<T> txt, QVector3D color = QVector3D(1, 1, 1), float size = 1.0)
+		{
+			QVector<QString> res;
+			for (auto t : txt)
+			{
+				res.append(QString::number(t));
+			}
+			this->appendCommonFont(key, pos, res, color, size);
+		}//添加通用文字显示
 		void setCommonFontIsShow(QString key, bool isShow);
 		void setCommonFontColor(QString key, QVector3D color);
 		void setCommonFontSize(QString key, float size);

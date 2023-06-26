@@ -177,6 +177,7 @@ namespace MBaseRend
 		fonts->AppendFontV_Vector3(txt, pos, 4);
 		_commonFonts[key] = fonts;
 	}
+
 	void mFontRender::setCommonFontIsShow(QString key, bool isShow)
 	{
 		auto value = _commonFonts.value(key);

@@ -22,6 +22,8 @@
 #include "mPostOneFrameRender.h"
 #include "mPostRendStatus.h"
 
+#include "SpaceTree.h"
+
 namespace mxr
 {
 	class Shader;
@@ -58,6 +60,7 @@ namespace MPostRend
 	class mPostRend;
 	class mPostRendStatus;
 	class mPostHighLightRender;
+	class mPostTempHighLightRender;
 	class mPostOneFrameRender;
 	class mPostAnimationRender;
 	class mPostFrameText;
@@ -91,6 +94,9 @@ namespace MPostRend
 		void updateOneModelOperate(QPair<MViewBasic::PostModelOperateEnum, std::set<QString>> postModelOperates);
 		//更新全部部件操作
 		void updateAllModelOperate(MViewBasic::PostModelOperateEnum postModelOperate);
+	
+		//获取动画的模型尺寸	
+		Space::AABB getCurrentModelData();
 
 		//设置后处理渲染模式
 		void setPostMode(PostMode postMode);
@@ -252,6 +258,20 @@ namespace MPostRend
 		//生成流线图
 		void createStreamLine(QVector3D center, float radius, int streamLineNum = 500, float ratio = 0.1);//中心，半径，流线密度（数量）,积分比例
 
+		/**************************最小最大值*********************************************/
+		
+		//设置最小值是否显示	
+		void setMinIsShow(bool isshow);
+		
+		//设置最大值是否显示		
+		void setMaxIsShow(bool isshow);
+	
+		//获取最小最大值的位置		
+		void getMinMaxLocation();
+
+		//计算最小最大值的线条位置（在模型发生变化时，切换帧或者变形系数时）
+		void calculateMinMaxLinePosition();
+
 		~mPostRender();
 
 		void updateUniform(shared_ptr<mViewBase> modelView, shared_ptr<mViewBase> commonView) override;
@@ -307,6 +327,9 @@ namespace MPostRend
 
 		//计时器更新	
 		void slot_aniTimer();
+
+		//完成拖拽
+		void slot_finsishedDrag();
 
 	signals:
 
@@ -371,6 +394,9 @@ namespace MPostRend
 		mPostMeshPickThread *_thread; QFutureWatcher<void> w;
 		mPostMeshPickData *_pickData;
 		shared_ptr<mPostHighLightRender> _highLightRender;
+
+		//临时高亮
+		shared_ptr<mPostTempHighLightRender> _tempHighLightRender;
 		
 	};
 }

@@ -662,6 +662,120 @@ namespace MPostRend
 	{
 		return _cuttingPlaneRenders[index]->getCuttingPlaneData()->getTriVertex();
 	}
+	void mPostOneFrameRender::getMinMaxIDs(QVector<int>& minids, QVector<int>& maxids)
+	{
+		QHash<int, float> values = _oneFrameRendData->getRendValue();
+		QSet<int> s = values.keys().toSet();
+		if (_oneFrameData == nullptr)
+		{
+			return;
+		}
+		float _minValue = _oneFrameRendData->getCurrentMinData();
+		float _maxValue = _oneFrameRendData->getCurrentMaxData();
+		set<int> ids;
+		if (_oneFrameRendData->getNodeOrElement() == PostElement)
+		{
+			ids = _oneFrameData->getAllMeshIDs();		
+		}
+		else
+		{
+			ids = _oneFrameData->getAllNodeIDs();	
+		}
+		for (int meshID : ids)
+		{
+			if (s.contains(meshID))
+			{
+				float value = values.value(meshID);
+				if (value <= _minValue)
+				{
+					minids.append(meshID);
+				}
+				else if (value >= _maxValue)
+				{
+					maxids.append(meshID);
+				}
+			}
+		}
+	}
+	void mPostOneFrameRender::getVertexs(NodeOrElement nodeOrElement, QVector<int> minids, QVector<int> maxids, QVector<QVector3D>& minvertexs, QVector<QVector3D>& maxvertexs)
+	{
+		QHash<int, QVector3D> dispdata = _oneFrameRendData->getNodeDisplacementData();
+		QVector3D dfactor = _oneFrameRendData->getDeformationScale();
+		if (nodeOrElement == PostNode)
+		{
+			for (int nodeID : minids)
+			{
+				QVector3D vertex;
+				mPostMeshNodeData1* nodedata = _oneFrameData->getNodeDataByID(nodeID);
+				if (nodedata == nullptr)
+				{
+					continue;
+				}
+				vertex = nodedata->getNodeVertex() + dispdata.value(nodeID) * dfactor;
+
+				minvertexs.append(vertex);
+			}
+			for (int nodeID : maxids)
+			{
+				QVector3D vertex;
+				mPostMeshNodeData1* nodedata = _oneFrameData->getNodeDataByID(nodeID);
+				if (nodedata == nullptr)
+				{
+					continue;
+				}
+				vertex = nodedata->getNodeVertex() + dispdata.value(nodeID) * dfactor;
+
+				maxvertexs.append(vertex);
+			}
+		}
+		else
+		{
+			for (int meshID : minids)
+			{
+				//获取单元数据
+				mPostMeshData1* meshdata = _oneFrameData->getMeshDataByID(meshID);
+				if (meshdata == nullptr)
+				{
+					continue;
+				}
+				QVector3D vertex;
+				//获取单元节点
+				QVector<int> nodeIDs = meshdata->getNodeIndex();
+				for (int nodeID : nodeIDs)
+				{
+					mPostMeshNodeData1* nodedata = _oneFrameData->getNodeDataByID(nodeID);
+					if (nodedata == nullptr)
+					{
+						continue;
+					}
+					vertex += nodedata->getNodeVertex() + dispdata.value(nodeID) * dfactor;
+				}
+				minvertexs.append(vertex / nodeIDs.size());
+			}
+			for (int meshID : maxids)
+			{
+				//获取单元数据
+				mPostMeshData1* meshdata = _oneFrameData->getMeshDataByID(meshID);
+				if (meshdata == nullptr)
+				{
+					continue;
+				}
+				QVector3D vertex;
+				//获取单元节点
+				QVector<int> nodeIDs = meshdata->getNodeIndex();
+				for (int nodeID : nodeIDs)
+				{
+					mPostMeshNodeData1* nodedata = _oneFrameData->getNodeDataByID(nodeID);
+					if (nodedata == nullptr)
+					{
+						continue;
+					}
+					vertex += nodedata->getNodeVertex() + dispdata.value(nodeID) * dfactor;
+				}
+				maxvertexs.append(vertex / nodeIDs.size());
+			}
+		}
+	}
 	void mPostOneFrameRender::initial()
 	{
 		if (!_viewer)
