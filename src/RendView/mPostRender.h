@@ -269,6 +269,9 @@ namespace MPostRend
 		//获取最小最大值的位置		
 		void getMinMaxLocation();
 
+		//更新最小最大值的渲染
+		void updateMinMaxRender();
+
 		//计算最小最大值的线条位置（在模型发生变化时，切换帧或者变形系数时）
 		void calculateMinMaxLinePosition();
 
@@ -397,6 +400,9 @@ namespace MPostRend
 
 		//临时高亮
 		shared_ptr<mPostTempHighLightRender> _tempHighLightRender;
+
+		//计算最小最大值的坐标
+		QFutureWatcher<void> minmaxw;
 		
 	};
 }

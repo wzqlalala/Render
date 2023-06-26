@@ -530,7 +530,9 @@ namespace MPostRend
 		{
 			if (_rendStatus->_postMode == OneFrame || _rendStatus->_postMode == OneFrameLinearAnimation || _rendStatus->_postMode == OneFrameSinAnimation)
 			{
-				this->getMinMaxLocation();
+				QFuture<void> future = QtConcurrent::run(this, &mPostRender::getMinMaxLocation);
+				QObject::connect(&w, &QFutureWatcher<void>::finished, [this] {	this->updateMinMaxRender();	});
+				w.setFuture(future);
 			}
 		}
 	}
@@ -553,7 +555,9 @@ namespace MPostRend
 		{
 			if (_rendStatus->_postMode == OneFrame || _rendStatus->_postMode == OneFrameLinearAnimation || _rendStatus->_postMode == OneFrameSinAnimation)
 			{
-				this->getMinMaxLocation();
+				QFuture<void> future = QtConcurrent::run(this, &mPostRender::getMinMaxLocation);
+				QObject::connect(&w, &QFutureWatcher<void>::finished, [this] {	this->updateMinMaxRender();	});
+				w.setFuture(future);
 			}
 		}
 	}
@@ -640,7 +644,10 @@ namespace MPostRend
 		_oneFrameRender->updateAllModelOperate(ImportOperate);
 		this->setDispersed(true);
 		this->initialPickThreads();
-		this->getMinMaxLocation();
+		QFuture<void> future = QtConcurrent::run(this, &mPostRender::getMinMaxLocation);
+		QObject::connect(&w, &QFutureWatcher<void>::finished, [this] {	this->updateMinMaxRender();	});
+		w.setFuture(future);
+		//this->getMinMaxLocation();
 	}
 
 	void mPostRender::setShowFuntion(ShowFuntion showFuntion)
@@ -726,6 +733,9 @@ namespace MPostRend
 		if (_oneFrameRender)
 		{
 			_oneFrameRender->setMinMaxData(maxValue, minValue);
+			QFuture<void> future = QtConcurrent::run(this, &mPostRender::getMinMaxLocation);
+			QObject::connect(&w, &QFutureWatcher<void>::finished, [this] {	this->updateMinMaxRender();	});
+			w.setFuture(future);
 		}
 	}
 
@@ -737,7 +747,9 @@ namespace MPostRend
 		{
 			_oneFrameRender->updateAllModelOperate(UpdateMinMax);
 		}
-		this->getMinMaxLocation();
+		QFuture<void> future = QtConcurrent::run(this, &mPostRender::getMinMaxLocation);
+		QObject::connect(&w, &QFutureWatcher<void>::finished, [this] {	this->updateMinMaxRender();	});
+		w.setFuture(future);
 	}
 
 	void mPostRender::setDispersIsEquivariance(bool isEquivariance)
@@ -1397,6 +1409,8 @@ namespace MPostRend
 
 	void mPostRender::setMinIsShow(bool isshow)
 	{
+		makeCurrent();
+
 		_rendStatus->_isShowMinLine = isshow;
 		shared_ptr<mPostMinMaxRender> minRender = dynamic_pointer_cast<mPostMinMaxRender>(_dragRenders["最小值"]);
 		if (isshow)
@@ -1433,6 +1447,8 @@ namespace MPostRend
 
 	void mPostRender::setMaxIsShow(bool isshow)
 	{
+		makeCurrent();
+
 		_rendStatus->_isShowMaxLine = isshow;
 		shared_ptr<mPostMinMaxRender> maxRender = dynamic_pointer_cast<mPostMinMaxRender>(_dragRenders["最大值"]);
 		if (isshow)
@@ -1486,8 +1502,13 @@ namespace MPostRend
 		else
 		{
 			_oneFrameRender->getVertexs(PostNode, minRender->_ids, maxRender->_ids, minRender->_vertexs, maxRender->_vertexs);
-		}
+		}	
+	}
 
+	void mPostRender::updateMinMaxRender()
+	{
+		shared_ptr<mPostMinMaxRender> minRender = dynamic_pointer_cast<mPostMinMaxRender>(_dragRenders["最小值"]);
+		shared_ptr<mPostMinMaxRender> maxRender = dynamic_pointer_cast<mPostMinMaxRender>(_dragRenders["最大值"]);
 		minRender->setData();
 		maxRender->setData();
 		setMinIsShow(_rendStatus->_isShowMinLine);
