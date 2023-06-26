@@ -615,8 +615,9 @@ namespace MLableRend
 		* 添加刚性墙渲染
 		*/
 		//无限大平面刚性
-		void appendLableRendData_RigidWall(const QString &name, const QVector3D pos, QVector3D normal, const QVector3D color = QVector3D(188.0, 188.0, 188.0),
-			const bool showState = true, const bool depthState = true, const bool isUpdate = true)
+		void appendLableRendData_RigidWall(const QString &name, const QVector3D pos, QVector3D normal, 
+			QVector3D minEdge = QVector3D(0,0,0), QVector3D maxEdge = QVector3D(0,0,0),
+			const QVector3D color = QVector3D(188.0, 188.0, 188.0),const bool showState = true, const bool depthState = true, const bool isUpdate = true)
 		{
 			//判断数据是否存在
 			if (_lableRend->_lableDataController->isLableDataExist<Face_RW_Explicit>(name) && _lableRend->_lableDataController->isLableDataExist<Axis_RW_Explicit>(name))
@@ -626,47 +627,12 @@ namespace MLableRend
 			normal = normal.normalized();
 			//模型几何中心坐标
 			//网格数据
-			int left = 0, right = 0, bottom = 0, top = 0, back = 0, front = 0;
-			//bool isExistMesh = MDataMesh::mMeshModelData1::getInstance()->isExistModel();
-			//bool isExistGeo = MDataGeo::mGeoModelData1::getInstance()->isExistModel();
-			//ModelSize geoModelSize, meshModelSize;
-			//if (isExistGeo&&isExistMesh)
-			//{
-			//	MDataGeo::mGeoModelData1::getInstance()->getModelSize(geoModelSize);
-			//	MDataMesh::mMeshModelData1::getInstance()->getModelSize(meshModelSize);
-			//	left = min(geoModelSize.xmin, meshModelSize.xmin);
-			//	right = max(geoModelSize.xmax, meshModelSize.xmax);
-			//	bottom = min(geoModelSize.ymin, meshModelSize.ymin);
-			//	top = max(geoModelSize.ymax, meshModelSize.ymax);
-			//	back = min(geoModelSize.zmin, meshModelSize.zmin);
-			//	front = max(geoModelSize.zmax, meshModelSize.zmax);
-			//}
-			//else if (isExistGeo)
-			//{
-			//	MDataGeo::mGeoModelData1::getInstance()->getModelSize(geoModelSize);
-			//	left = geoModelSize.xmin;
-			//	right = geoModelSize.xmax;
-			//	bottom = geoModelSize.ymin;
-			//	top = geoModelSize.ymax;
-			//	back = geoModelSize.zmin;
-			//	front = geoModelSize.zmax;
-			//}
-			//else if (isExistMesh)
-			//{
-			//	MDataMesh::mMeshModelData1::getInstance()->getModelSize(meshModelSize);
-			//	left = meshModelSize.xmin;
-			//	right = meshModelSize.xmax;
-			//	bottom = meshModelSize.ymin;
-			//	top = meshModelSize.ymax;
-			//	back = meshModelSize.zmin;
-			//	front = meshModelSize.zmax;
-			//}
 			//模型中心
-			QVector3D ModelCenterPos = QVector3D((left + right) / 2, (bottom + top) / 2, (back + front) / 2);
+			QVector3D ModelCenterPos = (minEdge + maxEdge / 2);
 			//获取以模型几何中心为中心的最大旋转半径
-			float max_x = std::max(std::abs(left - ModelCenterPos.x()), std::abs(right - ModelCenterPos.x()));
-			float max_y = std::max(std::abs(bottom - ModelCenterPos.y()), std::abs(top - ModelCenterPos.y()));
-			float max_z = std::max(std::abs(back - ModelCenterPos.z()), std::abs(front - ModelCenterPos.z()));
+			float max_x = std::max(std::abs(minEdge.x() - ModelCenterPos.x()), std::abs(maxEdge.x() - ModelCenterPos.x()));
+			float max_y = std::max(std::abs(minEdge.y() - ModelCenterPos.y()), std::abs(maxEdge.y() - ModelCenterPos.y()));
+			float max_z = std::max(std::abs(minEdge.z() - ModelCenterPos.z()), std::abs(maxEdge.z() - ModelCenterPos.z()));
 			float MaxRadius = sqrt(pow(max_x, 2) + pow(max_y, 2) + pow(max_z, 2));
 			//模型几何中心到平面最短距离
 			float distance = ModelCenterPos.distanceToPlane(pos, normal);

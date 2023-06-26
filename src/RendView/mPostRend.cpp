@@ -4,6 +4,10 @@
 #include "mArrowRender.h"
 #include "mVideoRender.h"
 #include "mVideoRender1.h"
+#include "mPostOneFrameRender.h"
+#include "mPostModelRender.h"
+
+#include "mModelView.h"
 
 //AppConfiguration
 #include <mAppConfiguration.h>
@@ -17,7 +21,7 @@ namespace MPostRend
 	mPostRend::mPostRend(const QString& name):mBaseRend3D(name, ViewportPost3D)
 	{
 		*_pickFilter = PickFilter::PickNode;
-		qDebug() << "Post Struct";
+		//qDebug() << "Post Struct";
 
 		//保存单位制
 		QString viewStyle = MAppConfiguration::mAppConfiguration::getInstance()->_viewStyle;
@@ -75,7 +79,7 @@ namespace MPostRend
 		_fontRender->appendGloabalAxisFont();
 		_arrowRender->appendGloabalAxisArrow();
 
-		qDebug() << "Post Initial";
+		//qDebug() << "Post Initial";
 	}
 
 	void mPostRend::paintGL()
@@ -92,6 +96,7 @@ namespace MPostRend
 
 	void mPostRend::resizeGL(int w, int h)
 	{
+		makeCurrent();
 		mBaseRend3D::resizeGL(w, h);
 	}
 	void mPostRend::mousePressEvent(QMouseEvent *event)
@@ -114,7 +119,7 @@ namespace MPostRend
 	mPostRend::~mPostRend()
 	{
 
-		qDebug() << "Post Distruct";
+		//qDebug() << "Post Distruct";
 	}
 	shared_ptr<mPostRender> mPostRend::getPostRender()
 	{
@@ -128,5 +133,69 @@ namespace MPostRend
 		}
 
 		return nullptr;
+	}
+
+	void mPostRend::GetModelSizePara(bool isModelCenter)
+	{
+		Space::AABB aabb = this->getPostRender()->getCurrentModelData();
+	
+		_aabb = aabb;
+		//模型中心
+		_center_model = (_aabb.maxEdge + _aabb.minEdge) / 2.0;
+		_maxRadius_model = _aabb.maxEdge.distanceToPoint(_aabb.minEdge);
+		if (isinf(_maxRadius_model) || qFuzzyCompare(0, _maxRadius_model))
+		{
+			_maxRadius_model = _maxRadius_now;
+		}
+		if (isModelCenter)
+		{
+			_center_now = _center_model;
+			_maxRadius_now = _maxRadius_model;
+		}
+		else
+		{
+			float t = _maxRadius_now;
+			_maxRadius_now = _aabb.maxEdge.distanceToPoint(_center_now);
+			float max_x = std::max(std::abs(_aabb.minEdge.x() - _center_now.x()), std::abs(_aabb.maxEdge.x() - _center_now.x()));
+			float max_y = std::max(std::abs(_aabb.minEdge.y() - _center_now.y()), std::abs(_aabb.maxEdge.y() - _center_now.y()));
+			float max_z = std::max(std::abs(_aabb.minEdge.z() - _center_now.z()), std::abs(_aabb.maxEdge.z() - _center_now.z()));
+			_maxRadius_now = sqrt(pow(max_x, 2) + pow(max_y, 2) + pow(max_z, 2));
+			if (isinf(_maxRadius_now) || qFuzzyCompare(0, _maxRadius_now))
+			{
+				_maxRadius_now = t;
+			}
+		}
+	}
+	void mPostRend::slotResetOrthoAndCamera()
+	{
+		GetModelSizePara(true);
+		_modelView->ResetOrthoAndCamera(_center_model, _maxRadius_model);
+		_modelView->SaveCurrentView();
+		_commonView->SaveCurrentView();
+		//_meshModelRulerRend->UpdateNum();
+		update();
+	}
+
+	void mPostRend::slotUpdateOrthoAndCamera()
+	{
+		GetModelSizePara(false);
+		_modelView->UpdateOrthoAndCamera(_maxRadius_model, _maxRadius_now);
+		_modelView->SaveCurrentView();
+		_commonView->SaveCurrentView();
+		//_meshModelRulerRend->UpdateNum();
+		//HideOrShowAllFont();
+		update();
+
+	}
+
+	void mPostRend::slotUpdateOrthoAndCamera(QVector<QVector3D> addVertex)
+	{
+		GetModelSizePara(false);
+		_modelView->UpdateOrthoAndCamera(_maxRadius_now, addVertex);
+		_modelView->SaveCurrentView();
+		_commonView->SaveCurrentView();
+		//_meshModelRulerRend->UpdateNum();
+		//HideOrShowAllFont();
+		update();
 	}
 }

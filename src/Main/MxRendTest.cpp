@@ -128,11 +128,7 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			_postRender->setRendCurrentFrameData(oneFrameRendData);
 			_postRender->updateAllModelOperate(UpdateVariableValue);
 			//_postRend->addBeforeRender(_postRender);
-			Space::AABB aabb = _postRender->getOneFrameRender()->getModelRender()->getModelAABB();
-			QVector3D center = (aabb.maxEdge + aabb.minEdge) / 2.0;
-			float radius = (aabb.maxEdge - aabb.minEdge).length() / 2.0;
-			_postRend->getCamera()->ResetOrthoAndCamera(center, radius);
-			_postRend->getCamera1()->ResetOrthoAndCamera(center, radius);
+			_postRend->slotResetOrthoAndCamera();
 			_postRender->setShowFuntion(WireFrame);
 			break;
 		}
@@ -157,6 +153,26 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			QVector3D center(0, 0, 0);
 			float radius = 1.0;
 			_postRender->createContourGraph();
+			break;
+		}
+		case Qt::Key_9:
+		{
+			if (_postRender == nullptr)
+			{
+				return;
+			}
+			_isShowMin = !_isShowMin;
+			_postRender->setMinIsShow(_isShowMin);
+			break;
+		}
+		case Qt::Key_0:
+		{
+			if (_postRender == nullptr)
+			{
+				return;
+			}
+			_isShowMax = !_isShowMax;
+			_postRender->setMaxIsShow(_isShowMax);
 			break;
 		}
 		case Qt::Key_F5:

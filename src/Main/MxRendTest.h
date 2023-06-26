@@ -135,6 +135,10 @@ private:
 	//视频
 	bool _isShowVideo = false;
 
+	//最小最大值显隐
+	bool _isShowMin = false;
+	bool _isShowMax = false;
+
 	//拾取
 	MultiplyPickMode _multuiplyPickMode = MultiplyPickMode::QuadPick;
 

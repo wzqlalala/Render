@@ -490,7 +490,7 @@ void Record::slot_stop()
 	bool OK = GifEnd(&_gifWriter);
 	if (OK)
 	{
-		qDebug() << "录制完成";
+		//qDebug() << "录制完成";
 	}
 }
 
@@ -666,7 +666,7 @@ void RecordWidget::paintEvent(QPaintEvent *e)
 	painter.setPen(Qt::yellow);
 	painter.drawText(x + 2, y - 8, tr("录屏范围：( %1 x %2 ) - ( %3 x %4 )  图片大小：( %5 x %6 ) 时间：（%7s）")//画文字
 		.arg(x).arg(y).arg(x + w).arg(y + h).arg(w).arg(h).arg(_elaspedTime / 1000.0));
-	qDebug() << x, y, w, h;
+	//qDebug() << x, y, w, h;
 }
 
 QScopedPointer<ScreenRecordWidget> ScreenRecordWidget::self;

@@ -187,6 +187,13 @@ namespace MPostRend
 
 		//获取切面三角形数据
 		QVector<QVector3D> getCuttingPlaneData(int index);
+
+		//获取最值的ID和位置
+		void getMinMaxIDs(QVector<int> &minids, QVector<int> &maxids);
+
+		//获取位置
+		void getVertexs(NodeOrElement nodeOrElement,QVector<int> minids, QVector<int> maxids, QVector<QVector3D> &minvertexs, QVector<QVector3D> &maxvertexs);
+
 	private:
 
 		void initial();
