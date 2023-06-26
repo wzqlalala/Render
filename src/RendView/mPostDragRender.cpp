@@ -11,6 +11,7 @@ namespace MPostRend
 {
 	mPostDragRender::mPostDragRender(QString name, std::shared_ptr<mxr::Application> app, std::shared_ptr<mxr::Group> parent, std::shared_ptr<mPostRendStatus> rendStatus)
 	{
+		_name = name;
 		_app = app; 
 		_parent = parent;
 		_drawable = nullptr;
@@ -29,6 +30,14 @@ namespace MPostRend
 	void mPostDragRender::updateUniform(std::shared_ptr<MViewBasic::mViewBase> modelView)
 	{
 
+	}
+
+	void mPostDragRender::setColor(QVector3D color)
+	{
+		if (_stateSet)
+		{
+			_stateSet->getUniform("showColor")->SetData(QVector4D(color, 1.0));
+		}
 	}
 
 	mPostSphereRender::mPostSphereRender(QString name, std::shared_ptr<Application> app, std::shared_ptr<Group> parent, std::shared_ptr<mPostRendStatus> rendStatus):mPostDragRender(name, app, parent, rendStatus)
@@ -76,15 +85,11 @@ namespace MPostRend
 			_parent->removeChild(_drawable);
 		}
 
-		_drawable = MakeAsset<Drawable>();
-		_drawable->setStateSet(_stateSet);
-
 		rendStatus->_sphereCenter = QVector3D(0, 0, 0);
 		rendStatus->_sphereRadius = 0;
 
 		_drawable = MakeAsset<Drawable>();
 		_drawable->setVertexAttribArray(0, MakeAsset<Vec3Array>(_sphereVertexs));
-		_drawable->setVertexAttribArray(1, MakeAsset<FloatArray>(QVector<float>(_sphereVertexs.size(), 1)));
 		_drawable->setIndexAttribute(MakeAsset<UIntArray>(_sphereIndexs));
 		Shader *shader = mShaderManage::GetInstance()->GetShader("Common");
 		_stateSet = MakeAsset<StateSet>();
@@ -165,4 +170,100 @@ namespace MPostRend
 
 	QVector<QVector3D> mPostSphereRender::_sphereVertexs;
 	QVector<uint> mPostSphereRender::_sphereIndexs;
+	mPostMinMaxRender::mPostMinMaxRender(QString name, std::shared_ptr<Application> app, std::shared_ptr<Group> parent, std::shared_ptr<mPostRendStatus> rendStatus) :mPostDragRender(name, app, parent, rendStatus)
+	{
+		_stateSet = MakeAsset<StateSet>();
+
+		if (_drawable)
+		{
+			_parent->removeChild(_drawable);
+		}
+
+		Shader *shader = mShaderManage::GetInstance()->GetShader("Common");
+		_stateSet = MakeAsset<StateSet>();
+		_stateSet->setShader(shader);
+		_stateSet->setDrawMode(GL_LINES);
+		_stateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
+		_stateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
+		_stateSet->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::LINE), 1);
+		_stateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
+		_stateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
+		_stateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
+		_stateSet->setUniform(MakeAsset<Uniform>("showColor", QVector4D()));
+	}
+	void mPostMinMaxRender::setData()
+	{
+		if (_drawable)
+		{
+			_parent->removeChild(_drawable);
+		}
+		
+		QVector<QVector3D> vertexs;
+		for (QVector3D vertex : _vertexs)
+		{
+			vertexs.append(_pos);
+			vertexs.append(vertex);
+		}
+
+		_drawable = MakeAsset<Drawable>();
+		_drawable->setVertexAttribArray(0, MakeAsset<Vec3Array>(vertexs));
+		_drawable->setStateSet(_stateSet);
+
+		_parent->addChild(_drawable);
+	}
+	bool mPostMinMaxRender::pointIsIn(QVector2D pos, float depth, QMatrix4x4 pvm, int w, int h)
+	{
+		if (_drawable->getNodeMask()==0)//显示
+		{
+			QVector4D centerPos = (pvm * QVector4D(_pos, 1.0));//求出世界坐标的乘以矩阵后的坐标（范围为-1~1）
+			_depth = centerPos.z();//求出深度
+
+			QVector4D res;
+			res.setX(2 * pos.x() / w - 1);
+			res.setY(1 - 2 * pos.y() / h);//求出鼠标点击的地方的坐标（换算为-1~1）
+			if (res.toVector2D().distanceToPoint(centerPos.toVector2D()) < 0.05)
+			{
+				_relativePosition = (res - centerPos).toVector2D();//求鼠标的位置相对于球心的位置(x，y代表位置)
+				return true;
+			}
+		}
+		return false;
+	}
+	void mPostMinMaxRender::move(QVector2D pos, QMatrix4x4 pvm, int w, int h)
+	{
+		if (_drawable->getNodeMask() == 0)//显示
+		{
+			QVector4D res;
+			res.setX(2 * pos.x() / w - 1);
+			res.setY(1 - 2 * pos.y() / h);//求出鼠标点击的地方的坐标（换算为-1~1）
+
+			//通过拖拽点和球心的相对位置来计算出球心的坐标（范围为-1~1）
+			QVector2D centerPos = res.toVector2D() - _relativePosition;
+
+			//通过逆矩阵换算出球心的世界坐标
+			QVector3D WorldPos = pvm.inverted()* QVector4D(centerPos.x(), centerPos.y(), _depth, 1.0).toVector3D();//算出坐标
+
+			_pos = WorldPos;
+
+			this->setData();
+		}
+
+
+	}
+	void mPostMinMaxRender::updateUniform(std::shared_ptr<MViewBasic::mViewBase> modelView)
+	{
+		if (_stateSet)
+		{
+			_stateSet->getUniform("projection")->SetData(modelView->_projection);
+			_stateSet->getUniform("view")->SetData(modelView->_view);
+			_stateSet->getUniform("model")->SetData(modelView->_model);
+		}
+	}
+	mPostMinMaxRender::~mPostMinMaxRender()
+	{
+		if (_drawable)
+		{
+			_parent->removeChild(_drawable);
+		}
+	}
 }

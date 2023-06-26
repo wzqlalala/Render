@@ -29,7 +29,7 @@ namespace MPreRend
 	mPreRend::mPreRend(const QString& name):mBaseRend3D(name, Viewport3D)
 	{
 		*_pickFilter = PickFilter::PickGeoPoint;
-		qDebug() << "Pre Struct";
+		//qDebug() << "Pre Struct";
 
 		//保存单位制
 		QString viewStyle = MAppConfiguration::mAppConfiguration::getInstance()->_viewStyle;
@@ -99,7 +99,7 @@ namespace MPreRend
 	
 		//_lableRendController_common->appendLableRendData<GlobalAxis>("globalAxis", QVector2D(75, 75), 1.3);
 
-		qDebug() << "Pre Initial";
+		//qDebug() << "Pre Initial";
 
 		GLenum error = QOpenGLContext::currentContext()->functions()->glGetError();
 		if (error != 0)
@@ -147,7 +147,7 @@ namespace MPreRend
 
 	mPreRend::~mPreRend()
 	{
-		qDebug() << "Pre Distruct";
+		//qDebug() << "Pre Distruct";
 	}
 	shared_ptr<mPreRender> mPreRend::getPreRender()
 	{

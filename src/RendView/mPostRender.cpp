@@ -5,6 +5,7 @@
 #include "mPostModelRender.h"
 #include "mPostAnimationRender.h"
 #include "mPostHighLightRender.h"
+#include "mPostTempHighLightRender.h"
 #include "mFontRender.h"
 #include "mArrowRender.h"
 #include "mPostFrameText.h"
@@ -381,13 +382,29 @@ namespace MPostRend
 		_aniTimer->setInterval(0);
 		connect(_aniTimer, SIGNAL(timeout()), this, SLOT(slot_aniTimer()));
 
+		//连接拖拽信号
+		connect(this, SIGNAL(finishedDragSig()), this, SLOT(slot_finsishedDrag()));
+
 		//初始化高亮渲染
 		_pickData = new mPostMeshPickData;
 		_highLightRender = make_shared<mPostHighLightRender>(_rendStatus, _pickData);
 
+		//初始化临时高亮渲染
+		_tempHighLightRender = make_shared<mPostTempHighLightRender>(_rendStatus);
+
 		//添加积分球
 		shared_ptr<mPostSphereRender> sphereRender = MakeAsset<mPostSphereRender>("积分球", _app, _parent, _rendStatus);
 		_dragRenders.insert("积分球",sphereRender);
+
+		shared_ptr<mPostMinMaxRender> minRender = MakeAsset<mPostMinMaxRender>("最小值", _app, _parent, _rendStatus);
+		_dragRenders.insert("最小值", minRender);
+		minRender->setColor(QVector3D(0, 0, 1));
+		minRender->setIsShow(false);
+
+		shared_ptr<mPostMinMaxRender> maxRender = MakeAsset<mPostMinMaxRender>("最大值", _app, _parent, _rendStatus);
+		_dragRenders.insert("最大值", maxRender);
+		maxRender->setColor(QVector3D(1, 0, 0));
+		maxRender->setIsShow(false);
 
 		//this->doneCurrent();
 	}
@@ -508,6 +525,16 @@ namespace MPostRend
 		{
 			rend->updateOneModelOperate(postModelOperates);
 		}
+
+		if (postModelOperates.first == HideOnePartOperate || postModelOperates.first == ShowOnePartOperate)
+		{
+			if (_rendStatus->_postMode == OneFrame || _rendStatus->_postMode == OneFrameLinearAnimation || _rendStatus->_postMode == OneFrameSinAnimation)
+			{
+				QFuture<void> future = QtConcurrent::run(this, &mPostRender::getMinMaxLocation);
+				QObject::connect(&w, &QFutureWatcher<void>::finished, [this] {	this->updateMinMaxRender();	});
+				w.setFuture(future);
+			}
+		}
 	}
 	void mPostRender::updateAllModelOperate(MViewBasic::PostModelOperateEnum postModelOperate)
 	{
@@ -524,6 +551,37 @@ namespace MPostRend
 		{
 			rend->updateAllModelOperate(postModelOperate);
 		}
+		if (postModelOperate == HideAllPartOperate || postModelOperate == ShowAllPartOperate)
+		{
+			if (_rendStatus->_postMode == OneFrame || _rendStatus->_postMode == OneFrameLinearAnimation || _rendStatus->_postMode == OneFrameSinAnimation)
+			{
+				QFuture<void> future = QtConcurrent::run(this, &mPostRender::getMinMaxLocation);
+				QObject::connect(&w, &QFutureWatcher<void>::finished, [this] {	this->updateMinMaxRender();	});
+				w.setFuture(future);
+			}
+		}
+	}
+	Space::AABB mPostRender::getCurrentModelData()
+	{
+		this->calculateMinMaxLinePosition();
+		if (_rendStatus->_postMode == No)
+		{
+
+		}
+		else if (_rendStatus->_postMode == OneFrame || _rendStatus->_postMode == OneFrameLinearAnimation || _rendStatus->_postMode == OneFrameSinAnimation)
+		{
+			return this->getOneFrameRender()->getModelRender()->getModelAABB();
+		}
+		else
+		{
+			Space::AABB aabb;
+			for (auto render : _animationRender)
+			{
+				aabb.push(render->getModelRender()->getModelAABB());
+			}
+			return aabb;
+		}
+		return Space::AABB();
 	}
 	void mPostRender::setPostMode(PostMode postMode)
 	{
@@ -543,6 +601,9 @@ namespace MPostRend
 		deleteAnimation();
 		_baseRend->getFontRender()->clearAllRender();
 		_baseRend->getArrowRender()->clearAllRender();
+		_pickData->clearAllPickData();
+		//_highLightRender->updateHighLightRender();
+		//_tempHighLightRender->setAllMeshData();
 	}
 	void mPostRender::setRendCurrentFrameData(mPostOneFrameRendData* postOneFrameRendData)
 	{
@@ -583,6 +644,10 @@ namespace MPostRend
 		_oneFrameRender->updateAllModelOperate(ImportOperate);
 		this->setDispersed(true);
 		this->initialPickThreads();
+		QFuture<void> future = QtConcurrent::run(this, &mPostRender::getMinMaxLocation);
+		QObject::connect(&w, &QFutureWatcher<void>::finished, [this] {	this->updateMinMaxRender();	});
+		w.setFuture(future);
+		//this->getMinMaxLocation();
 	}
 
 	void mPostRender::setShowFuntion(ShowFuntion showFuntion)
@@ -668,6 +733,9 @@ namespace MPostRend
 		if (_oneFrameRender)
 		{
 			_oneFrameRender->setMinMaxData(maxValue, minValue);
+			QFuture<void> future = QtConcurrent::run(this, &mPostRender::getMinMaxLocation);
+			QObject::connect(&w, &QFutureWatcher<void>::finished, [this] {	this->updateMinMaxRender();	});
+			w.setFuture(future);
 		}
 	}
 
@@ -679,6 +747,9 @@ namespace MPostRend
 		{
 			_oneFrameRender->updateAllModelOperate(UpdateMinMax);
 		}
+		QFuture<void> future = QtConcurrent::run(this, &mPostRender::getMinMaxLocation);
+		QObject::connect(&w, &QFutureWatcher<void>::finished, [this] {	this->updateMinMaxRender();	});
+		w.setFuture(future);
 	}
 
 	void mPostRender::setDispersIsEquivariance(bool isEquivariance)
@@ -1336,12 +1407,158 @@ namespace MPostRend
 		}
 	}
 
+	void mPostRender::setMinIsShow(bool isshow)
+	{
+		makeCurrent();
+
+		_rendStatus->_isShowMinLine = isshow;
+		shared_ptr<mPostMinMaxRender> minRender = dynamic_pointer_cast<mPostMinMaxRender>(_dragRenders["最小值"]);
+		if (isshow)
+		{
+			_baseRend->getFontRender()->appendCommonFont<int>("min", minRender->_vertexs, minRender->_ids);
+			_baseRend->getFontRender()->appendCommonFont<float>("最小值", QVector<QVector3D>{minRender->_pos}, QVector<float>{_oneFrameRender->getOneFrameRendData()->getCurrentMinData()}, QVector3D(0,0,1));
+			if (_oneFrameRender->getOneFrameRendData()->getNodeOrElement() == PostElement)
+			{
+				_tempHighLightRender->setAddMeshData(set<int>{minRender->_ids.begin(), minRender->_ids.end()});
+			}
+			else
+			{
+				_tempHighLightRender->setAddNodeData(set<int>{minRender->_ids.begin(), minRender->_ids.end()});
+			}
+		}
+		else
+		{
+			if (_oneFrameRender->getOneFrameRendData()->getNodeOrElement() == PostElement)
+			{
+				_tempHighLightRender->setReduceMeshData(set<int>{minRender->_ids.begin(), minRender->_ids.end()});
+			}
+			else
+			{
+				_tempHighLightRender->setReduceNodeData(set<int>{minRender->_ids.begin(), minRender->_ids.end()});
+			}
+		}
+		minRender->setData();
+		_tempHighLightRender->updateHighLightRender(_oneFrameRender->getOneFrameData(), _oneFrameRender->getOneFrameRendData());
+
+		if (minRender->_ids.size() > 0 && isshow)
+		{
+			_dragRenders["最小值"]->setIsShow(true);
+			_baseRend->getFontRender()->setCommonFontIsShow("min", true);
+			_baseRend->getFontRender()->setCommonFontIsShow("最小值", true);
+		}
+		else if (!isshow)
+		{
+			_dragRenders["最小值"]->setIsShow(false);
+			_baseRend->getFontRender()->setCommonFontIsShow("min", false);
+			_baseRend->getFontRender()->setCommonFontIsShow("最小值", false);
+		}
+
+	}
+
+	void mPostRender::setMaxIsShow(bool isshow)
+	{
+		makeCurrent();
+
+		_rendStatus->_isShowMaxLine = isshow;
+		shared_ptr<mPostMinMaxRender> maxRender = dynamic_pointer_cast<mPostMinMaxRender>(_dragRenders["最大值"]);
+		if (isshow)
+		{
+			_baseRend->getFontRender()->appendCommonFont<int>("max", maxRender->_vertexs, maxRender->_ids);
+			_baseRend->getFontRender()->appendCommonFont<float>("最大值", QVector<QVector3D>{maxRender->_pos}, QVector<float>{_oneFrameRender->getOneFrameRendData()->getCurrentMaxData()}, QVector3D(1, 0, 0));
+			if (_oneFrameRender->getOneFrameRendData()->getNodeOrElement() == PostElement)
+			{
+				_tempHighLightRender->setAddMeshData(set<int>{maxRender->_ids.begin(), maxRender->_ids.end()});
+			}
+			else
+			{
+				_tempHighLightRender->setAddNodeData(set<int>{maxRender->_ids.begin(), maxRender->_ids.end()});
+			}
+		}
+		else
+		{
+			if (_oneFrameRender->getOneFrameRendData()->getNodeOrElement() == PostElement)
+			{
+				_tempHighLightRender->setReduceMeshData(set<int>{maxRender->_ids.begin(), maxRender->_ids.end()});
+			}
+			else
+			{
+				_tempHighLightRender->setReduceNodeData(set<int>{maxRender->_ids.begin(), maxRender->_ids.end()});
+			}
+		}
+		maxRender->setData();
+		_tempHighLightRender->updateHighLightRender(_oneFrameRender->getOneFrameData(), _oneFrameRender->getOneFrameRendData());
+		if (maxRender->_ids.size() > 0 && isshow)
+		{
+			_dragRenders["最大值"]->setIsShow(true);
+			_baseRend->getFontRender()->setCommonFontIsShow("max", true);
+			_baseRend->getFontRender()->setCommonFontIsShow("最大值", true);
+		}
+		else if (!isshow)
+		{
+			_dragRenders["最大值"]->setIsShow(false);
+			_baseRend->getFontRender()->setCommonFontIsShow("max", false);
+			_baseRend->getFontRender()->setCommonFontIsShow("最大值", false);
+		}
+
+	}
+
+	void mPostRender::getMinMaxLocation()
+	{
+		if (!_oneFrameRender)
+		{
+			return;
+		}
+		shared_ptr<mPostMinMaxRender> minRender = dynamic_pointer_cast<mPostMinMaxRender>(_dragRenders["最小值"]);
+		shared_ptr<mPostMinMaxRender> maxRender = dynamic_pointer_cast<mPostMinMaxRender>(_dragRenders["最大值"]);
+
+		_tempHighLightRender->setAllMeshData();
+		_tempHighLightRender->setAllNodeData();
+		_oneFrameRender->getMinMaxIDs(minRender->_ids, maxRender->_ids);
+		if (_oneFrameRender->getOneFrameRendData()->getNodeOrElement() == PostElement)
+		{
+			_oneFrameRender->getVertexs(PostElement, minRender->_ids, maxRender->_ids, minRender->_vertexs, maxRender->_vertexs);
+		}
+		else
+		{
+			_oneFrameRender->getVertexs(PostNode, minRender->_ids, maxRender->_ids, minRender->_vertexs, maxRender->_vertexs);
+		}	
+	}
+
+	void mPostRender::updateMinMaxRender()
+	{
+		shared_ptr<mPostMinMaxRender> minRender = dynamic_pointer_cast<mPostMinMaxRender>(_dragRenders["最小值"]);
+		shared_ptr<mPostMinMaxRender> maxRender = dynamic_pointer_cast<mPostMinMaxRender>(_dragRenders["最大值"]);
+		minRender->setData();
+		maxRender->setData();
+		setMinIsShow(_rendStatus->_isShowMinLine);
+		setMaxIsShow(_rendStatus->_isShowMinLine);
+	}
+
+	void mPostRender::calculateMinMaxLinePosition()
+	{
+		Space::AABB aabb = this->getOneFrameRender()->getModelRender()->getModelAABB();
+		QVector3D center = (aabb.maxEdge + aabb.minEdge) / 2.0;
+		QVector3D vec = aabb.maxEdge - aabb.minEdge;
+
+		shared_ptr<mPostMinMaxRender> minRender = dynamic_pointer_cast<mPostMinMaxRender>(_dragRenders["最小值"]);
+		shared_ptr<mPostMinMaxRender> maxRender = dynamic_pointer_cast<mPostMinMaxRender>(_dragRenders["最大值"]);
+		if (!aabb.ContainPoint(minRender->_pos))
+		{
+			minRender->_pos = center - 11.0* vec / 20.0;
+		}
+		if (!aabb.ContainPoint(maxRender->_pos))
+		{
+			maxRender->_pos = center + 11.0 * vec / 20.0;
+		}
+	}
+
 	mPostRender::~mPostRender()
 	{
 		this->makeCurrent();
 		_oneFrameRender.reset();
 		_oneFrameAnimationRender.reset();
 		_highLightRender.reset();
+		_tempHighLightRender.reset();
 		//_animationRender.reset();
 		//delete _postFrameText;
 	}
@@ -1714,6 +1931,25 @@ namespace MPostRend
 		}	
 	}
 
+	void mPostRender::slot_finsishedDrag()
+	{
+		if (_currentDragRender != nullptr)
+		{
+			if (_currentDragRender->getName() == "最小值" || _currentDragRender->getName() == "最大值")
+			{
+				float txt = _currentDragRender->getName() == "最小值" ? _oneFrameRender->getOneFrameRendData()->getCurrentMinData() : _oneFrameRender->getOneFrameRendData()->getCurrentMaxData();
+				QVector3D color = _currentDragRender->getName() == "最小值" ? QVector3D(0, 0, 1) : QVector3D(1, 0, 0);
+				shared_ptr<mPostMinMaxRender> render = dynamic_pointer_cast<mPostMinMaxRender>(_currentDragRender);
+				if (render)
+				{
+					//render->setData();
+					//更新文字
+					_baseRend->getFontRender()->appendCommonFont<float>(_currentDragRender->getName(), QVector<QVector3D>{render->_pos}, QVector<float>{txt}, color);
+				}
+			}
+		}
+	}
+
 	void mPostRender::updateUniform(shared_ptr<mViewBase> modelView, shared_ptr<mViewBase> commonView)
 	{
 		if (_faceStateSet)
@@ -1801,6 +2037,7 @@ namespace MPostRend
 		}
 
 		_highLightRender->updateUniform(modelView, commonView);
+		_tempHighLightRender->updateUniform(modelView, commonView);
 	}
 	void mPostRender::resizeWindow(int w, int h)
 	{
