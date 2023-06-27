@@ -23,6 +23,7 @@ extern "C" {
 #include <libavutil/imgutils.h>
 #include <libswresample/swresample.h>
 #include <libswscale/swscale.h>
+#include <libavutil/time.h>
 #ifdef __cplusplus
 }
 #endif
@@ -122,6 +123,7 @@ void FFMpegReader1::run()
 
 	int got_frame = 0;
 	int i = 0;
+	int64_t start_time = av_gettime();
 	while (av_read_frame(pFormatCtx, pkt) >= 0)
 	{
 		if (pkt->stream_index == video_stream_index) {
@@ -143,6 +145,13 @@ void FFMpegReader1::run()
 			//if (i == 30)
 			//{
 				emit OnFrame(pFrame);
+				// 按照视频的帧率进行等待
+				AVRational timeBase = pFormatCtx->streams[video_stream_index]->time_base;
+				int64_t pts_time = av_rescale_q(pkt->pts, timeBase, AVRational{ 1, AV_TIME_BASE });
+				int64_t now_time = av_gettime() - start_time;
+				if (pts_time > now_time)
+					av_usleep(pts_time - now_time);
+				//av_usleep(delay);
 				if (isOneFrame)
 				{
 					break;
