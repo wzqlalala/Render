@@ -109,6 +109,10 @@ namespace MPreRend
 
 		void updateUniform(shared_ptr<mViewBase> modelView, shared_ptr<mViewBase> commonView) override;
 
+	private:
+		//设置线条是否显隐
+		void setLineVisual(float l_r);
+
 	signals:
 		//拾取完成信号
 		void finishedPickSig();
@@ -138,7 +142,8 @@ namespace MPreRend
 		std::shared_ptr<mxr::StateSet> _dotlineStateSet;//渲染虚线的状态
 		std::shared_ptr<mxr::StateSet> _edgelineStateSet;//渲染边界线的状态
 		std::shared_ptr<mxr::StateSet> _pointStateSet;//渲染点网格的状态
-		std::shared_ptr<mxr::StateSet> _facelineStateSet;//渲染面线的状态
+		std::shared_ptr<mxr::StateSet> _trifacelineStateSet;//渲染三角形面线的状态
+		std::shared_ptr<mxr::StateSet> _quadfacelineStateSet;//渲染四边形面线的状态
 		std::shared_ptr<mxr::StateSet> _nodeStateSet;
 
 		//计时器
