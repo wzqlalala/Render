@@ -475,6 +475,7 @@ namespace MPreRend
 					int index = quadToTriIndex.at(i);
 					_facerend->_vertex0->append(vertexs.at(index));
 					_facerend->_vertex1->append(color);
+					_facelinerend->_vertex0->append(vertexs.at(index));
 				}
 				_facelinerend->_vertex1->append(QVector<float>(6, 0.0f));
 			}
