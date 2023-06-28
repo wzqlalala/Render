@@ -70,6 +70,7 @@ namespace MDataGeo
 		{
 			_center = (_multiQuad.first() + _multiQuad.last()) / 2.0;
 			_boxXY_2 = _multiQuad.first() - _center; _boxXY_2[0] = qAbs(_boxXY_2[0]); _boxXY_2[1] = qAbs(_boxXY_2[1]);
+			_multiQuad = QVector<QVector2D>{ multiQuad.first(),QVector2D(multiQuad.first().x(), multiQuad.last().y()),multiQuad.last(),  QVector2D(multiQuad.last().x(), multiQuad.first().y()) };
 		};
 
 		bool getGeoPointIsInPick(QVector3D pointCenter) override;//0ά
