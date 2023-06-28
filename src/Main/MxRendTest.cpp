@@ -651,6 +651,15 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			break;
 		}
 		case Qt::Key_F3://读一个文件，其中有面和矢量信息
+		{
+			if (_preRend == nullptr)
+			{
+				return;
+			}
+			_preRender = _preRend->getPreRender();
+			readTxtFile();
+			break;
+		}
 		case Qt::Key_F4://读msh文件
 		{
 			if (_preRend == nullptr)
@@ -717,8 +726,35 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			{
 				return;
 			}
-			_preRend->FitView();
+			_preRender = _preRend->getPreRender();
+			MXReadData *readData = MeshMessage::getInstance()->getReadData();
+			QHash<int, MXMeshVertex*> allVertexData;
+			QHash<int, QPair<QVector<MXMeshTriangle*>, QVector<MXMeshQuadrangle*>>> values;
+			QVector<MXMeshTriangle*> tris;
+
+			allVertexData[1] = new MXMeshVertex(0, 5, -5, 1);
+			allVertexData[2] = new MXMeshVertex(0, -5, -5, 2);
+			allVertexData[3] = new MXMeshVertex(0, 5, 5, 3);
+			allVertexData[4] = new MXMeshVertex(0, -5, 5, 4);
+			allVertexData[5] = new MXMeshVertex(0, 0, 0, 5);
+			tris.append(new MXMeshTriangle(allVertexData[1], allVertexData[2], allVertexData[5], 1));
+			//tris.append(new MXMeshTriangle(allVertexData[3], allVertexData[1], allVertexData[5], 2));
+			//tris.append(new MXMeshTriangle(allVertexData[2], allVertexData[4], allVertexData[5], 3));
+			//tris.append(new MXMeshTriangle(allVertexData[4], allVertexData[3], allVertexData[5], 4));
+
+			values[1].first = tris;
+			readData->CreateVertex(allVertexData);
+			readData->CreateGeoFace("1", values);
+			mGeoModelData1 *geoModelData = _preRender->getGeoModelData();
+			if (!createGeo(geoModelData))
+			{
+
+			}
 			break;
+		}
+		case Qt::Key_2:
+		{
+			MeshMessage::getInstance()->deleteMeshPart("1"); break;
 		}
 		case Qt::Key_4:
 		{
@@ -1083,9 +1119,34 @@ bool MxRendTest::createGeo(MDataGeo::mGeoModelData1 * geoModelData)
 	/*******************面**************/
 	_globalFaceId++;
 	geoFaceData = new mGeoFaceData1(geoModelData, partName, _globalFaceId);
-	vertexs = QVector<QVector3D>{ QVector3D(0,0,0),QVector3D(0,1,0),QVector3D(1,0,0) };
+	vertexs = QVector<QVector3D>{ QVector3D(0,-5,5),QVector3D(0,-5,-5),QVector3D(0,5,-5),QVector3D(0,5,-5),QVector3D(0,5,5),QVector3D(0,-5,5) };
 	geoFaceData->appendGeoFaceData(_globalFaceId, vertexs);
 	geoPartData->appendGeoFaceID(_globalFaceId);
+	///*******************边界线**************/
+	//_globalLineId++;
+	//geoLineData = new mGeoLineData1(geoModelData, partName, _globalLineId);
+	//geoLineData->setGeoLineProperty(GeoLineProperty::EdgeOnFace);
+	//vertexs = QVector<QVector3D>{ QVector3D(0,-5,-5),QVector3D(0,5,-5) };
+	//geoLineData->appendGeoLineData(_globalLineId, vertexs);
+	//geoPartData->appendGeoLineID(_globalLineId);
+	//_globalLineId++;
+	//geoLineData = new mGeoLineData1(geoModelData, partName, _globalLineId);
+	//geoLineData->setGeoLineProperty(GeoLineProperty::EdgeOnFace);
+	//vertexs = QVector<QVector3D>{ QVector3D(0,5,-5),QVector3D(0,5,5) };
+	//geoLineData->appendGeoLineData(_globalLineId, vertexs);
+	//geoPartData->appendGeoLineID(_globalLineId);
+	//_globalLineId++;
+	//geoLineData = new mGeoLineData1(geoModelData, partName, _globalLineId);
+	//geoLineData->setGeoLineProperty(GeoLineProperty::EdgeOnFace);
+	//vertexs = QVector<QVector3D>{ QVector3D(0,5,5),QVector3D(0,-5,5) };
+	//geoLineData->appendGeoLineData(_globalLineId, vertexs);
+	//geoPartData->appendGeoLineID(_globalLineId);
+	//_globalLineId++;
+	//geoLineData = new mGeoLineData1(geoModelData, partName, _globalLineId);
+	//geoLineData->setGeoLineProperty(GeoLineProperty::EdgeOnFace);
+	//vertexs = QVector<QVector3D>{ QVector3D(0,-5,5),QVector3D(0,-5,-5) };
+	//geoLineData->appendGeoLineData(_globalLineId, vertexs);
+	//geoPartData->appendGeoLineID(_globalLineId);
 	/**********部件*****************************************************************************************/
 	//_globalPartId++;
 	//partName = "part2";
@@ -1148,7 +1209,7 @@ bool MxRendTest::createGeo(MDataGeo::mGeoModelData1 * geoModelData)
 	//geoPointData = new mGeoPointData1(geoModelData, partName, _globalPointId);
 	//geoPointData->setPointData(_globalPointId, QVector3D(0, 0, 0));
 	//geoPartData->appendGeoPointID(_globalPointId);
-	
+
 	//_globalPointId++;
 	//geoPointData = new mGeoPointData1(geoModelData, partName, _globalPointId);
 	//geoPointData->setPointData(_globalPointId, QVector3D(0, 0, 0));
@@ -1183,7 +1244,7 @@ bool MxRendTest::createGeo(MDataGeo::mGeoModelData1 * geoModelData)
 	//vertexs = QVector<QVector3D>{ QVector3D(0,0,0),QVector3D(1,0,0),QVector3D(0,1,0) };
 	//geoFaceData->appendGeoFaceData(_globalFaceId, vertexs);
 	//geoPartData->appendGeoFaceID(_globalFaceId);
-	
+
 	return true;
 }
 

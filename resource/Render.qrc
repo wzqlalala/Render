@@ -43,5 +43,6 @@
         <file>GLSL/Common.glsl</file>
         <file>GLSL/CommonTextureShape.glsl</file>
         <file>Icon/XPoint.png</file>
+        <file>GLSL/PreMeshFaceLine-1.glsl</file>
     </qresource>
 </RCC>
