@@ -315,7 +315,7 @@ namespace MPreRend
 		{
 			getGeoFaceData(geoFace, color);
 		}
-		_facelinerend->getDrawable()->setVertexAttribArray(0, _facerend->_vertex0);
+		//_facelinerend->getDrawable()->setVertexAttribArray(0, _facerend->_vertex0);
 
 		//线网格(获取不属于几何面的线)
 		QVector<MXGeoEdge*> geoEdges = MeshMessage::getInstance()->getFreeGEdgeInPart(_partName);
@@ -460,7 +460,7 @@ namespace MPreRend
 				//}
 				_facerend->_vertex0->append(mesh->getallVertexs1());
 				_facerend->_vertex1->append(QVector<QVector3D>(3, color));
-
+				_facelinerend->_vertex0->append(mesh->getallVertexs1());
 				_facelinerend->_vertex1->append(QVector<float>(3, 1.0f));
 			}
 			for (auto mesh : geoFace->_mQuadangles)
@@ -478,7 +478,7 @@ namespace MPreRend
 				}
 				_facelinerend->_vertex1->append(QVector<float>(6, 0.0f));
 			}
-
+			
 			//边界线
 			QVector<MEdge*> edges = geoFace->boundaryMeshEdgesInGface;
 			for (auto edge : edges)

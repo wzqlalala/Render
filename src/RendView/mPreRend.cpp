@@ -124,8 +124,8 @@ namespace MPreRend
 		makeCurrent();
 		mBaseRend3D::resizeGL(w, h);
 		////////图标测试////////////
-		_lableRend_pre->getScreenSize(w, h);
-		_lableRend_common->getScreenSize(w, h);
+		//_lableRend_pre->getScreenSize(w, h);
+		//_lableRend_common->getScreenSize(w, h);
 		///////////////////////////
 	}
 	void mPreRend::mousePressEvent(QMouseEvent *event)
@@ -183,20 +183,20 @@ namespace MPreRend
 		}
 		_aabb = aabb;
 		//额外顶点数据
-		QVector<QVector3D> ExtraVertex = _lableRend_pre->getLableDataController()->getExtraVertex() + _lableRend_common->getLableDataController()->getExtraVertex();
-		if (!ExtraVertex.isEmpty())
-		{
-			Space::AABB extra;
-			//获取额外顶点数据的最大参数
-			for (int i = 0; i < ExtraVertex.size(); i++)
-			{
-				extra.push(ExtraVertex.at(i));
-			}
+		//QVector<QVector3D> ExtraVertex = _lableRend_pre->getLableDataController()->getExtraVertex() + _lableRend_common->getLableDataController()->getExtraVertex();
+		//if (!ExtraVertex.isEmpty())
+		//{
+		//	Space::AABB extra;
+		//	//获取额外顶点数据的最大参数
+		//	for (int i = 0; i < ExtraVertex.size(); i++)
+		//	{
+		//		extra.push(ExtraVertex.at(i));
+		//	}
 
-			//获取最终的最大参数
-			_aabb.push(extra);
-		}
-		else
+		//	//获取最终的最大参数
+		//	_aabb.push(extra);
+		//}
+		//else
 		{
 			//获取最终的最大参数
 			_aabb = aabb;
@@ -263,8 +263,8 @@ namespace MPreRend
 	void mPreRend::otherRend()
 	{
 		////////图标////////////
-		_lableRend_pre->drawLable();
-		_lableRend_common->drawLable();
+		//_lableRend_pre->drawLable();
+		//_lableRend_common->drawLable();
 		///////////////////////////
 		GLenum error = QOpenGLContext::currentContext()->functions()->glGetError();
 		if (error != 0)
