@@ -523,7 +523,6 @@ namespace MPreRend
 		if (line >= 800)
 		{
 			_rendStatus->_faceLineColor.setW(0);
-			return;
 		}
 		else
 		{
