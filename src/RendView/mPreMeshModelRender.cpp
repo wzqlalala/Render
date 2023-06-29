@@ -460,7 +460,11 @@ namespace MPreRend
 		if (geoFace->_mTriangles.size() == 0 && geoFace->_mQuadangles.size() == 0)//Ò»Î¬
 		{
 			//ÏßÍø¸ñ
-			QSet<MXGeoEdge*> geoEdges = geoFace->getPVTEdgesOnFace();
+			//QSet<MXGeoEdge*> geoEdges = geoFace->getPVTEdgesOnFace();
+			QSet<MXGeoEdge*> geoEdges;
+			for (auto geoEdge : geoFace->getEdgesOfGeoFaces()) {
+				geoEdges.insert(geoEdge);
+			}
 			for (auto geoEdge : geoEdges)
 			{
 				getGeoIndependentEdgeData(geoEdge, color);
