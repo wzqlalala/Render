@@ -179,7 +179,7 @@ namespace MPreRend
 
 		if (!this->getPreRender()->getModelAABB(aabb))
 		{
-			aabb = Space::AABB();
+			aabb = _aabb;
 		}
 		_aabb = aabb;
 		//额外顶点数据

@@ -286,7 +286,7 @@ namespace MPreRend
 		QVector<QFuture<void>> futures;
 		if (_pickMode == PickMode::SoloPick)
 		{
-			QVector<QString> partNames = MeshMessage::getInstance()->getAllPartNames();
+			QVector<QString> partNames = MeshMessage::getInstance()->getMeshPartName();
 			for (auto partName : partNames)
 			{
 				if (MeshMessage::getInstance()->getPartMask(partName))
@@ -336,7 +336,7 @@ namespace MPreRend
 		}
 		else
 		{
-			QVector<QString> partNames = MeshMessage::getInstance()->getAllPartNames();
+			QVector<QString> partNames = MeshMessage::getInstance()->getMeshPartName();
 			for (auto partName : partNames)
 			{
 				if (MeshMessage::getInstance()->getPartMask(partName))

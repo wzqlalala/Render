@@ -100,7 +100,7 @@ namespace MPreRend
 		std::set<QString> hidePartNames;
 		//auto iter = _oneFrameData->getMeshPartIterator();
 		//_partOrder = _geoModelData->getAllPartName();
-		_partOrder = MeshMessage::getInstance()->getAllPartNames().toList();
+		_partOrder = MeshMessage::getInstance()->getMeshPartName().toList();
 		for (auto partName : _partOrder)
 		{
 			//mGeoPartData1 *partData = _geoModelData->getGeoPartDataByPartName(partName);

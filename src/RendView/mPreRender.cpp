@@ -359,7 +359,7 @@ namespace MPreRend
 			aabb.push(_geoModelData->getModelSize());
 			hasModel = true;
 		}
-		if (MeshMessage::getInstance()->getAllPartNames().size() > 0)
+		if (MeshMessage::getInstance()->getMeshPartName().size() > 0)
 		{
 			auto model = _meshModelRender->getModelAABB();
 			aabb.push(model);
