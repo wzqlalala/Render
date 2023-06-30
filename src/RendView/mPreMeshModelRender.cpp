@@ -60,15 +60,15 @@ namespace MPreRend
 		_edgelineStateSet = edgelineStateSet;
 		//_meshlinerend->setStateSet(_edgelineStateSet);
 	}
-	void mPreMeshModelRender::setTriFaceLineStateSet(std::shared_ptr<mxr::StateSet> facelineStateSet)
+	void mPreMeshModelRender::setFaceLineStateSet(std::shared_ptr<mxr::StateSet> facelineStateSet)
 	{
-		_trifacelineStateSet = facelineStateSet;
+		_facelineStateSet = facelineStateSet;
 		//_facelinerend->setStateSet(_facelineStateSet);
 	}
-	void mPreMeshModelRender::setQuadFaceLineStateSet(std::shared_ptr<mxr::StateSet> facelineStateSet)
-	{
-		_quadfacelineStateSet = facelineStateSet;
-	}
+	//void mPreMeshModelRender::setQuadFaceLineStateSet(std::shared_ptr<mxr::StateSet> facelineStateSet)
+	//{
+	//	_quadfacelineStateSet = facelineStateSet;
+	//}
 	void mPreMeshModelRender::setLineStateSet(std::shared_ptr<mxr::StateSet> lineStateSet)
 	{
 		_lineStateSet = lineStateSet;
@@ -116,8 +116,8 @@ namespace MPreRend
 			part->setFaceStateSet(_faceStateSet);
 			part->setFaceTransparentNodeformationStateSet(_faceTransparentNodeformationStateSet);
 			part->setEdgeLineStateSet(_edgelineStateSet);
-			part->setTriFaceLineStateSet(_trifacelineStateSet);
-			part->setQuadFaceLineStateSet(_quadfacelineStateSet);
+			part->setFaceLineStateSet(_facelineStateSet);
+			//part->setQuadFaceLineStateSet(_quadfacelineStateSet);
 			part->setLineStateSet(_lineStateSet);
 			part->setPointStateSet(_pointStateSet);
 
@@ -141,8 +141,8 @@ namespace MPreRend
 					part->setFaceStateSet(_faceStateSet);
 					part->setFaceTransparentNodeformationStateSet(_faceTransparentNodeformationStateSet);
 					part->setEdgeLineStateSet(_edgelineStateSet);
-					part->setTriFaceLineStateSet(_trifacelineStateSet);
-					part->setQuadFaceLineStateSet(_quadfacelineStateSet);
+					part->setFaceLineStateSet(_facelineStateSet);
+					//part->setQuadFaceLineStateSet(_quadfacelineStateSet);
 					part->setLineStateSet(_lineStateSet);
 					part->setPointStateSet(_pointStateSet);
 					part->setShowFuntion(_rendStatus->_showFunction);
@@ -270,8 +270,8 @@ namespace MPreRend
 		_facerend = MakeAsset<mGroupRender2<Vec3Array, Vec3Array>>(_geode);
 		_facetransparentnodeformationrend = MakeAsset<mGroupRender1<Vec3Array>>(_geode);
 		_edgelinerend = MakeAsset<mGroupRender1<Vec3Array>>(_geode);
-		_trifacelinerend = MakeAsset<mGroupRender1<Vec3Array>>(_geode);
-		_quadfacelinerend = MakeAsset<mGroupRender1<Vec3Array>>(_geode);
+		_facelinerend = MakeAsset<mGroupRender2<Vec3Array, FloatArray>>(_geode);
+		//_quadfacelinerend = MakeAsset<mGroupRender1<Vec3Array>>(_geode);
 		_linerend = MakeAsset<mGroupRender2<Vec3Array, Vec3Array>>(_geode);
 		_pointrend = MakeAsset<mGroupRender2<Vec3Array, Vec3Array>>(_geode);
 		_partName = partName;
@@ -295,14 +295,14 @@ namespace MPreRend
 		_edgelinerend->setStateSet(edgelineStateSet);
 	}
 
-	void mPreMeshPartRender::setTriFaceLineStateSet(std::shared_ptr<mxr::StateSet> facelineStateSet)
+	void mPreMeshPartRender::setFaceLineStateSet(std::shared_ptr<mxr::StateSet> facelineStateSet)
 	{
-		_trifacelinerend->setStateSet(facelineStateSet);
+		_facelinerend->setStateSet(facelineStateSet);
 	}
-	void mPreMeshPartRender::setQuadFaceLineStateSet(std::shared_ptr<mxr::StateSet> facelineStateSet)
-	{
-		_quadfacelinerend->setStateSet(facelineStateSet);
-	}
+	//void mPreMeshPartRender::setQuadFaceLineStateSet(std::shared_ptr<mxr::StateSet> facelineStateSet)
+	//{
+	//	_quadfacelinerend->setStateSet(facelineStateSet);
+	//}
 	void mPreMeshPartRender::setLineStateSet(std::shared_ptr<mxr::StateSet> lineStateSet)
 	{
 		_linerend->setStateSet(lineStateSet);
@@ -372,29 +372,29 @@ namespace MPreRend
 		if (showFuntion == ElementFace)
 		{
 			_facerend->getDrawable()->setNodeMask(0);
-			_trifacelinerend->getDrawable()->setNodeMask(1);
-			_quadfacelinerend->getDrawable()->setNodeMask(1);
+			_facelinerend->getDrawable()->setNodeMask(1);
+			//_quadfacelinerend->getDrawable()->setNodeMask(1);
 			_edgelinerend->getDrawable()->setNodeMask(1);
 		}
 		else if (showFuntion == SmoothShaded)
 		{
 			_facerend->getDrawable()->setNodeMask(0);
-			_trifacelinerend->getDrawable()->setNodeMask(0);
-			_quadfacelinerend->getDrawable()->setNodeMask(0);
+			_facelinerend->getDrawable()->setNodeMask(0);
+			//_quadfacelinerend->getDrawable()->setNodeMask(0);
 			_edgelinerend->getDrawable()->setNodeMask(0);
 		}
 		else if (showFuntion == WireFrame)
 		{
 			_facerend->getDrawable()->setNodeMask(1);
-			_trifacelinerend->getDrawable()->setNodeMask(0);
-			_quadfacelinerend->getDrawable()->setNodeMask(0);
+			_facelinerend->getDrawable()->setNodeMask(0);
+			//_quadfacelinerend->getDrawable()->setNodeMask(0);
 			_edgelinerend->getDrawable()->setNodeMask(0);
 		}
 		else if (showFuntion == WireEdge)
 		{
 			_facerend->getDrawable()->setNodeMask(1);
-			_trifacelinerend->getDrawable()->setNodeMask(1);
-			_quadfacelinerend->getDrawable()->setNodeMask(1);
+			_facelinerend->getDrawable()->setNodeMask(1);
+			//_quadfacelinerend->getDrawable()->setNodeMask(1);
 			_edgelinerend->getDrawable()->setNodeMask(0);
 		}
 	}
@@ -438,9 +438,9 @@ namespace MPreRend
 			_facerend->_vertex0->append(face->getAllVertexsOfMFace());
 			_facerend->_vertex1->append(QVector<QVector3D>(3, color));
 
-			_trifacelinerend->_vertex0->append(face->getAllVertexsOfMFace());
+			_facelinerend->_vertex0->append(face->getAllVertexsOfMFace());
 
-			//_facelinerend->_vertex1->append(QVector<float>(3, 1.0f));
+			_facelinerend->_vertex1->append(QVector<float>(3, 1.0f));
 		}
 		else
 		{
@@ -450,10 +450,11 @@ namespace MPreRend
 				int index = quadToTriIndex.at(i);
 				_facerend->_vertex0->append(vertexs.at(index));
 				_facerend->_vertex1->append(color);
+				_facelinerend->_vertex0->append(vertexs.at(index));
 			}
 
-			_quadfacelinerend->_vertex0->append(vertexs);
-			//_facelinerend->_vertex1->append(QVector<float>(6, 0.0f));
+
+			_facelinerend->_vertex1->append(QVector<float>(6, 0.0f));
 		}
 	}
 	void mPreMeshPartRender::getMEdgeData(MEdge * edge)
@@ -494,8 +495,8 @@ namespace MPreRend
 				//}
 				_facerend->_vertex0->append(mesh->getallVertexs1());
 				_facerend->_vertex1->append(QVector<QVector3D>(3, color));
-				_trifacelinerend->_vertex0->append(mesh->getallVertexs1());
-				//_facelinerend->_vertex1->append(QVector<float>(3, 1.0f));
+				_facelinerend->_vertex0->append(mesh->getallVertexs1());
+				_facelinerend->_vertex1->append(QVector<float>(3, 1.0f));
 			}
 			for (auto mesh : geoFace->_mQuadangles)
 			{
@@ -509,10 +510,10 @@ namespace MPreRend
 					int index = quadToTriIndex.at(i);
 					_facerend->_vertex0->append(vertexs.at(index));
 					_facerend->_vertex1->append(color);
+					_facelinerend->_vertex0->append(vertexs.at(index));
 				}
-				_quadfacelinerend->_vertex0->append(vertexs);
 
-				//_facelinerend->_vertex1->append(QVector<float>(6, 0.0f));
+				_facelinerend->_vertex1->append(QVector<float>(6, 0.0f));
 			}
 			
 			//±ß½çÏß
