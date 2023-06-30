@@ -368,6 +368,11 @@ namespace MPreRend
 		return hasModel;
 	}
 
+	void mPreRender::setPickElementTypeFilter(std::set<MxFunctions::ElementType> pickElementTypeFilter)
+	{
+
+	}
+
 	void mPreRender::updateHighLightRender()
 	{
 		this->makeCurrent();

@@ -469,6 +469,7 @@ namespace MPostRend
 		_thread->setWidget(_baseRend->getCamera()->SCR_WIDTH, _baseRend->getCamera()->SCR_HEIGHT);
 		_thread->setPickMode(*_baseRend->getCurrentPickMode(), *_baseRend->getMultiplyPickMode());
 		_thread->setPickAngleValue(_baseRend->getPickAngle());
+		_thread->setPickElementTypeFilter(_rendStatus->_pickElementTypeFilter);
 		if (*_baseRend->getCurrentPickMode() == PickMode::SoloPick)
 		{		
 			float depth = this->getDepth(poses.first());
@@ -497,6 +498,15 @@ namespace MPostRend
 		});
 		w.setFuture(future);
 
+	}
+
+	void mPostRender::setPickElementTypeFilter(std::set<MxFunctions::ElementType> pickElementTypeFilter)
+	{
+		_rendStatus->_pickElementTypeFilter.clear();
+		for (ElementType et : pickElementTypeFilter)
+		{
+			_rendStatus->_pickElementTypeFilter.insert(et);
+		}
 	}
 
 	mPostFrameText * mPostRender::getPostFrameText()

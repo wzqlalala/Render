@@ -83,6 +83,9 @@ namespace MPostRend
 		shared_ptr<mPostOneFrameRender> getOneFrameRender() { return  _oneFrameRender; };
 
 		mPostMeshPickData *getMeshPickData() { return _pickData; };
+
+		//设置拾取的单元过滤器
+		void setPickElementTypeFilter(std::set<MxFunctions::ElementType> pickElementTypeFilter);
 	
 		//获取当前屏幕文字渲染的数据
 		mPostFrameText* getPostFrameText();
