@@ -70,8 +70,8 @@ namespace MPostRend
 		mxr::Shader *faceshader = mShaderManage::GetInstance()->GetShader("PostMeshFaceWithDeformation");
 		_faceStateSet->setShader(faceshader);
 		_faceStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
-		_faceStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetFill>(0, 0), 0);
-		_faceStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
+		_faceStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetFill>(1.5, 1.5), 1);
+		_faceStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(mxr::PolygonMode::FRONT_AND_BACK, mxr::PolygonMode::FILL), 1);
 		_faceStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
 
 		_faceStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
@@ -185,7 +185,7 @@ namespace MPostRend
 		_facelineStateSet->setDrawMode(GL_TRIANGLES);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::LINE), 1);
-		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(-1, -1), 1);
+		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(0, 0), 1);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
 
 		_facelineStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
