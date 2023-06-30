@@ -65,7 +65,7 @@ namespace MPreRend
 		mxr::Shader *shader = mShaderManage::GetInstance()->GetShader("PreGeoMeshFace");
 		_faceStateSet->setShader(shader);
 		_faceStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
-		_faceStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetFill>(0, 0), 0);
+		_faceStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetFill>(0, 0), 1);
 		_faceStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
 		_faceStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
 
