@@ -400,7 +400,8 @@ namespace MPreRend
 	}
 	void mPreMeshPartRender::getGeoSolidData(MXGeoSolid * geoSolid, QVector3D color)
 	{
-		if (geoSolid->_mTetrahedrons.size() == 0 && geoSolid->_mHexahedrals.size() == 0)//二维或者一维
+		if (geoSolid->_mTetrahedrons.size() == 0 && geoSolid->_mHexahedrals.size() == 0&&
+			geoSolid->_mPrisms.size() == 0 && geoSolid->_mPyramids.size() == 0)//二维或者一维
 		{
 			QVector<MXGeoFace*> geoFaces = geoSolid->getface();
 			//面
@@ -469,7 +470,11 @@ namespace MPreRend
 		if (geoFace->_mTriangles.size() == 0 && geoFace->_mQuadangles.size() == 0)//一维
 		{
 			//线网格
-			QSet<MXGeoEdge*> geoEdges = geoFace->getPVTEdgesOnFace();
+			//QSet<MXGeoEdge*> geoEdges = geoFace->getPVTEdgesOnFace();
+			QSet<MXGeoEdge*> geoEdges;
+			for (auto geoEdge : geoFace->getEdgesOfGeoFaces()) {
+				geoEdges.insert(geoEdge);
+			}
 			for (auto geoEdge : geoEdges)
 			{
 				getGeoIndependentEdgeData(geoEdge, color);
