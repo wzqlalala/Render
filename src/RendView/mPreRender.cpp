@@ -103,7 +103,7 @@ namespace MPreRend
 		_trifacelineStateSet->setDrawMode(GL_TRIANGLES);
 		_trifacelineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
 		_trifacelineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::LINE), 1);
-		_trifacelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(-1, -1), 1);
+		_trifacelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(-0.5, -0.5), 1);
 		_trifacelineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
 
 		_trifacelineStateSet->setUniform(MakeAsset<Uniform>("pvm", QMatrix4x4()));
@@ -117,7 +117,7 @@ namespace MPreRend
 		_quadfacelineStateSet->setDrawMode(GL_QUADS);
 		_quadfacelineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
 		_quadfacelineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::LINE), 1);
-		_quadfacelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(-1, -1), 1);
+		_quadfacelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(-0.5, -0.5), 1);
 		_quadfacelineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
 
 		_quadfacelineStateSet->setUniform(MakeAsset<Uniform>("pvm", QMatrix4x4()));
