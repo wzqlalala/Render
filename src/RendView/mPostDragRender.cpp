@@ -97,7 +97,7 @@ namespace MPostRend
 		_stateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
 		_stateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
 		_stateSet->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::LINE), 1);
-		_stateSet->setUniform(MakeAsset<Uniform>("pvm", QMatrix4x4()));
+		_stateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
 		_stateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
 		_stateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
 		_stateSet->setUniform(MakeAsset<Uniform>("showColor", QVector4D()));
