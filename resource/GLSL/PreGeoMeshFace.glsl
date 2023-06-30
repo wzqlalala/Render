@@ -90,6 +90,7 @@ void main()
 {
 	vec3 normal = gl_FrontFacing ? Normal : -Normal;
 	FragColor = vec4(calculateLightResult(normal,material), 1.0);
+	FragColor.rgb = pow(FragColor.rgb, vec3(1.0 / 2.2));
 } 
 
 #endif

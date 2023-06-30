@@ -65,8 +65,8 @@ namespace MPreRend
 		mxr::Shader *shader = mShaderManage::GetInstance()->GetShader("PreGeoMeshFace");
 		_faceStateSet->setShader(shader);
 		_faceStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
-		_faceStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetFill>(0, 0), 1);
-		_faceStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
+		_faceStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetFill>(1.5, 1.5), 1);
+		_faceStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(mxr::PolygonMode::FRONT_AND_BACK, mxr::PolygonMode::FILL), 1);
 		_faceStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
 
 		_faceStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
@@ -103,7 +103,7 @@ namespace MPreRend
 		_trifacelineStateSet->setDrawMode(GL_TRIANGLES);
 		_trifacelineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
 		_trifacelineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::LINE), 1);
-		_trifacelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(-0.5, -0.5), 1);
+		_trifacelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(0, 0), 1);
 		_trifacelineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
 
 		_trifacelineStateSet->setUniform(MakeAsset<Uniform>("pvm", QMatrix4x4()));
@@ -117,7 +117,7 @@ namespace MPreRend
 		_quadfacelineStateSet->setDrawMode(GL_QUADS);
 		_quadfacelineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
 		_quadfacelineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::LINE), 1);
-		_quadfacelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(-0.5, -0.5), 1);
+		_quadfacelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(0, 0), 1);
 		_quadfacelineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
 
 		_quadfacelineStateSet->setUniform(MakeAsset<Uniform>("pvm", QMatrix4x4()));
