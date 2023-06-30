@@ -497,26 +497,27 @@ namespace MPostRend
 			//QVector3D center1_2 = (aabb1.maxEdge + aabb1.minEdge) / 2.0 - (aabb.maxEdge + aabb.minEdge) / 2.0;
 			//center1_2 = QVector3D(abs(center1_2.x()), abs(center1_2.y()), abs(center1_2.z()));
 
-			for (int j = 0; j < i; j++)
+			for (int j = i - 1; j < i; j++)
 			{
 				auto baseLine = renders.at(j);
-				if (aabb1.IsIntersect(baseLine->getPartSpaceTree()->space))
-				{
-					QString partName1 = baseLine->getpartData()->getPartName();
-					Space::AABB baseLineaabb = baseLine->getPartSpaceTree()->space;
-					baseLineaabb.move(_oneFrameRendData->getPartExplodeDis(partName1));
+				QString partName1 = baseLine->getpartData()->getPartName();
+				Space::AABB baseLineaabb = baseLine->getPartSpaceTree()->space;
+				baseLineaabb.move(_oneFrameRendData->getPartExplodeDis(partName1));
 
-					QVector3D center1_2 = (baseLineaabb.maxEdge + baseLineaabb.minEdge) / 2.0 - (aabb1.maxEdge + aabb1.minEdge) / 2.0;
+				aabb.push(baseLineaabb);
+				if (aabb1.IsIntersect(aabb))
+				{
+					QVector3D center1_2 = (aabb.maxEdge + aabb.minEdge) / 2.0 - (aabb1.maxEdge + aabb1.minEdge) / 2.0;
 					center1_2 = QVector3D(abs(center1_2.x()), abs(center1_2.y()), abs(center1_2.z()));
 
-					float x = min(abs(aabb1.minEdge.x() - baseLineaabb.maxEdge.x()), abs(aabb1.maxEdge.x() - baseLineaabb.minEdge.x()));
-					float y = min(abs(aabb1.minEdge.y() - baseLineaabb.maxEdge.y()), abs(aabb1.maxEdge.y() - baseLineaabb.minEdge.y()));
-					float z = min(abs(aabb1.minEdge.z() - baseLineaabb.maxEdge.z()), abs(aabb1.maxEdge.z() - baseLineaabb.minEdge.z()));
+					float x = min(abs(aabb1.minEdge.x() - aabb.maxEdge.x()), abs(aabb1.maxEdge.x() - aabb.minEdge.x()));
+					float y = min(abs(aabb1.minEdge.y() - aabb.maxEdge.y()), abs(aabb1.maxEdge.y() - aabb.minEdge.y()));
+					float z = min(abs(aabb1.minEdge.z() - aabb.maxEdge.z()), abs(aabb1.maxEdge.z() - aabb.minEdge.z()));
 					QVector3D dir(0,0,0);
 					if (x <= y && x <= z)//x方向最小
 					{
-						float x1 = aabb1.minEdge.x() - baseLineaabb.maxEdge.x();
-						float x2 = aabb1.maxEdge.x() - baseLineaabb.minEdge.x();
+						float x1 = aabb1.minEdge.x() - aabb.maxEdge.x();
+						float x2 = aabb1.maxEdge.x() - aabb.minEdge.x();
 						if (abs(x1) < abs(x2))//
 						{
 							dir.setX(-x1);
@@ -528,8 +529,8 @@ namespace MPostRend
 					}
 					else if (y <= z)//y方向最小
 					{
-						float y1 = aabb1.minEdge.y() - baseLineaabb.maxEdge.y();
-						float y2 = aabb1.maxEdge.y() - baseLineaabb.minEdge.y();
+						float y1 = aabb1.minEdge.y() - aabb.maxEdge.y();
+						float y2 = aabb1.maxEdge.y() - aabb.minEdge.y();
 						if (abs(y1) < abs(y2))//
 						{
 							dir.setY(-y1);
@@ -541,8 +542,8 @@ namespace MPostRend
 					}
 					else
 					{
-						float z1 = aabb1.minEdge.z() - baseLineaabb.maxEdge.z();
-						float z2 = aabb1.maxEdge.z() - baseLineaabb.minEdge.z();
+						float z1 = aabb1.minEdge.z() - aabb.maxEdge.z();
+						float z2 = aabb1.maxEdge.z() - aabb.minEdge.z();
 						if (abs(z1) < abs(z2))//
 						{
 							dir.setZ(-z1);
