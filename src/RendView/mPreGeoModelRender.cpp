@@ -145,7 +145,10 @@ namespace MPreRend
 		{
 			for (QString partName : partNames)
 			{
-				_partRenders[partName]->getGeode()->setNodeMask(1);
+				if (_partRenders.contains(partName))
+				{
+					_partRenders[partName]->getGeode()->setNodeMask(1);
+				}
 			}
 			return true;
 		}
@@ -153,7 +156,10 @@ namespace MPreRend
 		{
 			for (QString partName : partNames)
 			{
-				_partRenders[partName]->getGeode()->setNodeMask(0);
+				if (_partRenders.contains(partName))
+				{
+					_partRenders[partName]->getGeode()->setNodeMask(0);
+				}
 			}
 			return true;
 		}
@@ -161,13 +167,16 @@ namespace MPreRend
 		{
 			for (QString partName : partNames)
 			{
-				QVector3D color = _geoModelData->getGeoPartColor(partName);
-				Array *array = _partRenders[partName]->getFaceDrawable()->getVertexAttribArray(1);
-				array->updata(QVector<QVector3D>(array->size()/3.0, color).data());
-				array = _partRenders[partName]->getIndependentLineDrawable()->getVertexAttribArray(1);
-				array->updata(QVector<QVector3D>(array->size()/3.0, color).data());
-				array = _partRenders[partName]->getPointDrawable()->getVertexAttribArray(1);
-				array->updata(QVector<QVector3D>(array->size()/3.0, color).data());
+				if (_partRenders.contains(partName))
+				{
+					QVector3D color = _geoModelData->getGeoPartColor(partName);
+					Array *array = _partRenders[partName]->getFaceDrawable()->getVertexAttribArray(1);
+					array->updata(QVector<QVector3D>(array->size() / 3.0, color).data());
+					array = _partRenders[partName]->getIndependentLineDrawable()->getVertexAttribArray(1);
+					array->updata(QVector<QVector3D>(array->size() / 3.0, color).data());
+					array = _partRenders[partName]->getPointDrawable()->getVertexAttribArray(1);
+					array->updata(QVector<QVector3D>(array->size() / 3.0, color).data());
+				}
 			}
 		}
 		else

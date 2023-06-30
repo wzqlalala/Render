@@ -95,7 +95,7 @@ namespace MPostRend
 			AppendMesh0(meshdata0[i], values, dis, type);
 		}
 
-		qDebug() << "0Î¬Íø¸ñ" << meshdata0.size();
+		//qDebug() << "0Î¬Íø¸ñ" << meshdata0.size();
 		
 		QVector<mPostMeshData1*> meshdata1 = _partData->getMeshDatas1();
 		for (int i = 0; i < meshdata1.size(); i++)
@@ -103,7 +103,7 @@ namespace MPostRend
 			AppendMesh1(meshdata1[i], values, dis, type);
 		}
 
-		qDebug() << "1Î¬Íø¸ñ" << meshdata1.size();
+		//qDebug() << "1Î¬Íø¸ñ" << meshdata1.size();
 		
 		QVector<mPostMeshData1*> meshdata2 = _partData->getMeshDatas2();
 		for (int i = 0; i < meshdata2.size(); i++)
@@ -111,7 +111,7 @@ namespace MPostRend
 			AppendMesh2(meshdata2[i], values, dis, type);
 		}
 
-		qDebug() << "2Î¬Íø¸ñ" << meshdata2.size();
+		//qDebug() << "2Î¬Íø¸ñ" << meshdata2.size();
 
 		QVector<mPostMeshFaceData1*> meshFaces = _partData->getMeshFaceData();
 		for (int i = 0; i < meshFaces.size(); i++)
@@ -151,7 +151,7 @@ namespace MPostRend
 			}
 		}
 
-		qDebug() << "3Î¬Íø¸ñ±íÃæ" << meshFaces.size();
+		//qDebug() << "3Î¬Íø¸ñ±íÃæ" << meshFaces.size();
 
 		set<int> meshLineIDs = _partData->getMeshLineIDs();
 		for (int meshLineID : meshLineIDs)
@@ -160,7 +160,7 @@ namespace MPostRend
 			AppendMeshLine(meshLineData, dis, type);
 		}
 
-		qDebug() << "±ß½çÏß" << meshLineIDs.size();
+		//qDebug() << "±ß½çÏß" << meshLineIDs.size();
 
 		_facerend->getDrawable()->setVertexAttribArray(5, MakeAsset<Vec3Array>(QVector<QVector3D>(_facerend->_vertex0->size() / 3.0, QVector3D(0, 0, 0))));
 		_facetransparentnodeformationrend->getDrawable()->setVertexAttribArray(1, MakeAsset<Vec3Array>(QVector<QVector3D>(_facerend->_vertex0->size() / 3.0, QVector3D(0, 0, 0))));

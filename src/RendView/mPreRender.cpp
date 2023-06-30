@@ -97,18 +97,32 @@ namespace MPreRend
 		_edgelineStateSet->setUniform(MakeAsset<Uniform>("lineWidth", 1.0f));
 
 		//faceline
-		_facelineStateSet = MakeAsset<StateSet>();
-		shader = mShaderManage::GetInstance()->GetShader("PreMeshFaceLine");
-		_facelineStateSet->setShader(shader);
-		_facelineStateSet->setDrawMode(GL_TRIANGLES);
-		_facelineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
-		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::LINE), 1);
-		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(-1, -1), 1);
-		_facelineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
+		_trifacelineStateSet = MakeAsset<StateSet>();
+		shader = mShaderManage::GetInstance()->GetShader("PreMeshFaceLine-1");
+		_trifacelineStateSet->setShader(shader);
+		_trifacelineStateSet->setDrawMode(GL_TRIANGLES);
+		_trifacelineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
+		_trifacelineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::LINE), 1);
+		_trifacelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(-0.5, -0.5), 1);
+		_trifacelineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
 
-		_facelineStateSet->setUniform(MakeAsset<Uniform>("pvm", QMatrix4x4()));
-		_facelineStateSet->setUniform(MakeAsset<Uniform>("showColor", _rendStatus->_faceLineColor));
-		_facelineStateSet->setUniform(MakeAsset<Uniform>("rightToLeft", 0));
+		_trifacelineStateSet->setUniform(MakeAsset<Uniform>("pvm", QMatrix4x4()));
+		_trifacelineStateSet->setUniform(MakeAsset<Uniform>("showColor", _rendStatus->_faceLineColor));
+		//_trifacelineStateSet->setUniform(MakeAsset<Uniform>("rightToLeft", 0));
+
+		//faceline
+		_quadfacelineStateSet = MakeAsset<StateSet>();
+		shader = mShaderManage::GetInstance()->GetShader("PreMeshFaceLine-1");
+		_quadfacelineStateSet->setShader(shader);
+		_quadfacelineStateSet->setDrawMode(GL_QUADS);
+		_quadfacelineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
+		_quadfacelineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::LINE), 1);
+		_quadfacelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(-0.5, -0.5), 1);
+		_quadfacelineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
+
+		_quadfacelineStateSet->setUniform(MakeAsset<Uniform>("pvm", QMatrix4x4()));
+		_quadfacelineStateSet->setUniform(MakeAsset<Uniform>("showColor", _rendStatus->_faceLineColor));
+		//_trifacelineStateSet->setUniform(MakeAsset<Uniform>("rightToLeft", 0));
 
 		//line
 		_independentlineStateSet = MakeAsset<StateSet>();
@@ -183,7 +197,8 @@ namespace MPreRend
 
 		_meshModelRender->setFaceStateSet(_faceStateSet);
 		_meshModelRender->setEdgeLineStateSet(_edgelineStateSet);
-		_meshModelRender->setFaceLineStateSet(_facelineStateSet);
+		_meshModelRender->setTriFaceLineStateSet(_trifacelineStateSet);
+		_meshModelRender->setQuadFaceLineStateSet(_quadfacelineStateSet);
 		_meshModelRender->setLineStateSet(_independentlineStateSet);
 		_meshModelRender->setPointStateSet(_pointStateSet);
 		_meshModelRender->setNodeStateSet(_nodeStateSet);
@@ -418,7 +433,8 @@ namespace MPreRend
 	void mPreRender::setFaceLineColor(QVector4D color)
 	{
 		_rendStatus->_faceLineColor = color;
-		_facelineStateSet->getUniform("showColor")->SetData(_rendStatus->_faceLineColor);
+		_trifacelineStateSet->getUniform("showColor")->SetData(_rendStatus->_faceLineColor);
+		_quadfacelineStateSet->getUniform("showColor")->SetData(_rendStatus->_faceLineColor);
 	}
 
 	mPreRender::~mPreRender()
@@ -467,7 +483,8 @@ namespace MPreRend
 			_faceStateSet->getUniform("view")->SetData(modelView->_view);
 			_faceStateSet->getUniform("model")->SetData(modelView->_model);
 			_edgelineStateSet->getUniform("pvm")->SetData(pvm);
-			_facelineStateSet->getUniform("pvm")->SetData(pvm);
+			_trifacelineStateSet->getUniform("pvm")->SetData(pvm);
+			_quadfacelineStateSet->getUniform("pvm")->SetData(pvm);
 			_independentlineStateSet->getUniform("pvm")->SetData(pvm);
 			_dotlineStateSet->getUniform("pvm")->SetData(pvm);
 			_pointStateSet->getUniform("projection")->SetData(modelView->_projection);
@@ -487,11 +504,30 @@ namespace MPreRend
 				_pointStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
 			}
 
-			_facelineStateSet->getUniform("rightToLeft")->SetData(float(modelView->_Right - modelView->_Left));
+			//_facelineStateSet->getUniform("rightToLeft")->SetData(float(modelView->_Right - modelView->_Left));
 			_edgelineStateSet->getUniform("rightToLeft")->SetData(float(modelView->_Right - modelView->_Left));
+
+			setLineVisual(float(modelView->_Right - modelView->_Left));
 		}
 	
 		_geoHighLightRender->updateUniform(modelView, commonView);
 		_meshHighLightRender->updateUniform(modelView, commonView);
+	}
+
+	void mPreRender::setLineVisual(float r_l)
+	{
+		float line; //= _modelView->_MaxRadius / (_modelView->_Right - _modelView->_Left);
+		float meshsize = MeshMessage::getInstance()->getModeMeshSize();
+		line = (r_l) / meshsize;
+		//qDebug() << line << endl;
+		if (line >= 800)
+		{
+			_rendStatus->_faceLineColor.setW(0);
+		}
+		else
+		{
+			_rendStatus->_faceLineColor.setW(1 - sqrt(line / 800));
+		}
+		setFaceLineColor(_rendStatus->_faceLineColor);
 	}
 }

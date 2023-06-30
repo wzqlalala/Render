@@ -117,6 +117,10 @@ namespace mxr
 
 	void Drawable::setNodeMask(NodeMask nm)
 	{
+		if (_nodeMask == nm)
+		{
+			return;
+		}
 		if (_nodevisitor)
 		{
 			_nodevisitor->changeDrawBuffer(true);

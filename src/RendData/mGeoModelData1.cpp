@@ -253,22 +253,38 @@ namespace MDataGeo
 
 	Space::AABB mGeoModelData1::getGeoSolidAABBByID(int ID)
 	{
-		return _geoSolidData.value(ID)->getGeoSolidAABB();
+		if (_geoSolidData.contains(ID))
+		{
+			return _geoSolidData.value(ID)->getGeoSolidAABB();
+		}
+		return Space::AABB();
 	}
 
 	Space::AABB mGeoModelData1::getGeoFaceAABBByID(int ID)
 	{
-		return _geoFaceData.value(ID)->getGeoFaceAABB();
+		if (_geoFaceData.contains(ID))
+		{
+			return _geoFaceData.value(ID)->getGeoFaceAABB();
+		}
+		return Space::AABB();
 	}
 
 	Space::AABB mGeoModelData1::getGeoLineAABBByID(int ID)
 	{
-		return _geoLineData.value(ID)->getGeoLineAABB();
+		if (_geoLineData.contains(ID))
+		{
+			return _geoLineData.value(ID)->getGeoLineAABB();
+		}
+		return Space::AABB();
 	}
 
 	Space::AABB mGeoModelData1::getGeoPointAABBByID(int ID)
 	{
-		return _geoPointData.value(ID)->getGeoPointAABB();
+		if (_geoPointData.contains(ID))
+		{
+			return _geoPointData.value(ID)->getGeoPointAABB();
+		}
+		return Space::AABB();
 	}
 
 	QList<QString> mGeoModelData1::getAllPartName()
