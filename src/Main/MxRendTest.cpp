@@ -183,7 +183,21 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			_postRend->slotUpdateOrthoAndCamera();
 			break;
 		}
-
+		case Qt::Key_F7:
+		{
+			if (_postRender == nullptr)
+			{
+				return;
+			}
+			set<QString> names = _postRender->getOneFrameRender()->getOneFrameData()->getAllPartNames();
+			if (names.size() == 0)
+			{
+				return;
+			}
+			_postRender->createExplodedGraphByTransplatePart(set<QString>{*names.begin()}, _explodeDis);
+			_postRend->slotUpdateOrthoAndCamera();
+			break;
+		}
 		case Qt::Key_9:
 		{
 			if (_postRender == nullptr)
