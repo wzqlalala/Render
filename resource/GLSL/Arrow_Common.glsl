@@ -7,7 +7,7 @@ layout (location = 1) in vec3 aPointPos;//位置坐标（模型坐标系下）
 layout (location = 2) in vec3 aDirection; //方向
 layout (location = 3) in float aSize; //大小
 layout (location = 4) in vec3 aColor;	//颜色RGB
-
+layout (location = 5) in float aDepthState;	//深度测试状态
 
 out vec3 Color;
 out float Depth;
@@ -30,7 +30,7 @@ void main()
 	mat4 model;
 	//将载荷添加点从模型坐标系转化到通用坐标系下坐标
 	vec3 pos_norm = ModelToNormPositon(aPointPos,uProjection_m,uView_m,uModel_m);
-	Depth = 0.5+pos_norm.z*0.5-0.03;  //输出深度值 让箭头的深度值和添加点的深度值保持一致
+	Depth = aDepthState == 0 ? 0.0 : Depth = 0.5+pos_norm.z*0.5-0.01;	
 	vec3 pos_c = NormToModelPositon(pos_norm,uProjection_c,uView_c,uModel_c);
 
 	//根据值设定箭头的方向

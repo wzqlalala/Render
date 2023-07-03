@@ -89,8 +89,8 @@ namespace MBaseRend
 		void appendFixedFont(QString key, QVector<QVector2D> pos, QVector<QString> txt, QVector3D color = QVector3D(1,1,1), float size = 1.0);//添加固定文字显示
 		void setFixedFontIsShow(QString key, bool isShow);
 
-		void appendArrowFont(QString key, QVector<QVector3D> pos, QVector<QString> txt, QVector<QVector3D> dir, QVector3D color, float size);	//添加箭头文字显示
-		void setArrowFont(QString key, bool isShow);
+		void appendArrowFont(QString key, QVector<QVector3D> pos, QVector<QString> txt, QVector<QVector3D> dir, QVector3D color = QVector3D(1, 1, 1), float size = 1.0, bool hasDepth = true);	//添加箭头文字显示
+		void setArrowFontIsShow(QString key, bool isShow);
 
 		void appendCommonFont(QString key, QVector<QVector3D> pos, QVector<QString> txt, QVector3D color = QVector3D(1, 1, 1), float size = 1.0);//添加通用文字显示
 		template<class T>

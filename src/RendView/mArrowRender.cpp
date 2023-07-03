@@ -87,7 +87,7 @@ namespace MBaseRend
 		_commonArrowState->getUniform("uView_m")->SetData(modelView->_view);
 		_commonArrowState->getUniform("uProjection_m")->SetData(modelView->_projection);
 	}
-	void mArrowRender::appendCommonArrow(QString key, QVector<QVector3D> pos, QVector<QVector3D> dir, QVector3D color, float size)
+	void mArrowRender::appendCommonArrow(QString key, QVector<QVector3D> pos, QVector<QVector3D> dir, QVector3D color, float size, bool hasDepth)
 	{
 		makeCurrent();
 		std::shared_ptr<mBaseArrow> arrows = MakeAsset<mBaseArrow>(_parent);
@@ -98,6 +98,7 @@ namespace MBaseRend
 		arrows->AppendArrowV_Vector3(pos.size(), _Arrow_Vertices.size(), dir, 2);
 		arrows->AppendArrowFloat(pos.size(), _Arrow_Vertices.size(), size, 3);
 		arrows->AppendArrowVector3(pos.size(), _Arrow_Vertices.size(), color, 4);
+		arrows->AppendArrowFloat(pos.size(), _Arrow_Vertices.size(), hasDepth ? 1: 0 , 5);
 		arrows->AppendArrowIntIndex(pos.size());
 		_commonArrows[key] = arrows;
 	}

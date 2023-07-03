@@ -73,7 +73,7 @@ namespace MBaseRend
 
 		void updateUniform(shared_ptr<mViewBase> modelView, shared_ptr<mViewBase> commonView) override;
 
-		void appendCommonArrow(QString key, QVector<QVector3D> pos, QVector<QVector3D> dir, QVector3D color = QVector3D(1,1,1), float size = 1.0);
+		void appendCommonArrow(QString key, QVector<QVector3D> pos, QVector<QVector3D> dir, QVector3D color = QVector3D(1,1,1), float size = 1.0, bool hasDepth = true);
 		void setCommonArrowIsShow(QString key, bool isShow);
 
 		void appendGloabalAxisArrow();//添加全局坐标系箭头显示

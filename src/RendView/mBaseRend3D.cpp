@@ -1,6 +1,8 @@
 #include "mBaseRend3D.h"
 #include "mBaseRender.h"
 #include "mShapeRender.h"
+#include "mFontRender.h"
+#include "mArrowRender.h"
 //工具类
 #include"mViewToolClass.h"
 //视图类
@@ -31,6 +33,16 @@ namespace MBaseRend
 
 		_shapeRender = make_shared<mShapeRender>(_app, _afterroot, this);
 		this->addAfterRender(_shapeRender);
+
+		//添加原点坐标轴
+		_arrowRender->appendCommonArrow("x", QVector<QVector3D>{QVector3D(0, 0, 0)}, QVector<QVector3D>{QVector3D(1, 0, 0)}, QVector3D(1, 0, 0), 1.0, false);
+		_arrowRender->appendCommonArrow("y", QVector<QVector3D>{QVector3D(0, 0, 0)}, QVector<QVector3D>{QVector3D(0, 1, 0)}, QVector3D(0, 1, 0), 1.0, false);
+		_arrowRender->appendCommonArrow("z", QVector<QVector3D>{QVector3D(0, 0, 0)}, QVector<QVector3D>{QVector3D(0, 0, 1)}, QVector3D(0, 0, 1), 1.0, false);
+		_fontRender->appendArrowFont("x", QVector<QVector3D>{QVector3D(0, 0, 0)}, QVector<QString>{"x"}, QVector<QVector3D>{QVector3D(1, 0, 0)}, QVector3D(1, 0, 0), 1.0, false);
+		_fontRender->appendArrowFont("y", QVector<QVector3D>{QVector3D(0, 0, 0)}, QVector<QString>{"y"}, QVector<QVector3D>{QVector3D(0, 1, 0)}, QVector3D(0, 1, 0), 1.0, false);
+		_fontRender->appendArrowFont("z", QVector<QVector3D>{QVector3D(0, 0, 0)}, QVector<QString>{"z"}, QVector<QVector3D>{QVector3D(0, 0, 1)}, QVector3D(0, 0, 1), 1.0, false);
+
+		setIsShowOriginAxis(false);
 	}
 
 	void mBaseRend3D::paintGL()
@@ -336,6 +348,16 @@ namespace MBaseRend
 	{
 		
 
+	}
+
+	void mBaseRend3D::setIsShowOriginAxis(bool isShow)
+	{
+		_fontRender->setArrowFontIsShow("x", isShow);
+		_fontRender->setArrowFontIsShow("y", isShow);
+		_fontRender->setArrowFontIsShow("z", isShow);
+		_arrowRender->setCommonArrowIsShow("x", isShow);
+		_arrowRender->setCommonArrowIsShow("y", isShow);
+		_arrowRender->setCommonArrowIsShow("z", isShow);
 	}
 	
 	bool mBaseRend3D::event(QEvent * e)
