@@ -330,15 +330,15 @@ namespace MPreRend
 			{
 				_lineRender->_vertex0->append(medge->getAllVertexs());
 			}
-			QVector<MXGeoPoint*> geoPoints = MeshMessage::getInstance()->getGeoPointSamePart(partName);
+			QVector<SpecialElement*> points = MeshMessage::getInstance()->getSpecialElementOfPart(partName);
 			//µãÍø¸ñ
-			for (auto geoPoint : geoPoints)
+			for (auto point : points)
 			{
-				if (geoPoint->_mVertex == nullptr)
+				if (!point)
 				{
 					continue;
 				}
-				_pointRender->_vertex0->append(QVector3D(geoPoint->_mVertex->vx(), geoPoint->_mVertex->vy(), geoPoint->_mVertex->vz()));
+				_pointRender->_vertex0->append(point->getCentroid());
 
 			}
 		}
