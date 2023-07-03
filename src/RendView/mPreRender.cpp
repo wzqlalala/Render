@@ -138,7 +138,7 @@ namespace MPreRend
 		_geopointStateSet->setShader(shader);
 		_geopointStateSet->setDrawMode(GL_POINTS);
 		_geopointStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
-		_geopointStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
+		_geopointStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(mxr::PolygonMode::FRONT_AND_BACK, mxr::PolygonMode::FILL), 1);
 		_geopointStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
 
 		_geopointStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
@@ -160,7 +160,7 @@ namespace MPreRend
 		_pointStateSet->setShader(shader);
 		_pointStateSet->setDrawMode(GL_POINTS);
 		_pointStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
-		_pointStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
+		_pointStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(mxr::PolygonMode::FRONT_AND_BACK, mxr::PolygonMode::FILL), 1);
 		_pointStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
 
 		_pointStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
