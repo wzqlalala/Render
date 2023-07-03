@@ -410,7 +410,7 @@ namespace MPreRend
 		_facelineStateSet->setDrawMode(GL_TRIANGLES);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 0);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::LINE), 1);
-		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(-1, -1), 1);
+		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetFill>(0, 0), 1);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
 
 		_facelineStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
