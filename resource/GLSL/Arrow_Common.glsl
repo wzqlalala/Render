@@ -30,7 +30,7 @@ void main()
 	mat4 model;
 	//将载荷添加点从模型坐标系转化到通用坐标系下坐标
 	vec3 pos_norm = ModelToNormPositon(aPointPos,uProjection_m,uView_m,uModel_m);
-	Depth = aDepthState == 0 ? 0.0 : Depth = 0.5+pos_norm.z*0.5-0.01;	
+	Depth = aDepthState == 0 ? 0.0 : 0.5+pos_norm.z*0.5-0.01;	
 	vec3 pos_c = NormToModelPositon(pos_norm,uProjection_c,uView_c,uModel_c);
 
 	//根据值设定箭头的方向

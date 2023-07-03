@@ -76,6 +76,10 @@ namespace MBaseRend
 		void appendCommonArrow(QString key, QVector<QVector3D> pos, QVector<QVector3D> dir, QVector3D color = QVector3D(1,1,1), float size = 1.0, bool hasDepth = true);
 		void setCommonArrowIsShow(QString key, bool isShow);
 
+		void appendMinMaxArrow(QString key, QVector<QVector3D> pos, QVector<QVector3D> dir, QVector<float> value, mxr::Texture *texture, bool hasDepth = true);
+		void setMinMaxData(float min, float max);
+		void setMinMaxArrowIsShow(QString key, bool isShow);
+
 		void appendGloabalAxisArrow();//添加全局坐标系箭头显示
 
 	protected:
@@ -83,7 +87,10 @@ namespace MBaseRend
 		std::shared_ptr<mxr::StateSet> _commonArrowState;//不支持旋转、平移、缩放等的事件
 		std::shared_ptr<mxr::StateSet> _fixedArrowFontState;//不支持平移、缩放等的事件、支持旋转的事件
 
-		QHash<QString, std::shared_ptr<mBaseArrow>> _commonArrows;
+		QHash<QString, std::shared_ptr<mBaseArrow>> _commonArrows;//普通箭头
+
+		QHash<QString, std::shared_ptr<mBaseArrow>> _minmaxArrows;//带有云图颜色的箭头
+
 
 		std::shared_ptr<mBaseArrow> _globalAxisArrow;
 	};

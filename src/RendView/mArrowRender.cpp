@@ -110,6 +110,33 @@ namespace MBaseRend
 			value->setIsShow(isShow);
 		}
 	}
+	void mArrowRender::appendMinMaxArrow(QString key, QVector<QVector3D> pos, QVector<QVector3D> dir, QVector<float> value, mxr::Texture * texture, bool hasDepth)
+	{
+		makeCurrent();
+		std::shared_ptr<mBaseArrow> arrows = MakeAsset<mBaseArrow>(_parent);
+		arrows->setStateSet(_commonArrowState);
+
+		//arrows->AppendArrowVertex(pos.size(), 0);
+		//arrows->AppendArrowV_Vector3(pos.size(), _Arrow_Vertices.size(), pos, 1);
+		//arrows->AppendArrowV_Vector3(pos.size(), _Arrow_Vertices.size(), dir, 2);
+		//arrows->AppendArrowFloat(pos.size(), _Arrow_Vertices.size(), size, 3);
+		//arrows->AppendArrowVector3(pos.size(), _Arrow_Vertices.size(), color, 4);
+		//arrows->AppendArrowFloat(pos.size(), _Arrow_Vertices.size(), hasDepth ? 1 : 0, 5);
+		//arrows->AppendArrowIntIndex(pos.size());
+		//_commonArrows[key] = arrows;
+	}
+	void mArrowRender::setMinMaxData(float min, float max)
+	{
+
+	}
+	void mArrowRender::setMinMaxArrowIsShow(QString key, bool isShow)
+	{
+		auto value = _minmaxArrows.value(key);
+		if (value)
+		{
+			value->setIsShow(isShow);
+		}
+	}
 	void mArrowRender::appendGloabalAxisArrow()
 	{
 		makeCurrent();
