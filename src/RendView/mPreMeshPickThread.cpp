@@ -919,7 +919,7 @@ namespace MPreRend
 		}
 
 		//»ñÈ¡0Î¬Íø¸ñ
-		meshs = MeshMessage::getInstance()->getElementsSameDimAndPart(partName, 1);
+		meshs = MeshMessage::getInstance()->getElementsSameDimAndPart(partName, 0);
 		for (auto mesh : meshs)
 		{
 			if (mesh->getMask())
