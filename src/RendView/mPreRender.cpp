@@ -132,9 +132,31 @@ namespace MPreRend
 		_dotlineStateSet->setUniform(MakeAsset<Uniform>("pvm", QMatrix4x4()));
 		_dotlineStateSet->setUniform(MakeAsset<Uniform>("showColor", QVector3D(0.5,0.5,0.5)));
 
+		//geopoint
+		_geopointStateSet = MakeAsset<StateSet>();
+		shader = mShaderManage::GetInstance()->GetShader("PreGeoPoint");
+		_geopointStateSet->setShader(shader);
+		_geopointStateSet->setDrawMode(GL_POINTS);
+		_geopointStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
+		_geopointStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
+		_geopointStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
+
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("lightIsOn", int(1)));
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("viewPos", QVector3D()));
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("light.position", _rendStatus->_postLight.lightPosition));
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("light.ambient", _rendStatus->_postLight.ambient));
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("light.diffuse", _rendStatus->_postLight.diffuse));
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("light.specular", _rendStatus->_postLight.specular));
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("light.shiness", _rendStatus->_postLight.shiness));
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("PointSize", 10));
+		_geopointStateSet->setTexture("sprite_texture",_pointTexture);
+
 		//point
 		_pointStateSet = MakeAsset<StateSet>();
-		shader = mShaderManage::GetInstance()->GetShader("PreGeoPoint");
+		shader = mShaderManage::GetInstance()->GetShader("PreMeshPoint");
 		_pointStateSet->setShader(shader);
 		_pointStateSet->setDrawMode(GL_POINTS);
 		_pointStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
@@ -152,7 +174,6 @@ namespace MPreRend
 		_pointStateSet->setUniform(MakeAsset<Uniform>("light.specular", _rendStatus->_postLight.specular));
 		_pointStateSet->setUniform(MakeAsset<Uniform>("light.shiness", _rendStatus->_postLight.shiness));
 		_pointStateSet->setUniform(MakeAsset<Uniform>("PointSize", 10));
-		_pointStateSet->setTexture("sprite_texture",_pointTexture);
 
 		//node
 		_nodeStateSet = MakeAsset<StateSet>();
@@ -178,7 +199,7 @@ namespace MPreRend
 		_geoModelRender->setIndependentLineStateSet(_independentlineStateSet);
 		_geoModelRender->setDotLineStateSet(_dotlineStateSet);
 		_geoModelRender->setEdgeLineStateSet(_edgelineStateSet);
-		_geoModelRender->setPointStateSet(_pointStateSet);
+		_geoModelRender->setPointStateSet(_geopointStateSet);
 
 		_meshModelRender->setFaceStateSet(_faceStateSet);
 		_meshModelRender->setEdgeLineStateSet(_edgelineStateSet);
@@ -406,6 +427,7 @@ namespace MPreRend
 	void mPreRender::setPointSize(int size)
 	{
 		_rendStatus->_pointSize = size;
+		_geopointStateSet->getUniform("PointSize")->SetData(_rendStatus->_pointSize);
 		_pointStateSet->getUniform("PointSize")->SetData(_rendStatus->_pointSize);
 	}
 
@@ -472,20 +494,25 @@ namespace MPreRend
 			//_quadfacelineStateSet->getUniform("pvm")->SetData(pvm);
 			_independentlineStateSet->getUniform("pvm")->SetData(pvm);
 			_dotlineStateSet->getUniform("pvm")->SetData(pvm);
+			_geopointStateSet->getUniform("projection")->SetData(modelView->_projection);
+			_geopointStateSet->getUniform("view")->SetData(modelView->_view);
+			_geopointStateSet->getUniform("model")->SetData(modelView->_model);		
 			_pointStateSet->getUniform("projection")->SetData(modelView->_projection);
 			_pointStateSet->getUniform("view")->SetData(modelView->_view);
-			_pointStateSet->getUniform("model")->SetData(modelView->_model);			
+			_pointStateSet->getUniform("model")->SetData(modelView->_model);
 
 			_faceStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
-			_pointStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
+			_geopointStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
 			if (_rendStatus->_lightIsDependOnCamera)
 			{
 				_faceStateSet->getUniform("light.position")->SetData(2 * modelView->_Eye - modelView->_Center);
+				_geopointStateSet->getUniform("light.position")->SetData(2 * modelView->_Eye - modelView->_Center);
 				_pointStateSet->getUniform("light.position")->SetData(2 * modelView->_Eye - modelView->_Center);
 			}
 			else
 			{
 				_faceStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
+				_geopointStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
 				_pointStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
 			}
 

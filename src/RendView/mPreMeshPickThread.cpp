@@ -566,6 +566,7 @@ namespace MPreRend
 				break;
 			case MeshTri:
 			case MeshQuad:
+			case MeshPoint:
 				if (_pick->get2DAnd3DMeshCenterIsInPick(getCenter(vertexs)))
 				{
 					return true;
@@ -917,6 +918,26 @@ namespace MPreRend
 			}
 		}
 
+		//获取0维网格
+		meshs = MeshMessage::getInstance()->getElementsSameDimAndPart(partName, 1);
+		for (auto mesh : meshs)
+		{
+			if (mesh->getMask())
+			{
+				continue;
+			}
+			auto vertex = mesh->getVertex(0);
+			if (!vertex)
+			{
+				continue;
+			}
+			QVector2D ap1 = WorldvertexToScreenvertex(vertex->getNodeVertex(), depth);
+			if (fabs(ap1.x() - _pos.x()) <= 5 && fabs(ap1.y() - _pos.y()) <= 5 && depth < _nodedepth)
+			{
+				_nodedepth = depth;
+				_picknodevertex = vertex;
+			}
+		}
 
 		if (_picknodevertex == nullptr)
 		{
@@ -991,17 +1012,17 @@ namespace MPreRend
 		}
 
 		//获取0维网格
-		//QVector<SpecialElement*> meshs0 = MeshMessage::getInstance()->getSpecialElementOfPart(partName);
-		//for (auto mesh : meshs0)
-		//{
-		//	auto vertex = MeshMessage::getInstance()->getNodeDataByID(mesh->getNodeID());
-		//	QVector2D ap1 = WorldvertexToScreenvertex(QVector3D(vertex->vx(), vertex->vy(), vertex->vz()), depth);
-		//	if (fabs(ap1.x() - _pos.x()) <= 5 && fabs(ap1.y() - _pos.y()) <= 5 && depth < _meshdepth)
-		//	{
-		//		_meshdepth = depth;
-		//		//_picknodevertex = vertex;
-		//	}
-		//}
+		QVector<SpecialElement*> meshs0 = MeshMessage::getInstance()->getSpecialElementOfPart(partName);
+		for (auto mesh : meshs0)
+		{
+			auto vertex = mesh->getallVertexs1();
+			QVector2D ap1 = WorldvertexToScreenvertex(vertex.first(), depth);
+			if (fabs(ap1.x() - _pos.x()) <= 5 && fabs(ap1.y() - _pos.y()) <= 5 && depth < _meshdepth)
+			{
+				_meshdepth = depth;
+				_pickMesh = mesh;
+			}
+		}
 
 
 		if (_pickMesh == nullptr)
@@ -1475,6 +1496,7 @@ namespace MPreRend
 					{
 						pickmeshs.insert(mesh);
 					}
+					break;
 				}
 				default:
 				{
@@ -1482,8 +1504,9 @@ namespace MPreRend
 					{
 						pickmeshs.insert(mesh);
 					}
-				}
 					break;
+				}
+
 				}
 			}
 		}
@@ -2710,8 +2733,8 @@ namespace MPreRend
 				{
 					depth = *depthlist.begin();
 				}
-			}
 				break;
+			}
 			case MeshTri:
 			case MeshQuad:
 			{
@@ -2723,8 +2746,17 @@ namespace MPreRend
 						depth = t;
 					}
 				}
-			}
 				break;
+			}
+			case MeshPoint:
+			{
+				auto vertex = mesh->getallVertexs1();
+				QVector2D ap1 = WorldvertexToScreenvertex(vertex.first(), t);
+				if (fabs(ap1.x() - _pos.x()) <= 5 && fabs(ap1.y() - _pos.y()) <= 5 && t < depth)
+				{
+					depth = t;
+				}
+			}
 			default:
 				break;
 			}

@@ -138,6 +138,7 @@ namespace MPreRend
 
 		/*********************************模型*****************************************************/
 		std::shared_ptr<mxr::StateSet> _faceStateSet;//渲染面的状态
+		std::shared_ptr<mxr::StateSet> _geopointStateSet;//渲染几何点网格的状态（带贴图）
 		std::shared_ptr<mxr::StateSet> _independentlineStateSet;//渲染独立线的状态
 		std::shared_ptr<mxr::StateSet> _dotlineStateSet;//渲染虚线的状态
 		std::shared_ptr<mxr::StateSet> _edgelineStateSet;//渲染边界线的状态
