@@ -45,5 +45,6 @@
         <file>Icon/XPoint.png</file>
         <file>GLSL/PreMeshFaceLine-1.glsl</file>
         <file>GLSL/Font_Arrow.glsl</file>
+        <file>GLSL/Arrow_MinMax.glsl</file>
     </qresource>
 </RCC>

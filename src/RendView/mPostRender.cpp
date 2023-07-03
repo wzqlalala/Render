@@ -650,7 +650,7 @@ namespace MPostRend
 		_oneFrameRender->setFaceLineStateSet(_facelineStateSet);
 		_oneFrameRender->setLineStateSet(_lineStateSet);
 		_oneFrameRender->setPointStateSet(_pointStateSet);
-		//_oneFrameRender->setTexture(_texture);
+		_oneFrameRender->setTexture(_texture);
 		_oneFrameRender->updateAllModelOperate(ImportOperate);
 		this->setDispersed(true);
 		this->initialPickThreads();
@@ -1262,28 +1262,30 @@ namespace MPostRend
 		emit update();
 	}
 
-	void mPostRender::createVectorGraph(QVector<QPair<QString, QVector3D>> type_color, double size)
+	void mPostRender::createVectorGraph(QVector<QPair<QString, QVector3D>> type_color, double size, int type)
 	{
 		this->makeCurrent();
 		_rendStatus->_vectorArrowTypeColor = type_color;
 		_rendStatus->_vectorArrowSize = size;
 		_rendStatus->_vectorArrowMethod = "";
+		_rendStatus->_vectorType = type;
 		if (_oneFrameRender)
 		{
-			_oneFrameRender->createVectorGraph(type_color, size);
+			_oneFrameRender->createVectorGraph(type_color, size, type);
 		}
 	}
 
-	void mPostRender::createVectorGraph(std::set<int> nodeIDs, QVector<QPair<QString, QVector3D>> type_color, double size)
+	void mPostRender::createVectorGraph(std::set<int> nodeIDs, QVector<QPair<QString, QVector3D>> type_color, double size, int type)
 	{
 		this->makeCurrent();
 		_rendStatus->_vectorArrowNodeIDs = nodeIDs;
 		_rendStatus->_vectorArrowTypeColor = type_color;
 		_rendStatus->_vectorArrowSize = size;
 		_rendStatus->_vectorArrowMethod = "";
+		_rendStatus->_vectorType = type;
 		if (_oneFrameRender)
 		{
-			_oneFrameRender->createVectorGraph(nodeIDs, type_color, size);
+			_oneFrameRender->createVectorGraph(nodeIDs, type_color, size, type);
 		}
 	}
 

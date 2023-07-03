@@ -112,6 +112,8 @@ namespace MPostRend
 				_contourFaceStateSet->getUniform("maxValue")->SetData(_oneFrameRendData->getCurrentMaxData());
 			}
 			_colorTableRender->updatePostColorTable(_oneFrameRendData->getTextureCoordScale());
+
+			_arrowRender->setMinMaxData(_oneFrameRendData->getCurrentMinData(), _oneFrameRendData->getCurrentMaxData(), _rendStatus->_isEquivariance, _oneFrameRendData->getTextureCoordScale());
 			//_modelRender->setTexture(_texture);
 			//_modelRender->setDistancePlane(cutplanes);
 		}
@@ -326,27 +328,28 @@ namespace MPostRend
 		}
 		//_isShowPlane = isShow;
 	}
-	void mPostOneFrameRender::createVectorGraph(QVector<QPair<QString, QVector3D>> type_color, double size)
+	void mPostOneFrameRender::createVectorGraph(QVector<QPair<QString, QVector3D>> type_color, double size, int type)
 	{
 		QPair<QVector<QVector3D>, QVector<QVector3D>> res = this->getCuttingNodeData();	//通过原模型生成节点
-		createVectorGraph(res);
+		createVectorGraph(res, type);
 	}
-	void mPostOneFrameRender::createVectorGraph(std::set<int> nodeIDs, QVector<QPair<QString, QVector3D>> type_color, double size)
+	void mPostOneFrameRender::createVectorGraph(std::set<int> nodeIDs, QVector<QPair<QString, QVector3D>> type_color, double size, int type)
 	{
 		QPair<QVector<QVector3D>, QVector<QVector3D>> res = this->getPickingNodeData(nodeIDs);//通过拾取节点生成
-		createVectorGraph(res);
+		createVectorGraph(res, type);
 	}
 	void mPostOneFrameRender::deleteVectorGraph()
 	{
 		_arrowRender->clearAllRender();
 	}
-	void mPostOneFrameRender::createVectorGraph(QPair<QVector<QVector3D>, QVector<QVector3D>> res)
+	void mPostOneFrameRender::createVectorGraph(QPair<QVector<QVector3D>, QVector<QVector3D>> res, int type)
 	{
 		QVector<QPair<QString, QVector3D>> type_color = _rendStatus->_vectorArrowTypeColor;
 		for (int i = 0; i < type_color.size(); ++i)
 		{
 			QVector<QVector3D> pos;
 			QVector<QVector3D> dir;
+			QVector<QVector3D> val;
 			for (int j = 0; j < res.first.size(); ++j)
 			{
 				QVector3D d = res.second[j];
@@ -385,7 +388,14 @@ namespace MPostRend
 				}
 				dir.append(d);
 			}
-			_arrowRender->appendCommonArrow(QString("vectorGraph%1").arg(type_color[i].first), pos, dir, type_color.at(i).second, _rendStatus->_vectorArrowSize);
+			if (type == 0)
+			{
+				_arrowRender->appendCommonArrow(QString("vectorGraph%1").arg(type_color[i].first), pos, dir, type_color.at(i).second, _rendStatus->_vectorArrowSize);
+			}
+			else
+			{
+				_arrowRender->appendMinMaxArrow(QString("vectorGraph%1").arg(type_color[i].first), pos, dir, _texture);
+			}
 		}
 	}
 	void mPostOneFrameRender::deleteContourGraph()
