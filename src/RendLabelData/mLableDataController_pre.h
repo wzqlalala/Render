@@ -1026,14 +1026,38 @@ namespace MDataLable
 		{
 			QVector<QVector3D> extraPos;
 			//刚性墙
-			for (auto it = _lableData_explicit->_face_RW_Explicit_Data.begin(); it != _lableData_explicit->_face_RW_Explicit_Data.end(); ++it)
+			for (auto it : _lableData_explicit->_face_RW_Explicit_Data)
 			{
-				extraPos += it.value().lableData.getParameter();
+				extraPos += it.lableData.getParameter();
 			}
 			//盒子
-			for (auto it = _lableData_explicit->_face_Box_Explicit_Data.begin(); it != _lableData_explicit->_face_Box_Explicit_Data.end(); ++it)
+			for (auto it : _lableData_explicit->_face_Box_Explicit_Data)
 			{
-				extraPos += it.value().lableData.getParameter();
+				extraPos += it.lableData.getParameter();
+			}
+			//坐标系
+			for (auto it : _lableData_explicit->_arrow_Font_Axis_Explicit_Data)
+			{
+				for (auto pos : it.lableData.getParameter())
+				{
+					extraPos += pos.first;
+				}
+			}
+			//坐标系
+			for (auto it : _lableData_implicit->_arrow_Font_Axis_Implicit_Data)
+			{
+				for (auto pos : it.lableData.getParameter())
+				{
+					extraPos += pos.first;
+				}
+			}
+			//坐标系
+			for (auto it : _lableData_magnet->_arrow_Font_Axis_Magnet_Data)
+			{
+				for (auto pos : it.lableData.getParameter())
+				{
+					extraPos += pos.first;
+				}
 			}
 			return extraPos;
 		}

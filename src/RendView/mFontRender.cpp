@@ -92,6 +92,29 @@ namespace MBaseRend
 		_commonFontState->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
 		_commonFontState->setTexture("Texture", textTexture);
 
+		_arrowFontState = MakeAsset<StateSet>();
+		_arrowFontState->setUniform(MakeAsset<Uniform>("uView_font", QMatrix4x4()));
+		_arrowFontState->setUniform(MakeAsset<Uniform>("uProjection_font", QMatrix4x4()));
+
+		_arrowFontState->setUniform(MakeAsset<Uniform>("uModel_c", QMatrix4x4()));
+		_arrowFontState->setUniform(MakeAsset<Uniform>("uView_c", QMatrix4x4()));
+		_arrowFontState->setUniform(MakeAsset<Uniform>("uProjection_c", QMatrix4x4()));
+
+		_arrowFontState->setUniform(MakeAsset<Uniform>("uScr_width", float(0)));
+		_arrowFontState->setUniform(MakeAsset<Uniform>("uScr_height", float(0)));
+
+		_arrowFontState->setUniform(MakeAsset<Uniform>("uProjection_font", QVector3D()));
+		_arrowFontState->setUniform(MakeAsset<Uniform>("uView_font", QVector3D()));
+		_arrowFontState->setUniform(MakeAsset<Uniform>("uModel_font", QVector3D()));
+		_arrowFontState->setUniform(MakeAsset<Uniform>("uRatio", float(0)));
+
+		//mxr::Shader * ArrowFontShader = mShaderManage::GetInstance()->GetShader("Font_Arrow");
+		//_arrowFontState->setShader(ArrowFontShader);
+		//_arrowFontState->setAttributeAndModes(MakeAsset<Depth>(), 0);
+		//_arrowFontState->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
+		//_arrowFontState->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
+		//_arrowFontState->setTexture("Texture", textTexture);
+
 	}
 	mFontRender::~mFontRender()
 	{
@@ -160,6 +183,25 @@ namespace MBaseRend
 	void mFontRender::setFixedFontIsShow(QString key, bool isShow)
 	{
 		auto value = _fixedFonts.value(key);
+		if (value)
+		{
+			value->setIsShow(isShow);
+		}
+	}
+	void mFontRender::appendArrowFont(QString key, QVector<QVector3D> pos, QVector<QString> txt, QVector<QVector3D> dir, QVector3D color, float size)
+	{
+		std::shared_ptr<mBaseFont> fonts = MakeAsset<mBaseFont>(_parent);
+		fonts->setStateSet(_arrowFontState);
+
+		//fonts->AppendFontVector3(txt, color, 0);
+		//fonts->AppendFontFloat(txt, size, 1);
+		//fonts->AppendFontVertexAndTexcoord(txt, 2, 3);
+		//fonts->AppendFontV_Vector2(txt, pos, 4);
+		//_arrowFonts[key] = fonts;
+	}
+	void mFontRender::setArrowFont(QString key, bool isShow)
+	{
+		auto value = _arrowFonts.value(key);
 		if (value)
 		{
 			value->setIsShow(isShow);

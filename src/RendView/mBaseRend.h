@@ -260,7 +260,7 @@ namespace MBaseRend
 		float _maxRadius_model = 5.0;//最大旋转半径(以模型中心)
 		QVector3D _center_now; //当前旋转中心
 		float _maxRadius_now = 5.0;//最大旋转半径（以当前中心）
-		Space::AABB _aabb; //模型在X,Y,Z方向上的最大参数
+		Space::AABB _aabb = Space::AABB(QVector3D(-5,-5,-5), QVector3D(5, 5, 5)); //模型在X,Y,Z方向上的最大参数
 
 
 		//鼠标点击功能判断

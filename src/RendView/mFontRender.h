@@ -89,6 +89,9 @@ namespace MBaseRend
 		void appendFixedFont(QString key, QVector<QVector2D> pos, QVector<QString> txt, QVector3D color = QVector3D(1,1,1), float size = 1.0);//添加固定文字显示
 		void setFixedFontIsShow(QString key, bool isShow);
 
+		void appendArrowFont(QString key, QVector<QVector3D> pos, QVector<QString> txt, QVector<QVector3D> dir, QVector3D color, float size);	//添加箭头文字显示
+		void setArrowFont(QString key, bool isShow);
+
 		void appendCommonFont(QString key, QVector<QVector3D> pos, QVector<QString> txt, QVector3D color = QVector3D(1, 1, 1), float size = 1.0);//添加通用文字显示
 		template<class T>
 		void appendCommonFont(QString key, QVector<QVector3D> pos, QVector<T> txt, QVector3D color = QVector3D(1, 1, 1), float size = 1.0)
@@ -122,10 +125,13 @@ namespace MBaseRend
 		std::shared_ptr<mxr::StateSet> _fixedFontState;//不支持旋转、平移、缩放等的事件
 		std::shared_ptr<mxr::StateSet> _fixedAxisFontState;//不支持平移、缩放等的事件、支持旋转的事件
 		std::shared_ptr<mxr::StateSet> _commonFontState;//支持平移、旋转的事件
+		std::shared_ptr<mxr::StateSet> _arrowFontState;//支持平移、旋转的事件
 
-		QHash<QString, std::shared_ptr<mBaseFont>> _fixedFonts;
+		QHash<QString, std::shared_ptr<mBaseFont>> _fixedFonts;//固定文字
 
-		QHash<QString, std::shared_ptr<mBaseFont>> _commonFonts;
+		QHash<QString, std::shared_ptr<mBaseFont>> _commonFonts;//通用文字
+
+		QHash<QString, std::shared_ptr<mBaseFont>> _arrowFonts;//箭头文字
 
 		std::shared_ptr<mBaseFont> _globalAxisFont;
 
