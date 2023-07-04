@@ -74,6 +74,7 @@ namespace MPlotView
 			////»æÍ¼
 			//_smoothCurve->setSamples(x, y);
 		}
+		_textCurve[text] = curve;
 		curve->setSamples(xdata, ydata);
 		_qwtPlot->setAxisAutoScale(QwtPlot::yLeft);
 		_qwtPlot->setAxisAutoScale(QwtPlot::xBottom);

@@ -89,9 +89,18 @@ namespace MPreRend
 	bool mPreMeshModelRender::updateRender()
 	{
 		bool isUpdateCamera{ false };
+		QTime time;
+		if (MeshMessage::getInstance()->hasUpdatedRenderState())
+		{
+			time.start();
+		}
 		while (MeshMessage::getInstance()->hasUpdatedRenderState())
 		{
 			isUpdateCamera = isUpdateCamera | updateModelOperate(MeshMessage::getInstance()->getUpdatedRenderState());
+		}
+		if (isUpdateCamera)
+		{
+			qDebug() << "äÖÈ¾Ê±¼ä" << time.elapsed();
 		}
 		return isUpdateCamera;
 	}
