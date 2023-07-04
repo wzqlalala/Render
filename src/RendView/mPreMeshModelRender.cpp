@@ -199,6 +199,16 @@ namespace MPreRend
 				}
 			}
 		}
+		else if (postModelOperate == RenameOnePart)
+		{
+			QString oldname = *partNames.begin();
+			QString newname = *(++partNames.begin());
+			if (_partRenders.contains(newname))
+			{
+				swap(oldname, newname);
+			}
+			_partRenders[newname] = _partRenders.take(oldname);
+		}
 		else
 		{
 			QList<QString> partNames = _partRenders.keys();
