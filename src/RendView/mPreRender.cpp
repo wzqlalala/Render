@@ -139,7 +139,7 @@ namespace MPreRend
 		_geopointStateSet->setDrawMode(GL_POINTS);
 		_geopointStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
 		_geopointStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(mxr::PolygonMode::FRONT_AND_BACK, mxr::PolygonMode::FILL), 1);
-		_geopointStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
+		//_geopointStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
 
 		_geopointStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
 		_geopointStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
@@ -161,7 +161,7 @@ namespace MPreRend
 		_pointStateSet->setDrawMode(GL_POINTS);
 		_pointStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
 		_pointStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(mxr::PolygonMode::FRONT_AND_BACK, mxr::PolygonMode::FILL), 1);
-		_pointStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
+		//_pointStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
 
 		_pointStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
 		_pointStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
@@ -503,6 +503,7 @@ namespace MPreRend
 
 			_faceStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
 			_geopointStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
+			_pointStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
 			if (_rendStatus->_lightIsDependOnCamera)
 			{
 				_faceStateSet->getUniform("light.position")->SetData(2 * modelView->_Eye - modelView->_Center);
