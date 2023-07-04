@@ -30,11 +30,13 @@ namespace MViewBasic
 	class mViewBase;
 }
 struct AVFrame;
-class FFMpegReader : public QThread
+struct AVFormatContext;
+struct AVCodecContext;
+class FFMpegReader1 : public QThread
 {
 	Q_OBJECT
 public:
-	explicit FFMpegReader(QObject *parent = nullptr);
+	explicit FFMpegReader1(QObject *parent = nullptr);
 
 	void Open(const QString& Url);
 	void Close();
@@ -43,6 +45,13 @@ public:
 	// QThread interface
 	bool Running_;
 	QString Url_;
+	bool isOneFrame{false};
+
+	AVFormatContext *pFormatCtx;
+	AVCodecContext *pCodecCtx;
+	AVFrame *pFrame;
+	AVFrame *pframeRGB;
+	int video_stream_index = -1;
 public:
 	void run();
 
@@ -71,6 +80,10 @@ namespace MBaseRend
 
 		void initialVideo(QString filename);
 
+		void start();
+
+		void stop();
+
 		void setIsShow(bool isShow);
 
 		void updateUniform(shared_ptr<mViewBase> modelView, shared_ptr<mViewBase> commonView);
@@ -85,7 +98,7 @@ namespace MBaseRend
 		std::shared_ptr<mxr::Drawable> _drawable;
 		std::shared_ptr<mxr::StateSet> _stateSet;
 
-		FFMpegReader *reader;
+		FFMpegReader1 *reader;
 
 		mxr::Texture *_texture_y;
 		mxr::Texture *_texture_u;

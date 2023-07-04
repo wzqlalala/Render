@@ -13,7 +13,7 @@
 #include "mModelView.h"
 #include "mBaseRend2D.h"
 #include "mBackGroundRender.h"
-#include "mVideoRender1.h"
+#include "mVideoRender.h"
 
 //MLableRend
 #include"mLableRendController_pre.h"

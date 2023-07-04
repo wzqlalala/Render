@@ -1,4 +1,4 @@
-#include "mVideoRender1.h"
+#include "mVideoRender.h"
 
 #include "mViewBase.h"
 
@@ -184,7 +184,7 @@ void FFMpegReader1::Delay(int delay)
 
 namespace MBaseRend
 {
-	mVideoRender1::mVideoRender1(std::shared_ptr<mxr::Application> app, std::shared_ptr<mxr::Group> parent) :mBaseRender(app, parent)
+	mVideoRender::mVideoRender(std::shared_ptr<mxr::Application> app, std::shared_ptr<mxr::Group> parent) :mBaseRender(app, parent)
 	{
 		reader = new FFMpegReader1(this);
 		_app = app;
@@ -221,7 +221,7 @@ namespace MBaseRend
 		_stateSet->setShader(shader);	
 	};
 
-	void mVideoRender1::initialVideo(QString filename)
+	void mVideoRender::initialVideo(QString filename)
 	{
 		QString Url_(filename);
 		reader->Open(Url_);
@@ -260,7 +260,7 @@ namespace MBaseRend
 
 	}
 
-	void mVideoRender1::start()
+	void mVideoRender::start()
 	{
 		if (!reader->Url_.isEmpty())
 		{
@@ -270,12 +270,12 @@ namespace MBaseRend
 		}
 	}
 
-	void mVideoRender1::stop()
+	void mVideoRender::stop()
 	{
 
 	}
 
-	void mVideoRender1::setIsShow(bool isShow)
+	void mVideoRender::setIsShow(bool isShow)
 	{
 		if (_drawable)
 		{
@@ -283,7 +283,7 @@ namespace MBaseRend
 		}
 	}
 
-	void mVideoRender1::updateUniform(std::shared_ptr<MViewBasic::mViewBase> modelView, shared_ptr<mViewBase> commonView)
+	void mVideoRender::updateUniform(std::shared_ptr<MViewBasic::mViewBase> modelView, shared_ptr<mViewBase> commonView)
 	{
 		//if (!reader->Running_ && !reader->Url_.isEmpty())
 		//{

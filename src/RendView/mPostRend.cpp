@@ -3,7 +3,7 @@
 #include "mFontRender.h"
 #include "mArrowRender.h"
 #include "mVideoRender.h"
-#include "mVideoRender1.h"
+#include "mVideoRender.h"
 #include "mPostOneFrameRender.h"
 #include "mPostModelRender.h"
 
@@ -73,7 +73,7 @@ namespace MPostRend
 		shared_ptr<mPostRender> postRender = make_shared<mPostRender>(_app, _root, this);
 		this->addRender(postRender);	
 
-		_videoRender = make_shared<mVideoRender1>(_app, _root);
+		_videoRender = make_shared<mVideoRender>(_app, _root);
 		this->addRender(_videoRender);
 
 		_fontRender->appendGloabalAxisFont();

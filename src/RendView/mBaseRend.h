@@ -45,7 +45,7 @@ namespace MBaseRend
 	class mPostRender;
 	class mFontRender;
 	class mArrowRender;
-	class mVideoRender1;
+	class mVideoRender;
 	typedef QVector<shared_ptr<mBaseRender>> RenderArray;
 	class RENDVIEW_EXPORT mBaseRend : public QOpenGLWidget, protected QOpenGLFunctions_4_5_Core
 	{
@@ -101,7 +101,7 @@ namespace MBaseRend
 
 		shared_ptr<mArrowRender> getArrowRender() { return _arrowRender; };
 
-		shared_ptr<mVideoRender1> getVideoRender() {return _videoRender; };
+		shared_ptr<mVideoRender> getVideoRender() {return _videoRender; };
 
 		QVector<QVector2D> getPickPolygonVertexs() { return _polygonVertexs; };
 
@@ -244,7 +244,7 @@ namespace MBaseRend
 		std::shared_ptr<mArrowRender> _arrowRender;
 
 		//ÊÓÆµäÖÈ¾
-		std::shared_ptr<mVideoRender1> _videoRender;
+		std::shared_ptr<mVideoRender> _videoRender;
 
 		//¾ØÐÎ¿ò
 		std::shared_ptr<mQuadRender> _quadRender;
