@@ -256,13 +256,13 @@ namespace MPreRend
 		return false;
 	}
 
-	
+
 	mPreMeshPickThread::mPreMeshPickThread(mPreMeshPickData1 *pickData)
 	{
 		_isfinished = false;
 		_pickData = pickData;
 		_pickAngleValue = 60;
-		
+
 	}
 
 	mPreMeshPickThread::~mPreMeshPickThread()
@@ -401,7 +401,7 @@ namespace MPreRend
 		default:
 			break;
 		}
-		
+
 		//if (_multiplyPickMode == MultiplyPickMode::RoundPick)
 		//{
 		//	_centerScreenPoint = _centerBox;
@@ -486,7 +486,7 @@ namespace MPreRend
 		}
 		else if (_pick->isIntersectionAABBAndPick(ap))//有相交
 		{
-			isIntersetion = true;		
+			isIntersetion = true;
 		}
 		if (isIntersetion)
 		{
@@ -668,7 +668,7 @@ namespace MPreRend
 		{
 			QVector<MFace*> mfaces = geoSolid->surfaceMeshs;
 			picks.insert(mfaces.begin(), mfaces.end());
-			
+
 		}
 		return picks;
 	}
@@ -769,7 +769,7 @@ namespace MPreRend
 		}
 
 		//获取二维网格
-		if (filter.contains(MeshTri)|| filter.contains(MeshQuad))
+		if (filter.contains(MeshTri) || filter.contains(MeshQuad))
 		{
 			QVector<MXMeshElement*> meshs = MeshMessage::getInstance()->getElementsSameDimAndPart(partName, 2);
 			for (auto mesh : meshs)
@@ -842,7 +842,7 @@ namespace MPreRend
 			int num = 3;
 			if (meshType == MeshQuad)
 			{
-				num = 4;		
+				num = 4;
 			}
 			for (int i = 0; i < num; ++i)
 			{
@@ -975,6 +975,10 @@ namespace MPreRend
 		QVector<MXMeshElement*> meshs = MeshMessage::getInstance()->getElementsSameDimAndPart(partName, 2);
 		for (auto mesh : meshs)
 		{
+			if (mesh->getMask())
+			{
+				continue;
+			}
 			int num = 3;
 			if (mesh->getMeshType() == MeshQuad)
 			{
@@ -995,6 +999,10 @@ namespace MPreRend
 		meshs = MeshMessage::getInstance()->getElementsSameDimAndPart(partName, 1);
 		for (auto mesh : meshs)
 		{
+			if (mesh->getMask())
+			{
+				continue;
+			}
 			int num = 2;
 			if (mesh->getMeshType() != MeshBeam)
 			{
@@ -1015,6 +1023,10 @@ namespace MPreRend
 		QVector<SpecialElement*> meshs0 = MeshMessage::getInstance()->getSpecialElementOfPart(partName);
 		for (auto mesh : meshs0)
 		{
+			if (mesh->getMask())
+			{
+				continue;
+			}
 			auto vertex = mesh->getallVertexs1();
 			QVector2D ap1 = WorldvertexToScreenvertex(vertex.first(), depth);
 			if (fabs(ap1.x() - _pos.x()) <= 5 && fabs(ap1.y() - _pos.y()) <= 5 && depth < _meshdepth)
@@ -1341,7 +1353,7 @@ namespace MPreRend
 		QVector<MXMeshElement*> meshs = MeshMessage::getInstance()->getElementsSameDimAndPart(partName, 2);
 		for (auto mesh : meshs)
 		{
-			int num = 3;			
+			int num = 3;
 			if (mesh->getMask())
 			{
 				continue;
@@ -1776,7 +1788,7 @@ namespace MPreRend
 				picks.insert(datas.begin(), datas.end());
 			}
 		}
-	
+
 		if (picks.empty())
 		{
 			return;
@@ -1969,7 +1981,7 @@ namespace MPreRend
 
 
 		}
-		else if(!firstNodeID->linkMFaces.isEmpty())
+		else if (!firstNodeID->linkMFaces.isEmpty())
 		{
 			while (!queue.empty())
 			{
@@ -2280,7 +2292,7 @@ namespace MPreRend
 			if (meshFaceData == nullptr)
 			{
 				return;
-			}	
+			}
 
 			//判断过的单元面ID
 			std::set<MFace*> judgeMeshFaceIDs;
@@ -2509,7 +2521,7 @@ namespace MPreRend
 				if (_pickAngleValue > angleValue || _pickAngleValue > (180 - angleValue))
 				{
 					if (pickMeshLineIDs.insert(meshLineData).second)
-					{						
+					{
 						//单元表面
 						set<MEdge*> adjacentMeshFaceIDs = meshLineData->linkMEdges();
 						for (auto meshline : adjacentMeshFaceIDs)
@@ -2560,7 +2572,7 @@ namespace MPreRend
 			queue.enqueue(meshData);
 			queueDirection.enqueue(lastDirection);
 		}
-		
+
 
 		while (!queue.isEmpty() && !queueDirection.isEmpty())
 		{
@@ -2681,9 +2693,9 @@ namespace MPreRend
 							queueDirection.enqueue(direction);
 							queue.enqueue(meshface);
 						}
-					}						
+					}
 				}
-				
+
 			}
 
 		}
