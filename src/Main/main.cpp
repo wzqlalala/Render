@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 	//	// context2´´½¨Ê§°Ü
 	//}
 	//context2->setFormat(format);
-	MxRendTest w0(0);
+	MxRendTest w0(1);
 	//MxRendTest w1(1);
 
 	//MxRendTest w2(2);
