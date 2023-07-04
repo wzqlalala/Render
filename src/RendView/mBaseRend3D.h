@@ -55,6 +55,9 @@ namespace MBaseRend
 		mBaseRend3D(const QString& name = "", MxFunctions::ViewportType = MxFunctions::Viewport3D);
 		~mBaseRend3D();	
 
+		//设置是否显示原点坐标轴
+		void setIsShowOriginAxis(bool isShow);
+
 	public:
 		/*
 		* 重写父类函数

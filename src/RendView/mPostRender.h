@@ -83,6 +83,9 @@ namespace MPostRend
 		shared_ptr<mPostOneFrameRender> getOneFrameRender() { return  _oneFrameRender; };
 
 		mPostMeshPickData *getMeshPickData() { return _pickData; };
+
+		//设置拾取的单元过滤器
+		void setPickElementTypeFilter(std::set<MxFunctions::ElementType> pickElementTypeFilter);
 	
 		//获取当前屏幕文字渲染的数据
 		mPostFrameText* getPostFrameText();
@@ -209,11 +212,11 @@ namespace MPostRend
 
 		/**************************矢量图*********************************************/
 		
-		//生成矢量图	
-		void createVectorGraph(QVector<QPair<QString, QVector3D>> type_color, double size);
+		//生成矢量图	(最后一个参数代表类型(固定颜色或者云图渲染))
+		void createVectorGraph(QVector<QPair<QString, QVector3D>> type_color, double size, int type = 0);
 		
-		//指定节点ID生成矢量图		
-		void createVectorGraph(std::set<int> nodeIDs, QVector<QPair<QString, QVector3D>> type_color, double size);
+		//指定节点ID生成矢量图(最后一个参数代表类型(固定颜色或者云图渲染))	
+		void createVectorGraph(std::set<int> nodeIDs, QVector<QPair<QString, QVector3D>> type_color, double size, int type = 0);
 
 		//删除矢量图
 		void deleteVectorGraph();

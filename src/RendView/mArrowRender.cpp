@@ -53,6 +53,22 @@ namespace MBaseRend
 		_commonArrowState->setUniform(MakeAsset<Uniform>("uView_m", QMatrix4x4()));
 		_commonArrowState->setUniform(MakeAsset<Uniform>("uProjection_m", QMatrix4x4()));
 		_commonArrowState->setAttributeAndModes(MakeAsset<Depth>(), 1);
+
+		_minmaxArrowState = MakeAsset<StateSet>();
+		shader = mShaderManage::GetInstance()->GetShader("Arrow_MinMax");
+		_minmaxArrowState->setShader(shader);
+		_minmaxArrowState->setDrawMode(GL_LINES);
+		_minmaxArrowState->setUniform(MakeAsset<Uniform>("uModel_c", QMatrix4x4()));
+		_minmaxArrowState->setUniform(MakeAsset<Uniform>("uView_c", QMatrix4x4()));
+		_minmaxArrowState->setUniform(MakeAsset<Uniform>("uProjection_c", QMatrix4x4()));
+		_minmaxArrowState->setUniform(MakeAsset<Uniform>("uModel_m", QMatrix4x4()));
+		_minmaxArrowState->setUniform(MakeAsset<Uniform>("uView_m", QMatrix4x4()));
+		_minmaxArrowState->setUniform(MakeAsset<Uniform>("uProjection_m", QMatrix4x4()));
+		_minmaxArrowState->setUniform(MakeAsset<Uniform>("minValue", float(0)));
+		_minmaxArrowState->setUniform(MakeAsset<Uniform>("maxValue", float(0)));
+		_minmaxArrowState->setUniform(MakeAsset<Uniform>("isEquivariance", int(0)));
+		_minmaxArrowState->setUniform(MakeAsset<Uniform>("textureCoordRatio", float(0)));
+		_minmaxArrowState->setAttributeAndModes(MakeAsset<Depth>(), 1);
 	}
 	mArrowRender::~mArrowRender()
 	{
@@ -61,6 +77,7 @@ namespace MBaseRend
 	void mArrowRender::clearAllRender()
 	{
 		QHash<QString, std::shared_ptr<mBaseArrow>>().swap(_commonArrows);
+		QHash<QString, std::shared_ptr<mBaseArrow>>().swap(_minmaxArrows);
 	}
 	void mArrowRender::updateUniform(shared_ptr<mViewBase> modelView, shared_ptr<mViewBase> commonView)
 	{
@@ -86,8 +103,15 @@ namespace MBaseRend
 		_commonArrowState->getUniform("uModel_m")->SetData(modelView->_model);
 		_commonArrowState->getUniform("uView_m")->SetData(modelView->_view);
 		_commonArrowState->getUniform("uProjection_m")->SetData(modelView->_projection);
+
+		_minmaxArrowState->getUniform("uModel_c")->SetData(commonView->_model);
+		_minmaxArrowState->getUniform("uView_c")->SetData(commonView->_view);
+		_minmaxArrowState->getUniform("uProjection_c")->SetData(commonView->_projection);
+		_minmaxArrowState->getUniform("uModel_m")->SetData(modelView->_model);
+		_minmaxArrowState->getUniform("uView_m")->SetData(modelView->_view);
+		_minmaxArrowState->getUniform("uProjection_m")->SetData(modelView->_projection);
 	}
-	void mArrowRender::appendCommonArrow(QString key, QVector<QVector3D> pos, QVector<QVector3D> dir, QVector3D color, float size)
+	void mArrowRender::appendCommonArrow(QString key, QVector<QVector3D> pos, QVector<QVector3D> dir, QVector3D color, float size, bool hasDepth)
 	{
 		makeCurrent();
 		std::shared_ptr<mBaseArrow> arrows = MakeAsset<mBaseArrow>(_parent);
@@ -98,12 +122,43 @@ namespace MBaseRend
 		arrows->AppendArrowV_Vector3(pos.size(), _Arrow_Vertices.size(), dir, 2);
 		arrows->AppendArrowFloat(pos.size(), _Arrow_Vertices.size(), size, 3);
 		arrows->AppendArrowVector3(pos.size(), _Arrow_Vertices.size(), color, 4);
+		arrows->AppendArrowFloat(pos.size(), _Arrow_Vertices.size(), hasDepth ? 1: 0 , 5);
 		arrows->AppendArrowIntIndex(pos.size());
 		_commonArrows[key] = arrows;
 	}
 	void mArrowRender::setCommonArrowIsShow(QString key, bool isShow)
 	{
 		auto value = _commonArrows.value(key);
+		if (value)
+		{
+			value->setIsShow(isShow);
+		}
+	}
+	void mArrowRender::appendMinMaxArrow(QString key, QVector<QVector3D> pos, QVector<QVector3D> dir, mxr::Texture * texture, bool hasDepth)
+	{
+		makeCurrent();
+		_minmaxArrowState->setTexture("texture", texture);
+
+		std::shared_ptr<mBaseArrow> arrows = MakeAsset<mBaseArrow>(_parent);
+		arrows->setStateSet(_minmaxArrowState);
+
+		arrows->AppendArrowVertex(pos.size(), 0);
+		arrows->AppendArrowV_Vector3(pos.size(), _Arrow_Vertices.size(), pos, 1);
+		arrows->AppendArrowV_Vector3(pos.size(), _Arrow_Vertices.size(), dir, 2);
+		arrows->AppendArrowFloat(pos.size(), _Arrow_Vertices.size(), hasDepth ? 1 : 0, 3);
+		arrows->AppendArrowIntIndex(pos.size());
+		_minmaxArrows[key] = arrows;
+	}
+	void mArrowRender::setMinMaxData(float min, float max, int isEquivariance, float textureCoordRatio)
+	{
+		_minmaxArrowState->getUniform("minValue")->SetData(min);
+		_minmaxArrowState->getUniform("maxValue")->SetData(max);
+		_minmaxArrowState->getUniform("isEquivariance")->SetData(isEquivariance);
+		_minmaxArrowState->getUniform("textureCoordRatio")->SetData(textureCoordRatio);
+	}
+	void mArrowRender::setMinMaxArrowIsShow(QString key, bool isShow)
+	{
+		auto value = _minmaxArrows.value(key);
 		if (value)
 		{
 			value->setIsShow(isShow);

@@ -25,6 +25,7 @@ out vec4 FragColor;
 void main()
 {	
     FragColor = vec4(material,1);
+    FragColor.rgb = pow(FragColor.rgb, vec3(1.0 / 2.2));
 } 
 
 #endif

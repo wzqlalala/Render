@@ -26,9 +26,9 @@
 namespace MPreRend
 {
 
-	mPreRend::mPreRend(const QString& name):mBaseRend3D(name, Viewport3D)
+	mPreRend::mPreRend(const QString& name) :mBaseRend3D(name, Viewport3D)
 	{
-		*_pickFilter = PickFilter::PickGeoPoint;
+		*_pickFilter = PickFilter::PickAnyMesh;
 		//qDebug() << "Pre Struct";
 
 		//保存单位制
@@ -66,7 +66,7 @@ namespace MPreRend
 			this->setPickKeys(QPair<Qt::MouseButton, Qt::KeyboardModifiers>(Qt::LeftButton, Qt::ControlModifier), PickMode::SoloPick);
 			this->setPickKeys(QPair<Qt::MouseButton, Qt::KeyboardModifiers>(Qt::RightButton, Qt::ControlModifier), PickMode::SoloPick);
 		}
-		
+
 		//让其自动进入OpenGL初始化
 		this->setGeometry(-1, -1, 1, 1);
 		this->show();
@@ -87,7 +87,7 @@ namespace MPreRend
 		//图标渲染对象
 		_lableRend_pre = make_shared<mLableRendIntegrate_pre>();
 		_lableRend_common = make_shared<mLableRendIntegrate_common>();
-		mCommonView *commonView =  dynamic_pointer_cast<mCommonView>(_commonView).get();
+		mCommonView *commonView = dynamic_pointer_cast<mCommonView>(_commonView).get();
 		mModelView *modelView = dynamic_pointer_cast<mModelView>(_modelView).get();
 		_lableRend_pre->initial(commonView, modelView);
 		_lableRend_common->initial(commonView, modelView);
@@ -96,7 +96,7 @@ namespace MPreRend
 		connect(_lableRendController_pre.get(), SIGNAL(updateView()), this, SLOT(update()));
 		_lableRendController_common = make_shared<mLableRendController_common>(_lableRend_common);
 		connect(_lableRendController_common.get(), SIGNAL(updateView()), this, SLOT(update()));
-	
+
 		//_lableRendController_common->appendLableRendData<GlobalAxis>("globalAxis", QVector2D(75, 75), 1.3);
 
 		//qDebug() << "Pre Initial";
@@ -179,50 +179,31 @@ namespace MPreRend
 
 		if (!this->getPreRender()->getModelAABB(aabb))
 		{
-			aabb = Space::AABB();
+			aabb = _aabb;
+		}
+		_aabb = aabb;
+		//额外顶点数据
+		QVector<QVector3D> ExtraVertex = _lableRend_pre->getLableDataController()->getExtraVertex() + _lableRend_common->getLableDataController()->getExtraVertex();
+		if (!ExtraVertex.isEmpty())
+		{
+			Space::AABB extra;
+			//获取额外顶点数据的最大参数
+			for (int i = 0; i < ExtraVertex.size(); i++)
+			{
+				extra.push(ExtraVertex.at(i));
+			}
+
+			//获取最终的最大参数
+			_aabb.push(extra);
+		}
+		else
+		{
+			//获取最终的最大参数
+			_aabb = aabb;
 		}
 
-		//额外顶点数据
-		//QVector<QVector3D> ExtraVertex = mTempHighLightData1::getInstance()->getHighLightPointVertex() + MDataMesh::mMeshModelData1::getInstance()->getTempNodeVertex()
-		//	+ _lableRend_pre->getLableDataController()->getExtraVertex() + _lableRend_common->getLableDataController()->getExtraVertex();
-		//if (!ExtraVertex.isEmpty())
-		//{
-		//	float left_extra = 0, right_extra = 0, bottom_extra = 0, top_extra = 0, back_extra = 0, front_extra = 0;
-		//	//获取额外顶点数据的最大参数
-		//	left_extra = right_extra = ExtraVertex.at(0).x();
-		//	bottom_extra = top_extra = ExtraVertex.at(0).y();
-		//	back_extra = front_extra = ExtraVertex.at(0).z();
-		//	for (int i = 0; i < ExtraVertex.size(); i++)
-		//	{
-		//		left_extra = min(left_extra, ExtraVertex.at(i).x());
-		//		right_extra = max(right_extra, ExtraVertex.at(i).x());
-		//		bottom_extra = min(bottom_extra, ExtraVertex.at(i).y());
-		//		top_extra = max(top_extra, ExtraVertex.at(i).y());
-		//		back_extra = min(back_extra, ExtraVertex.at(i).z());
-		//		front_extra = max(front_extra, ExtraVertex.at(i).z());
-		//	}
-
-		//	//获取最终的最大参数
-		//	_left = min(left_mesh, left_extra);
-		//	_right = max(right_mesh, right_extra);
-		//	_bottom = min(bottom_mesh, bottom_extra);
-		//	_top = max(top_mesh, top_extra);
-		//	_back = min(back_mesh, back_extra);
-		//	_front = max(front_mesh, front_extra);
-		//}
-		//else
-		//{
-		//	//获取最终的最大参数
-		//	_left = left_mesh;
-		//	_right = right_mesh;
-		//	_bottom = bottom_mesh;
-		//	_top = top_mesh;
-		//	_back = back_mesh;
-		//	_front = front_mesh;
-		//}
-		_aabb = aabb;
 		//模型中心
-		_center_model = (_aabb.maxEdge + _aabb.minEdge)/2.0;
+		_center_model = (_aabb.maxEdge + _aabb.minEdge) / 2.0;
 		_maxRadius_model = _aabb.maxEdge.distanceToPoint(_aabb.minEdge);
 		if (isinf(_maxRadius_model) || qFuzzyCompare(0, _maxRadius_model))
 		{

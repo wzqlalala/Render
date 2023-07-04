@@ -61,6 +61,7 @@ namespace MPreRend
 		void setFaceTransparentNodeformationStateSet(std::shared_ptr<mxr::StateSet> faceTransparentNoDeformationStateSet);
 		void setEdgeLineStateSet(std::shared_ptr<mxr::StateSet> meshlineStateSet);
 		void setFaceLineStateSet(std::shared_ptr<mxr::StateSet> facelineStateSet);
+		//void setQuadFaceLineStateSet(std::shared_ptr<mxr::StateSet> facelineStateSet);
 		void setLineStateSet(std::shared_ptr<mxr::StateSet> lineStateSet);
 		void setPointStateSet(std::shared_ptr<mxr::StateSet> pointStateSet);
 
@@ -96,6 +97,7 @@ namespace MPreRend
 		std::shared_ptr<mGroupRender1<Vec3Array>> _facetransparentnodeformationrend;//变形前透明的面
 		std::shared_ptr<mGroupRender1<Vec3Array>>  _edgelinerend;//边界线
 		std::shared_ptr<mGroupRender2<Vec3Array, FloatArray>>  _facelinerend;//面线
+		//std::shared_ptr<mGroupRender1<Vec3Array>>  _quadfacelinerend;//面线
 		std::shared_ptr<mGroupRender2<Vec3Array, Vec3Array>>  _linerend;//线
 		std::shared_ptr<mGroupRender2<Vec3Array, Vec3Array>>  _pointrend;//点
 
@@ -119,6 +121,7 @@ namespace MPreRend
 		void setFaceTransparentNoDeformationStateSet(std::shared_ptr<mxr::StateSet> faceTransparentNoDeformationStateSet);
 		void setEdgeLineStateSet(std::shared_ptr<mxr::StateSet> edgelineStateSet);
 		void setFaceLineStateSet(std::shared_ptr<mxr::StateSet> facelineStateSet);
+		//void setQuadFaceLineStateSet(std::shared_ptr<mxr::StateSet> facelineStateSet);
 		void setLineStateSet(std::shared_ptr<mxr::StateSet> lineStateSet);
 		void setPointStateSet(std::shared_ptr<mxr::StateSet> pointStateSet);
 		void setNodeStateSet(std::shared_ptr<mxr::StateSet> stateset);
@@ -151,7 +154,8 @@ namespace MPreRend
 
 		std::shared_ptr<mxr::StateSet> _faceTransparentNodeformationStateSet;//渲染模型透明面无变形的状态
 
-		std::shared_ptr<mxr::StateSet> _facelineStateSet;//渲染面线的状态
+		std::shared_ptr<mxr::StateSet> _facelineStateSet;//渲染三角形面线的状态
+		//std::shared_ptr<mxr::StateSet> _quadfacelineStateSet;//渲染四边形面线的状态
 
 		std::shared_ptr<mxr::StateSet> _lineStateSet;//渲染线的状态
 

@@ -65,8 +65,8 @@ namespace MPreRend
 		mxr::Shader *shader = mShaderManage::GetInstance()->GetShader("PreGeoMeshFace");
 		_faceStateSet->setShader(shader);
 		_faceStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
-		_faceStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetFill>(0, 0), 0);
-		_faceStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
+		_faceStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetFill>(1.5, 1.5), 1);
+		_faceStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(mxr::PolygonMode::FRONT_AND_BACK, mxr::PolygonMode::FILL), 1);
 		_faceStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
 
 		_faceStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
@@ -86,8 +86,7 @@ namespace MPreRend
 		_edgelineStateSet->setShader(shader);
 		_edgelineStateSet->setDrawMode(GL_LINES);
 		_edgelineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
-		_edgelineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
-		_edgelineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
+		_edgelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetFill>(0, 0), 1);
 		_edgelineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(mxr::PolygonMode::FRONT_AND_BACK, mxr::PolygonMode::FILL), 1);
 		_edgelineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
 
@@ -103,7 +102,7 @@ namespace MPreRend
 		_facelineStateSet->setDrawMode(GL_TRIANGLES);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::LINE), 1);
-		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(-1, -1), 1);
+		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(0, 0), 1);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
 
 		_facelineStateSet->setUniform(MakeAsset<Uniform>("pvm", QMatrix4x4()));
@@ -133,13 +132,35 @@ namespace MPreRend
 		_dotlineStateSet->setUniform(MakeAsset<Uniform>("pvm", QMatrix4x4()));
 		_dotlineStateSet->setUniform(MakeAsset<Uniform>("showColor", QVector3D(0.5,0.5,0.5)));
 
+		//geopoint
+		_geopointStateSet = MakeAsset<StateSet>();
+		shader = mShaderManage::GetInstance()->GetShader("PreGeoPoint");
+		_geopointStateSet->setShader(shader);
+		_geopointStateSet->setDrawMode(GL_POINTS);
+		_geopointStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
+		_geopointStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(mxr::PolygonMode::FRONT_AND_BACK, mxr::PolygonMode::FILL), 1);
+		_geopointStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
+
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("lightIsOn", int(1)));
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("viewPos", QVector3D()));
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("light.position", _rendStatus->_postLight.lightPosition));
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("light.ambient", _rendStatus->_postLight.ambient));
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("light.diffuse", _rendStatus->_postLight.diffuse));
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("light.specular", _rendStatus->_postLight.specular));
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("light.shiness", _rendStatus->_postLight.shiness));
+		_geopointStateSet->setUniform(MakeAsset<Uniform>("PointSize", 10));
+		_geopointStateSet->setTexture("sprite_texture",_pointTexture);
+
 		//point
 		_pointStateSet = MakeAsset<StateSet>();
-		shader = mShaderManage::GetInstance()->GetShader("PreGeoPoint");
+		shader = mShaderManage::GetInstance()->GetShader("PreMeshPoint");
 		_pointStateSet->setShader(shader);
 		_pointStateSet->setDrawMode(GL_POINTS);
 		_pointStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
-		_pointStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
+		_pointStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(mxr::PolygonMode::FRONT_AND_BACK, mxr::PolygonMode::FILL), 1);
 		_pointStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
 
 		_pointStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
@@ -153,7 +174,6 @@ namespace MPreRend
 		_pointStateSet->setUniform(MakeAsset<Uniform>("light.specular", _rendStatus->_postLight.specular));
 		_pointStateSet->setUniform(MakeAsset<Uniform>("light.shiness", _rendStatus->_postLight.shiness));
 		_pointStateSet->setUniform(MakeAsset<Uniform>("PointSize", 10));
-		_pointStateSet->setTexture("sprite_texture",_pointTexture);
 
 		//node
 		_nodeStateSet = MakeAsset<StateSet>();
@@ -179,11 +199,12 @@ namespace MPreRend
 		_geoModelRender->setIndependentLineStateSet(_independentlineStateSet);
 		_geoModelRender->setDotLineStateSet(_dotlineStateSet);
 		_geoModelRender->setEdgeLineStateSet(_edgelineStateSet);
-		_geoModelRender->setPointStateSet(_pointStateSet);
+		_geoModelRender->setPointStateSet(_geopointStateSet);
 
 		_meshModelRender->setFaceStateSet(_faceStateSet);
 		_meshModelRender->setEdgeLineStateSet(_edgelineStateSet);
 		_meshModelRender->setFaceLineStateSet(_facelineStateSet);
+		//_meshModelRender->setQuadFaceLineStateSet(_quadfacelineStateSet);
 		_meshModelRender->setLineStateSet(_independentlineStateSet);
 		_meshModelRender->setPointStateSet(_pointStateSet);
 		_meshModelRender->setNodeStateSet(_nodeStateSet);
@@ -344,7 +365,7 @@ namespace MPreRend
 			aabb.push(_geoModelData->getModelSize());
 			hasModel = true;
 		}
-		if (MeshMessage::getInstance()->getAllPartNames().size() > 0)
+		if (MeshMessage::getInstance()->getMeshPartName().size() > 0)
 		{
 			auto model = _meshModelRender->getModelAABB();
 			aabb.push(model);
@@ -406,6 +427,7 @@ namespace MPreRend
 	void mPreRender::setPointSize(int size)
 	{
 		_rendStatus->_pointSize = size;
+		_geopointStateSet->getUniform("PointSize")->SetData(_rendStatus->_pointSize);
 		_pointStateSet->getUniform("PointSize")->SetData(_rendStatus->_pointSize);
 	}
 
@@ -419,6 +441,7 @@ namespace MPreRend
 	{
 		_rendStatus->_faceLineColor = color;
 		_facelineStateSet->getUniform("showColor")->SetData(_rendStatus->_faceLineColor);
+		//_quadfacelineStateSet->getUniform("showColor")->SetData(_rendStatus->_faceLineColor);
 	}
 
 	mPreRender::~mPreRender()
@@ -468,30 +491,55 @@ namespace MPreRend
 			_faceStateSet->getUniform("model")->SetData(modelView->_model);
 			_edgelineStateSet->getUniform("pvm")->SetData(pvm);
 			_facelineStateSet->getUniform("pvm")->SetData(pvm);
+			//_quadfacelineStateSet->getUniform("pvm")->SetData(pvm);
 			_independentlineStateSet->getUniform("pvm")->SetData(pvm);
 			_dotlineStateSet->getUniform("pvm")->SetData(pvm);
+			_geopointStateSet->getUniform("projection")->SetData(modelView->_projection);
+			_geopointStateSet->getUniform("view")->SetData(modelView->_view);
+			_geopointStateSet->getUniform("model")->SetData(modelView->_model);		
 			_pointStateSet->getUniform("projection")->SetData(modelView->_projection);
 			_pointStateSet->getUniform("view")->SetData(modelView->_view);
-			_pointStateSet->getUniform("model")->SetData(modelView->_model);			
+			_pointStateSet->getUniform("model")->SetData(modelView->_model);
 
 			_faceStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
-			_pointStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
+			_geopointStateSet->getUniform("viewPos")->SetData(modelView->_Eye);
 			if (_rendStatus->_lightIsDependOnCamera)
 			{
 				_faceStateSet->getUniform("light.position")->SetData(2 * modelView->_Eye - modelView->_Center);
+				_geopointStateSet->getUniform("light.position")->SetData(2 * modelView->_Eye - modelView->_Center);
 				_pointStateSet->getUniform("light.position")->SetData(2 * modelView->_Eye - modelView->_Center);
 			}
 			else
 			{
 				_faceStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
+				_geopointStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
 				_pointStateSet->getUniform("light.position")->SetData(_rendStatus->_postLight.lightPosition);
 			}
 
 			_facelineStateSet->getUniform("rightToLeft")->SetData(float(modelView->_Right - modelView->_Left));
 			_edgelineStateSet->getUniform("rightToLeft")->SetData(float(modelView->_Right - modelView->_Left));
+
+			//setLineVisual(float(modelView->_Right - modelView->_Left));
 		}
 	
 		_geoHighLightRender->updateUniform(modelView, commonView);
 		_meshHighLightRender->updateUniform(modelView, commonView);
+	}
+
+	void mPreRender::setLineVisual(float r_l)
+	{
+		float line; //= _modelView->_MaxRadius / (_modelView->_Right - _modelView->_Left);
+		float meshsize = MeshMessage::getInstance()->getModeMeshSize();
+		line = (r_l) / meshsize;
+		//qDebug() << line << endl;
+		if (line >= 800)
+		{
+			_rendStatus->_faceLineColor.setW(0);
+		}
+		else
+		{
+			_rendStatus->_faceLineColor.setW(1 - sqrt(line / 800));
+		}
+		setFaceLineColor(_rendStatus->_faceLineColor);
 	}
 }

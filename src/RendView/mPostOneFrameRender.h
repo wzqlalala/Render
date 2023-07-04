@@ -125,16 +125,16 @@ namespace MPostRend
 		/*********************************矢量图*******************************************/
 
 		//生成矢量图
-		void createVectorGraph(QVector<QPair<QString, QVector3D>> type_color, double size);
+		void createVectorGraph(QVector<QPair<QString, QVector3D>> type_color, double size, int type = 0);
 
 		//指定节点ID生成矢量图		
-		void createVectorGraph(std::set<int> nodeIDs, QVector<QPair<QString, QVector3D>> type_color, double size);
+		void createVectorGraph(std::set<int> nodeIDs, QVector<QPair<QString, QVector3D>> type_color, double size, int type = 0);
 
 		//删除矢量图
 		void deleteVectorGraph();
 
 		//自用
-		void createVectorGraph(QPair<QVector<QVector3D>, QVector<QVector3D>> res);
+		void createVectorGraph(QPair<QVector<QVector3D>, QVector<QVector3D>> res, int type = 0);
 
 		/**************************等值线等值面图*********************************************/
 

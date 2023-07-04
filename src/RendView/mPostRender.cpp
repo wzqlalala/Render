@@ -70,8 +70,8 @@ namespace MPostRend
 		mxr::Shader *faceshader = mShaderManage::GetInstance()->GetShader("PostMeshFaceWithDeformation");
 		_faceStateSet->setShader(faceshader);
 		_faceStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
-		_faceStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetFill>(0, 0), 0);
-		_faceStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(), 1);
+		_faceStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetFill>(1.5, 1.5), 1);
+		_faceStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(mxr::PolygonMode::FRONT_AND_BACK, mxr::PolygonMode::FILL), 1);
 		_faceStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(), 0);
 
 		_faceStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
@@ -185,7 +185,7 @@ namespace MPostRend
 		_facelineStateSet->setDrawMode(GL_TRIANGLES);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 1);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::LINE), 1);
-		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(-1, -1), 1);
+		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(0, 0), 1);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
 
 		_facelineStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
@@ -469,6 +469,7 @@ namespace MPostRend
 		_thread->setWidget(_baseRend->getCamera()->SCR_WIDTH, _baseRend->getCamera()->SCR_HEIGHT);
 		_thread->setPickMode(*_baseRend->getCurrentPickMode(), *_baseRend->getMultiplyPickMode());
 		_thread->setPickAngleValue(_baseRend->getPickAngle());
+		_thread->setPickElementTypeFilter(_rendStatus->_pickElementTypeFilter);
 		if (*_baseRend->getCurrentPickMode() == PickMode::SoloPick)
 		{		
 			float depth = this->getDepth(poses.first());
@@ -497,6 +498,15 @@ namespace MPostRend
 		});
 		w.setFuture(future);
 
+	}
+
+	void mPostRender::setPickElementTypeFilter(std::set<MxFunctions::ElementType> pickElementTypeFilter)
+	{
+		_rendStatus->_pickElementTypeFilter.clear();
+		for (ElementType et : pickElementTypeFilter)
+		{
+			_rendStatus->_pickElementTypeFilter.insert(et);
+		}
 	}
 
 	mPostFrameText * mPostRender::getPostFrameText()
@@ -640,7 +650,7 @@ namespace MPostRend
 		_oneFrameRender->setFaceLineStateSet(_facelineStateSet);
 		_oneFrameRender->setLineStateSet(_lineStateSet);
 		_oneFrameRender->setPointStateSet(_pointStateSet);
-		//_oneFrameRender->setTexture(_texture);
+		_oneFrameRender->setTexture(_texture);
 		_oneFrameRender->updateAllModelOperate(ImportOperate);
 		this->setDispersed(true);
 		this->initialPickThreads();
@@ -1252,28 +1262,30 @@ namespace MPostRend
 		emit update();
 	}
 
-	void mPostRender::createVectorGraph(QVector<QPair<QString, QVector3D>> type_color, double size)
+	void mPostRender::createVectorGraph(QVector<QPair<QString, QVector3D>> type_color, double size, int type)
 	{
 		this->makeCurrent();
 		_rendStatus->_vectorArrowTypeColor = type_color;
 		_rendStatus->_vectorArrowSize = size;
 		_rendStatus->_vectorArrowMethod = "";
+		_rendStatus->_vectorType = type;
 		if (_oneFrameRender)
 		{
-			_oneFrameRender->createVectorGraph(type_color, size);
+			_oneFrameRender->createVectorGraph(type_color, size, type);
 		}
 	}
 
-	void mPostRender::createVectorGraph(std::set<int> nodeIDs, QVector<QPair<QString, QVector3D>> type_color, double size)
+	void mPostRender::createVectorGraph(std::set<int> nodeIDs, QVector<QPair<QString, QVector3D>> type_color, double size, int type)
 	{
 		this->makeCurrent();
 		_rendStatus->_vectorArrowNodeIDs = nodeIDs;
 		_rendStatus->_vectorArrowTypeColor = type_color;
 		_rendStatus->_vectorArrowSize = size;
 		_rendStatus->_vectorArrowMethod = "";
+		_rendStatus->_vectorType = type;
 		if (_oneFrameRender)
 		{
-			_oneFrameRender->createVectorGraph(nodeIDs, type_color, size);
+			_oneFrameRender->createVectorGraph(nodeIDs, type_color, size, type);
 		}
 	}
 

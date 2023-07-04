@@ -330,15 +330,15 @@ namespace MPreRend
 			{
 				_lineRender->_vertex0->append(medge->getAllVertexs());
 			}
-			QVector<MXGeoPoint*> geoPoints = MeshMessage::getInstance()->getGeoPointSamePart(partName);
+			QVector<SpecialElement*> points = MeshMessage::getInstance()->getSpecialElementOfPart(partName);
 			//µãÍø¸ñ
-			for (auto geoPoint : geoPoints)
+			for (auto point : points)
 			{
-				if (geoPoint->_mVertex == nullptr)
+				if (!point)
 				{
 					continue;
 				}
-				_pointRender->_vertex0->append(QVector3D(geoPoint->_mVertex->vx(), geoPoint->_mVertex->vy(), geoPoint->_mVertex->vz()));
+				_pointRender->_vertex0->append(point->getCentroid());
 
 			}
 		}
@@ -410,7 +410,7 @@ namespace MPreRend
 		_facelineStateSet->setDrawMode(GL_TRIANGLES);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 0);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::LINE), 1);
-		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(-1, -1), 1);
+		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetFill>(0, 0), 1);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
 
 		_facelineStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
