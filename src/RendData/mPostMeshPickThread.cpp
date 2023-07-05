@@ -645,6 +645,7 @@ namespace MDataPost
 		const QHash<int, QVector3D> &dis = _oneFrameRendData->getNodeDisplacementData();
 		QVector3D deformationScale = _oneFrameRendData->getDeformationScale();
 		mPostMeshPartData1 *partData = _oneFrameData->getMeshPartDataByPartName(partName);
+		QVector3D explodeDis = _oneFrameRendData->getPartExplodeDis(partName);
 		if (partData == nullptr || !partData->getPartVisual())
 		{
 			return;
@@ -668,7 +669,7 @@ namespace MDataPost
 			{
 				QVector<QVector2D> tempQVector2D;
 				std::set<float> depthlist;
-				QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale);
+				QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale, explodeDis);
 				if (isVertexCuttingByPlane(vertexs))
 				{
 					continue;
@@ -701,6 +702,7 @@ namespace MDataPost
 		float t;
 		const QHash<int, QVector3D> &dis = _oneFrameRendData->getNodeDisplacementData();
 		QVector3D deformationScale = _oneFrameRendData->getDeformationScale();
+		QVector3D explodeDis = _oneFrameRendData->getPartExplodeDis(partName);
 		//for (QString _partName : _partNames)
 		{
 			mPostMeshPartData1 *partData = _oneFrameData->getMeshPartDataByPartName(partName);
@@ -729,7 +731,7 @@ namespace MDataPost
 				}
 				QVector<QVector2D> tempQVector2D;
 				std::set<float> depthlist;
-				QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale);
+				QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale, explodeDis);
 				if (isVertexCuttingByPlane(vertexs))
 				{
 					continue;
@@ -773,6 +775,7 @@ namespace MDataPost
 		float t;
 		const QHash<int, QVector3D> &dis = _oneFrameRendData->getNodeDisplacementData();
 		QVector3D deformationScale = _oneFrameRendData->getDeformationScale();
+		QVector3D explodeDis = _oneFrameRendData->getPartExplodeDis(partName);
 		{
 			mPostMeshPartData1 *partData = _oneFrameData->getMeshPartDataByPartName(partName);
 			if (partData == nullptr || !partData->getPartVisual())
@@ -797,7 +800,7 @@ namespace MDataPost
 					int meshID = _oneFrameData->MeshFaceIsSurface1(meshFaceData);
 					QVector<QVector2D> tempQVector2D;
 					std::set<float> depthlist;
-					QVector<QVector3D> vertexs = _oneFrameData->getMeshFaceVertexs(meshFaceData, dis, deformationScale);
+					QVector<QVector3D> vertexs = _oneFrameData->getMeshFaceVertexs(meshFaceData, dis, deformationScale, explodeDis);
 					if (isVertexCuttingByPlane(vertexs))
 					{
 						continue;
@@ -840,7 +843,7 @@ namespace MDataPost
 				}
 				QVector<QVector2D> tempQVector2D;
 				std::set<float> depthlist;
-				QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale);
+				QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale, explodeDis);
 				if (isVertexCuttingByPlane(vertexs))
 				{
 					continue;
@@ -882,7 +885,7 @@ namespace MDataPost
 				{
 					QVector<QVector2D> tempQVector2D;
 					std::set<float> depthlist;
-					QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale);
+					QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale, explodeDis);
 					if (isVertexCuttingByPlane(vertexs))
 					{
 						continue;
@@ -948,6 +951,7 @@ namespace MDataPost
 		float t;
 		const QHash<int, QVector3D> &dis = _oneFrameRendData->getNodeDisplacementData();
 		QVector3D deformationScale = _oneFrameRendData->getDeformationScale();
+		QVector3D explodeDis = _oneFrameRendData->getPartExplodeDis(partName);
 		//for (QString _partName : _partNames)
 		{
 			mPostMeshPartData1 *partData = _oneFrameData->getMeshPartDataByPartName(partName);
@@ -968,7 +972,7 @@ namespace MDataPost
 				{
 					QVector<QVector2D> tempQVector2D;
 					std::set<float> depthlist;
-					QVector<QVector3D> vertexs = _oneFrameData->getMeshFaceVertexs(meshFaceData, dis, deformationScale);
+					QVector<QVector3D> vertexs = _oneFrameData->getMeshFaceVertexs(meshFaceData, dis, deformationScale, explodeDis);
 					if (isVertexCuttingByPlane(vertexs))
 					{
 						continue;
@@ -1011,6 +1015,7 @@ namespace MDataPost
 		float depth = 1.0;
 		const QHash<int, QVector3D> &dis = _oneFrameRendData->getNodeDisplacementData();
 		QVector3D deformationScale = _oneFrameRendData->getDeformationScale();
+		QVector3D explodeDis = _oneFrameRendData->getPartExplodeDis(partName);
 		//for (QString _partName : _partNames)
 		{
 			mPostMeshPartData1 *partData = _oneFrameData->getMeshPartDataByPartName(partName);
@@ -1037,7 +1042,7 @@ namespace MDataPost
 				{
 					QVector<QVector2D> tempQVector2D;
 					std::set<float> depthlist;
-					QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale);
+					QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale, explodeDis);
 					if (isVertexCuttingByPlane(vertexs))
 					{
 						continue;
@@ -1074,6 +1079,7 @@ namespace MDataPost
 		float t;
 		const QHash<int, QVector3D> &dis = _oneFrameRendData->getNodeDisplacementData();
 		QVector3D deformationScale = _oneFrameRendData->getDeformationScale();
+		QVector3D explodeDis = _oneFrameRendData->getPartExplodeDis(partName);
 		//for (QString _partName : _partNames)
 		{
 			mPostMeshPartData1 *partData = _oneFrameData->getMeshPartDataByPartName(partName);
@@ -1097,7 +1103,7 @@ namespace MDataPost
 				}
 				QVector<QVector2D> tempQVector2D;
 				std::set<float> depthlist;
-				QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale);
+				QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale, explodeDis);
 				if (isVertexCuttingByPlane(vertexs))
 				{
 					continue;
@@ -1138,7 +1144,7 @@ namespace MDataPost
 				{
 					QVector<QVector2D> tempQVector2D;
 					std::set<float> depthlist;
-					QVector<QVector3D> vertexs = _oneFrameData->getMeshFaceVertexs(meshFaceData, dis, deformationScale);
+					QVector<QVector3D> vertexs = _oneFrameData->getMeshFaceVertexs(meshFaceData, dis, deformationScale, explodeDis);
 					if (isVertexCuttingByPlane(vertexs))
 					{
 						continue;
@@ -1189,6 +1195,7 @@ namespace MDataPost
 		float depth = 1.0;
 		const QHash<int, QVector3D> &dis = _oneFrameRendData->getNodeDisplacementData();
 		QVector3D deformationScale = _oneFrameRendData->getDeformationScale();
+		QVector3D explodeDis = _oneFrameRendData->getPartExplodeDis(partName);
 		//for (QString _partName : _partNames)
 		{
 			mPostMeshPartData1 *partData = _oneFrameData->getMeshPartDataByPartName(partName);
@@ -1215,7 +1222,7 @@ namespace MDataPost
 				{
 					QVector<QVector2D> tempQVector2D;
 					std::set<float> depthlist;
-					QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale);
+					QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale, explodeDis);
 					if (isVertexCuttingByPlane(vertexs))
 					{
 						continue;
@@ -1249,6 +1256,7 @@ namespace MDataPost
 		const QHash<int, QVector3D> &dis = _oneFrameRendData->getNodeDisplacementData();
 		QVector3D deformationScale = _oneFrameRendData->getDeformationScale();
 		mPostMeshPartData1 *partData = _oneFrameData->getMeshPartDataByPartName(partName);
+		QVector3D explodeDis = _oneFrameRendData->getPartExplodeDis(partName);
 		if (partData == nullptr || !partData->getPartVisual())
 		{
 			return;
@@ -1271,7 +1279,7 @@ namespace MDataPost
 			}
 			QVector<QVector2D> tempQVector2D;
 			std::set<float> depthlist;
-			QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale);
+			QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale, explodeDis);
 			if (isVertexCuttingByPlane(vertexs))
 			{
 				continue;
@@ -1315,6 +1323,7 @@ namespace MDataPost
 		const QHash<int, QVector3D> &dis = _oneFrameRendData->getNodeDisplacementData();
 		QVector3D deformationScale = _oneFrameRendData->getDeformationScale();
 		mPostMeshPartData1 *partData = _oneFrameData->getMeshPartDataByPartName(partName);
+		QVector3D explodeDis = _oneFrameRendData->getPartExplodeDis(partName);
 		if (partData == nullptr || !partData->getPartVisual())
 		{
 			return;
@@ -1334,7 +1343,7 @@ namespace MDataPost
 			{
 				QVector<QVector2D> tempQVector2D;
 				std::set<float> depthlist;
-				QVector<QVector3D> vertexs = _oneFrameData->getMeshFaceVertexs(meshFaceData, dis, deformationScale);
+				QVector<QVector3D> vertexs = _oneFrameData->getMeshFaceVertexs(meshFaceData, dis, deformationScale, explodeDis);
 				if (isVertexCuttingByPlane(vertexs))
 				{
 					continue;
@@ -1377,6 +1386,7 @@ namespace MDataPost
 		const QHash<int, QVector3D> &dis = _oneFrameRendData->getNodeDisplacementData();
 		QVector3D deformationScale = _oneFrameRendData->getDeformationScale();
 		mPostMeshPartData1 *partData = _oneFrameData->getMeshPartDataByPartName(partName);
+		QVector3D explodeDis = _oneFrameRendData->getPartExplodeDis(partName);
 		if (partData == nullptr || !partData->getPartVisual())
 		{
 			return;
@@ -1402,7 +1412,7 @@ namespace MDataPost
 			QVector<int> index = meshData->getNodeIndex();
 			for (int j = 0; j < index.size(); ++j)
 			{
-				QVector3D vertex0 = _oneFrameData->getNodeDataByID(index.at(j))->getNodeVertex() + deformationScale * dis.value(index.at(j));
+				QVector3D vertex0 = _oneFrameData->getNodeDataByID(index.at(j))->getNodeVertex() + deformationScale * dis.value(index.at(j)) + explodeDis;
 				if (isVertexCuttingByPlane(vertex0))
 				{
 					continue;
@@ -1430,6 +1440,7 @@ namespace MDataPost
 		const QHash<int, QVector3D> &dis = _oneFrameRendData->getNodeDisplacementData();
 		QVector3D deformationScale = _oneFrameRendData->getDeformationScale();
 		mPostMeshPartData1 *partData = _oneFrameData->getMeshPartDataByPartName(partName);
+		QVector3D explodeDis = _oneFrameRendData->getPartExplodeDis(partName);
 		if (partData == nullptr || !partData->getPartVisual())
 		{
 			return;
@@ -1450,7 +1461,7 @@ namespace MDataPost
 			QVector<int> index = meshData->getNodeIndex();
 			if ((meshData->getMeshType() == MeshBeam) && (_pickElementTypeFilter.find(meshData->getElementType()) != _pickElementTypeFilter.end()))
 			{
-				QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale);
+				QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale, explodeDis);
 				if (isVertexCuttingByPlane(vertexs))
 				{
 					continue;
@@ -1478,6 +1489,7 @@ namespace MDataPost
 		const QHash<int, QVector3D> &dis = _oneFrameRendData->getNodeDisplacementData();
 		QVector3D deformationScale = _oneFrameRendData->getDeformationScale();
 		mPostMeshPartData1 *partData = _oneFrameData->getMeshPartDataByPartName(partName);
+		QVector3D explodeDis = _oneFrameRendData->getPartExplodeDis(partName);
 		if (partData == nullptr || !partData->getPartVisual())
 		{
 			return;
@@ -1498,7 +1510,7 @@ namespace MDataPost
 			{
 				continue;
 			}
-			QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale);
+			QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale, explodeDis);
 			if (isVertexCuttingByPlane(vertexs))
 			{
 				continue;
@@ -1525,6 +1537,7 @@ namespace MDataPost
 		const QHash<int, QVector3D> &dis = _oneFrameRendData->getNodeDisplacementData();
 		QVector3D deformationScale = _oneFrameRendData->getDeformationScale();
 		mPostMeshPartData1 *partData = _oneFrameData->getMeshPartDataByPartName(partName);
+		QVector3D explodeDis = _oneFrameRendData->getPartExplodeDis(partName);
 		if (partData == nullptr || !partData->getPartVisual())
 		{
 			return;
@@ -1542,7 +1555,7 @@ namespace MDataPost
 			{
 				if (meshData != nullptr && meshData->getMeshVisual())
 				{
-					QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale);
+					QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale, explodeDis);
 					if (!isVertexCuttingByPlane(vertexs))
 					{
 						pickMeshDatas.insert(meshData->getMeshID());
@@ -1574,7 +1587,7 @@ namespace MDataPost
 			{
 				continue;
 			}
-			QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale);
+			QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale, explodeDis);
 			if (isVertexCuttingByPlane(vertexs))
 			{
 				continue;
@@ -1600,7 +1613,7 @@ namespace MDataPost
 			//QVector<int> index = meshData->getNodeIndex();
 			if (meshData->getMeshType() == MeshBeam)
 			{
-				QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale);
+				QVector<QVector3D> vertexs = _oneFrameData->getMeshVertexs(meshData, dis, deformationScale, explodeDis);
 
 				if (isVertexCuttingByPlane(vertexs))
 				{
@@ -1629,6 +1642,7 @@ namespace MDataPost
 		const QHash<int, QVector3D> &dis = _oneFrameRendData->getNodeDisplacementData();
 		QVector3D deformationScale = _oneFrameRendData->getDeformationScale();
 		mPostMeshPartData1 *partData = _oneFrameData->getMeshPartDataByPartName(partName);
+		QVector3D explodeDis = _oneFrameRendData->getPartExplodeDis(partName);
 		if (partData == nullptr || !partData->getPartVisual())
 		{
 			return;
@@ -1644,7 +1658,7 @@ namespace MDataPost
 			}
 			if (meshFaceData->getVisual())//判断这个单元面是不是外表面
 			{
-				QVector<QVector3D> vertexs = _oneFrameData->getMeshFaceVertexs(meshFaceData, dis, deformationScale);
+				QVector<QVector3D> vertexs = _oneFrameData->getMeshFaceVertexs(meshFaceData, dis, deformationScale, explodeDis);
 				if (isVertexCuttingByPlane(vertexs))
 				{
 					continue;
@@ -1880,6 +1894,7 @@ namespace MDataPost
 
 		QPair<PickObjectType, QPair<QString, int>> pickObjectID = _postMeshPickData->getSoloPickNodeDataByFaceAngle();
 		QString partName = pickObjectID.second.first;
+		QVector3D explodeDis = _oneFrameRendData->getPartExplodeDis(partName);
 		if (pickObjectID.first == PickObjectType::Mesh2D)
 		{
 			int meshID = pickObjectID.second.second;
@@ -1915,9 +1930,9 @@ namespace MDataPost
 					mPostMeshNodeData1* nodeData3 = _oneFrameData->getNodeDataByID(nodeIDs.at(2));
 
 					QVector<QVector3D> vertexs = {
-					nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0)),
-					nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1)),
-					nodeData3->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(2)) };
+					nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0))+explodeDis,
+					nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1))+explodeDis,
+					nodeData3->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(2))+explodeDis };
 
 					lastDirection = QVector3D::crossProduct((vertexs.at(1) - vertexs.at(0)).normalized(), (vertexs.at(2) - vertexs.at(1)).normalized()).normalized();
 					queue.enqueue(meshID);
@@ -1949,9 +1964,9 @@ namespace MDataPost
 						mPostMeshNodeData1* nodeData3 = _oneFrameData->getNodeDataByID(nodeIDs.at(2));
 
 						QVector<QVector3D> vertexs = {
-						nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0)),
-						nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1)),
-						nodeData3->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(2)) };
+						nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0))+explodeDis,
+						nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1))+explodeDis,
+						nodeData3->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(2))+explodeDis };
 
 						direction = QVector3D::crossProduct((vertexs.at(1) - vertexs.at(0)).normalized(), (vertexs.at(2) - vertexs.at(1)).normalized()).normalized();
 
@@ -2004,10 +2019,10 @@ namespace MDataPost
 						mPostMeshNodeData1* nodeData4 = _oneFrameData->getNodeDataByID(nodeIDs.at(3));
 
 						QVector<QVector3D> vertexs = {
-						nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0)),
-						nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1)),
-						nodeData3->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(2)),
-						nodeData4->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(3)) };
+						nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0))+explodeDis,
+						nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1))+explodeDis,
+						nodeData3->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(2))+explodeDis,
+						nodeData4->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(3))+explodeDis };
 
 						direction = QVector3D::crossProduct((vertexs.at(1) - vertexs.at(0)).normalized(), (vertexs.at(2) - vertexs.at(1)).normalized()).normalized();
 
@@ -2096,9 +2111,9 @@ namespace MDataPost
 				mPostMeshNodeData1* nodeData3 = _oneFrameData->getNodeDataByID(nodeIDs.at(2));
 
 				QVector<QVector3D> vertexs = {
-					nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0)),
-					nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1)),
-					nodeData3->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(2)) };
+					nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0))+explodeDis,
+					nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1))+explodeDis,
+					nodeData3->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(2))+explodeDis };
 
 				lastDirection = QVector3D::crossProduct((vertexs.at(1) - vertexs.at(0)).normalized(), (vertexs.at(2) - vertexs.at(1)).normalized()).normalized();
 				if (!_oneFrameData->getMeshDataByID(meshID)->getMeshVisual())
@@ -2144,9 +2159,9 @@ namespace MDataPost
 					mPostMeshNodeData1* nodeData3 = _oneFrameData->getNodeDataByID(nodeIDs.at(2));
 
 					QVector<QVector3D> vertexs = {
-					nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0)),
-					nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1)),
-					nodeData3->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(2)) };
+					nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0))+explodeDis,
+					nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1))+explodeDis,
+					nodeData3->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(2))+explodeDis };
 
 					direction = QVector3D::crossProduct((vertexs.at(1) - vertexs.at(0)).normalized(), (vertexs.at(2) - vertexs.at(1)).normalized()).normalized();
 					if (!_oneFrameData->getMeshDataByID(meshID)->getMeshVisual())
@@ -2186,7 +2201,7 @@ namespace MDataPost
 						{
 							mPostMeshNodeData1* nodeData4 = _oneFrameData->getNodeDataByID(nodeIDs.at(3));
 
-							if (!isVertexCuttingByPlane(nodeData4->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(3))) && pickNodeIDs.insert(nodeIDs.at(3)).second)
+							if (!isVertexCuttingByPlane(nodeData4->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(3)) + explodeDis) && pickNodeIDs.insert(nodeIDs.at(3)).second)
 							{
 								std::set<int> ids = nodeData4->getNodeInMeshIDs();
 								adjacentMeshIDs.insert(ids.begin(), ids.end());
@@ -2253,6 +2268,7 @@ namespace MDataPost
 
 		QPair<QString, int> partNameMeshID = _postMeshPickData->getSoloPickMeshDataByAngle();
 		mPostMeshPartData1 *partData = _oneFrameData->getMeshPartDataByPartName(partNameMeshID.first);
+		QVector3D explodeDis = _oneFrameRendData->getPartExplodeDis(partData->getPartName());
 		int meshID = partNameMeshID.second;
 		if (partData == nullptr || meshID == 0)
 		{
@@ -2286,8 +2302,8 @@ namespace MDataPost
 				mPostMeshNodeData1* nodeData2 = _oneFrameData->getNodeDataByID(nodeIDs.at(1));
 
 				QVector<QVector3D> vertexs = {
-					nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0)),
-					nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1)) };
+					nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0))+explodeDis,
+					nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1))+explodeDis };
 
 				lastDirection = (vertexs.at(1) - vertexs.at(0)).normalized();
 				queue.enqueue(meshID);
@@ -2318,8 +2334,8 @@ namespace MDataPost
 					mPostMeshNodeData1* nodeData2 = _oneFrameData->getNodeDataByID(nodeIDs.at(1));
 
 					QVector<QVector3D> vertexs = {
-					nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0)),
-					nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1)) };
+					nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0))+explodeDis,
+					nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1))+explodeDis };
 
 					direction = (vertexs.at(1) - vertexs.at(0)).normalized();
 
@@ -2466,6 +2482,7 @@ namespace MDataPost
 
 		QPair<QString, int> partNameMeshID = _postMeshPickData->getSoloPickMeshDataByAngle();
 		mPostMeshPartData1 *partData = _oneFrameData->getMeshPartDataByPartName(partNameMeshID.first);
+		QVector3D explodeDis = _oneFrameRendData->getPartExplodeDis(partData->getPartName());
 		int meshID = partNameMeshID.second;
 		if (partData == nullptr || meshID == 0)
 		{
@@ -2500,9 +2517,9 @@ namespace MDataPost
 				mPostMeshNodeData1* nodeData3 = _oneFrameData->getNodeDataByID(nodeIDs.at(2));
 
 				QVector<QVector3D> vertexs = {
-					nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0)),
-					nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1)),
-					nodeData3->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(2)) };
+					nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0))+explodeDis,
+					nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1))+explodeDis,
+					nodeData3->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(2))+explodeDis };
 
 				lastDirection = QVector3D::crossProduct((vertexs.at(1) - vertexs.at(0)).normalized(), (vertexs.at(2) - vertexs.at(1)).normalized()).normalized();
 				queue.enqueue(meshID);
@@ -2534,9 +2551,9 @@ namespace MDataPost
 					mPostMeshNodeData1* nodeData3 = _oneFrameData->getNodeDataByID(nodeIDs.at(2));
 
 					QVector<QVector3D> vertexs = {
-					nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0)),
-					nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1)),
-					nodeData3->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(2)) };
+					nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0))+explodeDis,
+					nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1))+explodeDis,
+					nodeData3->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(2))+explodeDis };
 
 					direction = QVector3D::crossProduct((vertexs.at(1) - vertexs.at(0)).normalized(), (vertexs.at(2) - vertexs.at(1)).normalized()).normalized();
 
@@ -2588,10 +2605,10 @@ namespace MDataPost
 					mPostMeshNodeData1* nodeData4 = _oneFrameData->getNodeDataByID(nodeIDs.at(3));
 
 					QVector<QVector3D> vertexs = {
-						nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0)),
-						nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1)),
-						nodeData3->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(2)),
-						nodeData4->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(3)) };
+						nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0))+explodeDis,
+						nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1))+explodeDis,
+						nodeData3->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(2))+explodeDis,
+						nodeData4->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(3))+explodeDis };
 
 					direction = QVector3D::crossProduct((vertexs.at(1) - vertexs.at(0)).normalized(), (vertexs.at(2) - vertexs.at(1)).normalized()).normalized();
 
@@ -2651,6 +2668,7 @@ namespace MDataPost
 		QPair<QString, int> partNameMeshID = _postMeshPickData->getSoloPickMeshFaceDataByAngle();
 		mPostMeshPartData1 *partData = _oneFrameData->getMeshPartDataByPartName(partNameMeshID.first);
 		int meshFaceID = partNameMeshID.second;
+		QVector3D explodeDis = _oneFrameRendData->getPartExplodeDis(partData->getPartName());
 		if (partData == nullptr || meshFaceID == 0)
 		{
 			return;
@@ -2684,9 +2702,9 @@ namespace MDataPost
 			mPostMeshNodeData1* nodeData2 = _oneFrameData->getNodeDataByID(nodeIDs.at(1));
 			mPostMeshNodeData1* nodeData3 = _oneFrameData->getNodeDataByID(nodeIDs.at(2));
 			QVector<QVector3D> vertexs = {
-					nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0)),
-					nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1)),
-					nodeData3->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(2)) };
+					nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0))+explodeDis,
+					nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1))+explodeDis,
+					nodeData3->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(2))+explodeDis };
 
 			lastDirection = QVector3D::crossProduct((vertexs.at(1) - vertexs.at(0)).normalized(), (vertexs.at(2) - vertexs.at(1)).normalized()).normalized();
 			if (!_oneFrameData->getMeshDataByID(meshID)->getMeshVisual())
@@ -2731,9 +2749,9 @@ namespace MDataPost
 				mPostMeshNodeData1* nodeData3 = _oneFrameData->getNodeDataByID(nodeIDs.at(2));
 
 				QVector<QVector3D> vertexs = {
-				nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0)),
-				nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1)),
-				nodeData3->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(2)) };
+				nodeData1->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(0))+explodeDis,
+				nodeData2->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(1))+explodeDis,
+				nodeData3->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(2))+explodeDis };
 
 				direction = QVector3D::crossProduct((vertexs.at(1) - vertexs.at(0)).normalized(), (vertexs.at(2) - vertexs.at(1)).normalized()).normalized();
 				if (!_oneFrameData->getMeshDataByID(meshID)->getMeshVisual())
@@ -2756,7 +2774,7 @@ namespace MDataPost
 					if (nodeIDs.size() == 4)
 					{
 						nodeData4 = _oneFrameData->getNodeDataByID(nodeIDs.at(3));
-						vertexs.append(nodeData4->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(3)));
+						vertexs.append(nodeData4->getNodeVertex() + deformationScale * dis.value(nodeIDs.at(3)) + explodeDis);
 					}
 					if (isVertexCuttingByPlane(vertexs))
 					{

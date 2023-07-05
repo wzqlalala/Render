@@ -453,6 +453,7 @@ namespace MPostRend
 	}
 	void mPostModelRender::createExplodedGraph()
 	{
+		const QHash<int, QVector3D> &disp = _oneFrameRendData->getNodeDisplacementData();
 		QVector<shared_ptr<mPostPartRender>> renders;
 		shared_ptr<mPostPartRender> baseLinePartRender = nullptr;
 		//根据面积最大的找到模型基准部件
@@ -560,22 +561,26 @@ namespace MPostRend
 					//QVector3D res = dir * factor;
 					_oneFrameRendData->setPartExplodeDis(partName, dir);
 					_partRenders[partName]->UpdatePartExplodeDis(dir);
+					//_partRenders[partName]->calculateSpaceTreeThread(disp, dir);
 				}
 			}
 		}
 	}
 	void mPostModelRender::createExplodedGraphByTransplatePart(set<QString> partNames, QVector3D dis)
 	{
+		const QHash<int, QVector3D> &disp = _oneFrameRendData->getNodeDisplacementData();
 		for (auto partName : partNames)
 		{
 			QVector3D res = _oneFrameRendData->getPartExplodeDis(partName) + dis;
 			_oneFrameRendData->setPartExplodeDis(partName, res);
 			_partRenders[partName]->UpdatePartExplodeDis(res);
+			//_partRenders[partName]->calculateSpaceTreeThread(disp, res);
 		}
 	}
 	void mPostModelRender::createExplodedGraphByModelCenter(set<QString> partNames, QVector3D factor)
 	{
 		Space::AABB aabb = this->getModelAABB();
+		const QHash<int, QVector3D> &disp = _oneFrameRendData->getNodeDisplacementData();
 		QVector3D modelCenter = (aabb.maxEdge + aabb.minEdge) / 2.0;
 		for (auto partName : partNames)
 		{
@@ -585,6 +590,19 @@ namespace MPostRend
 			QVector3D res = _oneFrameRendData->getPartExplodeDis(partName) + dir * factor;
 			_oneFrameRendData->setPartExplodeDis(partName, res);
 			_partRenders[partName]->UpdatePartExplodeDis(res);
+			//_partRenders[partName]->calculateSpaceTreeThread(disp, res);
+		}
+	}
+	void mPostModelRender::clearExplodedGraph()
+	{
+		const QHash<int, QVector3D> &disp = _oneFrameRendData->getNodeDisplacementData();
+		QHashIterator<QString, shared_ptr<mPostPartRender>> iter(_partRenders);
+		while (iter.hasNext())
+		{
+			iter.next();
+			_oneFrameRendData->setPartExplodeDis(iter.key(), QVector3D(0,0,0));
+			iter.value()->UpdatePartExplodeDis(QVector3D(0, 0, 0));
+			//iter.value()->calculateSpaceTreeThread(disp, QVector3D(0, 0, 0));
 		}
 	}
 }

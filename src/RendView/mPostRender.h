@@ -289,6 +289,9 @@ namespace MPostRend
 		//沿着模型中心生成爆炸图
 		void createExplodedGraphByModelCenter(set<QString> partNames, QVector3D factor);
 
+		//清除爆炸图
+		void clearExplodedGraph();
+
 		~mPostRender();
 
 		void updateUniform(shared_ptr<mViewBase> modelView, shared_ptr<mViewBase> commonView) override;

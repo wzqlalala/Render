@@ -1226,7 +1226,7 @@ namespace MDataPost
 		return _eleNum.value(elementType);
 	}
 
-	QVector3D mOneFrameData1::getMeshCenter(mPostMeshData1 * meshData, const QHash<int, QVector3D> &dis, QVector3D deformationScale)
+	QVector3D mOneFrameData1::getMeshCenter(mPostMeshData1 * meshData, const QHash<int, QVector3D> &dis, QVector3D deformationScale, QVector3D explodeDis)
 	{
 		int nodeNum = 1;
 		switch (meshData->getMeshType())
@@ -1251,12 +1251,12 @@ namespace MDataPost
 			{
 				return QVector3D();
 			}
-			nodePos += (meshNodeData->getNodeVertex() + deformationScale * dis.value(nodeID));
+			nodePos += (meshNodeData->getNodeVertex() + deformationScale * dis.value(nodeID) + explodeDis);
 		}
 		return nodePos / nodeNum;
 	}
 
-	QVector<QVector3D> mOneFrameData1::getMeshVertexs(mPostMeshData1 * meshData, const QHash<int, QVector3D>& dis, QVector3D deformationScale)
+	QVector<QVector3D> mOneFrameData1::getMeshVertexs(mPostMeshData1 * meshData, const QHash<int, QVector3D>& dis, QVector3D deformationScale, QVector3D explodeDis)
 	{
 		int nodeNum = 1;
 		switch (meshData->getMeshType())
@@ -1281,7 +1281,7 @@ namespace MDataPost
 			{
 				return vertexs;
 			}
-			vertexs += (meshNodeData->getNodeVertex() + deformationScale * dis.value(nodeID));
+			vertexs += (meshNodeData->getNodeVertex() + deformationScale * dis.value(nodeID) + explodeDis);
 		}
 		return vertexs;
 	}
@@ -1605,7 +1605,7 @@ namespace MDataPost
 		}
 	}
 
-	QVector<QVector3D> mOneFrameData1::getMeshFaceVertexs(mPostMeshFaceData1 * meshFaceData, const QHash<int, QVector3D>& dis, QVector3D deformationScale)
+	QVector<QVector3D> mOneFrameData1::getMeshFaceVertexs(mPostMeshFaceData1 * meshFaceData, const QHash<int, QVector3D>& dis, QVector3D deformationScale, QVector3D explodeDis)
 	{
 		QVector<int> nodeIDs = meshFaceData->getNodeIndex();
 		QVector<QVector3D> vertexs;
@@ -1616,7 +1616,7 @@ namespace MDataPost
 			{
 				return vertexs;
 			}
-			vertexs += (meshNodeData->getNodeVertex() + deformationScale * dis.value(nodeID));
+			vertexs += (meshNodeData->getNodeVertex() + deformationScale * dis.value(nodeID) + explodeDis);
 		}
 		return vertexs;
 	}

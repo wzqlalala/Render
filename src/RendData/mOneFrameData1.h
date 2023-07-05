@@ -174,10 +174,10 @@ namespace MDataPost
 		int getNumByElementType(MViewBasic::ElementType elementType);
 
 		//获取网格的形心
-		QVector3D getMeshCenter(mPostMeshData1 *meshData, const QHash<int, QVector3D> &dis, QVector3D deformationScale);
+		QVector3D getMeshCenter(mPostMeshData1 *meshData, const QHash<int, QVector3D> &dis, QVector3D deformationScale, QVector3D explodeDis);
 
 		//获取网格的节点（不包括高阶节点）
-		QVector<QVector3D> getMeshVertexs(mPostMeshData1 *meshData, const QHash<int, QVector3D> &dis, QVector3D deformationScale);
+		QVector<QVector3D> getMeshVertexs(mPostMeshData1 *meshData, const QHash<int, QVector3D> &dis, QVector3D deformationScale, QVector3D explodeDis);
 
 		//删除网格
 		//void deleteMesh(set<int> meshIDs);
@@ -222,7 +222,7 @@ namespace MDataPost
 		void judgeMeshFaceIsShow(set<int> meshIDs);
 
 		//获取单元面的节点（不包括高阶节点）
-		QVector<QVector3D> getMeshFaceVertexs(mPostMeshFaceData1 *meshData, const QHash<int, QVector3D> &dis, QVector3D deformationScale);
+		QVector<QVector3D> getMeshFaceVertexs(mPostMeshFaceData1 *meshData, const QHash<int, QVector3D> &dis, QVector3D deformationScale, QVector3D explodeDis);
 
 		/*
 		 * 单元线操作

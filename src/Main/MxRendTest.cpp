@@ -199,6 +199,16 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			_postRend->slotUpdateOrthoAndCamera();
 			break;
 		}
+		case Qt::Key_F11:
+		{
+			if (_postRender == nullptr)
+			{
+				return;
+			}
+			_postRender->clearExplodedGraph();
+			_postRend->slotUpdateOrthoAndCamera();
+			break;
+		}
 		case Qt::Key_F8:
 		{
 			if (_postRend == nullptr)

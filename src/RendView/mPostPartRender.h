@@ -185,7 +185,7 @@ namespace MPostRend
 		void setLineStateSet(std::shared_ptr<mxr::StateSet> lineStateSet);
 		void setPointStateSet(std::shared_ptr<mxr::StateSet> pointStateSet);
 
-		void calculateSpaceTreeThread(const QHash<int, QVector3D> &dis);
+		void calculateSpaceTreeThread(const QHash<int, QVector3D> &dis, QVector3D explodeDis = QVector3D(0,0,0));
 		Space::SpaceTree* getPartSpaceTree();
 		MDataPost::mPostMeshPartData1 *getpartData() {return _partData; };
 

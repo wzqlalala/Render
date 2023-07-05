@@ -1146,7 +1146,7 @@ namespace MPostRend
 		}
 	}
 
-	void mPostPartRender::calculateSpaceTreeThread(const QHash<int, QVector3D> &dis)
+	void mPostPartRender::calculateSpaceTreeThread(const QHash<int, QVector3D> &dis, QVector3D explodeDis)
 	{
 		if (_oneFrameData == nullptr)
 		{
@@ -1164,7 +1164,7 @@ namespace MPostRend
 			QVector<int> nodes = s->getNodeIndex();
 			for (int j = 0; j < nodes.size(); j++)
 			{
-				aabb.push(_oneFrameData->getNodeDataByID(nodes[j])->getNodeVertex() + dis.value(nodes.at(j)) * deformationScale);			
+				aabb.push(_oneFrameData->getNodeDataByID(nodes[j])->getNodeVertex() + dis.value(nodes.at(j)) * deformationScale + explodeDis);
 			}
 		}
 		QVector<mPostMeshData1*> meshDatas = _partData->getMeshDatas2() + _partData->getMeshDatas1() + _partData->getMeshDatas0();
@@ -1173,7 +1173,7 @@ namespace MPostRend
 			QVector<int> nodes = s->getNodeIndex();
 			for (int j = 0; j < nodes.size(); j++)
 			{
-				aabb.push(_oneFrameData->getNodeDataByID(nodes[j])->getNodeVertex() + dis.value(nodes.at(j)) * deformationScale);			
+				aabb.push(_oneFrameData->getNodeDataByID(nodes[j])->getNodeVertex() + dis.value(nodes.at(j)) * deformationScale + explodeDis);
 			}
 		}
 		if (_spaceTree != nullptr)
@@ -1191,7 +1191,7 @@ namespace MPostRend
 			Space::AABB aabb1;
 			for (int i = 0; i < nodes.size(); i++)
 			{
-				aabb1.push(_oneFrameData->getNodeDataByID(nodes[i])->getNodeVertex() + dis.value(nodes.at(i)) * deformationScale);			
+				aabb1.push(_oneFrameData->getNodeDataByID(nodes[i])->getNodeVertex() + dis.value(nodes.at(i)) * deformationScale + explodeDis);
 			}
 			Space::addMeshAABBToSpace(_spaceTree, item, _oneFrameData, aabb1);
 			//Space::addMeshToSpace(partData->spaceTree, fd->getMeshDataByID(item), fd);

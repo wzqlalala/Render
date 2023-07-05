@@ -1600,6 +1600,18 @@ namespace MPostRend
 		}
 	}
 
+	void mPostRender::clearExplodedGraph()
+	{
+		if (_oneFrameRender)
+		{
+			_oneFrameRender->clearExplodedGraph();
+		}
+		for (auto render : _animationRender)
+		{
+			render->clearExplodedGraph();
+		}
+	}
+
 	mPostRender::~mPostRender()
 	{
 		this->makeCurrent();

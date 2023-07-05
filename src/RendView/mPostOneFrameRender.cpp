@@ -502,6 +502,13 @@ namespace MPostRend
 			_modelRender->createExplodedGraphByModelCenter(partNames, factor);
 		}
 	}
+	void MPostRend::mPostOneFrameRender::clearExplodedGraph()
+	{
+		if (_modelRender)
+		{
+			_modelRender->clearExplodedGraph();
+		}
+	}
 	QPair<QVector<QVector3D>, QVector<QVector3D>> mPostOneFrameRender::getPickingNodeData(std::set<int> nodeIds)
 	{
 		if (_oneFrameData == nullptr)
