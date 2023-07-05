@@ -218,7 +218,8 @@ namespace MPreRend
 		_meshPickData = new mPreMeshPickData1();
 		_meshPickThread = new mPreMeshPickThread(_meshPickData);
 		_meshPickThread->setPickFilter(_baseRend->getPickFilter());
-		_meshHighLightRender = make_shared<mPreMeshHighLightRender>(_parent, _rendStatus, _meshPickData);
+		_meshHighLightRender = make_shared<mPreMeshHighLightRender>(_app, preRend->getAfterParent(), _rendStatus, _meshPickData);
+		preRend->addAfterRender(_meshHighLightRender);
 
 		//this->doneCurrent();
 	}

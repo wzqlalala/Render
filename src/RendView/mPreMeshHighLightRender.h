@@ -12,6 +12,8 @@
 
 #include "mGroupRender.h"
 
+#include "mBaseRender.h"
+
 namespace mxr
 {
 	class Shader;
@@ -33,6 +35,10 @@ namespace MDataPre
 {
 	class mPreMeshPickData1;
 }
+namespace MBaseRend
+{
+	class mBaseRender;
+}
 using namespace MDataPre;
 using namespace MViewBasic;
 using namespace MBaseRend;
@@ -40,11 +46,11 @@ using namespace std;
 namespace MPreRend
 {
 	class mPreRendStatus;
-	class RENDVIEW_EXPORT mPreMeshHighLightRender
+	class RENDVIEW_EXPORT mPreMeshHighLightRender: public mBaseRender
 	{
 	public:
 
-		mPreMeshHighLightRender(shared_ptr<mxr::Group> parent, shared_ptr<mPreRendStatus> rendStatus, mPreMeshPickData1 *meshPickData);
+		mPreMeshHighLightRender(std::shared_ptr<mxr::Application> app, shared_ptr<mxr::Group> parent, shared_ptr<mPreRendStatus> rendStatus, mPreMeshPickData1 *meshPickData);
 
 		~mPreMeshHighLightRender();
 
@@ -61,8 +67,6 @@ namespace MPreRend
 
 		void initial();
 	private:
-		shared_ptr<mxr::Group> _parent;//父节点
-
 		std::shared_ptr<mxr::Geode> _geode;//当前总节点
 
 		std::shared_ptr<mPreRendStatus> _rendStatus;

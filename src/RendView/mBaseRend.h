@@ -121,6 +121,8 @@ namespace MBaseRend
 
 		void removeAfterRender(shared_ptr<mBaseRender> baseRender);
 
+		std::shared_ptr<mxr::Group> getAfterParent();
+
 		void clearRender();
 
 		void clearCameraKeys();

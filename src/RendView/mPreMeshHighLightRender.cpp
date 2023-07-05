@@ -26,9 +26,9 @@ using namespace mxr;
 using namespace std;
 namespace MPreRend
 {
-	mPreMeshHighLightRender::mPreMeshHighLightRender(shared_ptr<mxr::Group> parent, shared_ptr<mPreRendStatus> rendStatus, mPreMeshPickData1 *meshPickData):_rendStatus(rendStatus), _meshPickData(meshPickData)
+	mPreMeshHighLightRender::mPreMeshHighLightRender(std::shared_ptr<mxr::Application> app, shared_ptr<mxr::Group> parent, shared_ptr<mPreRendStatus> rendStatus, mPreMeshPickData1 *meshPickData):
+		mBaseRender(app, parent, nullptr), _rendStatus(rendStatus), _meshPickData(meshPickData)
 	{
-		_parent = parent;
 		_geode = MakeAsset<Geode>();
 		_parent->addChild(_geode);
 		//_viewer = nullptr;
@@ -410,13 +410,13 @@ namespace MPreRend
 		_facelineStateSet->setDrawMode(GL_TRIANGLES);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 0);
 		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(PolygonMode::FRONT_AND_BACK, PolygonMode::LINE), 1);
-		_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetFill>(-1, -1), 1);
-		_facelineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
+		//_facelineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetLine>(-1, -1), 1);
+		//_facelineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 0);
 
 		_facelineStateSet->setUniform(MakeAsset<Uniform>("model", QMatrix4x4()));
 		_facelineStateSet->setUniform(MakeAsset<Uniform>("view", QMatrix4x4()));
 		_facelineStateSet->setUniform(MakeAsset<Uniform>("projection", QMatrix4x4()));
-		_facelineStateSet->setUniform(MakeAsset<Uniform>("showColor", QVector4D(1, 1, 1, 0.8)));
+		_facelineStateSet->setUniform(MakeAsset<Uniform>("showColor", QVector4D(1, 1, 1, 1.0)));
 
 		//edgeline
 		_lineStateSet = MakeAsset<StateSet>();
@@ -426,10 +426,10 @@ namespace MPreRend
 		_lineStateSet->setAttributeAndModes(MakeAsset<Depth>(), 0);
 		_lineStateSet->setAttributeAndModes(MakeAsset<PolygonOffsetFill>(-1, -1), 1);
 		_lineStateSet->setAttributeAndModes(MakeAsset<PolygonMode>(mxr::PolygonMode::FRONT_AND_BACK, mxr::PolygonMode::FILL), 1);
-		_lineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
+		//_lineStateSet->setAttributeAndModes(MakeAsset<BlendFunc>(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), 1);
 
 		_lineStateSet->setUniform(MakeAsset<Uniform>("pvm", QMatrix4x4()));
-		_lineStateSet->setUniform(MakeAsset<Uniform>("showColor", QVector4D(1,1,1,0.8)));
+		_lineStateSet->setUniform(MakeAsset<Uniform>("showColor", QVector4D(1,1,1,1.0)));
 		_lineStateSet->setUniform(MakeAsset<Uniform>("lineWidth", 3.0f));
 
 		_pointStateSet = MakeAsset<StateSet>();

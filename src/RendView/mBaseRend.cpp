@@ -294,6 +294,10 @@ namespace MBaseRend
 		_afterRenderArray.removeOne(baseRender);
 		baseRender.reset();
 	}
+	std::shared_ptr<mxr::Group> mBaseRend::getAfterParent()
+	{
+		return _afterroot;
+	}
 	void mBaseRend::clearRender()
 	{
 		for (auto baseRender : _beforeRenderArray)
