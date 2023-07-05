@@ -6,6 +6,7 @@ layout (location = 1) in vec3 aMaterial;
 layout (location = 2) in float aIsColor;
 layout (location = 3) in float aValue;
 layout (location = 4) in vec3 aDisplacement;
+layout (location = 5) in vec3 aExplodeDis;
 
 uniform vec3 deformationScale;
 
@@ -16,7 +17,7 @@ out VS_OUT
 
 void main()
 {
-	vs_out.deformationPos = aPos + deformationScale * aDisplacement;
+	vs_out.deformationPos = aPos + deformationScale * aDisplacement + aExplodeDis;
 }
 #endif
 

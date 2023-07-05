@@ -1564,6 +1564,42 @@ namespace MPostRend
 		}
 	}
 
+	void mPostRender::createExplodedGraph()
+	{
+		if (_oneFrameRender)
+		{
+			_oneFrameRender->createExplodedGraph();
+		}
+		for (auto render : _animationRender)
+		{
+			render->createExplodedGraph();
+		}
+	}
+
+	void mPostRender::createExplodedGraphByTransplatePart(set<QString> partNames, QVector3D dis)
+	{
+		if (_oneFrameRender)
+		{
+			_oneFrameRender->createExplodedGraphByTransplatePart(partNames, dis);
+		}
+		for (auto render : _animationRender)
+		{
+			render->createExplodedGraphByTransplatePart(partNames, dis);
+		}
+	}
+
+	void mPostRender::createExplodedGraphByModelCenter(set<QString> partNames, QVector3D factor)
+	{
+		if (_oneFrameRender)
+		{
+			_oneFrameRender->createExplodedGraphByModelCenter(partNames, factor);
+		}
+		for (auto render : _animationRender)
+		{
+			render->createExplodedGraphByModelCenter(partNames, factor);
+		}
+	}
+
 	mPostRender::~mPostRender()
 	{
 		this->makeCurrent();

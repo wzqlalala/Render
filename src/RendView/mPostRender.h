@@ -278,6 +278,17 @@ namespace MPostRend
 		//计算最小最大值的线条位置（在模型发生变化时，切换帧或者变形系数时）
 		void calculateMinMaxLinePosition();
 
+		/**************************爆炸图(在云图基础上)*********************************************/
+
+		//自动生成爆炸图
+		void createExplodedGraph();
+
+		//生成爆炸图(通过位移)
+		void createExplodedGraphByTransplatePart(set<QString> partNames, QVector3D dis);
+
+		//沿着模型中心生成爆炸图
+		void createExplodedGraphByModelCenter(set<QString> partNames, QVector3D factor);
+
 		~mPostRender();
 
 		void updateUniform(shared_ptr<mViewBase> modelView, shared_ptr<mViewBase> commonView) override;

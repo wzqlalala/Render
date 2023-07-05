@@ -440,7 +440,9 @@ namespace MPostRend
 		{
 			if (partrend->getPartSpaceTree())
 			{
-				aabb.push(partrend->getPartSpaceTree()->space);
+				Space::AABB aabb1 = partrend->getPartSpaceTree()->space;
+
+				aabb.push(Space::AABB::move(partrend->getPartSpaceTree()->space,_oneFrameRendData->getPartExplodeDis(partrend->getpartData()->getPartName())));
 			}
 		}
 		return aabb;
@@ -448,5 +450,141 @@ namespace MPostRend
 	Space::SpaceTree *mPostModelRender::getPartSpaceTree(QString partName)
 	{
 		return _partRenders.value(partName)->getPartSpaceTree();
+	}
+	void mPostModelRender::createExplodedGraph()
+	{
+		QVector<shared_ptr<mPostPartRender>> renders;
+		shared_ptr<mPostPartRender> baseLinePartRender = nullptr;
+		//根据面积最大的找到模型基准部件
+		for (auto partRender : _partRenders)
+		{
+			if (baseLinePartRender == nullptr)
+			{
+				baseLinePartRender = partRender;
+			}
+			else if (partRender->getPartSpaceTree()->space.getSurfaceArea() > baseLinePartRender->getPartSpaceTree()->space.getSurfaceArea())
+			{
+				renders.append(baseLinePartRender);
+				baseLinePartRender = partRender;
+				renders.removeOne(partRender);
+			}
+			else
+			{
+				renders.append(partRender);
+			}
+		}
+
+		Space::AABB aabb = baseLinePartRender->getPartSpaceTree()->space;
+		QVector3D modelCenter = (aabb.maxEdge + aabb.minEdge) / 2.0;
+
+		//根据距离模型的距离顺序进行从小到大排序
+		sort(renders.begin(), renders.end(), [baseLinePartRender, modelCenter](std::shared_ptr<mPostPartRender> a, std::shared_ptr<mPostPartRender> b) {
+			QVector3D center = a->getPartSpaceTree()->space.getCenter();
+			float distance = modelCenter.distanceToPoint(center);
+			QVector3D center1 = b->getPartSpaceTree()->space.getCenter();
+			float distance1 = modelCenter.distanceToPoint(center1);
+
+			return distance < distance1;
+		});
+		renders.prepend(baseLinePartRender);
+		//与基准部件有交叉干涉的都往某方向偏移
+		for (int i = 1; i < renders.size(); ++i)
+		{
+			auto partRender = renders.at(i);			
+			QString partName = partRender->getpartData()->getPartName();
+			Space::AABB aabb1 = this->getPartSpaceTree(partName)->space;
+
+			//QVector3D center1_2 = (aabb1.maxEdge + aabb1.minEdge) / 2.0 - (aabb.maxEdge + aabb.minEdge) / 2.0;
+			//center1_2 = QVector3D(abs(center1_2.x()), abs(center1_2.y()), abs(center1_2.z()));
+
+			for (int j = i - 1; j < i; j++)
+			{
+				auto baseLine = renders.at(j);
+				QString partName1 = baseLine->getpartData()->getPartName();
+				Space::AABB baseLineaabb = baseLine->getPartSpaceTree()->space;
+				baseLineaabb.move(_oneFrameRendData->getPartExplodeDis(partName1));
+
+				aabb.push(baseLineaabb);
+				if (aabb1.IsIntersect(aabb))
+				{
+					QVector3D center1_2 = (aabb.maxEdge + aabb.minEdge) / 2.0 - (aabb1.maxEdge + aabb1.minEdge) / 2.0;
+					center1_2 = QVector3D(abs(center1_2.x()), abs(center1_2.y()), abs(center1_2.z()));
+
+					float x = min(abs(aabb1.minEdge.x() - aabb.maxEdge.x()), abs(aabb1.maxEdge.x() - aabb.minEdge.x()));
+					float y = min(abs(aabb1.minEdge.y() - aabb.maxEdge.y()), abs(aabb1.maxEdge.y() - aabb.minEdge.y()));
+					float z = min(abs(aabb1.minEdge.z() - aabb.maxEdge.z()), abs(aabb1.maxEdge.z() - aabb.minEdge.z()));
+					QVector3D dir(0,0,0);
+					if (x <= y && x <= z)//x方向最小
+					{
+						float x1 = aabb1.minEdge.x() - aabb.maxEdge.x();
+						float x2 = aabb1.maxEdge.x() - aabb.minEdge.x();
+						if (abs(x1) < abs(x2))//
+						{
+							dir.setX(-x1);
+						}
+						else
+						{
+							dir.setX(-x2);
+						}				
+					}
+					else if (y <= z)//y方向最小
+					{
+						float y1 = aabb1.minEdge.y() - aabb.maxEdge.y();
+						float y2 = aabb1.maxEdge.y() - aabb.minEdge.y();
+						if (abs(y1) < abs(y2))//
+						{
+							dir.setY(-y1);
+						}
+						else
+						{
+							dir.setY(-y2);
+						}
+					}
+					else
+					{
+						float z1 = aabb1.minEdge.z() - aabb.maxEdge.z();
+						float z2 = aabb1.maxEdge.z() - aabb.minEdge.z();
+						if (abs(z1) < abs(z2))//
+						{
+							dir.setZ(-z1);
+						}
+						else
+						{
+							dir.setZ(-z2);
+						}
+					}
+					//float factor = (min(min(x, y), z));
+
+					//QVector3D partCenter = (aabb1.maxEdge + aabb1.minEdge) / 2.0;
+					//QVector3D dir = partCenter - modelCenter;
+					//QVector3D res = dir * factor;
+					_oneFrameRendData->setPartExplodeDis(partName, dir);
+					_partRenders[partName]->UpdatePartExplodeDis(dir);
+				}
+			}
+		}
+	}
+	void mPostModelRender::createExplodedGraphByTransplatePart(set<QString> partNames, QVector3D dis)
+	{
+		for (auto partName : partNames)
+		{
+			QVector3D res = _oneFrameRendData->getPartExplodeDis(partName) + dis;
+			_oneFrameRendData->setPartExplodeDis(partName, res);
+			_partRenders[partName]->UpdatePartExplodeDis(res);
+		}
+	}
+	void mPostModelRender::createExplodedGraphByModelCenter(set<QString> partNames, QVector3D factor)
+	{
+		Space::AABB aabb = this->getModelAABB();
+		QVector3D modelCenter = (aabb.maxEdge + aabb.minEdge) / 2.0;
+		for (auto partName : partNames)
+		{
+			Space::AABB aabb1 = this->getPartSpaceTree(partName)->space;
+			QVector3D partCenter = (aabb1.maxEdge + aabb1.minEdge) / 2.0;
+			QVector3D dir = partCenter - modelCenter;
+			QVector3D res = _oneFrameRendData->getPartExplodeDis(partName) + dir * factor;
+			_oneFrameRendData->setPartExplodeDis(partName, res);
+			_partRenders[partName]->UpdatePartExplodeDis(res);
+		}
 	}
 }

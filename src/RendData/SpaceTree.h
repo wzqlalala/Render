@@ -39,9 +39,15 @@ namespace Space
 		void push(QVector<QVector3D> p1);
 		bool empty();
 		bool intersects(QVector3D origin, QVector3D dir, QVector3D &ptOnPlane);
-		bool isContain(AABB aabb);
-		bool IsIntersect(AABB aabb);
-		float getLongestEdge();
+		bool isContain(AABB aabb);//包围盒是否包含
+		bool IsIntersect(AABB aabb);//包围盒是否相交
+		float getLongestEdge();//获取包围盒最长的边
+		void move(QVector3D dir); //将包围盒往一个方向移动
+		static AABB move(AABB aabb, QVector3D dir);//获取包围盒往一个方向移动后的包围盒
+		float getSurfaceArea();//获取包围盒的表面积
+		float getIntersectMinAbsFactor(AABB aabb);//获取和另一个包围盒最小的相交比例（x，y，z）
+		QVector3D getIntersectAbsFactor(AABB aabb);
+		QVector3D getCenter();
 	};
 
 

@@ -191,6 +191,7 @@ namespace MPostRend
 
 		void ImportPart(QVector3D deformationScale, QHash<int, float> &values, QHash<int, QVector3D> &dis, MViewBasic::NodeOrElement type);
 		void UpdatePartVariableValue(QHash<int, float> &values, MViewBasic::NodeOrElement type);
+		void UpdatePartExplodeDis(QVector3D explodeDis);
 
 		void setShowFuntion(ShowFuntion showFuntion);
 		void setIsShowInitialShape(bool isShowInitialShape);//设置是否显示初始构型的透明图形
@@ -215,12 +216,12 @@ namespace MPostRend
 		shared_ptr<mxr::Group> _parent;//父节点
 		std::shared_ptr<mxr::Geode> _geode;//当前总节点
 
-		std::shared_ptr<mGroupRender5<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array>>  _facerend;//面
-		std::shared_ptr<mGroupRender1<Vec3Array>> _facetransparentnodeformationrend;//变形前透明的面
-		std::shared_ptr<mGroupRender2<Vec3Array, Vec3Array>>  _edgelinerend;//边界线
-		std::shared_ptr<mGroupRender4<Vec3Array, Vec3Array, FloatArray, FloatArray>>  _facelinerend;//面线
-		std::shared_ptr<mGroupRender5<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array>>  _linerend;//线
-		std::shared_ptr<mGroupRender5<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array>>  _pointrend;//点
+		std::shared_ptr<mGroupRender6<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array, Vec3Array>>  _facerend;//面
+		std::shared_ptr<mGroupRender2<Vec3Array, Vec3Array>> _facetransparentnodeformationrend;//变形前透明的面
+		std::shared_ptr<mGroupRender3<Vec3Array, Vec3Array, Vec3Array>>  _edgelinerend;//边界线
+		std::shared_ptr<mGroupRender5<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array>>  _facelinerend;//面线
+		std::shared_ptr<mGroupRender6<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array, Vec3Array>>  _linerend;//线
+		std::shared_ptr<mGroupRender6<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array, Vec3Array>>  _pointrend;//点
 
 		QVector3D deformationScale;
 		MDataPost::mOneFrameData1 *_oneFrameData;

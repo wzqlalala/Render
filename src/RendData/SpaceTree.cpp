@@ -292,6 +292,56 @@ namespace Space
 		return max(maxEdge.x() - minEdge.x(), max(maxEdge.y() - minEdge.y(), maxEdge.z() - minEdge.z()));
 	}
 
+	void AABB::move(QVector3D dir)
+	{
+		maxEdge += dir;
+		minEdge += dir;
+	}
+
+	AABB AABB::move(AABB aabb, QVector3D dir)
+	{
+		return AABB(aabb.maxEdge + dir, aabb.minEdge + dir);
+	}
+
+	float AABB::getSurfaceArea()
+	{
+		return (abs((maxEdge.x() - minEdge.x()) * (maxEdge.y() - minEdge.y()))
+		+ abs((maxEdge.x() - minEdge.x()) * (maxEdge.y() - minEdge.y()))
+		+ abs((maxEdge.x() - minEdge.x()) * (maxEdge.z() - minEdge.z()))) * 2;
+
+	}
+
+	float AABB::getIntersectMinAbsFactor(AABB aabb)
+	{
+		if (!IsIntersect(aabb))
+		{
+			return FLT_MAX;
+		}
+		QVector3D center1_2 = (aabb.maxEdge + aabb.minEdge) / 2.0 - (maxEdge + minEdge) / 2.0;
+		center1_2 = QVector3D(abs(center1_2.x()), abs(center1_2.y()), abs(center1_2.z()));
+
+		float x = min(abs(minEdge.x() - aabb.maxEdge.x()), abs(maxEdge.x() - aabb.minEdge.x())) / center1_2.x();
+		float y = min(abs(minEdge.y() - aabb.maxEdge.y()), abs(maxEdge.y() - aabb.minEdge.y())) / center1_2.y();
+		float z = min(abs(minEdge.z() - aabb.maxEdge.z()), abs(maxEdge.z() - aabb.minEdge.z())) / center1_2.z();
+		return (min(min(x, y), z));
+	}
+
+	QVector3D AABB::getIntersectAbsFactor(AABB aabb)
+	{
+		QVector3D center1_2 = (aabb.maxEdge + aabb.minEdge) / 2.0 - (maxEdge + minEdge) / 2.0;
+		center1_2 = QVector3D(abs(center1_2.x()), abs(center1_2.y()), abs(center1_2.z()));
+
+		float x = abs(minEdge.x() - aabb.maxEdge.x()) / center1_2.x();
+		float y = abs(minEdge.y() - aabb.maxEdge.y()) / center1_2.y();
+		float z = abs(minEdge.z() - aabb.maxEdge.z()) / center1_2.z();
+		return QVector3D(x, y, z);
+	}
+
+	QVector3D AABB::getCenter()
+	{
+		return (maxEdge + minEdge) / 2.0;
+	}
+
 	SpaceTree::SpaceTree(AABB aabb)
 	{
 		space = aabb;

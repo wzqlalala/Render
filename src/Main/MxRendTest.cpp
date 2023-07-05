@@ -157,6 +157,78 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			_postRender->createContourGraph();
 			break;
 		}
+		case Qt::Key_F5:
+		{
+			if (_postRender == nullptr)
+			{
+				return;
+			}
+			//_postRender->createExplodedGraphByTransplatePart(set<QString>{"686_doorfrontsupport3"}, _explodeDis);
+			set<QString> names = _postRender->getOneFrameRender()->getOneFrameData()->getAllPartNames();
+			if (names.size() == 0)
+			{
+				return;
+			}
+			_postRender->createExplodedGraphByModelCenter(names, _explodeDis);
+			_postRend->slotUpdateOrthoAndCamera();
+			//_explodeDis += QVector3D(0, 2, 0);
+			break;
+		}
+		case Qt::Key_F6:
+		{
+			if (_postRender == nullptr)
+			{
+				return;
+			}
+			_postRender->createExplodedGraph();
+			_postRend->slotUpdateOrthoAndCamera();
+			break;
+		}
+		case Qt::Key_F7:
+		{
+			if (_postRender == nullptr)
+			{
+				return;
+			}
+			set<QString> names = _postRender->getOneFrameRender()->getOneFrameData()->getAllPartNames();
+			if (names.size() == 0)
+			{
+				return;
+			}
+			_postRender->createExplodedGraphByTransplatePart(set<QString>{*names.begin()}, _explodeDis);
+			_postRend->slotUpdateOrthoAndCamera();
+			break;
+		}
+		case Qt::Key_F8:
+		{
+			if (_postRend == nullptr)
+			{
+				return;
+			}
+			QString filename = QFileDialog::getOpenFileName(this, "选择mp4文件", qApp->applicationDirPath(), "*.mp4");
+			QFileInfo info(filename);
+			_postRend->getVideoRender()->initialVideo(filename);
+			break;
+		}
+		case Qt::Key_F9:
+		{
+			if (_postRend == nullptr)
+			{
+				return;
+			}
+			_postRend->getVideoRender()->start();
+			break;
+		}
+		case Qt::Key_F10:
+		{
+			if (_postRend == nullptr)
+			{
+				return;
+			}
+			_postRend->getVideoRender()->setIsShow(_isShowVideo);
+			_isShowVideo = !_isShowVideo;
+			break;
+		}
 		case Qt::Key_9:
 		{
 			if (_postRender == nullptr)
@@ -175,36 +247,6 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			}
 			_isShowMax = !_isShowMax;
 			_postRender->setMaxIsShow(_isShowMax);
-			break;
-		}
-		case Qt::Key_F5:
-		{
-			if (_postRend == nullptr)
-			{
-				return;
-			}
-			QString filename = QFileDialog::getOpenFileName(this, "选择mp4文件", qApp->applicationDirPath(), "*.mp4");
-			QFileInfo info(filename);
-			_postRend->getVideoRender()->initialVideo(filename);
-			break;
-		}
-		case Qt::Key_F6:
-		{
-			if (_postRend == nullptr)
-			{
-				return;
-			}
-			_postRend->getVideoRender()->start();
-			break;
-		}
-		case Qt::Key_F7:
-		{
-			if (_postRend == nullptr)
-			{
-				return;
-			}
-			_postRend->getVideoRender()->setIsShow(_isShowVideo);
-			_isShowVideo = !_isShowVideo;
 			break;
 		}
 		case Qt::Key_Tab:

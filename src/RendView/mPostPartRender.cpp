@@ -40,12 +40,12 @@ namespace MPostRend
 		_geode = MakeAsset<Geode>();
 		_parent->addChild(_geode);
 
-		_facerend = MakeAsset<mGroupRender5<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array>>(_geode);
-		_facetransparentnodeformationrend = MakeAsset<mGroupRender1<Vec3Array>>(_geode);
-		_edgelinerend = MakeAsset<mGroupRender2<Vec3Array, Vec3Array>>(_geode);
-		_facelinerend = MakeAsset<mGroupRender4<Vec3Array, Vec3Array, FloatArray, FloatArray>>(_geode);
-		_linerend = MakeAsset<mGroupRender5<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array>>(_geode);
-		_pointrend = MakeAsset<mGroupRender5<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array>>(_geode);
+		_facerend = MakeAsset<mGroupRender6<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array, Vec3Array>>(_geode);
+		_facetransparentnodeformationrend = MakeAsset<mGroupRender2<Vec3Array, Vec3Array>>(_geode);
+		_edgelinerend = MakeAsset<mGroupRender3<Vec3Array, Vec3Array, Vec3Array>>(_geode);
+		_facelinerend = MakeAsset<mGroupRender5<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array>>(_geode);
+		_linerend = MakeAsset<mGroupRender6<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array, Vec3Array>>(_geode);
+		_pointrend = MakeAsset<mGroupRender6<Vec3Array, Vec3Array, FloatArray, FloatArray, Vec3Array, Vec3Array>>(_geode);
 	}
 
 	mPostPartRender::~mPostPartRender()
@@ -162,6 +162,13 @@ namespace MPostRend
 
 		//qDebug() << "±ß½çÏß" << meshLineIDs.size();
 
+		_facerend->getDrawable()->setVertexAttribArray(5, MakeAsset<Vec3Array>(QVector<QVector3D>(_facerend->_vertex0->size() / 3.0, QVector3D(0, 0, 0))));
+		_facetransparentnodeformationrend->getDrawable()->setVertexAttribArray(1, MakeAsset<Vec3Array>(QVector<QVector3D>(_facerend->_vertex0->size() / 3.0, QVector3D(0, 0, 0))));
+		_edgelinerend->getDrawable()->setVertexAttribArray(2, MakeAsset<Vec3Array>(QVector<QVector3D>(_edgelinerend->_vertex0->size() / 3.0, QVector3D(0, 0, 0))));
+		_facelinerend->getDrawable()->setVertexAttribArray(4, MakeAsset<Vec3Array>(QVector<QVector3D>(_facerend->_vertex0->size() / 3.0, QVector3D(0, 0, 0))));
+		_linerend->getDrawable()->setVertexAttribArray(5, MakeAsset<Vec3Array>(QVector<QVector3D>(_linerend->_vertex0->size() / 3.0, QVector3D(0, 0, 0))));
+		_pointrend->getDrawable()->setVertexAttribArray(5, MakeAsset<Vec3Array>(QVector<QVector3D>(_pointrend->_vertex0->size() / 3.0, QVector3D(0, 0, 0))));
+
 		_facetransparentnodeformationrend->getDrawable()->setVertexAttribArray(0, _facerend->_vertex0);
 		//_facetransparentnodeformationrend->getDrawable()->setVertexAttribArray(1, _facerend->_vertex6);
 
@@ -208,9 +215,24 @@ namespace MPostRend
 		{
 			GetVariableValue_Mesh3(faceValue, faceHasValue, meshFaces[i], values, type);
 		}
-		_facerend->getDrawable()->getVertexAttribArray(3)->updata(0, faceValue.size() * sizeof(float), faceValue.data());
-		_facelinerend->getDrawable()->getVertexAttribArray(2)->updata(0, faceValue.size() * sizeof(float), faceValue.data());
-		//_facerend->getDrawable()->getVertexAttribArray(6)->updata(0, faceHasValue.size() * sizeof(float), faceHasValue.data());
+		_facerend->getDrawable()->getVertexAttribArray(3)->updata(faceValue.data());
+		_facelinerend->getDrawable()->getVertexAttribArray(2)->updata(faceValue.data());
+	}
+
+	void mPostPartRender::UpdatePartExplodeDis(QVector3D explodeDis)
+	{
+		Array *array =this->getFaceDrawable()->getVertexAttribArray(5);
+		array->updata(QVector<QVector3D>(array->size() / 3, explodeDis).data());
+		array = _facetransparentnodeformationrend->getDrawable()->getVertexAttribArray(1);
+		array->updata(QVector<QVector3D>(array->size() / 3, explodeDis).data());
+		array = _edgelinerend->getDrawable()->getVertexAttribArray(2);
+		array->updata(QVector<QVector3D>(array->size() / 3, explodeDis).data());
+		array = _facelinerend->getDrawable()->getVertexAttribArray(4);
+		array->updata(QVector<QVector3D>(array->size() / 3, explodeDis).data());
+		array = _linerend->getDrawable()->getVertexAttribArray(5);
+		array->updata(QVector<QVector3D>(array->size() / 3, explodeDis).data());
+		array = _pointrend->getDrawable()->getVertexAttribArray(5);
+		array->updata(QVector<QVector3D>(array->size() / 3, explodeDis).data());
 	}
 
 	void mPostPartRender::setShowFuntion(ShowFuntion showFuntion)

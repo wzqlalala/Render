@@ -86,9 +86,14 @@ namespace MPostRend
 
 		Space::SpaceTree *getPartSpaceTree(QString partName);
 
-		//void append
+		//自动生成爆炸图
+		void createExplodedGraph();
 
-		//void updateOneModelOperate(QPair<MViewBasic::PostModelOperateEnum, std::set<QString>> postModelOperates);
+		//生成爆炸图(通过位移)
+		void createExplodedGraphByTransplatePart(set<QString> partNames, QVector3D dis);
+
+		//沿着模型中心生成爆炸图
+		void createExplodedGraphByModelCenter(set<QString> partNames, QVector3D factor);
 
 	private:
 		shared_ptr<mxr::Group> _parent;//父节点

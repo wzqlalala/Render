@@ -135,6 +135,9 @@ private:
 	//视频
 	bool _isShowVideo = false;
 
+	//爆炸图的位移值
+	QVector3D _explodeDis = QVector3D(1, 1, 1);
+
 	//最小最大值显隐
 	bool _isShowMin = false;
 	bool _isShowMax = false;
