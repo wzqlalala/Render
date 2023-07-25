@@ -1,6 +1,43 @@
 #pragma once
 namespace MDataLable
 {
+	/*
+	* 分析模块
+	*/
+	enum AnalysisModule
+	{
+		//隐式
+		ImplicitAnalysis,
+
+		//显式
+		ExplicitAnalysis,
+
+		//电磁
+		MagnetAnalysis,
+
+		//多物理场分析
+		MultiPhysicAnalysis,
+
+		//多物理场分析-子场
+		MultiPhysicAnalysisChild,
+
+		//可压流体传热
+		FluidCompressibleAnalysis,
+
+		//不可压流体传热
+		FluidIncompressibleAnalysis,
+
+		//压电分析模板
+		PiezoelectricAnalysis,
+
+		//未知模块
+		UnknownAnalysis,
+
+		//通用模块zdh加
+		Common,
+
+	};
+
 	//图标操作类型 （载荷、边界、连接等）
 	enum  LableOperateType
 	{

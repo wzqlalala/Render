@@ -109,9 +109,9 @@ namespace MPreRend
 
 			_partRenders.insert(partName, part);
 		}
-		updateModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>>(HideOnePart, hidePartNames));
+		updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(HideOnePart, hidePartNames));
 	}
-	bool mPreGeoModelRender::updateModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>> postModelOperates)
+	bool mPreGeoModelRender::updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>> postModelOperates)
 	{
 		ModelOperateEnum postModelOperate = postModelOperates.first;
 		set<QString> partNames = postModelOperates.second;
@@ -202,19 +202,19 @@ namespace MPreRend
 			}
 			else if (postModelOperate == HideAllPart)
 			{
-				updateModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>>(HideOnePart, partnames));
+				updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(HideOnePart, partnames));
 			}
 			else if (postModelOperate == ShowAllPart)
 			{
-				updateModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>>(ShowOnePart, partnames));
+				updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(ShowOnePart, partnames));
 			}
 			else if (postModelOperate == ColorAllPart)
 			{
-				updateModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>>(ColorOnePart, partnames));
+				updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(ColorOnePart, partnames));
 			}
 			else if (postModelOperate == DeleteAllPart)
 			{
-				updateModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>>(DeleteOnePart, partnames));
+				updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(DeleteOnePart, partnames));
 			}
 		}
 		return false;

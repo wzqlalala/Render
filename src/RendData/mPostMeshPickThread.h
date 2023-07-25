@@ -14,10 +14,10 @@
 #include "SpaceTree.h"
 
 #include "mMeshViewEnum.h"
-#include "mBasicEnum.h"
+
 
 using namespace MViewBasic;
-using namespace MxFunctions;
+using namespace MViewBasic;
 namespace MDataPost
 {
 	class mOneFrameData1;
@@ -56,7 +56,7 @@ namespace MDataPost
 	protected:
 		QMatrix4x4 _pvm;
 		int _width, _height;
-		MxFunctions::MultiplyPickMode _multiplyPickMode;
+		MViewBasic::MultiplyPickMode _multiplyPickMode;
 
 	};
 
@@ -336,7 +336,7 @@ namespace MDataPost
 		MViewBasic::PickMode _pickMode;
 
 		//框选拾取模式
-		MxFunctions::MultiplyPickMode _multiplyPickMode;
+		MViewBasic::MultiplyPickMode _multiplyPickMode;
 
 		//拾取的单元类型过滤器
 		std::set<int> _pickElementTypeFilter;

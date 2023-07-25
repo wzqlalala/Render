@@ -5,7 +5,7 @@ endif()
 set(MxSim_Qwt_ALREADY_INCLUDED 1)
 
 #设置路径
-set(Qwt_Dir "${CMAKE_SOURCE_DIR}/../../ThirdLib/Qwt")
+set(Qwt_Dir "${CMAKE_SOURCE_DIR}/../Qwt")
 
 set(Qwt_INC_DIR "${Qwt_Dir}/include")
 set(Qwt_BIN_DIR "${Qwt_Dir}/bin")

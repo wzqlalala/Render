@@ -9,7 +9,7 @@ endif()
 set(FreeType_ALREADY_INCLUDED 1)
 
 #设置路径
-set(Freetype_Dir "${CMAKE_SOURCE_DIR}/../../ThirdLib/freetype_2.10.4")
+set(Freetype_Dir "${CMAKE_SOURCE_DIR}/../freetype_2.10.4")
 
 set(Freetype_INC_DIR "${Freetype_Dir}/include")
 set(Freetype_BIN_DIR "${Freetype_Dir}/bin")

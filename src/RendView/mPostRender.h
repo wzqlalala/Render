@@ -16,7 +16,7 @@
 #include "mMeshViewEnum.h"
 
 //MViewBasic
-#include "mElementFunction.h"
+
 //#include "mBasicStructor.h"
 
 #include "mPostOneFrameRender.h"
@@ -53,7 +53,7 @@ using namespace MViewBasic;
 using namespace MDataPost;
 using namespace MViewBasic;
 using namespace MBaseRend;
-using namespace MxFunctions;
+using namespace MViewBasic;
 using namespace std;
 namespace MPostRend
 {
@@ -85,7 +85,7 @@ namespace MPostRend
 		mPostMeshPickData *getMeshPickData() { return _pickData; };
 
 		//设置拾取的单元过滤器
-		void setPickElementTypeFilter(std::set<MxFunctions::ElementType> pickElementTypeFilter);
+		void setPickElementTypeFilter(std::set<MViewBasic::ElementType> pickElementTypeFilter);
 	
 		//获取当前屏幕文字渲染的数据
 		mPostFrameText* getPostFrameText();

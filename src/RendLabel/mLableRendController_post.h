@@ -11,13 +11,13 @@
 #include "mViewToolClass.h"
 #include "mLableRendBase.h"
 #include "mLableRendFont.h"
-#include "mBasicEnum.h"
+
 //#include "mGeoModelData1.h"
 //#include "mMeshModelData1.h"
 #define PI 3.1415926
 using namespace std;
 using namespace MDataLable;
-//using namespace MBasicFunction;
+//using namespace MViewBasic;
 namespace MLableRend
 {
 	class RENDLABEL_EXPORT mLableRendController_post : public QObject

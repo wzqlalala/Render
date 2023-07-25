@@ -5,8 +5,10 @@
 #include <QObject>
 #include <set>
 
-#include "mElementFunction.h"
+#include "mMeshViewEnum.h"
 
+
+using namespace MViewBasic;
 namespace MDataPost
 {
 	class mPostMeshFaceData1;
@@ -16,7 +18,7 @@ namespace MDataPost
 	public:
 		
 
-		mPostMeshData1(int ID, MxFunctions::MeshType meshType, MxFunctions::ElementType eleType, QString partName);
+		mPostMeshData1(int ID, MViewBasic::MeshType meshType, MViewBasic::ElementType eleType, QString partName);
 
 		~mPostMeshData1();
 
@@ -28,13 +30,13 @@ namespace MDataPost
 	
 
 		//获取网格的网格类型
-		MxFunctions::MeshType getMeshType();
+		MViewBasic::MeshType getMeshType();
 
 		//设置网格的单元类型
-		void setElementType(MxFunctions::ElementType eleType);
+		void setElementType(MViewBasic::ElementType eleType);
 
 		//获取网格的单元类型
-		MxFunctions::ElementType getElementType();
+		MViewBasic::ElementType getElementType();
 
 		//添加网格对应的网格面
 		void appendMeshFace(mPostMeshFaceData1* meshFace);
@@ -83,9 +85,9 @@ namespace MDataPost
 		//网格所在的部件名称
 		QString _partName;
 		//网格类型
-		MxFunctions::MeshType _meshType;
+		MViewBasic::MeshType _meshType;
 		//单元类型
-		MxFunctions::ElementType _eleType;
+		MViewBasic::ElementType _eleType;
 		//网格ID
 		int _meshID;
 		//网格是否显示

@@ -22,7 +22,7 @@
 
 namespace MBaseRend
 {
-	mBaseRend3D::mBaseRend3D(const QString& name, MxFunctions::ViewportType type): mBaseRend(name, type)
+	mBaseRend3D::mBaseRend3D(const QString& name): mBaseRend(name)
 	{
 		//qDebug() << "mBaseRend3D Struct";
 	}

@@ -31,7 +31,7 @@ namespace MViewBasic
 	class mModelView;
 	class mViewBase;
 }
-namespace MDataPre
+namespace MDataMesh
 {
 	class mPreMeshPickData1;
 }
@@ -39,7 +39,7 @@ namespace MBaseRend
 {
 	class mBaseRender;
 }
-using namespace MDataPre;
+using namespace MDataMesh;
 using namespace MViewBasic;
 using namespace MBaseRend;
 using namespace std;

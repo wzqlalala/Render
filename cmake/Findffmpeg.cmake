@@ -5,7 +5,7 @@ endif()
 set(MxSim_ffmpeg_ALREADY_INCLUDED 1)
 
 #设置路径
-set(ffmpeg_Dir "${CMAKE_SOURCE_DIR}/../../ThirdLib/ffmpeg")
+set(ffmpeg_Dir "${CMAKE_SOURCE_DIR}/../ffmpeg")
 
 set(ffmpeg_INC_DIR "${ffmpeg_Dir}/include")
 set(ffmpeg_BIN_DIR "${ffmpeg_Dir}/bin")

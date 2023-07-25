@@ -10,9 +10,6 @@
 
 //MViewBasic
 #include "mMeshViewEnum.h"
-
-//MViewBasic
-#include "mMeshViewEnum.h"
 #include "mBasicStructor.h"
 
 #include "SpaceTree.h"
@@ -38,14 +35,17 @@ namespace MDataGeo
 	class mGeoPickData1;
 	class mPreGeoPickThread;
 }
-namespace MDataPre
+namespace MDataMesh
 {
+	class mPreMeshModelRender;
 	class mPreMeshPickData1;
+	class mPreMeshPickThread;
+	class mMeshModelData;
 }
 using namespace MViewBasic;
 using namespace MBaseRend;
 using namespace MDataGeo;
-using namespace MDataPre;
+using namespace MDataMesh;
 using namespace std;
 namespace MPreRend
 {
@@ -55,7 +55,6 @@ namespace MPreRend
 	class mPreGeoHighLightRender;
 	class mPreMeshModelRender;
 	class mPreMeshHighLightRender;
-	class mPreMeshPickThread;
 	class RENDVIEW_EXPORT mPreRender :public mBaseRender
 	{
 		Q_OBJECT
@@ -84,7 +83,7 @@ namespace MPreRend
 		void updateHighLightRender();
 
 		//更新部件操作
-		void updateModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>> modelOperates);
+		void updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>> modelOperates);
 		
 		//清除全部的渲染
 		void clearRender();
@@ -130,7 +129,8 @@ namespace MPreRend
 		shared_ptr<mPreGeoHighLightRender> _geoHighLightRender;//几何高亮数据
 
 		shared_ptr<mPreMeshModelRender> _meshModelRender;//网格渲染
-		mPreMeshPickData1 *_meshPickData;//网格数据
+		shared_ptr<mMeshModelData> _meshModelData;//网格数据
+		mPreMeshPickData1 *_meshPickData;//网格拾取数据
 		mPreMeshPickThread *_meshPickThread;//网格拾取
 		shared_ptr<mPreMeshHighLightRender> _meshHighLightRender;//几何高亮数据
 

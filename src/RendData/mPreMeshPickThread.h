@@ -2,7 +2,7 @@
 //解决中文乱码
 #pragma execution_character_set("utf-8")
 
-#include "rendview_global.h"
+#include "renddata_global.h"
 
 #include <QObject>
 #include <QMatrix4x4>
@@ -14,27 +14,22 @@
 #include "SpaceTree.h"
 
 #include "mMeshViewEnum.h"
-#include "mElementFunction.h"
+
+#include <memory>
+
 
 using namespace MViewBasic;
 using namespace Space;
 using namespace std;
-using namespace MxFunctions;
-class MXGeoSolid;
-class MXGeoFace;
-class MXGeoEdge;
-class MXGeoPoint;
-class MFace;
-class MEdge;
-class MXMeshElement;
-class MXMeshVertex;
-namespace MDataPre
+namespace MDataMesh
 {
 	class mPreMeshPickData1;
-}
-using namespace MDataPre;
-namespace MPreRend
-{
+	class mMeshModelData;
+	class mMeshPartData;
+	class mMeshData;
+	class mMeshFaceData;
+	class mMeshNodeData;
+	class mMeshLineData;
 	class mBasePick
 	{
 	public:
@@ -65,7 +60,7 @@ namespace MPreRend
 	protected:
 		QMatrix4x4 _pvm;
 		int _width, _height;
-		MxFunctions::MultiplyPickMode _multiplyPickMode;
+		MViewBasic::MultiplyPickMode _multiplyPickMode;
 
 	};
 
@@ -150,7 +145,7 @@ namespace MPreRend
 		QVector3D _centerPoint; QVector3D _centerDirection; double _radius; //空间
 		QVector2D _screenCenter; double _screenRadius;//屏幕
 	};
-	class RENDVIEW_EXPORT mPreMeshPickThread : public QObject
+	class RENDDATA_EXPORT mPreMeshPickThread : public QObject
 	{
 		Q_OBJECT
 
@@ -196,6 +191,11 @@ namespace MPreRend
 		void setPickAngleValue(double angle) { _pickAngleValue = angle; };
 
 		/*
+		* 设置网格数据
+		*/
+		void setMeshModelData(std::shared_ptr<mMeshModelData> meshModelData);
+
+		/*
 		 * 设置单选位置
 		 */
 		void setLocation(const QVector2D & pos, float depth);
@@ -238,46 +238,46 @@ namespace MPreRend
 		//void SoloPickPyramid(QString partName);
 		//void SoloPickWedge(QString partName);
 		//void SoloPickHex(QString partName);
-		void SoloPickMeshTypeFilter(QString partName, QVector<MeshType> filters);
-		void SoloPickNode(QString partName);
-		void SoloPickAnyMesh(QString partName);
-		void SoloPickMeshLine(QString partName);
-		void SoloPickMeshFace(QString partName);
-		void SoloPickMeshPart(QString partName);
-		void SoloPickNodeByPart(QString partName);
-		void SoloPickAnyMeshByPart(QString partName);
-		void SoloPickMeshLineByPart(QString partName);
-		void SoloPickMeshFaceByPart(QString partName);
-		void SoloPickNodeByLine(QString partName);
-		void SoloPickMeshByLine(QString partName);
-		void SoloPickMeshLineByLine(QString partName);
-		void SoloPickNodeByFace(QString partName);
-		void SoloPickMeshByFace(QString partName);
-		void SoloPickMeshFaceByFace(QString partName);
-		void SoloPickNodeByLineAngle(QString partName);
-		void SoloPickNodeByFaceAngle(QString partName);
-		void SoloPick1DMeshByAngle(QString partName);
-		void SoloPick2DMeshByAngle(QString partName);
-		void SoloPickMeshLineByAngle(QString partName);
-		void SoloPickMeshFaceByAngle(QString partName);
+		void SoloPickMeshTypeFilter(std::shared_ptr<mMeshPartData> partData, QVector<MeshType> filters);
+		void SoloPickNode(std::shared_ptr<mMeshPartData> partData);
+		void SoloPickAnyMesh(std::shared_ptr<mMeshPartData> partData);
+		void SoloPickMeshLine(std::shared_ptr<mMeshPartData> partData);
+		void SoloPickMeshFace(std::shared_ptr<mMeshPartData> partData);
+		void SoloPickMeshPart(std::shared_ptr<mMeshPartData> partData);
+		void SoloPickNodeByPart(std::shared_ptr<mMeshPartData> partData);
+		void SoloPickAnyMeshByPart(std::shared_ptr<mMeshPartData> partData);
+		void SoloPickMeshLineByPart(std::shared_ptr<mMeshPartData> partData);
+		void SoloPickMeshFaceByPart(std::shared_ptr<mMeshPartData> partData);
+		void SoloPickNodeByLine(std::shared_ptr<mMeshPartData> partData);
+		void SoloPickMeshByLine(std::shared_ptr<mMeshPartData> partData);
+		void SoloPickMeshLineByLine(std::shared_ptr<mMeshPartData> partData);
+		void SoloPickNodeByFace(std::shared_ptr<mMeshPartData> partData);
+		void SoloPickMeshByFace(std::shared_ptr<mMeshPartData> partData);
+		void SoloPickMeshFaceByFace(std::shared_ptr<mMeshPartData> partData);
+		void SoloPickNodeByLineAngle(std::shared_ptr<mMeshPartData> partData);
+		void SoloPickNodeByFaceAngle(std::shared_ptr<mMeshPartData> partData);
+		void SoloPick1DMeshByAngle(std::shared_ptr<mMeshPartData> partData);
+		void SoloPick2DMeshByAngle(std::shared_ptr<mMeshPartData> partData);
+		void SoloPickMeshLineByAngle(std::shared_ptr<mMeshPartData> partData);
+		void SoloPickMeshFaceByAngle(std::shared_ptr<mMeshPartData> partData);
 
 		//框选拾取
-		void MultiplyPickNode(QString partName, bool isAllIn = false);
-		void MultiplyPickAnyMesh(QString partName, bool isAllIn = false);
-		void MultiplyPickMeshTypeFilter(QString partName, QVector<MeshType> filters, bool isAllIn = false);
-		void MultiplyPickMeshLine(QString partName, bool isAllIn = false);
-		void MultiplyPickMeshFace(QString partName, bool isAllIn = false);
-		void MultiplyPickMeshPart(QString partName, bool isAllIn = false);
-		void MultiplyPickNodeByPart(QString partName, bool isAllIn = false);
-		void MultiplyPickAnyMeshByPart(QString partName, bool isAllIn = false);
-		void MultiplyPickMeshLineByPart(QString partName, bool isAllIn = false);
-		void MultiplyPickMeshFaceByPart(QString partName, bool isAllIn = false);
-		void MultiplyPickNodeByLine(QString partName, bool isAllIn = false);
-		void MultiplyPickMeshByLine(QString partName, bool isAllIn = false);
-		void MultiplyPickMeshLineByLine(QString partName, bool isAllIn = false);
-		void MultiplyPickNodeByFace(QString partName, bool isAllIn = false);
-		void MultiplyPickMeshByFace(QString partName, bool isAllIn = false);
-		void MultiplyPickMeshFaceByFace(QString partName, bool isAllIn = false);
+		void MultiplyPickNode(std::shared_ptr<mMeshPartData> partData, bool isAllIn = false);
+		void MultiplyPickAnyMesh(std::shared_ptr<mMeshPartData> partData, bool isAllIn = false);
+		void MultiplyPickMeshTypeFilter(std::shared_ptr<mMeshPartData> partData, QVector<MeshType> filters, bool isAllIn = false);
+		void MultiplyPickMeshLine(std::shared_ptr<mMeshPartData> partData, bool isAllIn = false);
+		void MultiplyPickMeshFace(std::shared_ptr<mMeshPartData> partData, bool isAllIn = false);
+		void MultiplyPickMeshPart(std::shared_ptr<mMeshPartData> partData, bool isAllIn = false);
+		void MultiplyPickNodeByPart(std::shared_ptr<mMeshPartData> partData, bool isAllIn = false);
+		void MultiplyPickAnyMeshByPart(std::shared_ptr<mMeshPartData> partData, bool isAllIn = false);
+		void MultiplyPickMeshLineByPart(std::shared_ptr<mMeshPartData> partData, bool isAllIn = false);
+		void MultiplyPickMeshFaceByPart(std::shared_ptr<mMeshPartData> partData, bool isAllIn = false);
+		void MultiplyPickNodeByLine(std::shared_ptr<mMeshPartData> partData, bool isAllIn = false);
+		void MultiplyPickMeshByLine(std::shared_ptr<mMeshPartData> partData, bool isAllIn = false);
+		void MultiplyPickMeshLineByLine(std::shared_ptr<mMeshPartData> partData, bool isAllIn = false);
+		void MultiplyPickNodeByFace(std::shared_ptr<mMeshPartData> partData, bool isAllIn = false);
+		void MultiplyPickMeshByFace(std::shared_ptr<mMeshPartData> partData, bool isAllIn = false);
+		void MultiplyPickMeshFaceByFace(std::shared_ptr<mMeshPartData> partData, bool isAllIn = false);
 
 		void SoloPickNodePath();//通过路径拾取
 		//通过角度拾取
@@ -292,13 +292,13 @@ namespace MPreRend
 		//判断单选是否拾取到部件
 
 		//判断单选是否拾取到该部件
-		bool isSoloPickMeshPart(QString partName, float &depth);
+		bool isSoloPickMeshPart(std::shared_ptr<mMeshPartData> partData, float &depth);
 
 		//判断单选是否拾取到该几何面
-		bool isSoloPickGeoFace(MXGeoFace* geoFaceData, float &depth);
+		//bool isSoloPickGeoFace(MXGeoFace* geoFaceData, float &depth);
 
-		//判断单选是否拾取到该几何边
-		bool isSoloPickGeoLine(MXGeoEdge* geoEdgeData, float &depth);
+		////判断单选是否拾取到该几何边
+		//bool isSoloPickGeoLine(MXGeoEdge* geoEdgeData, float &depth);
 
 
 		/***********框选*********/
@@ -306,16 +306,16 @@ namespace MPreRend
 		//bool IsMultiplyPickGeoPoint(MXGeoPoint* geoPointData);
 
 		//判断是否拾取到该几何线
-		bool IsMultiplyPickGeoLine(MXGeoEdge* geoLineData);
+		//bool IsMultiplyPickGeoLine(MXGeoEdge* geoLineData);
 
-		//判断是否拾取到该几何面
-		bool IsMultiplyPickGeoFace(MXGeoFace* geoFaceData);
+		////判断是否拾取到该几何面
+		//bool IsMultiplyPickGeoFace(MXGeoFace* geoFaceData);
 
 		//判断是否拾取到该几何体
 		//bool IsMultiplyPickGeoSolid(MXGeoSolid* geoSolidData);
 
 		//判断框选是否拾取到该部件
-		bool isMultiplyPickMeshPart(QString partName);
+		bool isMultiplyPickMeshPart(std::shared_ptr<mMeshPartData> partData);
 
 
 		//将世界坐标转化为屏幕坐标
@@ -335,16 +335,16 @@ namespace MPreRend
 		QVector3D getCenter(QVector<QVector3D> vertexs);
 
 		//获取一个部件的所有信息
-		set<MXMeshVertex*> getAllNodesByPartName(QString partName);
-		set<MXMeshElement*> getAllMeshsByPartName(QString partName);
-		set<MFace*> getAllMeshFacesByPartName(QString partName);
-		set<MEdge*> getAllMeshLinesByPartName(QString partName);
-		set<MXMeshVertex*> getAllNodesByGeoFace(MXGeoFace *entity);
-		set<MXMeshElement*> getAllMeshsByGeoFace(MXGeoFace *entity);
-		set<MFace*> getAllMeshFacesByGeoFace(MXGeoFace *entity);
-		set<MXMeshVertex*> getAllNodesByGeoEdge(MXGeoEdge *entity);
-		set<MXMeshElement*> getAllMeshsByGeoEdge(MXGeoEdge *entity);
-		set<MEdge*> getAllMeshLinesByGeoEdge(MXGeoEdge *entity);
+		set<shared_ptr<mMeshNodeData>> getAllNodesByPartName(std::shared_ptr<mMeshPartData> partData);
+		set<shared_ptr<mMeshData>> getAllMeshsByPartName(std::shared_ptr<mMeshPartData> partData);
+		set<shared_ptr<mMeshFaceData>> getAllMeshFacesByPartName(std::shared_ptr<mMeshPartData> partData);
+		set<shared_ptr<mMeshLineData>> getAllMeshLinesByPartName(std::shared_ptr<mMeshPartData> partData);
+		//set<MXMeshVertex*> getAllNodesByGeoFace(MXGeoFace *entity);
+		//set<MXMeshElement*> getAllMeshsByGeoFace(MXGeoFace *entity);
+		//set<MFace*> getAllMeshFacesByGeoFace(MXGeoFace *entity);
+		//set<MXMeshVertex*> getAllNodesByGeoEdge(MXGeoEdge *entity);
+		//set<MXMeshElement*> getAllMeshsByGeoEdge(MXGeoEdge *entity);
+		//set<MEdge*> getAllMeshLinesByGeoEdge(MXGeoEdge *entity);
 
 	signals:
 		/*
@@ -365,7 +365,7 @@ namespace MPreRend
 		MViewBasic::PickMode _pickMode;
 
 		//框选拾取模式
-		MxFunctions::MultiplyPickMode _multiplyPickMode;
+		MViewBasic::MultiplyPickMode _multiplyPickMode;
 
 		//拾取角度
 		float _pickAngleValue = 60;
@@ -380,6 +380,9 @@ namespace MPreRend
 		* 拾取数据
 		*/
 		mPreMeshPickData1 *_pickData;
+
+		//模型数据
+		std::shared_ptr<mMeshModelData> _meshModelData;
 
 		/*
 		 * 点选位置

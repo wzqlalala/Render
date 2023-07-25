@@ -4,13 +4,11 @@
 #include <memory>
 #include"mLableData.h"
 #include<type_traits>
-#include"mBasicEnum.h"
+
 #include"rendlabeldata_global.h"
 #include"mLableDataEnum.h"
 
 using namespace std;
-//using namespace MBasicFunction;
-using namespace MxFunctions;
 namespace MDataLable
 {
 	class RENDLABELDATA_EXPORT mLableDataController_pre : public QObject

@@ -1,7 +1,7 @@
 #include "mPostMeshData1.h"
 #include "mPostMeshFaceData1.h"
 
-using namespace MxFunctions;
+using namespace MViewBasic;
 namespace MDataPost
 {
 	mPostMeshData1::mPostMeshData1(int ID, MeshType meshType, ElementType eleType, QString partName)

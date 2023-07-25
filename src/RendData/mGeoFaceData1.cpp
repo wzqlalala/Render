@@ -1,10 +1,10 @@
 #include "mGeoFaceData1.h"
 #include "mGeoModelData1.h"
 
-//MxFunctions
+//MViewBasic
 #include "mGlobalVarible.h"
 
-using namespace MxFunctions;
+using namespace MViewBasic;
 namespace MDataGeo
 {
 	mGeoFaceData1::mGeoFaceData1(mGeoModelData1 *geoModelData, QString partName, int ID)

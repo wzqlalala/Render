@@ -7,7 +7,7 @@
 #include <QVector2D>
 
 #include "mMeshViewEnum.h"
-#include "mBasicEnum.h"
+
 namespace mxr
 {
 	class Application;
@@ -18,7 +18,7 @@ namespace MViewBasic
 	class mViewBase;
 }
 using namespace MViewBasic;
-using namespace MxFunctions;
+using namespace MViewBasic;
 using namespace std;
 namespace MBaseRend
 {

@@ -43,7 +43,7 @@ add_library(RendBase
 target_compile_definitions(RendBase PRIVATE "RENDBASE_LIB")
 
 list(APPEND _runtimes_libraries
-	Qt5::Core Qt5::Gui Qt5::Widgets MxFunctions
+	Qt5::Core Qt5::Gui Qt5::Widgets
 )
 
 #-----------------------------------------------------------------------------

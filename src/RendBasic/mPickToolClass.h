@@ -2,11 +2,11 @@
 #include "rendbasic_global.h"
 
 #include "mMeshViewEnum.h"
-#include "mElementFunction.h"
+
 
 #include <QObject>
 
-using namespace MxFunctions;
+using namespace MViewBasic;
 namespace MViewBasic
 {
 	class RENDBASIC_EXPORT mPickToolClass : public QObject

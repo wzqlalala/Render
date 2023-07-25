@@ -1,15 +1,9 @@
 #include "mPreMeshModelRender.h"
 
-#include "MeshMessage.h"
-//#include "MXGeoPoint.h"
-//#include "MXGeoEdge.h"
-//#include "MXGeoFace.h"
-//#include "MXGeoSolid.h"
-//#include "MeshEntity.h"
-#include "MXMeshTetrahedron.h"
-#include "MXMeshHexahedral.h"
-#include "MXMeshTriangle.h"
-#include "MXMeshQuadrangle.h"
+#include "mMeshModelData.h"
+#include "mMeshData.h"
+#include "mMeshFaceData.h"
+#include "mMeshPartData.h"
 
 #include <renderpch.h>
 #include "Space.h"
@@ -31,10 +25,11 @@
 using namespace mxr;
 using namespace std;
 using namespace MViewBasic;
+using namespace MDataMesh;
 namespace MPreRend
 {
-	mPreMeshModelRender::mPreMeshModelRender(std::shared_ptr<mxr::Group> parent, shared_ptr<mPreRendStatus> rendStatus/*, mGeoModelData1 *geoModelData*/):
-		_parent(parent), _rendStatus(rendStatus)/*, _geoModelData(geoModelData)*/
+	mPreMeshModelRender::mPreMeshModelRender(std::shared_ptr<mxr::Group> parent, shared_ptr<mPreRendStatus> rendStatus, std::shared_ptr<mMeshModelData> meshModelData):
+		_parent(parent), _rendStatus(rendStatus), _meshModelData(meshModelData)
 	{
 		_geode = MakeAsset<Geode>();
 		_parent->addChild(_geode);	
@@ -90,52 +85,22 @@ namespace MPreRend
 	{
 		bool isUpdateCamera{ false };
 		QTime time;
-		if (MeshMessage::getInstance()->hasUpdatedRenderState())
-		{
-			time.start();
-		}
-		while (MeshMessage::getInstance()->hasUpdatedRenderState())
-		{
-			isUpdateCamera = isUpdateCamera | updateModelOperate(MeshMessage::getInstance()->getUpdatedRenderState());
-		}
+		//if (MeshMessage::getInstance()->hasUpdatedRenderState())
+		//{
+		//	time.start();
+		//}
+		//while (MeshMessage::getInstance()->hasUpdatedRenderState())
+		//{
+		//	isUpdateCamera = isUpdateCamera | updateModelOperate(MeshMessage::getInstance()->getUpdatedRenderState());
+		//}
 		if (isUpdateCamera)
 		{
 			qDebug() << "渲染时间" << time.elapsed();
 		}
 		return isUpdateCamera;
 	}
-	void mPreMeshModelRender::UpdateModelBuffer()
-	{
-		std::set<QString> hidePartNames;
-		//auto iter = _oneFrameData->getMeshPartIterator();
-		//_partOrder = _geoModelData->getAllPartName();
-		_partOrder = MeshMessage::getInstance()->getMeshPartName().toList();
-		for (auto partName : _partOrder)
-		{
-			//mGeoPartData1 *partData = _geoModelData->getGeoPartDataByPartName(partName);
-			//if (partData == nullptr)
-			//{
-			//	continue;
-			//}
-			if (!MeshMessage::getInstance()->getPartMask(partName))
-			{
-				hidePartNames.insert(partName);
-			}
-			asset_ref<mPreMeshPartRender> part = MakeAsset<mPreMeshPartRender>(_geode, partName);
-			part->setFaceStateSet(_faceStateSet);
-			part->setFaceTransparentNodeformationStateSet(_faceTransparentNodeformationStateSet);
-			part->setEdgeLineStateSet(_edgelineStateSet);
-			part->setFaceLineStateSet(_facelineStateSet);
-			//part->setQuadFaceLineStateSet(_quadfacelineStateSet);
-			part->setLineStateSet(_lineStateSet);
-			part->setPointStateSet(_pointStateSet);
 
-			_partRenders.insert(partName, part);
-		}
-		updateModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>>(HideOnePart, hidePartNames));
-	}
-
-	bool mPreMeshModelRender::updateModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>> postModelOperates)
+	bool mPreMeshModelRender::updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>> postModelOperates)
 	{
 		ModelOperateEnum postModelOperate = postModelOperates.first;
 		set<QString> partNames = postModelOperates.second;
@@ -146,7 +111,7 @@ namespace MPreRend
 				//mGeoPartData1 *partData = _geoModelData->getGeoPartDataByPartName(partName);
 				//if (partData)
 				{
-					asset_ref<mPreMeshPartRender> part = MakeAsset<mPreMeshPartRender>(_geode, partName);
+					asset_ref<mPreMeshPartRender> part = MakeAsset<mPreMeshPartRender>(_geode, _meshModelData->getMeshPartDataByPartName(partName));
 					part->setFaceStateSet(_faceStateSet);
 					part->setFaceTransparentNodeformationStateSet(_faceTransparentNodeformationStateSet);
 					part->setEdgeLineStateSet(_edgelineStateSet);
@@ -198,7 +163,7 @@ namespace MPreRend
 			{
 				if (_partRenders.contains(partName))
 				{
-					QVector3D color = MeshMessage::getInstance()->getPartColor(partName);
+					QVector3D color = _meshModelData->getMeshPartColor(partName);
 					Array *array = _partRenders[partName]->getFaceDrawable()->getVertexAttribArray(1);
 					array->updata(QVector<QVector3D>(array->size() / 3.0, color).data());
 					array = _partRenders[partName]->getLineDrawable()->getVertexAttribArray(1);
@@ -224,26 +189,26 @@ namespace MPreRend
 			std::set<QString> partnames{ partNames.begin(),partNames.end() };
 			if (postModelOperate == ImportPart)
 			{
-				UpdateModelBuffer();
+				//UpdateModelBuffer();
 				setShowFuntion(_rendStatus->_showFunction);
 				//UpdateRigidWallBuffer();
 				//updateAllModelOperate(UpdateMinMax);
 			}
 			else if (postModelOperate == HideAllPart)
 			{
-				updateModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>>(HideOnePart, partnames));
+				updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(HideOnePart, partnames));
 			}
 			else if (postModelOperate == ShowAllPart)
 			{
-				updateModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>>(ShowOnePart, partnames));
+				updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(ShowOnePart, partnames));
 			}
 			else if (postModelOperate == ColorAllPart)
 			{
-				updateModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>>(ColorOnePart, partnames));
+				updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(ColorOnePart, partnames));
 			}
 			else if (postModelOperate == DeleteAllPart)
 			{
-				updateModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>>(DeleteOnePart, partnames));
+				updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>>(DeleteOnePart, partnames));
 			}
 		}
 		return false;
@@ -281,7 +246,7 @@ namespace MPreRend
 	{
 		return _partRenders.value(partName)->getPartAABB();
 	}
-	mPreMeshPartRender::mPreMeshPartRender(std::shared_ptr<mxr::Group> parent, QString partName):_parent(parent)
+	mPreMeshPartRender::mPreMeshPartRender(std::shared_ptr<mxr::Group> parent, std::shared_ptr<mMeshPartData> partData):_parent(parent)
 	{
 		_geode = MakeAsset<Geode>();
 		_parent->addChild(_geode);
@@ -293,7 +258,7 @@ namespace MPreRend
 		//_quadfacelinerend = MakeAsset<mGroupRender1<Vec3Array>>(_geode);
 		_linerend = MakeAsset<mGroupRender2<Vec3Array, Vec3Array>>(_geode);
 		_pointrend = MakeAsset<mGroupRender2<Vec3Array, Vec3Array>>(_geode);
-		_partName = partName;
+		_partData= partData;
 		appendPart();
 	}
 	mPreMeshPartRender::~mPreMeshPartRender()
@@ -339,46 +304,56 @@ namespace MPreRend
 
 	void mPreMeshPartRender::appendPart()
 	{
-		QVector3D color = MeshMessage::getInstance()->getPartColor(_partName);
-		//color = QVector3D(1, 1, 1);
-		
-		//实体(获取实体)
-		QVector<MXGeoSolid*> geoSolids = MeshMessage::getInstance()->getGeoSolidSamePart(_partName);
-		for (auto geoSolid : geoSolids)
+		QVector3D color = _partData->getPartColor();
+
+		//三维
+		auto meshFaceDatas = _partData->getMeshFaceData();
+		for (auto meshFaceData : meshFaceDatas)
 		{
-			getGeoSolidData(geoSolid, color);
+			QVector<QVector3D> vertexs = meshFaceData->getNodeVertex();
+			appendFace(vertexs, color);
 		}
 
-		//面(获取不属于几何实体的面)
-		QVector<MXGeoFace*> geoFaces = MeshMessage::getInstance()->getFreeGFaceInPart(_partName);
-		for (auto geoFace : geoFaces)
+		//二维
+		auto meshDatas = _partData->getMeshDatas2();
+		for (auto meshData : meshDatas)
 		{
-			getGeoFaceData(geoFace, color);
-		}
-		//_facelinerend->getDrawable()->setVertexAttribArray(0, _facerend->_vertex0);
-
-		//线网格(获取不属于几何面的线)
-		QVector<MXGeoEdge*> geoEdges = MeshMessage::getInstance()->getFreeGEdgeInPart(_partName);
-		for (auto geoEdge : geoEdges)
-		{
-			getGeoIndependentEdgeData(geoEdge, color);
-		}
-
-		//点网格
-		QVector<SpecialElement*> points = MeshMessage::getInstance()->getSpecialElementOfPart(_partName);
-		for (auto point : points)
-		{
-			MXMeshVertex *vertex = MeshMessage::getInstance()->getNodeDataByID(point->getNodeID());
-			if (vertex)
+			if (!meshData->getMeshVisual())
 			{
-				_pointrend->_vertex0->append(vertex->getNodeVertex());
-				_pointrend->_vertex1->append(color);
+				continue;
 			}
+			QVector<QVector3D> vertexs = meshData->getNodeVertex();
+			appendFace(vertexs, color);
 		}
 
-		QPair<QVector3D, QVector3D> box = MeshMessage::getInstance()->getBoundBoxSamePart(_partName);
+		//一维
+		meshDatas = _partData->getMeshDatas1();
+		for (auto meshData : meshDatas)
+		{
+			if (!meshData->getMeshVisual())
+			{
+				continue;
+			}
+			QVector<QVector3D> vertexs = meshData->getNodeVertex();
+			appendLine(vertexs, color);
+		}
+
+		//0维
+		meshDatas = _partData->getMeshDatas0();
+		for (auto meshData : meshDatas)
+		{
+			if (!meshData->getMeshVisual())
+			{
+				continue;
+			}
+			QVector<QVector3D> vertexs = meshData->getNodeVertex();
+			appendPoint(vertexs, color);
+		}
+
+		//边界线
+
 		
-		_aabb.push(box.first, box.second);
+		_aabb.push(_partData->getMeshPartAABB());
 	}
 	void mPreMeshPartRender::setShowFuntion(ShowFuntion showFuntion)
 	{
@@ -417,53 +392,18 @@ namespace MPreRend
 			_edgelinerend->getDrawable()->setNodeMask(0);
 		}
 	}
-	void mPreMeshPartRender::getGeoSolidData(MXGeoSolid * geoSolid, QVector3D color)
+	void mPreMeshPartRender::appendFace(QVector<QVector3D> vertexs, QVector3D color)
 	{
-		if (geoSolid->_mTetrahedrons.size() == 0 && geoSolid->_mHexahedrals.size() == 0&&
-			geoSolid->_mPrisms.size() == 0 && geoSolid->_mPyramids.size() == 0)//二维或者一维
+		switch (vertexs.size())
 		{
-			QVector<MXGeoFace*> geoFaces = geoSolid->getface();
-			//面
-			for (auto geoFace : geoFaces)
-			{
-				getGeoFaceData(geoFace, color);
-			}
-		}
-		else//三维获取单元面(先从面获取表面)
-		{
-			QVector<MFace*> faces = geoSolid->surfaceMeshs;
-			//表面
-			for (auto face : faces)
-			{
-				getMFaceData(face, color);
-			}
-			//边界线
-			QVector<MEdge*> edges = geoSolid->boundaryMeshEdges;
-			for (auto edge : edges)
-			{
-				getMEdgeData(edge);
-			}
-			
-		}
-	}
-	void mPreMeshPartRender::getMFaceData(MFace *face, QVector3D color)
-	{
-		if (face == nullptr)
-		{
-			return;
-		}
-		if (face->type() == 1)//三角形
-		{
-			_facerend->_vertex0->append(face->getAllVertexsOfMFace());
+		case 3:
+			_facerend->_vertex0->append(vertexs);
 			_facerend->_vertex1->append(QVector<QVector3D>(3, color));
 
-			_facelinerend->_vertex0->append(face->getAllVertexsOfMFace());
-
+			_facelinerend->_vertex0->append(vertexs);
 			_facelinerend->_vertex1->append(QVector<float>(3, 1.0f));
-		}
-		else
-		{
-			auto vertexs = face->getAllVertexsOfMFace();
+			break;
+		case 4:
 			for (int i = 0; i < 6; i++)
 			{
 				int index = quadToTriIndex.at(i);
@@ -471,105 +411,27 @@ namespace MPreRend
 				_facerend->_vertex1->append(color);
 				_facelinerend->_vertex0->append(vertexs.at(index));
 			}
-
-
 			_facelinerend->_vertex1->append(QVector<float>(6, 0.0f));
+			break;
+		default:
+			break;
 		}
 	}
-	void mPreMeshPartRender::getMEdgeData(MEdge * edge)
-	{
-		if (edge == nullptr)
-		{
-			return;
-		}
-		_edgelinerend->_vertex0->append(edge->getVerOfMEdge(0)->getNodeVertex());
-		_edgelinerend->_vertex0->append(edge->getVerOfMEdge(1)->getNodeVertex());
-	}
-	void mPreMeshPartRender::getGeoFaceData(MXGeoFace * geoFace, QVector3D color)
-	{
-		if (geoFace->_mTriangles.size() == 0 && geoFace->_mQuadangles.size() == 0)//一维
-		{
-			//线网格
-			//QSet<MXGeoEdge*> geoEdges = geoFace->getPVTEdgesOnFace();
-			QSet<MXGeoEdge*> geoEdges;
-			for (auto geoEdge : geoFace->getEdgesOfGeoFaces()) {
-				geoEdges.insert(geoEdge);
-			}
-			for (auto geoEdge : geoEdges)
-			{
-				getGeoIndependentEdgeData(geoEdge, color);
-			}
-		}
-		else//二维
-		{
-			for (auto mesh : geoFace->_mTriangles)
-			{
-				if (mesh == nullptr || mesh->getMask())
-				{
-					continue;
-				}
-				//if (mesh->getNum() == 230 || mesh->getNum() == 231)
-				//{
-				//	qDebug() << "正在读取数据";
-				//}
-				_facerend->_vertex0->append(mesh->getallVertexs1());
-				_facerend->_vertex1->append(QVector<QVector3D>(3, color));
-				_facelinerend->_vertex0->append(mesh->getallVertexs1());
-				_facelinerend->_vertex1->append(QVector<float>(3, 1.0f));
-			}
-			for (auto mesh : geoFace->_mQuadangles)
-			{
-				if (mesh == nullptr || mesh->getMask())
-				{
-					continue;
-				}
-				auto vertexs = mesh->getallVertexs1();
-				for (int i = 0; i < 6; i++)
-				{
-					int index = quadToTriIndex.at(i);
-					_facerend->_vertex0->append(vertexs.at(index));
-					_facerend->_vertex1->append(color);
-					_facelinerend->_vertex0->append(vertexs.at(index));
-				}
 
-				_facelinerend->_vertex1->append(QVector<float>(6, 0.0f));
-			}
-			
-			//边界线
-			QVector<MEdge*> edges = geoFace->boundaryMeshEdgesInGface;
-			for (auto edge : edges)
-			{
-				getMEdgeData(edge);
-			}
-		}
-	}
-	void mPreMeshPartRender::getGeoEdgeData(MXGeoEdge * geoEdge)
+	void mPreMeshPartRender::appendLine(QVector<QVector3D> vertexs, QVector3D color)
 	{
-		for (auto mesh : geoEdge->_mLines)
-		{
-			if (mesh == nullptr || mesh->getMask())
-			{
-				continue;
-			}
-			for (int i = 0; i < 2; i++)
-			{
-				_edgelinerend->_vertex0->append(QVector3D(mesh->getVertex(i)->vx(), mesh->getVertex(i)->vy(), mesh->getVertex(i)->vz()));
-			}
-		}
+		_linerend->_vertex0->append(vertexs);
+		_linerend->_vertex1->append(QVector<QVector3D>(2, color));
 	}
-	void mPreMeshPartRender::getGeoIndependentEdgeData(MXGeoEdge * geoEdge, QVector3D color)
+
+	void mPreMeshPartRender::appendPoint(QVector<QVector3D> vertexs, QVector3D color)
 	{
-		for (auto mesh : geoEdge->_mLines)
-		{
-			if (mesh == nullptr || mesh->getMask())
-			{
-				continue;
-			}
-			for (int i = 0; i < 2; i++)
-			{
-				_linerend->_vertex0->append(QVector3D(mesh->getVertex(i)->vx(), mesh->getVertex(i)->vy(), mesh->getVertex(i)->vz()));
-				_linerend->_vertex1->append(color);
-			}
-		}
+		_pointrend->_vertex0->append(vertexs);
+		_pointrend->_vertex1->append(color);
 	}
+
+	void mPreMeshPartRender::appendMeshLine(QVector<QVector3D> vertexs)
+	{
+		_edgelinerend->_vertex0->append(vertexs);
+	}	
 }

@@ -56,10 +56,10 @@
 #include "mIMxdbFile1.h"
 #include "mIFluentBCMeshFile.h"
 
-#include "MeshMessage.h"
+//#include "MeshMessage.h"
 
 using namespace MDataPost;
-using namespace MxFunctions;
+using namespace MViewBasic;
 MxRendTest::MxRendTest(int id)
 {
 	_id = id;
@@ -754,7 +754,7 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			QFileInfo info(filename);
 			
 			MIOFile::mIFluentBCMeshFile *file = new MIOFile::mIFluentBCMeshFile();
-			file->ReadBCMeshFile(filename);
+			//file->ReadBCMeshFile(filename);
 			break;
 		}
 		case Qt::Key_F5:
@@ -810,24 +810,6 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 				return;
 			}
 			_preRender = _preRend->getPreRender();
-			MXReadData *readData = MeshMessage::getInstance()->getReadData();
-			QHash<int, MXMeshVertex*> allVertexData;
-			QHash<int, QPair<QVector<MXMeshTriangle*>, QVector<MXMeshQuadrangle*>>> values;
-			QVector<MXMeshTriangle*> tris;
-
-			allVertexData[1] = new MXMeshVertex(0, 5, -5, 1);
-			allVertexData[2] = new MXMeshVertex(0, -5, -5, 2);
-			allVertexData[3] = new MXMeshVertex(0, 5, 5, 3);
-			allVertexData[4] = new MXMeshVertex(0, -5, 5, 4);
-			allVertexData[5] = new MXMeshVertex(0, 0, 0, 5);
-			tris.append(new MXMeshTriangle(allVertexData[1], allVertexData[2], allVertexData[5], 1));
-			//tris.append(new MXMeshTriangle(allVertexData[3], allVertexData[1], allVertexData[5], 2));
-			//tris.append(new MXMeshTriangle(allVertexData[2], allVertexData[4], allVertexData[5], 3));
-			//tris.append(new MXMeshTriangle(allVertexData[4], allVertexData[3], allVertexData[5], 4));
-
-			values[1].first = tris;
-			readData->CreateVertex(allVertexData);
-			readData->CreateGeoFace("1", values);
 			mGeoModelData1 *geoModelData = _preRender->getGeoModelData();
 			if (!createGeo(geoModelData))
 			{
@@ -837,7 +819,7 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 		}
 		case Qt::Key_2:
 		{
-			MeshMessage::getInstance()->deleteMeshPart("1"); break;
+			//MeshMessage::getInstance()->deleteMeshPart("1"); break;
 		}
 		case Qt::Key_4:
 		{
@@ -922,12 +904,12 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			{
 				return;
 			}
-			QVector<QString> partNames = MeshMessage::getInstance()->getAllPartNames();
-			if (partNames.size() == 0)
-			{
-				return;
-			}
-			MeshMessage::getInstance()->deleteMeshPart(partNames.last());
+			//QVector<QString> partNames = MeshMessage::getInstance()->getAllPartNames();
+			//if (partNames.size() == 0)
+			//{
+			//	return;
+			//}
+			//MeshMessage::getInstance()->deleteMeshPart(partNames.last());
 			break;
 		}
 		case Qt::Key_Tab:

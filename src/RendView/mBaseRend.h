@@ -13,7 +13,7 @@
 
 #include "SpaceTree.h"
 
-#include "mBasicEnum.h"
+
 
 namespace MViewBasic
 {
@@ -28,7 +28,7 @@ namespace mxr
 }
 using namespace std;
 using namespace MViewBasic;
-using namespace MxFunctions;
+using namespace MViewBasic;
 namespace MPostRend
 {
 	class mPostRender;
@@ -52,7 +52,7 @@ namespace MBaseRend
 		Q_OBJECT
 
 	public:
-		mBaseRend(const QString& name = "", MxFunctions::ViewportType = MxFunctions::Viewport3D);
+		mBaseRend(const QString& name = "");
 		~mBaseRend();
 
 		//设置视口名称	
@@ -62,7 +62,7 @@ namespace MBaseRend
 		QString getViewportName();
 	
 		//获取视口类型		
-		MxFunctions::ViewportType getViewportType();
+		//MViewBasic::ViewportType getViewportType();
 
 		std::shared_ptr<mxr::Application> getApplication() { return _app; };
 
@@ -215,7 +215,7 @@ namespace MBaseRend
 		QOpenGLFramebufferObject *FBO;
 
 		QString _name;//视口名称
-		MxFunctions::ViewportType _viewportType;//视口类型
+		//MViewBasic::ViewportType _viewportType;//视口类型
 
 		std::shared_ptr<mxr::Application> _app;
 

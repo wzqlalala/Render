@@ -7,24 +7,31 @@
 #include <QPair>
 #include <QVector>
 
-//MBasicFunction
+#include <set>
+
+//MViewBasic
 #include "mBasicStructor.h"
-#include "mBasicEnum.h"
+
 #include "mMeshViewEnum.h"
 
 
-class MXMeshElement;
-class MXMeshVertex;
+//class mMeshData;
+//class mMeshNodeData;
+//class mMeshFaceData;
 class MFace;
 class MEdge;
-namespace MDataPre
+namespace MDataMesh
 {	
 	using namespace std;
-	using namespace MxFunctions;
 	using namespace MViewBasic;
+	class mMeshPartData;
+	class mMeshData;
+	class mMeshNodeData;
+	class mMeshLineData;
+	class mMeshFaceData;
 	struct MeshVertexDepthBuffer
 	{
-		MXMeshVertex *vertex;
+		shared_ptr<mMeshNodeData> vertex;
 		float depth;
 		MeshVertexDepthBuffer()
 		{
@@ -40,7 +47,7 @@ namespace MDataPre
 
 	struct MeshVertexSetDepthBuffer
 	{
-		set<MXMeshVertex*> vertexs;
+		set<shared_ptr<mMeshNodeData>> vertexs;
 		float depth;
 		MeshVertexSetDepthBuffer()
 		{
@@ -54,7 +61,7 @@ namespace MDataPre
 	};
 	struct MeshFaceDepthBuffer
 	{
-		MFace *meshface;
+		shared_ptr<mMeshFaceData> meshface;
 		float depth;
 		MeshFaceDepthBuffer()
 		{
@@ -70,7 +77,7 @@ namespace MDataPre
 
 	struct MeshFaceSetDepthBuffer
 	{
-		set<MFace*> meshfaces;
+		set<shared_ptr<mMeshFaceData>> meshfaces;
 		float depth;
 		MeshFaceSetDepthBuffer()
 		{
@@ -116,7 +123,7 @@ namespace MDataPre
 
 	struct MeshElementDepthBuffer
 	{
-		MXMeshElement *element;
+		shared_ptr<mMeshData> element;
 		float depth;
 		MeshElementDepthBuffer()
 		{
@@ -132,7 +139,7 @@ namespace MDataPre
 
 	struct MeshElementSetDepthBuffer
 	{
-		set<MXMeshElement*> elements;
+		set<shared_ptr<mMeshData>> elements;
 		float depth;
 		MeshElementSetDepthBuffer()
 		{
@@ -146,7 +153,7 @@ namespace MDataPre
 	};
 	struct PointerQStringDepthBuffer
 	{
-		void *ptr;
+		shared_ptr<void> ptr;
 		QString partName;
 		float depth;
 		PointerQStringDepthBuffer()
@@ -176,45 +183,45 @@ namespace MDataPre
 		void setMeshPickFunction(int pickfunction);//0加1减
 
 		//拾取时调用
-		void setSoloPickNodeData(MXMeshVertex* nodeid, float depth);
-		void setSoloPickMeshData(MXMeshElement* meshid, float depth);
+		void setSoloPickNodeData(shared_ptr<mMeshNodeData> nodeid, float depth);
+		void setSoloPickMeshData(shared_ptr<mMeshData> meshid, float depth);
 		void setSoloPickMeshLineData(MEdge* meshlineid, float depth);
-		void setSoloPickMeshFaceData(MFace* meshfaceid, float depth);
+		void setSoloPickMeshFaceData(shared_ptr<mMeshFaceData> meshfaceid, float depth);
 		void setSoloPickMeshPartData(QString partName, float depth);
-		void setSoloPickNodeByPartData(set<MXMeshVertex*> nodeids, float depth);
-		void setSoloPickMeshByPartData(set<MXMeshElement*> meshids, float depth);
+		void setSoloPickNodeByPartData(set<shared_ptr<mMeshNodeData>> nodeids, float depth);
+		void setSoloPickMeshByPartData(set<shared_ptr<mMeshData>> meshids, float depth);
 		void setSoloPickMeshLineByPartData(set<MEdge*> meshLineids, float depth);
-		void setSoloPickMeshFaceByPartData(set<MFace*> meshFaceids, float depth);
-		void setSoloPickMeshDataByAngle(MXMeshElement* meshid, QString partName,float depth);
-		void setSoloPickMeshLineDataByAngle(void* meshlineid, QString partName, float depth);
-		void setSoloPickMeshFaceDataByAngle(void* meshfaceid, QString partName, float depth);
+		void setSoloPickMeshFaceByPartData(set<shared_ptr<mMeshFaceData>> meshFaceids, float depth);
+		void setSoloPickMeshDataByAngle(shared_ptr<mMeshData> meshid, QString partName,float depth);
+		void setSoloPickMeshLineDataByAngle(shared_ptr<void> meshlineid, QString partName, float depth);
+		void setSoloPickMeshFaceDataByAngle(shared_ptr<void> meshfaceid, QString partName, float depth);
 
-		void setMultiplyPickNodeData(set<MXMeshVertex*> nodeids);
-		void setMultiplyPickNodeData(QVector<MXMeshVertex*> nodeids);
-		void setMultiplyPickMeshData(set<MXMeshElement*> meshids);
+		void setMultiplyPickNodeData(set<shared_ptr<mMeshNodeData>> nodeids);
+		void setMultiplyPickNodeData(QVector<shared_ptr<mMeshNodeData>> nodeids);
+		void setMultiplyPickMeshData(set<shared_ptr<mMeshData>> meshids);
 		void setMultiplyPickMeshLineData(set<MEdge*> meshlineids);
-		void setMultiplyPickMeshFaceData(set<MFace*> meshfaceids);
+		void setMultiplyPickMeshFaceData(set<shared_ptr<mMeshFaceData>> meshfaceids);
 		void setMultiplyPickMeshPartData(QString partNames);
 
 		//一次性高亮，清除上一次高亮
-		void setAllPickNodeData(set<MXMeshVertex*> nodeids);
-		void setAllPickMeshData(set<MXMeshElement*> meshids);
+		void setAllPickNodeData(set<shared_ptr<mMeshNodeData>> nodeids);
+		void setAllPickMeshData(set<shared_ptr<mMeshData>> meshids);
 		void setAllPickMeshLineData(set<MEdge*> meshlineids);
-		void setAllPickMeshFaceData(set<MFace*> meshfaceids);
+		void setAllPickMeshFaceData(set<shared_ptr<mMeshFaceData>> meshfaceids);
 		void setAllPickMeshPartData(set<QString> partNames);
 
 		//累积高亮
-		void setAddPickNodeData(set<MXMeshVertex*> nodeids);
-		void setAddPickMeshData(set<MXMeshElement*> meshids);
+		void setAddPickNodeData(set<shared_ptr<mMeshNodeData>> nodeids);
+		void setAddPickMeshData(set<shared_ptr<mMeshData>> meshids);
 		void setAddPickMeshLineData(set<MEdge*> meshlineids);
-		void setAddPickMeshFaceData(set<MFace*> meshfaceids);
+		void setAddPickMeshFaceData(set<shared_ptr<mMeshFaceData>> meshfaceids);
 		void setAddPickMeshPartData(set<QString> partNames);
 
 		//减少高亮
-		void setReducePickNodeData(set<MXMeshVertex*> nodeids);
-		void setReducePickMeshData(set<MXMeshElement*> meshids);
+		void setReducePickNodeData(set<shared_ptr<mMeshNodeData>> nodeids);
+		void setReducePickMeshData(set<shared_ptr<mMeshData>> meshids);
 		void setReducePickMeshLineData(set<MEdge*> meshlineids);
-		void setReducePickMeshFaceData(set<MFace*> meshfaceids);
+		void setReducePickMeshFaceData(set<shared_ptr<mMeshFaceData>> meshfaceids);
 		void setReducePickMeshPartData(set<QString> partNames);
 
 		//单选不保留顺序拾取完成后调用
@@ -224,19 +231,19 @@ namespace MDataPre
 		void setSoloOrderPickData();
 
 		//获取拾取后的节点编号
-		set<MXMeshVertex*> getPickNodeIDs();
+		set<shared_ptr<mMeshNodeData>> getPickNodeIDs();
 
 		//获取拾取后的节点编号(保留拾取顺序)
-		QVector<MXMeshVertex*> getPickNodeIDsOrder();
+		QVector<shared_ptr<mMeshNodeData>> getPickNodeIDsOrder();
 
 		//获取拾取后的单元编号
-		set<MXMeshElement*> getPickMeshIDs();
+		set<shared_ptr<mMeshData>> getPickMeshIDs();
 
 		//获取拾取后的单元线编号
 		set<MEdge*> getPickMeshLineIDs();
 
 		//获取拾取后的单元面编号
-		set<MFace*> getPickMeshFaceIDs();
+		set<shared_ptr<mMeshFaceData>> getPickMeshFaceIDs();
 
 		//获取拾取后的网格部件名称
 		set<QString> getPickMeshPartNames();
@@ -252,11 +259,11 @@ namespace MDataPre
 		void clearPickMeshPartData();
 
 		//通过角度拾取
-		QPair<PickObjectType, QPair<QString, void*>> getSoloPickNodeDataByLineAngle();//拾取到的对象和其编号
-		QPair<PickObjectType, QPair<QString, void*>> getSoloPickNodeDataByFaceAngle();//拾取到的对象和其编号
-		QPair<QString, void*> getSoloPickMeshDataByAngle();
-		QPair<QString, void*> getSoloPickMeshLineDataByAngle();
-		QPair<QString, void*> getSoloPickMeshFaceDataByAngle();
+		QPair<PickObjectType, QPair<QString, shared_ptr<void>>> getSoloPickNodeDataByLineAngle();//拾取到的对象和其编号
+		QPair<PickObjectType, QPair<QString, shared_ptr<void>>> getSoloPickNodeDataByFaceAngle();//拾取到的对象和其编号
+		QPair<QString,shared_ptr<void>> getSoloPickMeshDataByAngle();
+		QPair<QString,shared_ptr<void>> getSoloPickMeshLineDataByAngle();
+		QPair<QString,shared_ptr<void>> getSoloPickMeshFaceDataByAngle();
 
 	private:
 
@@ -288,11 +295,11 @@ namespace MDataPre
 
 		//IDQStringDepthBuffer _meshPartNameBuffers;//按角度拾取单元的编号
 
-		set<MXMeshVertex*> _pickNodes;//最终拾取到的节点
-		QVector<MXMeshVertex*> _pickNodesOrder;//最终拾取到的节点（保留拾取顺序）
-		set<MXMeshElement*> _pickMeshs;//最终拾取到的单元
+		set<shared_ptr<mMeshNodeData>> _pickNodes;//最终拾取到的节点
+		QVector<shared_ptr<mMeshNodeData>> _pickNodesOrder;//最终拾取到的节点（保留拾取顺序）
+		set<shared_ptr<mMeshData>> _pickMeshs;//最终拾取到的单元
 		set<MEdge*> _pickMeshLines;//最终拾取到的单元线
-		set<MFace*> _pickMeshFaces;//最终拾取到的单元面
+		set<shared_ptr<mMeshFaceData>> _pickMeshFaces;//最终拾取到的单元面
 		set<QString> _pickParts;//最终拾取到的部件
 
 	};

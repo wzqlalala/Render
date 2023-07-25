@@ -11,7 +11,7 @@
 
 #include "SpaceTree.h"
 
-#include "mBasicEnum.h"
+
 
 #include "mMeshViewEnum.h"
 #include "mBasicStructor.h"
@@ -33,16 +33,13 @@ namespace MViewBasic
 	class mModelView;
 	class mViewBase;
 }
-class MXMesh;
-class MeshEntity;
-class MXGeoSolid;
-class MXGeoFace;
-class MXGeoEdge;
-class MXMeshElement;
-class MFace;
-class MEdge;
+namespace MDataMesh
+{
+	class mMeshModelData;
+	class mMeshPartData;
+}
 using namespace MViewBasic;
-using namespace MViewBasic;
+using namespace MDataMesh;
 using namespace MBaseRend;
 using namespace mxr;
 using namespace std;
@@ -53,7 +50,7 @@ namespace MPreRend
 	{
 	public:
 
-		mPreMeshPartRender(std::shared_ptr<mxr::Group> parent, QString partName);
+		mPreMeshPartRender(std::shared_ptr<mxr::Group> parent, std::shared_ptr<mMeshPartData> partData);
 
 		~mPreMeshPartRender();
 
@@ -77,18 +74,10 @@ namespace MPreRend
 		std::shared_ptr<mxr::Geode> getGeode() { return _geode; }
 
 	private:
-		void getGeoSolidData(MXGeoSolid* geoSolid, QVector3D color);
-
-		void getMFaceData(MFace* geoSolid, QVector3D color);
-
-		void getMEdgeData(MEdge* geoEdge);
-
-		void getGeoFaceData(MXGeoFace* geoFace, QVector3D color);
-
-		void getGeoEdgeData(MXGeoEdge* geoEdge);
-
-		void getGeoIndependentEdgeData(MXGeoEdge* geoFace, QVector3D color);
-
+		void appendFace(QVector<QVector3D> vertexs, QVector3D color);
+		void appendLine(QVector<QVector3D> vertexs, QVector3D color);
+		void appendPoint(QVector<QVector3D> vertexs, QVector3D color);
+		void appendMeshLine(QVector<QVector3D> vertexs);
 	private:
 		shared_ptr<mxr::Group> _parent;//父节点
 		std::shared_ptr<mxr::Geode> _geode;//当前总节点
@@ -101,8 +90,7 @@ namespace MPreRend
 		std::shared_ptr<mGroupRender2<Vec3Array, Vec3Array>>  _linerend;//线
 		std::shared_ptr<mGroupRender2<Vec3Array, Vec3Array>>  _pointrend;//点
 
-		//MDataGeo::mGeoPartData1 *_partData;
-		QString _partName;
+		std::shared_ptr<mMeshPartData> _partData;
 
 		Space::AABB _aabb;
 	};
@@ -110,7 +98,7 @@ namespace MPreRend
 	{
 	public:
 
-		mPreMeshModelRender(shared_ptr<mxr::Group> parent, shared_ptr<mPreRendStatus> rendStatus/*, mGeoModelData1 *geoModelData*/);
+		mPreMeshModelRender(shared_ptr<mxr::Group> parent, shared_ptr<mPreRendStatus> rendStatus, std::shared_ptr<mMeshModelData> meshModelData);
 
 		~mPreMeshModelRender();
 
@@ -127,10 +115,10 @@ namespace MPreRend
 		void setNodeStateSet(std::shared_ptr<mxr::StateSet> stateset);
 
 		//更新缓存
-		void UpdateModelBuffer();
+		//void UpdateModelBuffer();
 
 		//更新单个部件操作
-		bool updateModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>> postModelOperates);
+		bool updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>> postModelOperates);
 
 		void setShowFuntion(ShowFuntion showFuntion);
 
@@ -146,7 +134,7 @@ namespace MPreRend
 
 		std::shared_ptr<mPreRendStatus> _rendStatus;
 
-		//mGeoModelData1 *_geoModelData;
+		std::shared_ptr<mMeshModelData> _meshModelData;
 
 		std::shared_ptr<mxr::StateSet> _faceStateSet;//渲染面的状态
 

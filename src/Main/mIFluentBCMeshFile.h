@@ -11,11 +11,11 @@ namespace MIOFile
 	class mIFluentBCMeshFile
 	{
 	public:
-		bool ReadBCMeshFile(QString filename);
+		//bool ReadBCMeshFile(QString filename);
 
-		void ReadFile1(ifstream &file_fp, vector<string> strVec, string buffer);
+		//void ReadFile1(ifstream &file_fp, vector<string> strVec, string buffer) {};
 
-		MXMeshVertex *getVertex(int id, QHash<int, MXMeshVertex*> &vertexs);
+		MXMeshVertex *getVertex(int id, QHash<int, MXMeshVertex*> &vertexs) { return nullptr; };
 
 	private:
 		//当前文件下面所有的部件名字

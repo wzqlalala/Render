@@ -14,10 +14,10 @@
 #include "SpaceTree.h"
 
 #include "mMeshViewEnum.h"
-#include "mBasicEnum.h"
+
 
 using namespace MViewBasic;
-using namespace MxFunctions;
+using namespace MViewBasic;
 using namespace std;
 namespace MDataGeo
 {
@@ -58,7 +58,7 @@ namespace MDataGeo
 	protected:
 		QMatrix4x4 _pvm;
 		int _width, _height;
-		MxFunctions::MultiplyPickMode _multiplyPickMode;
+		MViewBasic::MultiplyPickMode _multiplyPickMode;
 
 	};
 
@@ -296,7 +296,7 @@ namespace MDataGeo
 		MViewBasic::PickMode _pickMode;
 
 		//框选拾取模式
-		MxFunctions::MultiplyPickMode _multiplyPickMode;
+		MViewBasic::MultiplyPickMode _multiplyPickMode;
 
 		//窗口大小
 		int _Win_WIDTH, _Win_HEIGHT;

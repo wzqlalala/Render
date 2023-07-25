@@ -10,7 +10,7 @@
 
 #include "SpaceTree.h"
 
-#include "mBasicEnum.h"
+
 
 #include "mMeshViewEnum.h"
 #include "mBasicStructor.h"
@@ -106,7 +106,7 @@ namespace MPreRend
 		void UpdateModelBuffer();
 
 		//更新单个部件操作
-		bool updateModelOperate(QPair<MxFunctions::ModelOperateEnum, std::set<QString>> postModelOperates);
+		bool updateModelOperate(QPair<MViewBasic::ModelOperateEnum, std::set<QString>> postModelOperates);
 
 		void setShowFuntion(ShowFuntion showFuntion);
 

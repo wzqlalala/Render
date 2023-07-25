@@ -5,7 +5,7 @@
 #include <QOpenGLShaderProgram>
 
 //MViewBasic
-#include "mBasicEnum.h"
+#include "mMeshViewEnum.h"
 
 namespace mxr
 {
@@ -14,7 +14,7 @@ namespace mxr
 	class Group;
 	class Application;
 }
-using namespace MxFunctions;
+using namespace MViewBasic;
 namespace MBaseRend
 {
 	class RENDVIEW_EXPORT mBackGroundRender : public QObject

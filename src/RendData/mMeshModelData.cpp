@@ -1,12 +1,11 @@
-#include "mOneFrameData1.h"
-#include "mOneFrameData1.h"
+#include "mMeshModelData.h"
 
 
-#include "mPostMeshPartData1.h"
-#include "mPostMeshData1.h"
-#include "mPostMeshFaceData1.h"
-#include "mPostMeshLineData1.h"
-#include "mPostMeshNodeData1.h"
+#include "mMeshPartData.h"
+#include "mMeshData.h"
+#include "mMeshFaceData.h"
+#include "mMeshLineData.h"
+#include "mMeshNodeData.h"
 
 //Qt
 #include <QTime>
@@ -23,20 +22,19 @@
 
 using namespace std;
 using namespace MViewBasic;
-using namespace MViewBasic;
-namespace MDataPost
+namespace MDataMesh
 {
-	mOneFrameData1::mOneFrameData1()
+	mMeshModelData::mMeshModelData()
 	{
 		_hasModalValue = false;
 	}
 
-	mOneFrameData1::~mOneFrameData1()
+	mMeshModelData::~mMeshModelData()
 	{
 		deleteOneFrameData();
 	}
 
-	void mOneFrameData1::calculatePointCell()
+	void mMeshModelData::calculatePointCell()
 	{
 		std::unordered_map<int, std::vector<int>> pcells;
 		for (auto p : _meshData1)
@@ -86,22 +84,22 @@ namespace MDataPost
 
 	}
 
-	void mOneFrameData1::resizeNodeSize(int size)
+	void mMeshModelData::resizeNodeSize(int size)
 	{
-		_nodeData2.resize(size+1);
+		_nodeData2.resize(size + 1);
 	}
 
-	void mOneFrameData1::resizeCopyCellSize(int size)
+	void mMeshModelData::resizeCopyCellSize(int size)
 	{
-		
+
 		int bef = _meshData2.size();
-		_meshData2.resize(size + bef+1);
+		_meshData2.resize(size + bef + 1);
 		//_meshData2;
 	}
 
-	void mOneFrameData1::calculateCellData()
+	void mMeshModelData::calculateCellData()
 	{
-		QVector<mPostMeshData1*> _meshtemp;
+		QVector<std::shared_ptr<mMeshData> > _meshtemp;
 		_meshtemp.swap(_meshData2);
 		_meshData2.resize(_meshtemp.size());
 		for (auto item : _meshtemp)
@@ -123,7 +121,7 @@ namespace MDataPost
 
 	}
 
-	void mOneFrameData1::caculateMeshModelRadiusAndCenter()
+	void mMeshModelData::caculateMeshModelRadiusAndCenter()
 	{
 		//太慢排序
 		//set<float> x, y, z;
@@ -159,7 +157,7 @@ namespace MDataPost
 		float xmin = 0, ymin = 0, zmin = 0, xmax = 0, ymax = 0, zmax = 0;
 		if (!_nodeData1.isEmpty())
 		{
-			QHashIterator<int, mPostMeshNodeData1*> iter(_nodeData1);
+			QHashIterator<int, std::shared_ptr<mMeshNodeData> > iter(_nodeData1);
 			while (iter.hasNext())
 			{
 				iter.next();
@@ -169,7 +167,7 @@ namespace MDataPost
 				break;
 			}
 		}
-		QHashIterator<int, mPostMeshNodeData1*> iternode(_nodeData1);
+		QHashIterator<int, std::shared_ptr<mMeshNodeData> > iternode(_nodeData1);
 		while (iternode.hasNext())
 		{
 			iternode.next();
@@ -193,10 +191,11 @@ namespace MDataPost
 		//qDebug() << "runtime " << time.elapsed();
 	}
 
-	void mOneFrameData1::caculateMeshSize()
+	void mMeshModelData::caculateMeshSize()
 	{
+		/*
 		bool isIn = false;
-		QHashIterator<int, mPostMeshData1*> itermesh(_meshData1);
+		QHashIterator<int, std::shared_ptr<mMeshData> > itermesh(_meshData1);
 		while (itermesh.hasNext())
 		{
 			itermesh.next();
@@ -215,7 +214,7 @@ namespace MDataPost
 		{
 			return;
 		}
-		for (mPostMeshData1* meshData: _meshData2)
+		for (std::shared_ptr<mMeshData>  meshData: _meshData2)
 		{
 			if (meshData == nullptr|| meshData->getMeshType() == MViewBasic::MeshPoint)
 			{
@@ -226,20 +225,22 @@ namespace MDataPost
 			_meshSize = node1.distanceToPoint(node2);
 			break;
 		}
+		*/
 	}
 
-	void mOneFrameData1::caculateMeshLine()
+	void mMeshModelData::caculateMeshLine()
 	{
+		/*
 		QStringList partNames = _partData1.keys();
 		for (int a = 0; a < partNames.size(); ++a)
 		{
 			QString partName = partNames.at(a);
-			mPostMeshPartData1 *partData = this->getMeshPartDataByPartName(partName);
+			std::shared_ptr<mMeshPartData> partData = this->getMeshPartDataByPartName(partName);
 
 			//判断三维网格的表面的单元线
-			QMultiHash<QSet<int>, mPostMeshFaceData1*> lines1;//存单元线和它所在的单元面
-			QVector<mPostMeshFaceData1*> meshFaceIDDatas = partData->getMeshFaceData();
-			for (mPostMeshFaceData1* meshFaceData : meshFaceIDDatas)
+			QMultiHash<QSet<int>, std::shared_ptr<mMeshFaceData>> lines1;//存单元线和它所在的单元面
+			QVector<std::shared_ptr<mMeshFaceData>> meshFaceIDDatas = partData->getMeshFaceData();
+			for (std::shared_ptr<mMeshFaceData> meshFaceData : meshFaceIDDatas)
 			{
 				//由于读取文件后不存在新生成的表面的单元面，所以这儿只考虑最原始的表面的单元面
 				if (meshFaceData != nullptr && meshFaceData->getVisual())
@@ -270,8 +271,8 @@ namespace MDataPost
 				//int count = lines1.count(tempset);
 				if (lines1.count(tempset) == 1)//边界线,保留信息
 				{
-					mPostMeshFaceData1 *meshFaceData = lines1.value(tempset);
-					mPostMeshData1 *meshData = this->getMeshDataByID(meshFaceData->getMeshID1());
+					std::shared_ptr<mMeshFaceData>meshFaceData = lines1.value(tempset);
+					std::shared_ptr<mMeshData>meshData = this->getMeshDataByID(meshFaceData->getMeshID1());
 					_globalMeshLineId++;
 					int order = this->judgeMeshLineOrder(meshData, std::set<int>{tempset.begin(), tempset.end()});
 					mPostMeshLineData1 *meshLineData = new mPostMeshLineData1(_globalMeshLineId, std::set<int>{tempset.begin(), tempset.end()}, meshData->getMeshID(), order, partName);
@@ -286,18 +287,18 @@ namespace MDataPost
 				}
 				else if (lines1.count(tempset) == 2)//判断两个单元面的方向是否大于一定度数，如果超过了则设为单元线
 				{
-					QList<mPostMeshFaceData1*> meshFaceDatas = lines1.values(tempset);
+					QList<std::shared_ptr<mMeshFaceData>> meshFaceDatas = lines1.values(tempset);
 					if (meshFaceDatas.size() == 2)
 					{
-						mPostMeshFaceData1 *meshFaceData1 = meshFaceDatas.at(0);
-						mPostMeshFaceData1 *meshFaceData2 = meshFaceDatas.at(1);
+						std::shared_ptr<mMeshFaceData>meshFaceData1 = meshFaceDatas.at(0);
+						std::shared_ptr<mMeshFaceData>meshFaceData2 = meshFaceDatas.at(1);
 						QVector<int> nodeIDs = meshFaceData1->getNodeIndex();
 						QVector<int> nodeIDs1 = meshFaceData2->getNodeIndex();
 						if (nodeIDs.size() >= 3 && nodeIDs1.size() >= 3)
 						{
-							mPostMeshNodeData1* nodeData1 = this->getNodeDataByID(nodeIDs.at(0));
-							mPostMeshNodeData1* nodeData2 = this->getNodeDataByID(nodeIDs.at(1));
-							mPostMeshNodeData1* nodeData3 = this->getNodeDataByID(nodeIDs.at(2));
+							std::shared_ptr<mMeshNodeData>  nodeData1 = this->getNodeDataByID(nodeIDs.at(0));
+							std::shared_ptr<mMeshNodeData>  nodeData2 = this->getNodeDataByID(nodeIDs.at(1));
+							std::shared_ptr<mMeshNodeData>  nodeData3 = this->getNodeDataByID(nodeIDs.at(2));
 
 							QVector3D direction1 = QVector3D::crossProduct((nodeData2->getNodeVertex() - nodeData1->getNodeVertex()).normalized(), (nodeData3->getNodeVertex() - nodeData2->getNodeVertex()).normalized()).normalized();
 
@@ -323,7 +324,7 @@ namespace MDataPost
 							{
 								_globalMeshLineId++;
 								int meshID = meshFaceData1->getMeshID1();
-								mPostMeshData1 *meshData = getMeshDataByID(meshID);
+								std::shared_ptr<mMeshData>meshData = getMeshDataByID(meshID);
 								int order = this->judgeMeshLineOrder(meshData, std::set<int>{tempset.begin(), tempset.end()});
 								mPostMeshLineData1 *meshLineData = new mPostMeshLineData1(_globalMeshLineId, std::set<int>{tempset.begin(), tempset.end()}, meshID, order, partName);
 								this->appendMeshLineData(_globalMeshLineId, meshLineData);
@@ -344,8 +345,8 @@ namespace MDataPost
 			//判断二维网格的单元线
 			QMultiHash<QSet<int>, int> lines;//存单元线和它所在的单元
 
-			QVector<mPostMeshData1*> meshDatas = partData->getMeshDatas2();
-			for (mPostMeshData1 *meshData : meshDatas)
+			QVector<std::shared_ptr<mMeshData> > meshDatas = partData->getMeshDatas2();
+			for (std::shared_ptr<mMeshData>meshData : meshDatas)
 			{
 				int meshID = meshData->getMeshID();
 				if (meshData->getMeshType() == MeshTri)
@@ -371,7 +372,7 @@ namespace MDataPost
 				QSet<int> tempset = linelist.at(i);
 				if (lines.count(tempset) == 1)//边界线,保留信息
 				{
-					mPostMeshData1 *meshData = this->getMeshDataByID(lines.value(tempset));
+					std::shared_ptr<mMeshData>meshData = this->getMeshDataByID(lines.value(tempset));
 					_globalMeshLineId++;
 					int order = this->judgeMeshLineOrder(meshData, std::set<int>{tempset.begin(), tempset.end()});
 					mPostMeshLineData1 *meshLineData = new mPostMeshLineData1(_globalMeshLineId, std::set<int>{tempset.begin(), tempset.end()}, meshData->getMeshID(), order, partName);
@@ -379,26 +380,26 @@ namespace MDataPost
 					partData->appendMeshLineID(_globalMeshLineId);
 					//meshData->appendMeshLine(_globalMeshLineId);
 
-					/*for (int nodeID : tempset)
+					for (int nodeID : tempset)
 					{
 						mMeshModelData1::getInstance()->getNodeDataByID(nodeID)->addMeshLine(_globalMeshLineId);
-					}*/
+					}
 				}
 				else if (lines.count(tempset) == 2)//判断两个单元的方向是否大于一定度数，如果超过了则设为单元线
 				{
 					QList<int> meshIDs = lines.values(tempset);
 					if (meshIDs.size() == 2)
 					{
-						mPostMeshData1 *meshData1 = this->getMeshDataByID(meshIDs.at(0));
-						mPostMeshData1 *meshData2 = this->getMeshDataByID(meshIDs.at(1));
+						std::shared_ptr<mMeshData>meshData1 = this->getMeshDataByID(meshIDs.at(0));
+						std::shared_ptr<mMeshData>meshData2 = this->getMeshDataByID(meshIDs.at(1));
 
 						QVector<int> nodeIDs = meshData1->getNodeIndex();
 						QVector<int> nodeIDs1 = meshData2->getNodeIndex();
 						if (nodeIDs.size() >= 3 && nodeIDs1.size() >= 3)
 						{
-							mPostMeshNodeData1* nodeData1 = this->getNodeDataByID(nodeIDs.at(0));
-							mPostMeshNodeData1* nodeData2 = this->getNodeDataByID(nodeIDs.at(1));
-							mPostMeshNodeData1* nodeData3 = this->getNodeDataByID(nodeIDs.at(2));
+							std::shared_ptr<mMeshNodeData>  nodeData1 = this->getNodeDataByID(nodeIDs.at(0));
+							std::shared_ptr<mMeshNodeData>  nodeData2 = this->getNodeDataByID(nodeIDs.at(1));
+							std::shared_ptr<mMeshNodeData>  nodeData3 = this->getNodeDataByID(nodeIDs.at(2));
 							if (nodeData1 == nullptr || nodeData2 == nullptr || nodeData3 == nullptr)
 							{
 								continue;
@@ -445,40 +446,41 @@ namespace MDataPost
 			}
 			lines.clear();
 		}
-
+		*/
 	}
+
 	
 
-	void mOneFrameData1::generateMeshLine(mPostMeshFaceData1* surfaceID1, mPostMeshFaceData1* surfaceID2, mPostMeshData1* meshData, QString partName, mPostMeshPartData1* partData)
-	{
-		
-		mPostMeshFaceData1 *meshFaceData1 = surfaceID1;
-		QVector<int> i1 = meshFaceData1->getNodeIndex();
-		std::set<int> index1(i1.begin(), i1.end());
-		mPostMeshFaceData1 *meshFaceData2 = surfaceID2;
-		QVector<int> i2 = meshFaceData2->getNodeIndex();
-		std::set<int> index2(i2.begin(), i2.end());
-		std::set<int> result;
-		std::set_intersection(index1.begin(), index1.end(), index2.begin(), index2.end(), std::inserter(result, result.begin()));
-		if (result.size() == 2)
-		{
-			_globalMeshLineId++;
-			int order = this->judgeMeshLineOrder(meshData, result);
-			mPostMeshLineData1 *meshLineData = new mPostMeshLineData1(_globalMeshLineId, result, meshData->getMeshID(), order, partName);
-			this->appendMeshLineData(_globalMeshLineId, meshLineData);
-			partData->appendMeshLineID(_globalMeshLineId);
-			meshData->appendMeshLine(_globalMeshLineId);
-		}
-	}
+	//void mMeshModelData::generateMeshLine(std::shared_ptr<mMeshFaceData> surfaceID1, std::shared_ptr<mMeshFaceData> surfaceID2, std::shared_ptr<mMeshData>  meshData, QString partName, std::shared_ptr<mMeshPartData> partData)
+	//{
+	//	
+	//	std::shared_ptr<mMeshFaceData>meshFaceData1 = surfaceID1;
+	//	QVector<int> i1 = meshFaceData1->getNodeIndex();
+	//	std::set<int> index1(i1.begin(), i1.end());
+	//	std::shared_ptr<mMeshFaceData>meshFaceData2 = surfaceID2;
+	//	QVector<int> i2 = meshFaceData2->getNodeIndex();
+	//	std::set<int> index2(i2.begin(), i2.end());
+	//	std::set<int> result;
+	//	std::set_intersection(index1.begin(), index1.end(), index2.begin(), index2.end(), std::inserter(result, result.begin()));
+	//	if (result.size() == 2)
+	//	{
+	//		_globalMeshLineId++;
+	//		int order = this->judgeMeshLineOrder(meshData, result);
+	//		mPostMeshLineData1 *meshLineData = new mPostMeshLineData1(_globalMeshLineId, result, meshData->getMeshID(), order, partName);
+	//		this->appendMeshLineData(_globalMeshLineId, meshLineData);
+	//		partData->appendMeshLineID(_globalMeshLineId);
+	//		meshData->appendMeshLine(_globalMeshLineId);
+	//	}
+	//}
 
-	set<int> mOneFrameData1::getAllNodeIDs()
+	set<int> mMeshModelData::getAllNodeIDs()
 	{
 		set<int> ids;
-		QHashIterator<QString, mPostMeshPartData1*> iter(_partData1);
+		QHashIterator<QString, std::shared_ptr<mMeshPartData>> iter(_partData1);
 		while (iter.hasNext())
 		{
 			iter.next();
-			mPostMeshPartData1 *partData = iter.value();
+			std::shared_ptr<mMeshPartData> partData = iter.value();
 			if (partData == nullptr)
 			{
 				continue;
@@ -491,7 +493,7 @@ namespace MDataPost
 			set<int> meshIDs = partData->getMeshIDs3();
 			for (int meshID : meshIDs)
 			{
-				mPostMeshData1 *meshData = getMeshDataByID(meshID);
+				std::shared_ptr<mMeshData>meshData = getMeshDataByID(meshID);
 				if (meshData == nullptr)
 				{
 					continue;
@@ -508,7 +510,7 @@ namespace MDataPost
 			meshIDs = partData->getMeshIDs2();
 			for (int meshID : meshIDs)
 			{
-				mPostMeshData1 *meshData = getMeshDataByID(meshID);
+				std::shared_ptr<mMeshData>meshData = getMeshDataByID(meshID);
 				if (meshData == nullptr)
 				{
 					continue;
@@ -525,7 +527,7 @@ namespace MDataPost
 			meshIDs = partData->getMeshIDs1();
 			for (int meshID : meshIDs)
 			{
-				mPostMeshData1 *meshData = getMeshDataByID(meshID);
+				std::shared_ptr<mMeshData>meshData = getMeshDataByID(meshID);
 				if (meshData == nullptr)
 				{
 					continue;
@@ -542,7 +544,7 @@ namespace MDataPost
 			meshIDs = partData->getMeshIDs0();
 			for (int meshID : meshIDs)
 			{
-				mPostMeshData1 *meshData = getMeshDataByID(meshID);
+				std::shared_ptr<mMeshData>meshData = getMeshDataByID(meshID);
 				if (meshData == nullptr)
 				{
 					continue;
@@ -558,10 +560,10 @@ namespace MDataPost
 		return ids;
 	}
 
-	set<int> mOneFrameData1::getAllNodeIDsInPart(QString partName)
+	set<int> mMeshModelData::getAllNodeIDsInPart(QString partName)
 	{
 		set<int> ids;
-		mPostMeshPartData1 *partData = _partData1.value(partName);
+		std::shared_ptr<mMeshPartData> partData = _partData1.value(partName);
 		if (partData == nullptr)
 		{
 			return ids;
@@ -570,7 +572,7 @@ namespace MDataPost
 		set<int> meshIDs = partData->getMeshIDs3();
 		for (int meshID : meshIDs)
 		{
-			mPostMeshData1 *meshData = getMeshDataByID(meshID);
+			std::shared_ptr<mMeshData>meshData = getMeshDataByID(meshID);
 			if (meshData == nullptr)
 			{
 				continue;
@@ -587,7 +589,7 @@ namespace MDataPost
 		meshIDs = partData->getMeshIDs2();
 		for (int meshID : meshIDs)
 		{
-			mPostMeshData1 *meshData = getMeshDataByID(meshID);
+			std::shared_ptr<mMeshData>meshData = getMeshDataByID(meshID);
 			if (meshData == nullptr)
 			{
 				continue;
@@ -604,7 +606,7 @@ namespace MDataPost
 		meshIDs = partData->getMeshIDs1();
 		for (int meshID : meshIDs)
 		{
-			mPostMeshData1 *meshData = getMeshDataByID(meshID);
+			std::shared_ptr<mMeshData>meshData = getMeshDataByID(meshID);
 			if (meshData == nullptr)
 			{
 				continue;
@@ -621,7 +623,7 @@ namespace MDataPost
 		meshIDs = partData->getMeshIDs0();
 		for (int meshID : meshIDs)
 		{
-			mPostMeshData1 *meshData = getMeshDataByID(meshID);
+			std::shared_ptr<mMeshData>meshData = getMeshDataByID(meshID);
 			if (meshData == nullptr)
 			{
 				continue;
@@ -637,14 +639,14 @@ namespace MDataPost
 		return ids;
 	}
 
-	set<int> mOneFrameData1::getAllMeshIDs()
+	set<int> mMeshModelData::getAllMeshIDs()
 	{
 		set<int> ids;
-		QHashIterator<QString, mPostMeshPartData1*> iter(_partData1);
+		QHashIterator<QString, std::shared_ptr<mMeshPartData>> iter(_partData1);
 		while (iter.hasNext())
 		{
 			iter.next();
-			mPostMeshPartData1 *partData = iter.value();
+			std::shared_ptr<mMeshPartData> partData = iter.value();
 			if (partData == nullptr)
 			{
 				continue;
@@ -656,7 +658,7 @@ namespace MDataPost
 			set<int> meshIDs = partData->getMeshIDs3();
 			for (int meshID : meshIDs)
 			{
-				mPostMeshData1 *meshData = getMeshDataByID(meshID);
+				std::shared_ptr<mMeshData>meshData = getMeshDataByID(meshID);
 				if (meshData == nullptr)
 				{
 					continue;
@@ -671,7 +673,7 @@ namespace MDataPost
 			meshIDs = partData->getMeshIDs2();
 			for (int meshID : meshIDs)
 			{
-				mPostMeshData1 *meshData = getMeshDataByID(meshID);
+				std::shared_ptr<mMeshData>meshData = getMeshDataByID(meshID);
 				if (meshData == nullptr)
 				{
 					continue;
@@ -682,7 +684,7 @@ namespace MDataPost
 			meshIDs = partData->getMeshIDs1();
 			for (int meshID : meshIDs)
 			{
-				mPostMeshData1 *meshData = getMeshDataByID(meshID);
+				std::shared_ptr<mMeshData>meshData = getMeshDataByID(meshID);
 				if (meshData == nullptr)
 				{
 					continue;
@@ -693,7 +695,7 @@ namespace MDataPost
 			meshIDs = partData->getMeshIDs0();
 			for (int meshID : meshIDs)
 			{
-				mPostMeshData1 *meshData = getMeshDataByID(meshID);
+				std::shared_ptr<mMeshData>meshData = getMeshDataByID(meshID);
 				if (meshData == nullptr)
 				{
 					continue;
@@ -704,10 +706,10 @@ namespace MDataPost
 		return ids;
 	}
 
-	set<int> mOneFrameData1::getAllMeshIDsInPart(QString partName)
+	set<int> mMeshModelData::getAllMeshIDsInPart(QString partName)
 	{
 		set<int> ids;
-		mPostMeshPartData1 *partData = _partData1.value(partName);
+		std::shared_ptr<mMeshPartData> partData = _partData1.value(partName);
 		if (partData == nullptr)
 		{
 			return ids;
@@ -715,7 +717,7 @@ namespace MDataPost
 		set<int> meshIDs = partData->getMeshIDs3();
 		for (int meshID : meshIDs)
 		{
-			mPostMeshData1 *meshData = getMeshDataByID(meshID);
+			std::shared_ptr<mMeshData>meshData = getMeshDataByID(meshID);
 			if (meshData == nullptr)
 			{
 				continue;
@@ -730,7 +732,7 @@ namespace MDataPost
 		meshIDs = partData->getMeshIDs2();
 		for (int meshID : meshIDs)
 		{
-			mPostMeshData1 *meshData = getMeshDataByID(meshID);
+			std::shared_ptr<mMeshData>meshData = getMeshDataByID(meshID);
 			if (meshData == nullptr)
 			{
 				continue;
@@ -745,7 +747,7 @@ namespace MDataPost
 		meshIDs = partData->getMeshIDs1();
 		for (int meshID : meshIDs)
 		{
-			mPostMeshData1 *meshData = getMeshDataByID(meshID);
+			std::shared_ptr<mMeshData>meshData = getMeshDataByID(meshID);
 			if (meshData == nullptr)
 			{
 				continue;
@@ -760,7 +762,7 @@ namespace MDataPost
 		meshIDs = partData->getMeshIDs0();
 		for (int meshID : meshIDs)
 		{
-			mPostMeshData1 *meshData = getMeshDataByID(meshID);
+			std::shared_ptr<mMeshData>meshData = getMeshDataByID(meshID);
 			if (meshData == nullptr)
 			{
 				continue;
@@ -775,14 +777,14 @@ namespace MDataPost
 		return ids;
 	}
 
-	QVector<mPostMeshData1*> mOneFrameData1::getAll3DMeshIDs()
+	QVector<std::shared_ptr<mMeshData> > mMeshModelData::getAll3DMeshIDs()
 	{
-		QVector<mPostMeshData1*> meshDatas;
-		QHashIterator<QString, mPostMeshPartData1*> iter(_partData1);
+		QVector<std::shared_ptr<mMeshData> > meshDatas;
+		QHashIterator<QString, std::shared_ptr<mMeshPartData>> iter(_partData1);
 		while (iter.hasNext())
 		{
 			iter.next();
-			mPostMeshPartData1 *partData = iter.value();
+			std::shared_ptr<mMeshPartData> partData = iter.value();
 			if (partData == nullptr)
 			{
 				continue;
@@ -792,20 +794,20 @@ namespace MDataPost
 				continue;
 			}
 			//判断单元面
-			QVector<mPostMeshData1*> meshs = partData->getMeshDatas3();
+			QVector<std::shared_ptr<mMeshData> > meshs = partData->getMeshDatas3();
 			meshDatas.append(meshs);
 		}
 		return meshDatas;
 	}
 
-	QVector<mPostMeshData1*> mOneFrameData1::getAll2DMeshIDs()
+	QVector<std::shared_ptr<mMeshData> > mMeshModelData::getAll2DMeshIDs()
 	{
-		QVector<mPostMeshData1*> meshDatas;
-		QHashIterator<QString, mPostMeshPartData1*> iter(_partData1);
+		QVector<std::shared_ptr<mMeshData> > meshDatas;
+		QHashIterator<QString, std::shared_ptr<mMeshPartData>> iter(_partData1);
 		while (iter.hasNext())
 		{
 			iter.next();
-			mPostMeshPartData1 *partData = iter.value();
+			std::shared_ptr<mMeshPartData> partData = iter.value();
 			if (partData == nullptr)
 			{
 				continue;
@@ -815,20 +817,20 @@ namespace MDataPost
 				continue;
 			}
 			//判断单元面
-			QVector<mPostMeshData1*> meshs = partData->getMeshDatas2();
+			QVector<std::shared_ptr<mMeshData> > meshs = partData->getMeshDatas2();
 			meshDatas.append(meshs);
 		}
 		return meshDatas;
 	}
 
-	set<int> mOneFrameData1::getAllMeshFaceIDs()
+	set<int> mMeshModelData::getAllMeshFaceIDs()
 	{
 		set<int> ids;
-		QHashIterator<QString, mPostMeshPartData1*> iter(_partData1);
+		QHashIterator<QString, std::shared_ptr<mMeshPartData>> iter(_partData1);
 		while (iter.hasNext())
 		{
 			iter.next();
-			mPostMeshPartData1 *partData = iter.value();
+			std::shared_ptr<mMeshPartData> partData = iter.value();
 			if (partData == nullptr)
 			{
 				continue;
@@ -838,49 +840,49 @@ namespace MDataPost
 				continue;
 			}
 			//判断单元面
-			QVector<mPostMeshFaceData1*> meshFaceDatas = partData->getMeshFaceData();
-			for (mPostMeshFaceData1* meshFaceData : meshFaceDatas)
+			QVector<std::shared_ptr<mMeshFaceData>> meshFaceDatas = partData->getMeshFaceData();
+			for (std::shared_ptr<mMeshFaceData> meshFaceData : meshFaceDatas)
 			{
 				if (meshFaceData == nullptr)
 				{
 					continue;
 				}
-				ids.insert(meshFaceData->getMeshFaceID());
+				//ids.insert(meshFaceData->getMeshFaceID());
 			}
 		}
 		return ids;
 	}
 
-	set<int> mOneFrameData1::getAllMeshFaceIDsInPart(QString partName)
+	set<int> mMeshModelData::getAllMeshFaceIDsInPart(QString partName)
 	{
 		set<int> ids;
-		mPostMeshPartData1 *partData = this->getMeshPartDataByPartName(partName);
+		std::shared_ptr<mMeshPartData> partData = this->getMeshPartDataByPartName(partName);
 		if (partData == nullptr)
 		{
 			return ids;
 		}
 		//判断单元面
-		QVector<mPostMeshFaceData1*> meshFaceDatas = partData->getMeshFaceData();
-		for (mPostMeshFaceData1* meshFaceData : meshFaceDatas)
+		QVector<std::shared_ptr<mMeshFaceData>> meshFaceDatas = partData->getMeshFaceData();
+		for (std::shared_ptr<mMeshFaceData> meshFaceData : meshFaceDatas)
 		{
 			if (meshFaceData == nullptr)
 			{
 				continue;
 			}
-			ids.insert(meshFaceData->getMeshFaceID());
+			//ids.insert(meshFaceData->getMeshFaceID());
 		}
 
 		return ids;
 	}
 
-	QVector<mPostMeshFaceData1*> mOneFrameData1::getAllMeshFaceDatas()
+	QVector<std::shared_ptr<mMeshFaceData>> mMeshModelData::getAllMeshFaceDatas()
 	{
-		QVector<mPostMeshFaceData1*> meshFaceDatas;
-		QHashIterator<QString, mPostMeshPartData1*> iter(_partData1);
+		QVector<std::shared_ptr<mMeshFaceData>> meshFaceDatas;
+		QHashIterator<QString, std::shared_ptr<mMeshPartData>> iter(_partData1);
 		while (iter.hasNext())
 		{
 			iter.next();
-			mPostMeshPartData1 *partData = iter.value();
+			auto partData = iter.value();
 			if (partData == nullptr)
 			{
 				continue;
@@ -890,13 +892,13 @@ namespace MDataPost
 				continue;
 			}
 			//判断单元面
-			QVector<mPostMeshFaceData1*> meshFaces = partData->getMeshFaceData();
+			QVector<std::shared_ptr<mMeshFaceData>> meshFaces = partData->getMeshFaceData();
 			meshFaceDatas.append(meshFaces);
 		}
 		return meshFaceDatas;
 	}
 
-	bool mOneFrameData1::isIdExistInModel(int id, const QString & type)
+	bool mMeshModelData::isIdExistInModel(int id, const QString & type)
 	{
 		if (type == QString("节点"))
 		{
@@ -915,26 +917,26 @@ namespace MDataPost
 		return false;
 	}
 
-	mPostMeshPartData1* mOneFrameData1::getMeshPartDataByPartName(QString partName)
+	std::shared_ptr<mMeshPartData> mMeshModelData::getMeshPartDataByPartName(QString partName)
 	{
 		return _partData1.value(partName);
 	}
 
-	mPostMeshLineData1* mOneFrameData1::getMeshLineDataByID(int ID)
-	{
-		return _meshLineData1.value(ID);
-	}
+	//mPostMeshLineData1* mMeshModelData::getMeshLineDataByID(int ID)
+	//{
+	//	return _meshLineData1.value(ID);
+	//}
 
-	mPostMeshFaceData1* mOneFrameData1::getMeshFaceDataByID(int ID)
-	{
-		if (ID < _meshFaceData1.size())
-		{
-			return _meshFaceData1.at(ID);
-		}
-		return nullptr;
-	}
+	//std::shared_ptr<mMeshFaceData> mMeshModelData::getMeshFaceDataByID(int ID)
+	//{
+	//	if (ID < _meshFaceData1.size())
+	//	{
+	//		return _meshFaceData1.at(ID);
+	//	}
+	//	return nullptr;
+	//}
 
-	mPostMeshData1* mOneFrameData1::getMeshDataByID(int ID)
+	std::shared_ptr<mMeshData>  mMeshModelData::getMeshDataByID(int ID)
 	{
 		if (ID < _meshData2.size())
 		{
@@ -943,7 +945,7 @@ namespace MDataPost
 		return _meshData1.value(ID);
 	}
 
-	mPostMeshNodeData1* mOneFrameData1::getNodeDataByID(int ID)
+	std::shared_ptr<mMeshNodeData>  mMeshModelData::getNodeDataByID(int ID)
 	{
 		if (ID < _nodeData2.size())
 		{
@@ -952,18 +954,18 @@ namespace MDataPost
 		return _nodeData1.value(ID);
 	}
 
-	QHashIterator<QString, mPostMeshPartData1*> mOneFrameData1::getMeshPartIterator()
+	QHashIterator<QString, std::shared_ptr<mMeshPartData>> mMeshModelData::getMeshPartIterator()
 	{
-		QHashIterator<QString, mPostMeshPartData1*> iter(_partData1);
+		QHashIterator<QString, std::shared_ptr<mMeshPartData>> iter(_partData1);
 		return iter;
 	}
 
-	const QHash<QString, mPostMeshPartData1*> mOneFrameData1::getMeshParts()
+	const QHash<QString, std::shared_ptr<mMeshPartData>> mMeshModelData::getMeshParts()
 	{
 		return _partData1;
 	}
 
-	void mOneFrameData1::appendMeshPartData(QString partName, mPostMeshPartData1* data)
+	void mMeshModelData::appendMeshPartData(QString partName, std::shared_ptr<mMeshPartData> data)
 	{
 		
 		_partData1.insert(partName, data);
@@ -973,23 +975,23 @@ namespace MDataPost
 
 		caculateMeshSize();
 		//_meshFace.clear();
-		//std::map<std::set<int>, mPostMeshFaceData1*>().swap(_meshFace);
+		//std::map<std::set<int>, std::shared_ptr<mMeshFaceData>>().swap(_meshFace);
 	
 		
 				
 	}
 
-	void mOneFrameData1::appendMeshFaceData(int ID, mPostMeshFaceData1* data)
-	{
-		_meshFaceData1.push_back(data);
-	}
+	//void mMeshModelData::appendMeshFaceData(std::shared_ptr<mMeshFaceData> data)
+	//{
+	//	_meshFaceData1.push_back(data);
+	//}
 
-	void mOneFrameData1::appendMeshLineData(int ID, mPostMeshLineData1* data)
-	{
-		_meshLineData1.insert(ID, data);
-	}
+	//void mMeshModelData::appendMeshLineData(int ID, mPostMeshLineData1* data)
+	//{
+	//	_meshLineData1.insert(ID, data);
+	//}
 
-	void mOneFrameData1::appendMeshData(int ID, mPostMeshData1* data)
+	void mMeshModelData::appendMeshData(int ID, std::shared_ptr<mMeshData>  data)
 	{
 		//if (ID < _meshData2.size())
 		//{
@@ -1002,7 +1004,7 @@ namespace MDataPost
 		_meshData2.push_back(data);
 	}
 
-	void mOneFrameData1::appendNodeData(int ID, mPostMeshNodeData1* data)
+	void mMeshModelData::appendNodeData(int ID, std::shared_ptr<mMeshNodeData>  data)
 	{
 		if (ID < _nodeData2.size())
 		{
@@ -1014,13 +1016,14 @@ namespace MDataPost
 		}
 	}
 
-	void mOneFrameData1::createMesh(int ID, MViewBasic::MeshType meshType, MViewBasic::ElementType elementType, QVector<int> index, 
-		mPostMeshPartData1* partData, QHash<QVector<int>, mPostMeshFaceData1*> &_meshFace)
+	void mMeshModelData::createMesh(int ID, MViewBasic::MeshType meshType, QVector<int> index, 
+		std::shared_ptr<mMeshPartData> partData, QHash<QVector<int>, std::shared_ptr<mMeshFaceData>> &_meshFace)
 	{
-		QString partName = partData->getPartName();
-		mPostMeshData1 *meshData = new mPostMeshData1(ID, meshType, elementType, partName);
-		appendMeshData(ID, meshData);
-
+		//QString partName = partData->getPartName();
+		//std::shared_ptr<mMeshData> meshData = make_shared<mMeshData>(ID, meshType, partData);
+		//meshData->setNodeIndex(index);
+		//appendMeshData(ID, meshData);
+		/*
 		if (meshType == MeshPoint)
 		{
 			meshData->setNodeIndex(index);
@@ -1078,74 +1081,78 @@ namespace MDataPost
 			createMeshFace(QVector<int>{index.at(3), index.at(0), index.at(4), index.at(7)}, QVector<int>{index.at(3), index.at(0), index.at(4), index.at(7)}, meshData, 6, partName, partData, _meshFace);
 		}
 		_eleNum[elementType]++;
+		*/
 	}
 
-	void mOneFrameData1::createMesh(int ID, MViewBasic::MeshType meshType, MViewBasic::ElementType elementType, QVector<int> index, mPostMeshPartData1 * partData, QVector<QVector<QPair<QPair<int,int>, mPostMeshFaceData1*>>>& _meshFace)
+	void mMeshModelData::createMesh(int ID, MViewBasic::MeshType meshType, QVector<int> index, std::shared_ptr<mMeshPartData> partData, QVector<QVector<QPair<QPair<int,int>, std::shared_ptr<mMeshFaceData>>>>& _meshFace)
 	{
-		QString partName = partData->getPartName();
-		mPostMeshData1 *meshData = new mPostMeshData1(ID, meshType, elementType, partName);
-		appendMeshData(ID, meshData);
-		switch (meshType)
-		{
-		case MViewBasic::MeshPoint:	
-			meshData->setNodeIndex(index);
-			partData->appendMesh0(meshData);
-			break;
-		case MViewBasic::MeshBeam:
-			meshData->setNodeIndex(index);
-			partData->appendMesh1(meshData);
-			break;
-		case MViewBasic::MeshTri:
-		case MViewBasic::MeshQuad:
-			meshData->setNodeIndex(index);
-			partData->appendMesh2(meshData);
-			break;
-		case MViewBasic::MeshTet:
-			partData->appendMesh3(meshData);
-			createMeshFace(QVector<int>{index.at(0), index.at(2), index.at(1)}, meshData, 1, partName, _meshFace);
-			createMeshFace(QVector<int>{index.at(0), index.at(1), index.at(3)}, meshData, 2, partName, _meshFace);
-			createMeshFace(QVector<int>{index.at(1), index.at(2), index.at(3)}, meshData, 3, partName, _meshFace);
-			createMeshFace(QVector<int>{index.at(0), index.at(3), index.at(2)}, meshData, 4, partName, _meshFace);
-			break;
-		case MViewBasic::MeshWedge:
-			partData->appendMesh3(meshData);
-			//meshData->faces.reserve(5);
-			createMeshFace(QVector<int>{index.at(0), index.at(2), index.at(1)}, meshData, 1, partName, _meshFace);
-			createMeshFace(QVector<int>{index.at(3), index.at(4), index.at(5)}, meshData, 2, partName, _meshFace);
-			createMeshFace(QVector<int>{index.at(0), index.at(1), index.at(4), index.at(3)}, meshData, 3, partName, _meshFace);
-			createMeshFace(QVector<int>{index.at(1), index.at(2), index.at(5), index.at(4)}, meshData, 4, partName, _meshFace);
-			createMeshFace(QVector<int>{index.at(2), index.at(0), index.at(3), index.at(5)}, meshData, 5, partName, _meshFace);
-			break;
-		case MViewBasic::MeshHex:
-			partData->appendMesh3(meshData);
-			//meshData->faces.reserve(6);
-			createMeshFace(QVector<int>{index.at(0), index.at(3), index.at(2), index.at(1)}, meshData, 1, partName, _meshFace);
-			createMeshFace(QVector<int>{index.at(4), index.at(5), index.at(6), index.at(7)}, meshData, 2, partName, _meshFace);
-			createMeshFace(QVector<int>{index.at(0), index.at(1), index.at(5), index.at(4)}, meshData, 3, partName, _meshFace);
-			createMeshFace(QVector<int>{index.at(1), index.at(2), index.at(6), index.at(5)}, meshData, 4, partName, _meshFace);
-			createMeshFace(QVector<int>{index.at(2), index.at(3), index.at(7), index.at(6)}, meshData, 5, partName, _meshFace);
-			createMeshFace(QVector<int>{index.at(3), index.at(0), index.at(4), index.at(7)}, meshData, 6, partName, _meshFace);
-			break;
-		case MViewBasic::MeshPyramid:
-			partData->appendMesh3(meshData);
-			//meshData->faces.reserve(5);
-			createMeshFace(QVector<int>{index.at(0), index.at(1), index.at(2), index.at(3)}, meshData, 1, partName, _meshFace);
-			createMeshFace(QVector<int>{index.at(1), index.at(2), index.at(4)}, meshData, 2, partName, _meshFace);
-			createMeshFace(QVector<int>{index.at(4), index.at(3), index.at(2)}, meshData, 3, partName, _meshFace);
-			createMeshFace(QVector<int>{index.at(4), index.at(0), index.at(3)}, meshData, 4, partName, _meshFace);
-			createMeshFace(QVector<int>{index.at(0), index.at(1), index.at(4)}, meshData, 5, partName, _meshFace);
-			break;
-		default:
-			break;
-		}
-		_eleNum[elementType]++;
+		//std::shared_ptr<mMeshData> meshData = make_shared<mMeshData>(ID, partData, make_shared<mMeshModelData>(this));
+		//meshData->setNodeIndex(index, _meshFace);
+		//appendMeshData(ID, meshData);
+		//QString partName = partData->getPartName();
+		//std::shared_ptr<mMeshData> meshData = new mPostMeshData1(ID, meshType, elementType, partName);
+		//appendMeshData(ID, meshData);
+		//switch (meshType)
+		//{
+		//case MViewBasic::MeshPoint:	
+		//	meshData->setNodeIndex(index);
+		//	partData->appendMesh0(meshData);
+		//	break;
+		//case MViewBasic::MeshBeam:
+		//	meshData->setNodeIndex(index);
+		//	partData->appendMesh1(meshData);
+		//	break;
+		//case MViewBasic::MeshTri:
+		//case MViewBasic::MeshQuad:
+		//	meshData->setNodeIndex(index);
+		//	partData->appendMesh2(meshData);
+		//	break;
+		//case MViewBasic::MeshTet:
+		//	partData->appendMesh3(meshData);
+		//	createMeshFace(QVector<int>{index.at(0), index.at(2), index.at(1)}, meshData, 1, partName, _meshFace);
+		//	createMeshFace(QVector<int>{index.at(0), index.at(1), index.at(3)}, meshData, 2, partName, _meshFace);
+		//	createMeshFace(QVector<int>{index.at(1), index.at(2), index.at(3)}, meshData, 3, partName, _meshFace);
+		//	createMeshFace(QVector<int>{index.at(0), index.at(3), index.at(2)}, meshData, 4, partName, _meshFace);
+		//	break;
+		//case MViewBasic::MeshWedge:
+		//	partData->appendMesh3(meshData);
+		//	//meshData->faces.reserve(5);
+		//	createMeshFace(QVector<int>{index.at(0), index.at(2), index.at(1)}, meshData, 1, partName, _meshFace);
+		//	createMeshFace(QVector<int>{index.at(3), index.at(4), index.at(5)}, meshData, 2, partName, _meshFace);
+		//	createMeshFace(QVector<int>{index.at(0), index.at(1), index.at(4), index.at(3)}, meshData, 3, partName, _meshFace);
+		//	createMeshFace(QVector<int>{index.at(1), index.at(2), index.at(5), index.at(4)}, meshData, 4, partName, _meshFace);
+		//	createMeshFace(QVector<int>{index.at(2), index.at(0), index.at(3), index.at(5)}, meshData, 5, partName, _meshFace);
+		//	break;
+		//case MViewBasic::MeshHex:
+		//	partData->appendMesh3(meshData);
+		//	//meshData->faces.reserve(6);
+		//	createMeshFace(QVector<int>{index.at(0), index.at(3), index.at(2), index.at(1)}, meshData, 1, partName, _meshFace);
+		//	createMeshFace(QVector<int>{index.at(4), index.at(5), index.at(6), index.at(7)}, meshData, 2, partName, _meshFace);
+		//	createMeshFace(QVector<int>{index.at(0), index.at(1), index.at(5), index.at(4)}, meshData, 3, partName, _meshFace);
+		//	createMeshFace(QVector<int>{index.at(1), index.at(2), index.at(6), index.at(5)}, meshData, 4, partName, _meshFace);
+		//	createMeshFace(QVector<int>{index.at(2), index.at(3), index.at(7), index.at(6)}, meshData, 5, partName, _meshFace);
+		//	createMeshFace(QVector<int>{index.at(3), index.at(0), index.at(4), index.at(7)}, meshData, 6, partName, _meshFace);
+		//	break;
+		//case MViewBasic::MeshPyramid:
+		//	partData->appendMesh3(meshData);
+		//	//meshData->faces.reserve(5);
+		//	createMeshFace(QVector<int>{index.at(0), index.at(1), index.at(2), index.at(3)}, meshData, 1, partName, _meshFace);
+		//	createMeshFace(QVector<int>{index.at(1), index.at(2), index.at(4)}, meshData, 2, partName, _meshFace);
+		//	createMeshFace(QVector<int>{index.at(4), index.at(3), index.at(2)}, meshData, 3, partName, _meshFace);
+		//	createMeshFace(QVector<int>{index.at(4), index.at(0), index.at(3)}, meshData, 4, partName, _meshFace);
+		//	createMeshFace(QVector<int>{index.at(0), index.at(1), index.at(4)}, meshData, 5, partName, _meshFace);
+		//	break;
+		//default:
+		//	break;
+		//}
+		//_eleNum[elementType]++;
 	}
 
-	void mOneFrameData1::maskMesh(set<int> meshIDs)
+	void mMeshModelData::maskMesh(set<int> meshIDs)
 	{
 		for (auto iter = meshIDs.begin(); iter != meshIDs.end(); ++iter)
 		{
-			mPostMeshData1* meshData = getMeshDataByID(*iter);
+			std::shared_ptr<mMeshData>  meshData = getMeshDataByID(*iter);
 			if (meshData == nullptr)
 			{
 				continue;
@@ -1156,11 +1163,11 @@ namespace MDataPost
 		//this->judgeMeshFaceIsShow(meshIDs);
 	}
 
-	void mOneFrameData1::showMesh(set<int> meshIDs)
+	void mMeshModelData::showMesh(set<int> meshIDs)
 	{
 		for (auto iter = meshIDs.begin(); iter != meshIDs.end(); ++iter)
 		{
-			mPostMeshData1* meshData = getMeshDataByID(*iter);
+			std::shared_ptr<mMeshData>  meshData = getMeshDataByID(*iter);
 			if (meshData == nullptr)
 			{
 				continue;
@@ -1171,9 +1178,9 @@ namespace MDataPost
 		//this->judgeMeshFaceIsShow(meshIDs);
 	}
 
-	void mOneFrameData1::reverseMaskMesh()
+	void mMeshModelData::reverseMaskMesh()
 	{
-		for (mPostMeshData1 *meshData : _meshData2)
+		for (std::shared_ptr<mMeshData>meshData : _meshData2)
 		{
 			if (meshData == nullptr)
 			{
@@ -1181,11 +1188,11 @@ namespace MDataPost
 			}
 			meshData->reverseMeshVisual();
 		}
-		QHashIterator<int, mPostMeshData1*> iter(_meshData1);
+		QHashIterator<int, std::shared_ptr<mMeshData> > iter(_meshData1);
 		while (iter.hasNext())
 		{
 			iter.next();
-			mPostMeshData1* meshData = iter.value();
+			std::shared_ptr<mMeshData>  meshData = iter.value();
 			if (meshData == nullptr)
 			{
 				continue;
@@ -1196,9 +1203,9 @@ namespace MDataPost
 		//this->judgeMeshFaceIsShow();
 	}
 
-	void mOneFrameData1::showAllMesh()
+	void mMeshModelData::showAllMesh()
 	{
-		for (mPostMeshData1 *meshData : _meshData2)
+		for (std::shared_ptr<mMeshData>meshData : _meshData2)
 		{
 			if (meshData == nullptr)
 			{
@@ -1206,11 +1213,11 @@ namespace MDataPost
 			}
 			meshData->setMeshVisual(true);
 		}
-		QHashIterator<int, mPostMeshData1*> iter(_meshData1);
+		QHashIterator<int, std::shared_ptr<mMeshData> > iter(_meshData1);
 		while (iter.hasNext())
 		{
 			iter.next();
-			mPostMeshData1* meshData = iter.value();
+			std::shared_ptr<mMeshData>  meshData = iter.value();
 			if (meshData == nullptr)
 			{
 				continue;
@@ -1221,12 +1228,13 @@ namespace MDataPost
 		//this->judgeMeshFaceIsShow();
 	}
 
-	int mOneFrameData1::getNumByElementType(ElementType elementType)
+	int mMeshModelData::getNumByElementType(ElementType elementType)
 	{
-		return _eleNum.value(elementType);
+		//return _eleNum.value(elementType);
+		return 0;
 	}
 
-	QVector3D mOneFrameData1::getMeshCenter(mPostMeshData1 * meshData, const QHash<int, QVector3D> &dis, QVector3D deformationScale, QVector3D explodeDis)
+	QVector3D mMeshModelData::getMeshCenter(std::shared_ptr<mMeshData> meshData, const QHash<int, QVector3D> &dis, QVector3D deformationScale, QVector3D explodeDis)
 	{
 		int nodeNum = 1;
 		switch (meshData->getMeshType())
@@ -1246,7 +1254,7 @@ namespace MDataPost
 		QVector3D nodePos;
 		for (int nodeID : nodeIDs)
 		{
-			mPostMeshNodeData1 *meshNodeData = this->getNodeDataByID(nodeID);
+			std::shared_ptr<mMeshNodeData> meshNodeData = this->getNodeDataByID(nodeID);
 			if (meshNodeData == nullptr)
 			{
 				return QVector3D();
@@ -1256,7 +1264,7 @@ namespace MDataPost
 		return nodePos / nodeNum;
 	}
 
-	QVector<QVector3D> mOneFrameData1::getMeshVertexs(mPostMeshData1 * meshData, const QHash<int, QVector3D>& dis, QVector3D deformationScale, QVector3D explodeDis)
+	QVector<QVector3D> mMeshModelData::getMeshVertexs(std::shared_ptr<mMeshData> meshData, const QHash<int, QVector3D>& dis, QVector3D deformationScale, QVector3D explodeDis)
 	{
 		int nodeNum = 1;
 		switch (meshData->getMeshType())
@@ -1276,7 +1284,7 @@ namespace MDataPost
 		QVector<QVector3D> vertexs;
 		for (int nodeID : nodeIDs)
 		{
-			mPostMeshNodeData1 *meshNodeData = this->getNodeDataByID(nodeID);
+			std::shared_ptr<mMeshNodeData> meshNodeData = this->getNodeDataByID(nodeID);
 			if (meshNodeData == nullptr)
 			{
 				return vertexs;
@@ -1286,138 +1294,22 @@ namespace MDataPost
 		return vertexs;
 	}
 
-	void mOneFrameData1::createMeshFace(QVector<int> set, QVector<int> ve, mPostMeshData1* meshData, int order,
-		QString partName,  mPostMeshPartData1* partData, QHash<QVector<int>, mPostMeshFaceData1*> &_meshFace)
+	void mMeshModelData::createMeshFace(QVector<int> set, QVector<int> ve, std::shared_ptr<mMeshData>  meshData, int order,
+		QString partName,  std::shared_ptr<mMeshPartData> partData, QHash<QVector<int>, std::shared_ptr<mMeshFaceData>> &_meshFace)
 	{
-		sort(set.begin(), set.end());
-		if (_meshFace.find(set) == _meshFace.end())
-		{
-			//_globalMeshFaceId++;	
-
-			mPostMeshFaceData1 *meshFaceData1 = new mPostMeshFaceData1(_meshFaceData1.size(), ve, meshData->getMeshID(), order, partName);
-			this->appendMeshFaceData(_globalMeshFaceId, meshFaceData1);
-			meshData->appendMeshFace(meshFaceData1);
-			_meshFace[set] = meshFaceData1;
-		}
-		else
-		{
-			mPostMeshFaceData1 *meshFaceData1 = _meshFace[set];
-			meshFaceData1->appendMeshID(meshData->getMeshID(), order, ve[0]);
-			meshData->appendMeshFace(meshFaceData1);
-			_meshFace.remove(set);
-			meshFaceData1->setVisual(false);
-		}
-	}
-
-	void mOneFrameData1::createMeshFace(QVector<int> set, mPostMeshData1 * meshData, int order, QString partName, QVector<QVector<QPair<QPair<int, int>, mPostMeshFaceData1*>>>& _meshFace)
-	{
-		auto itermin = min_element(set.begin(), set.end());
-		int in = distance(set.begin(),itermin);
-		QVector<QPair<QPair<int, int>, mPostMeshFaceData1*>> &face = _meshFace[*itermin];
-		bool isNeibu{ false };
-		QPair<int, int> pair;
-		int n1 = set.size();
-		if (n1 == 3)
-		{
-			switch (in)
-			{
-			case 0:pair.first = set.at(2); pair.second = set.at(1);break;
-			case 1:pair.first = set.at(0); pair.second = set.at(2); break;
-			case 2:pair.first = set.at(1); pair.second = set.at(0); break;
-			default:
-				break;
-			}
-		}
-		else
-		{
-			switch (in)
-			{
-			case 0:pair.first = set.at(3); pair.second = set.at(1); break;
-			case 1:pair.first = set.at(0); pair.second = set.at(2); break;
-			case 2:pair.first = set.at(1); pair.second = set.at(3); break;
-			case 3:pair.first = set.at(2); pair.second = set.at(0); break;
-			default:
-				break;
-			}
-			//for (int i = 0; i < face.size(); ++i)
-			//{
-			//	QPair<QPair<int, int>, mPostMeshFaceData1*> f = face.at(i);
-			//	if (f.first.first == pair.second && f.first.second == pair.first)//是内部面
-			//	{
-			//		f.second->appendMeshID(meshData->getMeshID(), order, set[0]);
-			//		meshData->appendMeshFace(f.second);
-			//		//meshData->setMeshFace(order, f.second);
-			//		face.removeAt(i);
-			//		f.second->setVisual(false);
-			//		isNeibu = true;
-			//		break;
-			//	}
-			//}
-			//if (!isNeibu)//外部面，重新创建
-			//{
-			//	mPostMeshFaceData1 *meshFaceData1 = new mPostMeshFaceData1(_meshFaceData1.size(), set, meshData->getMeshID(), order, partName);
-			//	this->appendMeshFaceData(0, meshFaceData1);
-			//	meshData->appendMeshFace(meshFaceData1);
-				//meshData->setMeshFace(order, meshFaceData1);
-				//if (in == 0)
-				//{
-				//	pair.first = set.at(2); pair.second = set.at(3);
-				//}
-				//else if (in == 1)
-				//{
-				//	pair.first = set.at(3); pair.second = set.at(0);
-				//}
-				//else if (in == 2)
-				//{
-				//	pair.first = set.at(0); pair.second = set.at(1);
-				//}
-				//else if (in == 3)
-				//{
-				//	pair.first = set.at(1); pair.second = set.at(2);
-				//}
-				//_meshFace[*itermin].append({ pair,meshFaceData1 });
-			//}
-		}
-		for (int i = 0, n = face.size(); i < n; ++i)
-		{
-			QPair<QPair<int, int>, mPostMeshFaceData1*> f = face.at(i);
-			int n2 = f.second->getNodeIndex().size();
-			if (f.first.first == pair.second && f.first.second == pair.first)//是内部面
-			{
-				if (n1 == n2)
-				{
-					f.second->appendMeshID(meshData->getMeshID(), order, set[0]);
-					meshData->appendMeshFace(f.second);
-					//meshData->setMeshFace(order, f.second);
-					face.removeAt(i);
-					f.second->setVisual(false);
-					isNeibu = true;
-					break;
-				}
-			}
-		}
-		if (!isNeibu)//外部面，重新创建
-		{
-			mPostMeshFaceData1 *meshFaceData1 = new mPostMeshFaceData1(_meshFaceData1.size(), set, meshData->getMeshID(), order, partName);
-			this->appendMeshFaceData(0, meshFaceData1);
-			meshData->appendMeshFace(meshFaceData1);
-			//meshData->setMeshFace(order, meshFaceData1);
-			_meshFace[*itermin].append({ pair,meshFaceData1 });
-		}
-
 		//sort(set.begin(), set.end());
 		//if (_meshFace.find(set) == _meshFace.end())
 		//{
 		//	//_globalMeshFaceId++;	
 
-		//	mPostMeshFaceData1 *meshFaceData1 = new mPostMeshFaceData1(_meshFaceData1.size(), index, meshData->getMeshID(), order, partName);
+		//	std::shared_ptr<mMeshFaceData>meshFaceData1 = new mPostMeshFaceData1(_meshFaceData1.size(), ve, meshData->getMeshID(), order, partName);
 		//	this->appendMeshFaceData(_globalMeshFaceId, meshFaceData1);
 		//	meshData->appendMeshFace(meshFaceData1);
 		//	_meshFace[set] = meshFaceData1;
 		//}
 		//else
 		//{
-		//	mPostMeshFaceData1 *meshFaceData1 = _meshFace[set];
+		//	std::shared_ptr<mMeshFaceData>meshFaceData1 = _meshFace[set];
 		//	meshFaceData1->appendMeshID(meshData->getMeshID(), order, ve[0]);
 		//	meshData->appendMeshFace(meshFaceData1);
 		//	_meshFace.remove(set);
@@ -1425,7 +1317,123 @@ namespace MDataPost
 		//}
 	}
 
-	void mOneFrameData1::eraseNotMeshFace()
+	void mMeshModelData::createMeshFace(QVector<int> set, std::shared_ptr<mMeshData> meshData, int order, QString partName, QVector<QVector<QPair<QPair<int, int>, std::shared_ptr<mMeshFaceData>>>>& _meshFace)
+	{
+		//auto itermin = min_element(set.begin(), set.end());
+		//int in = distance(set.begin(),itermin);
+		//QVector<QPair<QPair<int, int>, std::shared_ptr<mMeshFaceData>>> &face = _meshFace[*itermin];
+		//bool isNeibu{ false };
+		//QPair<int, int> pair;
+		//int n1 = set.size();
+		//if (n1 == 3)
+		//{
+		//	switch (in)
+		//	{
+		//	case 0:pair.first = set.at(2); pair.second = set.at(1);break;
+		//	case 1:pair.first = set.at(0); pair.second = set.at(2); break;
+		//	case 2:pair.first = set.at(1); pair.second = set.at(0); break;
+		//	default:
+		//		break;
+		//	}
+		//}
+		//else
+		//{
+		//	switch (in)
+		//	{
+		//	case 0:pair.first = set.at(3); pair.second = set.at(1); break;
+		//	case 1:pair.first = set.at(0); pair.second = set.at(2); break;
+		//	case 2:pair.first = set.at(1); pair.second = set.at(3); break;
+		//	case 3:pair.first = set.at(2); pair.second = set.at(0); break;
+		//	default:
+		//		break;
+		//	}
+		//	//for (int i = 0; i < face.size(); ++i)
+		//	//{
+		//	//	QPair<QPair<int, int>, std::shared_ptr<mMeshFaceData>> f = face.at(i);
+		//	//	if (f.first.first == pair.second && f.first.second == pair.first)//是内部面
+		//	//	{
+		//	//		f.second->appendMeshID(meshData->getMeshID(), order, set[0]);
+		//	//		meshData->appendMeshFace(f.second);
+		//	//		//meshData->setMeshFace(order, f.second);
+		//	//		face.removeAt(i);
+		//	//		f.second->setVisual(false);
+		//	//		isNeibu = true;
+		//	//		break;
+		//	//	}
+		//	//}
+		//	//if (!isNeibu)//外部面，重新创建
+		//	//{
+		//	//	std::shared_ptr<mMeshFaceData>meshFaceData1 = new mPostMeshFaceData1(_meshFaceData1.size(), set, meshData->getMeshID(), order, partName);
+		//	//	this->appendMeshFaceData(0, meshFaceData1);
+		//	//	meshData->appendMeshFace(meshFaceData1);
+		//		//meshData->setMeshFace(order, meshFaceData1);
+		//		//if (in == 0)
+		//		//{
+		//		//	pair.first = set.at(2); pair.second = set.at(3);
+		//		//}
+		//		//else if (in == 1)
+		//		//{
+		//		//	pair.first = set.at(3); pair.second = set.at(0);
+		//		//}
+		//		//else if (in == 2)
+		//		//{
+		//		//	pair.first = set.at(0); pair.second = set.at(1);
+		//		//}
+		//		//else if (in == 3)
+		//		//{
+		//		//	pair.first = set.at(1); pair.second = set.at(2);
+		//		//}
+		//		//_meshFace[*itermin].append({ pair,meshFaceData1 });
+		//	//}
+		//}
+		//for (int i = 0, n = face.size(); i < n; ++i)
+		//{
+		//	QPair<QPair<int, int>, std::shared_ptr<mMeshFaceData>> f = face.at(i);
+		//	int n2 = f.second->getNodeIndex().size();
+		//	if (f.first.first == pair.second && f.first.second == pair.first)//是内部面
+		//	{
+		//		if (n1 == n2)
+		//		{
+		//			f.second->appendMeshID(meshData->getMeshID(), order, set[0]);
+		//			meshData->appendMeshFace(f.second);
+		//			//meshData->setMeshFace(order, f.second);
+		//			face.removeAt(i);
+		//			f.second->setVisual(false);
+		//			isNeibu = true;
+		//			break;
+		//		}
+		//	}
+		//}
+		//if (!isNeibu)//外部面，重新创建
+		//{
+		//	std::shared_ptr<mMeshFaceData>meshFaceData1 = new mPostMeshFaceData1(_meshFaceData1.size(), set, meshData->getMeshID(), order, partName);
+		//	this->appendMeshFaceData(0, meshFaceData1);
+		//	meshData->appendMeshFace(meshFaceData1);
+		//	//meshData->setMeshFace(order, meshFaceData1);
+		//	_meshFace[*itermin].append({ pair,meshFaceData1 });
+		//}
+
+		//sort(set.begin(), set.end());
+		//if (_meshFace.find(set) == _meshFace.end())
+		//{
+		//	//_globalMeshFaceId++;	
+
+		//	std::shared_ptr<mMeshFaceData>meshFaceData1 = new mPostMeshFaceData1(_meshFaceData1.size(), index, meshData->getMeshID(), order, partName);
+		//	this->appendMeshFaceData(_globalMeshFaceId, meshFaceData1);
+		//	meshData->appendMeshFace(meshFaceData1);
+		//	_meshFace[set] = meshFaceData1;
+		//}
+		//else
+		//{
+		//	std::shared_ptr<mMeshFaceData>meshFaceData1 = _meshFace[set];
+		//	meshFaceData1->appendMeshID(meshData->getMeshID(), order, ve[0]);
+		//	meshData->appendMeshFace(meshFaceData1);
+		//	_meshFace.remove(set);
+		//	meshFaceData1->setVisual(false);
+		//}
+	}
+
+	void mMeshModelData::eraseNotMeshFace()
 	{
 		/*
 		auto iter = this->getMeshPartIterator();
@@ -1433,7 +1441,7 @@ namespace MDataPost
 		{
 			iter.next();
 			QString partName = iter.key();
-			mPostMeshPartData1 *partData = iter.value();
+			std::shared_ptr<mMeshPartData> partData = iter.value();
 			if (partData == nullptr)
 			{
 				continue;
@@ -1445,8 +1453,8 @@ namespace MDataPost
 			}
 
 			//三维网格表面
-			set<mPostMeshFaceData1*> meshFaceIDs = partData->getMeshFaces();	
-			for(mPostMeshFaceData1 *meshFaceData : meshFaceIDs)
+			set<std::shared_ptr<mMeshFaceData>> meshFaceIDs = partData->getMeshFaces();	
+			for(std::shared_ptr<mMeshFaceData>meshFaceData : meshFaceIDs)
 			{
 				if (meshFaceData == nullptr)
 				{
@@ -1465,14 +1473,14 @@ namespace MDataPost
 		}*/
 	}
 
-	void mOneFrameData1::judgeMeshFaceIsShow()
+	void mMeshModelData::judgeMeshFaceIsShow()
 	{
 		auto iter = this->getMeshPartIterator();
 		while (iter.hasNext())
 		{
 			iter.next();
 			QString partName = iter.key();
-			mPostMeshPartData1 *partData = iter.value();
+			std::shared_ptr<mMeshPartData> partData = iter.value();
 			if (partData == nullptr)
 			{
 				continue;
@@ -1484,8 +1492,8 @@ namespace MDataPost
 			}
 
 			//三维网格表面
-			set<mPostMeshFaceData1*> meshFaceIDs = partData->getMeshFaces();
-			for (mPostMeshFaceData1 *meshFaceData : meshFaceIDs)
+			set<std::shared_ptr<mMeshFaceData>> meshFaceIDs = partData->getMeshFaces();
+			for (std::shared_ptr<mMeshFaceData>meshFaceData : meshFaceIDs)
 			{
 				
 				if (meshFaceData == nullptr)
@@ -1504,7 +1512,7 @@ namespace MDataPost
 		}
 	}
 
-	bool mOneFrameData1::getMeshFaceShow(mPostMeshFaceData1 * mMeshFaceData1, mPostMeshData1* meshData)
+	bool mMeshModelData::getMeshFaceShow(std::shared_ptr<mMeshFaceData> mMeshFaceData1, std::shared_ptr<mMeshData>  meshData)
 	{
 		int meshID = meshData->getMeshID();
 		if (mMeshFaceData1->getMeshID2() == 0)
@@ -1515,18 +1523,18 @@ namespace MDataPost
 				return true;
 			}
 		}
-		else if (mMeshFaceData1->getMeshID1() == meshID)//第一个面
+		else if (mMeshFaceData1->getMeshID1()->getMeshID() == meshID)//第一个面
 		{			
-			mPostMeshData1 *mMeshData12 = getMeshDataByID(mMeshFaceData1->getMeshID2());
+			std::shared_ptr<mMeshData>mMeshData12 = mMeshFaceData1->getMeshID2();
 			if (meshData->getMeshVisual() && !mMeshData12->getMeshVisual())
 			{
 				//mMeshFaceData1->setVisual(true);
 				return true;
 			}			
 		}
-		else if(mMeshFaceData1->getMeshID2() == meshID)//第二个面
+		else if(mMeshFaceData1->getMeshID2() -> getMeshID() == meshID)//第二个面
 		{
-			mPostMeshData1 *mMeshData12 = getMeshDataByID(mMeshFaceData1->getMeshID1());
+			std::shared_ptr<mMeshData>mMeshData12 = mMeshFaceData1->getMeshID1();
 			if (meshData->getMeshVisual() && !mMeshData12->getMeshVisual())
 			{
 				//mMeshFaceData1->setVisual(true);
@@ -1537,14 +1545,14 @@ namespace MDataPost
 		return false;
 	}
 
-	void mOneFrameData1::setMeshFaceShow()
+	void mMeshModelData::setMeshFaceShow()
 	{
 		auto iter = this->getMeshPartIterator();
 		while (iter.hasNext())
 		{
 			iter.next();
 			QString partName = iter.key();
-			mPostMeshPartData1 *partData = iter.value();
+			std::shared_ptr<mMeshPartData> partData = iter.value();
 			if (partData == nullptr)
 			{
 				continue;
@@ -1555,11 +1563,11 @@ namespace MDataPost
 				continue;
 			}
 
-			QVector<mPostMeshFaceData1*> face;
+			QVector<std::shared_ptr<mMeshFaceData>> face;
 
 			//三维网格表面
-			set<mPostMeshFaceData1*> meshFaceIDs = partData->getMeshFaces();
-			for (mPostMeshFaceData1 *meshFaceData : meshFaceIDs)
+			set<std::shared_ptr<mMeshFaceData>> meshFaceIDs = partData->getMeshFaces();
+			for (std::shared_ptr<mMeshFaceData>meshFaceData : meshFaceIDs)
 			{
 				if (meshFaceData == nullptr)
 				{
@@ -1576,18 +1584,18 @@ namespace MDataPost
 		
 	}
 
-	void mOneFrameData1::judgeMeshFaceIsShow(set<int> meshIDs)
+	void mMeshModelData::judgeMeshFaceIsShow(set<int> meshIDs)
 	{
 		for (int meshID :meshIDs)
 		{
-			mPostMeshData1 *meshData = getMeshDataByID(meshID);
+			std::shared_ptr<mMeshData>meshData = getMeshDataByID(meshID);
 			if (meshData== nullptr)
 			{
 				continue;
 			}
 			//三维网格表面
-			QVector<mPostMeshFaceData1 *> meshFaceIDs = meshData->getFace();
-			for (mPostMeshFaceData1 *meshFaceData : meshFaceIDs)
+			QVector<std::shared_ptr<mMeshFaceData>> meshFaceIDs = meshData->getMeshFace();
+			for (std::shared_ptr<mMeshFaceData>meshFaceData : meshFaceIDs)
 			{
 				if (meshFaceData == nullptr)
 				{
@@ -1605,23 +1613,23 @@ namespace MDataPost
 		}
 	}
 
-	QVector<QVector3D> mOneFrameData1::getMeshFaceVertexs(mPostMeshFaceData1 * meshFaceData, const QHash<int, QVector3D>& dis, QVector3D deformationScale, QVector3D explodeDis)
+	QVector<QVector3D> mMeshModelData::getMeshFaceVertexs(std::shared_ptr<mMeshFaceData> meshFaceData, const QHash<int, QVector3D>& dis, QVector3D deformationScale, QVector3D explodeDis)
 	{
-		QVector<int> nodeIDs = meshFaceData->getNodeIndex();
+		//QVector<int> nodeIDs = meshFaceData->getNodeIndex();
 		QVector<QVector3D> vertexs;
-		for (int nodeID : nodeIDs)
-		{
-			mPostMeshNodeData1 *meshNodeData = this->getNodeDataByID(nodeID);
-			if (meshNodeData == nullptr)
-			{
-				return vertexs;
-			}
-			vertexs += (meshNodeData->getNodeVertex() + deformationScale * dis.value(nodeID) + explodeDis);
-		}
+		//for (int nodeID : nodeIDs)
+		//{
+		//	std::shared_ptr<mMeshNodeData> meshNodeData = this->getNodeDataByID(nodeID);
+		//	if (meshNodeData == nullptr)
+		//	{
+		//		return vertexs;
+		//	}
+		//	vertexs += (meshNodeData->getNodeVertex() + deformationScale * dis.value(nodeID) + explodeDis);
+		//}
 		return vertexs;
 	}
 
-	int mOneFrameData1::judgeMeshLineOrder(mPostMeshData1* meshData, std::set<int> index)
+	int mMeshModelData::judgeMeshLineOrder(std::shared_ptr<mMeshData>  meshData, std::set<int> index)
 	{
 		if (meshData == nullptr)
 		{
@@ -1818,7 +1826,7 @@ namespace MDataPost
 		return 0;
 	}
 
-	bool mOneFrameData1::MeshFaceIsSurfaceIDPointer(mPostMeshFaceData1* mMeshFaceData1)
+	bool mMeshModelData::MeshFaceIsSurfaceIDPointer(std::shared_ptr<mMeshFaceData> mMeshFaceData1)
 	{
 		
 		if (mMeshFaceData1 == nullptr)
@@ -1827,7 +1835,7 @@ namespace MDataPost
 		}
 		if (mMeshFaceData1->getMeshID2() == 0)
 		{
-			mPostMeshData1 *mMeshData1 = getMeshDataByID(mMeshFaceData1->getMeshID1());
+			std::shared_ptr<mMeshData>mMeshData1 = mMeshFaceData1->getMeshID1();
 			if (!mMeshData1->getMeshVisual())
 			{
 				return false;
@@ -1836,8 +1844,8 @@ namespace MDataPost
 		}
 		else
 		{
-			mPostMeshData1 *mMeshData11 = getMeshDataByID(mMeshFaceData1->getMeshID1());
-			mPostMeshData1 *mMeshData12 = getMeshDataByID(mMeshFaceData1->getMeshID2());
+			std::shared_ptr<mMeshData>mMeshData11 = mMeshFaceData1->getMeshID1();
+			std::shared_ptr<mMeshData>mMeshData12 = mMeshFaceData1->getMeshID2();
 			if (mMeshData11->getPartName() == mMeshData12->getPartName())
 			{
 				if (mMeshData11->getMeshVisual() && mMeshData12->getMeshVisual())
@@ -1863,7 +1871,7 @@ namespace MDataPost
 		return false;
 	}
 
-	bool mOneFrameData1::MeshFaceIsSurface(mPostMeshFaceData1* mMeshFaceData1, mPostMeshData1 **meshData, int isInTwoMesh, mPostMeshData1 **meshData1)
+	bool mMeshModelData::MeshFaceIsSurface(std::shared_ptr<mMeshFaceData> mMeshFaceData1, std::shared_ptr<mMeshData> meshData, int isInTwoMesh, std::shared_ptr<mMeshData> meshData1)
 	{
 		
 		if (mMeshFaceData1 == nullptr)
@@ -1873,18 +1881,18 @@ namespace MDataPost
 		if (mMeshFaceData1->getMeshID2() == 0)
 		{
 			isInTwoMesh = 1;
-			*meshData = getMeshDataByID(mMeshFaceData1->getMeshID1());
+			meshData = mMeshFaceData1->getMeshID1();
 			return true;
 		}
 		else
 		{
-			mPostMeshData1 *mMeshData11 = getMeshDataByID(mMeshFaceData1->getMeshID1());
-			mPostMeshData1 *mMeshData12 = getMeshDataByID(mMeshFaceData1->getMeshID2());
+			std::shared_ptr<mMeshData>mMeshData11 = mMeshFaceData1->getMeshID1();
+			std::shared_ptr<mMeshData>mMeshData12 = mMeshFaceData1->getMeshID2();
 			if (mMeshData11->getPartName() != mMeshData12->getPartName())
 			{
 				isInTwoMesh = 2;
-				*meshData = mMeshData11;
-				*meshData1 = mMeshData12;
+				meshData = mMeshData11;
+				meshData1 = mMeshData12;
 				return true;
 			}
 
@@ -1892,11 +1900,11 @@ namespace MDataPost
 		return false;
 	}
 
-	bool mOneFrameData1::MeshFaceIsSurface(mPostMeshFaceData1* mMeshFaceData1)
+	bool mMeshModelData::MeshFaceIsSurface(std::shared_ptr<mMeshFaceData> mMeshFaceData1)
 	{
 		if (mMeshFaceData1->getMeshID2() == 0)
 		{
-			mPostMeshData1 *mMeshData1 = getMeshDataByID(mMeshFaceData1->getMeshID1());
+			std::shared_ptr<mMeshData>mMeshData1 = mMeshFaceData1->getMeshID1();
 			if (!mMeshData1->getMeshVisual())
 			{
 				return false;
@@ -1904,8 +1912,8 @@ namespace MDataPost
 		}
 		else
 		{
-			mPostMeshData1 *mMeshData11 = getMeshDataByID(mMeshFaceData1->getMeshID1());
-			mPostMeshData1 *mMeshData12 = getMeshDataByID(mMeshFaceData1->getMeshID2());
+			std::shared_ptr<mMeshData>mMeshData11 = mMeshFaceData1->getMeshID1();
+			std::shared_ptr<mMeshData>mMeshData12 = mMeshFaceData1->getMeshID2();
 			if (mMeshData11->getMeshVisual() && mMeshData12->getMeshVisual())
 			{
 				return false;
@@ -1918,11 +1926,11 @@ namespace MDataPost
 		return true;
 	}
 
-	int mOneFrameData1::MeshFaceIsSurface1(mPostMeshFaceData1* mMeshFaceData1)
+	int mMeshModelData::MeshFaceIsSurface1(std::shared_ptr<mMeshFaceData> mMeshFaceData1)
 	{
 		if (mMeshFaceData1->getMeshID2() == 0)
 		{
-			mPostMeshData1 *mMeshData1 = getMeshDataByID(mMeshFaceData1->getMeshID1());
+			std::shared_ptr<mMeshData>mMeshData1 = mMeshFaceData1->getMeshID1();
 			if (!mMeshData1->getMeshVisual())
 			{
 				return 0;
@@ -1931,8 +1939,8 @@ namespace MDataPost
 		}
 		else
 		{
-			mPostMeshData1 *mMeshData11 = getMeshDataByID(mMeshFaceData1->getMeshID1());
-			mPostMeshData1 *mMeshData12 = getMeshDataByID(mMeshFaceData1->getMeshID2());
+			std::shared_ptr<mMeshData>mMeshData11 = mMeshFaceData1->getMeshID1();
+			std::shared_ptr<mMeshData>mMeshData12 = mMeshFaceData1->getMeshID2();
 			if (!mMeshData11->getMeshVisual() && mMeshData12->getMeshVisual())
 			{
 				return mMeshData12->getMeshID();
@@ -1945,7 +1953,7 @@ namespace MDataPost
 		return 0;
 	}
 
-	void mOneFrameData1::getModelSize(ModelSize &modelSize)
+	void mMeshModelData::getModelSize(ModelSize &modelSize)
 	{
 		if (_isAddOrDeletePart_Mesh)
 		{
@@ -1955,29 +1963,24 @@ namespace MDataPost
 		modelSize = _modelSize;
 	}
 
-	bool mOneFrameData1::isExistModel()
+	bool mMeshModelData::isExistModel()
 	{
 		return !_partData1.isEmpty();
 	}
 
-	float mOneFrameData1::getModeMeshSize()
-	{
-		return _meshSize;
-	}
-
-	bool mOneFrameData1::isExistMeshPart(QString partName)
+	bool mMeshModelData::isExistMeshPart(QString partName)
 	{
 		return _partData1.contains(partName);
 	}
 
-	std::set<QString> mOneFrameData1::getAllPartNames()
+	std::set<QString> mMeshModelData::getAllPartNames()
 	{
 		set<QString> partNames;
-		QHashIterator<QString, mPostMeshPartData1*> iter(_partData1);
+		QHashIterator<QString, std::shared_ptr<mMeshPartData>> iter(_partData1);
 		while (iter.hasNext())
 		{
 			iter.next();
-			mPostMeshPartData1 *partData = iter.value();
+			std::shared_ptr<mMeshPartData> partData = iter.value();
 			if (partData == nullptr)
 			{
 				continue;
@@ -1991,14 +1994,14 @@ namespace MDataPost
 		return partNames;
 	}
 
-	QStringList mOneFrameData1::getAllPartNameList()
+	QStringList mMeshModelData::getAllPartNameList()
 	{
 		QStringList names = _partData1.keys();
 		sort(names.begin(), names.end());
 		return names;
 	}
 
-	void mOneFrameData1::importMeshPartData(QString partName, mPostMeshPartData1* data)
+	void mMeshModelData::importMeshPartData(QString partName, std::shared_ptr<mMeshPartData> data)
 	{
 		_partData1.insert(partName, data);
 		_oneMeshOperatePartName.insert(partName);
@@ -2007,7 +2010,7 @@ namespace MDataPost
 		caculateMeshSize();
 	}
 
-	void mOneFrameData1::replaceMeshPartData(QString partName, mPostMeshPartData1* data)
+	void mMeshModelData::replaceMeshPartData(QString partName, std::shared_ptr<mMeshPartData> data)
 	{
 		_partData1.insert(partName, data);
 		_oneMeshOperatePartName.insert(partName);
@@ -2016,9 +2019,9 @@ namespace MDataPost
 		caculateMeshSize();
 	}
 
-	void mOneFrameData1::setMeshPartColor(QString partName, QVector3D color)
+	void mMeshModelData::setMeshPartColor(QString partName, QVector3D color)
 	{
-		mPostMeshPartData1* meshPartData = _partData1.value(partName);
+		std::shared_ptr<mMeshPartData> meshPartData = _partData1.value(partName);
 		if (meshPartData != nullptr)
 		{
 			meshPartData->setPartColor(color);
@@ -2026,9 +2029,9 @@ namespace MDataPost
 		}
 	}
 
-	QVector3D mOneFrameData1::getMeshPartColor(QString partName)
+	QVector3D mMeshModelData::getMeshPartColor(QString partName)
 	{
-		mPostMeshPartData1* meshPartData = _partData1.value(partName);
+		std::shared_ptr<mMeshPartData> meshPartData = _partData1.value(partName);
 		if (meshPartData != nullptr)
 		{
 			return	meshPartData->getPartColor();
@@ -2037,9 +2040,9 @@ namespace MDataPost
 
 	}
 
-	void mOneFrameData1::setMeshPartVisual(QString partName, bool isShow)
+	void mMeshModelData::setMeshPartVisual(QString partName, bool isShow)
 	{
-		mPostMeshPartData1* meshPartData = _partData1.value(partName);
+		std::shared_ptr<mMeshPartData> meshPartData = _partData1.value(partName);
 		if (meshPartData != nullptr)
 		{
 			meshPartData->setPartVisual(isShow);
@@ -2047,9 +2050,9 @@ namespace MDataPost
 		}
 	}
 
-	bool mOneFrameData1::getMeshPartVisual(QString partName)
+	bool mMeshModelData::getMeshPartVisual(QString partName)
 	{
-		mPostMeshPartData1* meshPartData = _partData1.value(partName);
+		std::shared_ptr<mMeshPartData> meshPartData = _partData1.value(partName);
 		if (meshPartData != nullptr)
 		{
 			return meshPartData->getPartVisual();
@@ -2057,9 +2060,9 @@ namespace MDataPost
 		return false;
 	}
 
-	void mOneFrameData1::setAllMeshPartVisual(bool isShow)
+	void mMeshModelData::setAllMeshPartVisual(bool isShow)
 	{
-		QHashIterator<QString, mPostMeshPartData1*> iter(_partData1);
+		QHashIterator<QString, std::shared_ptr<mMeshPartData>> iter(_partData1);
 		while (iter.hasNext())
 		{
 			iter.next();
@@ -2067,9 +2070,9 @@ namespace MDataPost
 		}
 	}
 
-	void mOneFrameData1::setAllMeshPartColor(QVector3D color)
+	void mMeshModelData::setAllMeshPartColor(QVector3D color)
 	{
-		QHashIterator<QString, mPostMeshPartData1*> iter(_partData1);
+		QHashIterator<QString, std::shared_ptr<mMeshPartData>> iter(_partData1);
 		while (iter.hasNext())
 		{
 			iter.next();
@@ -2077,27 +2080,27 @@ namespace MDataPost
 		}
 	}
 
-	int mOneFrameData1::getOneFrameNodeAmount()
+	int mMeshModelData::getOneFrameNodeAmount()
 	{
 		return _nodeData1.size() + _nodeData2.size();
 	}
 
-	void mOneFrameData1::appendPartData(QString partName, mPostMeshPartData1* onePartData)
+	void mMeshModelData::appendPartData(QString partName, std::shared_ptr<mMeshPartData> onePartData)
 	{
 		_partData1[partName] = onePartData;
 	}
 
-	QHash<QString, mPostMeshPartData1*> mOneFrameData1::getAllPartData()
+	QHash<QString, std::shared_ptr<mMeshPartData>> mMeshModelData::getAllPartData()
 	{
 		return _partData1;
 	}
 
-	QStringList mOneFrameData1::getOneFramePartNames()
+	QStringList mMeshModelData::getOneFramePartNames()
 	{
 		return _partData1.keys();
 	}
 
-	mPostMeshPartData1* mOneFrameData1::getOnePartDataByName(QString partName)
+	std::shared_ptr<mMeshPartData> mMeshModelData::getOnePartDataByName(QString partName)
 	{
 		if (_partData1.contains(partName))
 		{
@@ -2106,42 +2109,42 @@ namespace MDataPost
 		return nullptr;
 	}
 
-	void mOneFrameData1::deleteOneFrameData()
+	void mMeshModelData::deleteOneFrameData()
 	{
 		_allMeshOperatePart = true;
 		_meshOperateEnum = DeleteAllPart;
 
 		QList<int> allNodeIDs = _nodeData1.keys();
-		for_each(allNodeIDs.begin(), allNodeIDs.end(), [this](int id) {mPostMeshNodeData1* nodeData = _nodeData1.value(id); delete nodeData; nodeData = nullptr; });
+		for_each(allNodeIDs.begin(), allNodeIDs.end(), [this](int id) {std::shared_ptr<mMeshNodeData>  nodeData = _nodeData1.value(id); nodeData.reset(); nodeData = nullptr; });
 		QList<int> allMeshIDs = _meshData1.keys();
-		for_each(allMeshIDs.begin(), allMeshIDs.end(), [this](int id) {mPostMeshData1* meshData = _meshData1.value(id); delete meshData; meshData = nullptr; });
-		QList<int> allMeshLineIDs = _meshLineData1.keys();
-		for_each(allMeshLineIDs.begin(), allMeshLineIDs.end(), [this](int id) {mPostMeshLineData1* meshLineData = _meshLineData1.value(id); delete meshLineData; meshLineData = nullptr; });
+		for_each(allMeshIDs.begin(), allMeshIDs.end(), [this](int id) {std::shared_ptr<mMeshData>  meshData = _meshData1.value(id); meshData.reset(); meshData = nullptr; });
+		//QList<int> allMeshLineIDs = _meshLineData1.keys();
+		//for_each(allMeshLineIDs.begin(), allMeshLineIDs.end(), [this](int id) {mPostMeshLineData1* meshLineData = _meshLineData1.value(id); delete meshLineData; meshLineData = nullptr; });
 		//QList<int> allMeshFaceIDs = _meshFaceData1.keys();
-		//for_each(allMeshFaceIDs.begin(), allMeshFaceIDs.end(), [this](int id) {mPostMeshFaceData1* meshFaceData = _meshFaceData1.value(id); delete meshFaceData; meshFaceData = nullptr; });
+		//for_each(allMeshFaceIDs.begin(), allMeshFaceIDs.end(), [this](int id) {std::shared_ptr<mMeshFaceData> meshFaceData = _meshFaceData1.value(id); delete meshFaceData; meshFaceData = nullptr; });
 
-		for (int i = 0; i < _meshFaceData1.size(); i++)
-		{	
-			mPostMeshFaceData1* s = _meshFaceData1[i];
-			delete s;
-		}
+		//for (int i = 0; i < _meshFaceData1.size(); i++)
+		//{	
+		//	std::shared_ptr<mMeshFaceData> s = _meshFaceData1[i];
+		//	delete s;
+		//}
 
 		for (int i = 0; i < _nodeData2.size(); i++)
 		{
-			mPostMeshNodeData1* s = _nodeData2[i];
-			delete s;
+			std::shared_ptr<mMeshNodeData>  s = _nodeData2[i];
+			s.reset();
 		}
 
 		for (int i = 0; i < _meshData2.size(); i++)
 		{
-			mPostMeshData1* s = _meshData2[i];
-			delete s;
+			std::shared_ptr<mMeshData>  s = _meshData2[i];
+			s.reset();
 		}
 
-		std::vector<mPostMeshFaceData1*>().swap(_meshFaceData1);
+		//std::vector<std::shared_ptr<mMeshFaceData>>().swap(_meshFaceData1);
 
 		QList<QString> allPartNames = _partData1.keys();
-		for_each(allPartNames.begin(), allPartNames.end(), [this](QString name) {mPostMeshPartData1* partData = _partData1.value(name); delete partData; partData = nullptr; });
+		for_each(allPartNames.begin(), allPartNames.end(), [this](QString name) {std::shared_ptr<mMeshPartData> partData = _partData1.value(name); partData.reset(); partData = nullptr; });
 
 		_modelSize = ModelSize();
 
@@ -2150,13 +2153,13 @@ namespace MDataPost
 		_nodeData2.clear();
 		_meshData2.clear();
 
-		_meshLineData1.clear();
-		_meshFaceData1.clear();
+		//_meshLineData1.clear();
+		//_meshFaceData1.clear();
 		_partData1.clear();
 		
 	}
 
-	int mOneFrameData1::getOneFrameElementAmount()
+	int mMeshModelData::getOneFrameElementAmount()
 	{
 		int sum = 0;
 		for (auto iter : _meshData2)
@@ -2169,31 +2172,31 @@ namespace MDataPost
 		return _meshData1.size() + sum;
 	}
 
-	void mOneFrameData1::setOneFrameModalValue(double freq, double eig)
+	void mMeshModelData::setOneFrameModalValue(double freq, double eig)
 	{
 		_hasModalValue = true;
 		_modalValue[0] = freq;
 		_modalValue[1] = eig;
 	}
 
-	bool mOneFrameData1::isOneFrameModalValue()
+	bool mMeshModelData::isOneFrameModalValue()
 	{
 		return _hasModalValue;
 	}
 
-	double mOneFrameData1::getOneFrameModalFrequency()
+	double mMeshModelData::getOneFrameModalFrequency()
 	{
 		return _modalValue[0];
 	}
 
-	double mOneFrameData1::getOneFrameModalEigen()
+	double mMeshModelData::getOneFrameModalEigen()
 	{
 		return _modalValue[1];
 	}
 
-	QHashIterator<int, mPostMeshNodeData1*> mOneFrameData1::getMeshNodeIterator()
+	QHashIterator<int, std::shared_ptr<mMeshNodeData> > mMeshModelData::getMeshNodeIterator()
 	{
-		QHashIterator<int, mPostMeshNodeData1*> iter(_nodeData1);
+		QHashIterator<int, std::shared_ptr<mMeshNodeData> > iter(_nodeData1);
 		return iter;
 	}
 }

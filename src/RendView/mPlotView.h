@@ -4,7 +4,7 @@
 #pragma execution_character_set("utf-8")
 
 //MBasicFunciton
-#include "mBasicEnum.h"
+
 
 #include "mBaseRend2D.h"
 
@@ -14,7 +14,7 @@
 #include <QHBoxLayout>
 
 
-using namespace MxFunctions;
+using namespace MViewBasic;
 class QwtPlot;
 class QwtPlotCanvas;
 class QwtLegend;
@@ -36,7 +36,7 @@ namespace MPlotView
 		/*
 		 * 构造函数
 		 */
-		mPlotView(const QString& name = "", MxFunctions::ViewportType = MxFunctions::Viewport2D);
+		mPlotView(const QString& name = "");
 
 		/*
 		 * 析构函数
@@ -46,7 +46,7 @@ namespace MPlotView
 		/*
 		 * 设置绘图类型
 		 */
-		void setPlotType(MxFunctions::PlotType plotType);
+		void setPlotType(MViewBasic::PlotType plotType);
 
 		/*
 		 * 设置标题
@@ -76,12 +76,12 @@ namespace MPlotView
 		/*
 		 * 设置数据
 		 */
-		void setPlotData(MxFunctions::PlotType plotType, QString text, const QVector<double> &xdata, const QVector<double> &ydata,int colorid = 0, bool isShowLegendSymbol = true, bool isShowLegendLine = true);
+		void setPlotData(MViewBasic::PlotType plotType, QString text, const QVector<double> &xdata, const QVector<double> &ydata,int colorid = 0, bool isShowLegendSymbol = true, bool isShowLegendLine = true);
 
 		/*
 		 * 添加数据
 		 */
-		void appendPlotData(MxFunctions::PlotType plotType, QString text, QPointF point);
+		void appendPlotData(MViewBasic::PlotType plotType, QString text, QPointF point);
 
 		/*
 		 * 清空全部数据
@@ -133,7 +133,7 @@ namespace MPlotView
 		QwtPlotGrid *_grid;
 
 		//绘图类型
-		MxFunctions::PlotType _plotType;
+		MViewBasic::PlotType _plotType;
 
 		//折线图
 		mLineChart *_lineChart;

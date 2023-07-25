@@ -26,7 +26,7 @@
 
 namespace MBaseRend
 {
-	mBaseRend2D::mBaseRend2D(const QString& name, MxFunctions::ViewportType type): mBaseRend(name, type)
+	mBaseRend2D::mBaseRend2D(const QString& name): mBaseRend(name)
 	{
 		qDebug() << "mBaseRend2D Struct";
 		auto iter = QHashIterator< QPair<Qt::MouseButton, Qt::KeyboardModifiers>, CameraOperateMode>(_cameraKeys);//ÒÆ³ýÐý×ª

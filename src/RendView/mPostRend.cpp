@@ -10,7 +10,7 @@
 #include "mModelView.h"
 
 //AppConfiguration
-#include <mAppConfiguration.h>
+//#include <mAppConfiguration.h>
 
 ////MxRender
 #include <renderpch.h>
@@ -18,13 +18,13 @@
 namespace MPostRend
 {
 
-	mPostRend::mPostRend(const QString& name):mBaseRend3D(name, ViewportPost3D)
+	mPostRend::mPostRend(const QString& name):mBaseRend3D(name)
 	{
 		*_pickFilter = PickFilter::PickNode;
 		//qDebug() << "Post Struct";
 
 		//保存单位制
-		QString viewStyle = MAppConfiguration::mAppConfiguration::getInstance()->_viewStyle;
+		QString viewStyle = "MxSim";
 
 		this->clearCameraKeys();
 		this->clearPickKeys();

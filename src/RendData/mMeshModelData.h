@@ -15,28 +15,26 @@
 #include "mBasicStructor.h"
 
 using namespace std;
-namespace MDataPost
+namespace MDataMesh
 {
-	class mPostMeshPartData1;
-	class mPostMeshData1;
-	class mPostMeshNodeData1;
-	class mPostMeshData1;
-	class mPostMeshLineData1;
-	class mPostMeshFaceData1;
-	class mPostOneFrameRendData;
-	class RENDDATA_EXPORT mOneFrameData1
+	class mMeshPartData;
+	class mMeshData;
+	class mMeshNodeData;
+	class mMeshLineData;
+	class mMeshFaceData;
+	class RENDDATA_EXPORT mMeshModelData
 	{
 
 	public:
 		/*
 		* 默认构造函数
 		*/
-		mOneFrameData1();
+		mMeshModelData();
 
 		/*
 		 *默认析构函数
 		 */
-		~mOneFrameData1();
+		~mMeshModelData();
 
 		/*
 		 * 模型操作
@@ -52,39 +50,39 @@ namespace MDataPost
 		//获取一个部件的所有的网格ID(除去隐藏的网格)
 		set<int> getAllMeshIDsInPart(QString partName);
 		//获取所有的三维网格ID（除去隐藏的网格）
-		QVector<mPostMeshData1*> getAll3DMeshIDs();
+		QVector<std::shared_ptr<mMeshData> > getAll3DMeshIDs();
 		//获取所有的二维网格ID（除去隐藏的网格）
-		QVector<mPostMeshData1*> getAll2DMeshIDs();
+		QVector<std::shared_ptr<mMeshData> > getAll2DMeshIDs();
 
 		//获取所有的单元面ID（除去隐藏的网格）
 		set<int> getAllMeshFaceIDs();
 		//获取一个部件的所有的单元面ID(除去隐藏的网格)
 		set<int> getAllMeshFaceIDsInPart(QString partName);
 		//获取所有的单元面指针（除去隐藏的网格）
-		QVector<mPostMeshFaceData1*> getAllMeshFaceDatas();
+		QVector<std::shared_ptr<mMeshFaceData>> getAllMeshFaceDatas();
 
 		//判断ID对应的节点或单元是否存在
 		bool isIdExistInModel(int id, const QString& type);
 
 		//通过ID(名称)获取相应的数据
-		mPostMeshPartData1 *getMeshPartDataByPartName(QString partName);
-		mPostMeshLineData1* getMeshLineDataByID(int ID);
-		mPostMeshFaceData1* getMeshFaceDataByID(int ID);
-		mPostMeshData1* getMeshDataByID(int ID);
-		mPostMeshNodeData1* getNodeDataByID(int ID);
+		std::shared_ptr<mMeshPartData> getMeshPartDataByPartName(QString partName);
+		//mPostMeshLineData1* getMeshLineDataByID(int ID);
+		//std::shared_ptr<mMeshFaceData> getMeshFaceDataByID(int ID);
+		std::shared_ptr<mMeshData>  getMeshDataByID(int ID);
+		std::shared_ptr<mMeshNodeData>  getNodeDataByID(int ID);
 
 		//获取当前帧部件的迭代器
-		QHashIterator<QString, mPostMeshPartData1*> getMeshPartIterator();
+		QHashIterator<QString, std::shared_ptr<mMeshPartData>> getMeshPartIterator();
 
 		//获取当前帧部件容器
-		const QHash<QString, mPostMeshPartData1*> getMeshParts();
+		const QHash<QString, std::shared_ptr<mMeshPartData>> getMeshParts();
 
 		//添加数据
-		void appendMeshPartData(QString partName, mPostMeshPartData1 *data);
-		void appendMeshFaceData(int ID, mPostMeshFaceData1 *data);
-		void appendMeshLineData(int ID, mPostMeshLineData1 *data);
-		void appendMeshData(int ID, mPostMeshData1 *data);
-		void appendNodeData(int ID, mPostMeshNodeData1 *data);
+		void appendMeshPartData(QString partName, std::shared_ptr<mMeshPartData>data);
+		//void appendMeshFaceData(int ID, std::shared_ptr<mMeshFaceData> *data);
+		//void appendMeshLineData(int ID, mPostMeshLineData1 *data);
+		void appendMeshData(int ID, std::shared_ptr<mMeshData>data);
+		void appendNodeData(int ID, std::shared_ptr<mMeshNodeData> data);
 
 
 
@@ -93,9 +91,6 @@ namespace MDataPost
 
 		//判断是否存在模型
 		bool isExistModel();
-
-		//获取模型的模型的单元大致尺寸
-		float getModeMeshSize();
 
 		/*
 		* 判断是否有该部件通过名字
@@ -113,10 +108,10 @@ namespace MDataPost
 		QStringList getAllPartNameList();
 
 		//读文件添加数据，不自动更新渲染
-		void importMeshPartData(QString partName, mPostMeshPartData1 *data);
+		void importMeshPartData(QString partName, std::shared_ptr<mMeshPartData>data);
 
 		//替换部件
-		void replaceMeshPartData(QString partName, mPostMeshPartData1* data);
+		void replaceMeshPartData(QString partName, std::shared_ptr<mMeshPartData> data);
 
 		//设置网格部件的颜色
 		void setMeshPartColor(QString partName, QVector3D color);
@@ -144,19 +139,19 @@ namespace MDataPost
 		/*
 		 * 添加当前帧的模型
 		 */
-		void appendPartData(QString partName, mPostMeshPartData1* onePartData);
+		void appendPartData(QString partName, std::shared_ptr<mMeshPartData> onePartData);
 
 		/*
 		 * 单元操作
 		 */
 
 		 //创建网格
-		void createMesh(int ID, MViewBasic::MeshType meshType, MViewBasic::ElementType elementType, 
-			QVector<int> index, mPostMeshPartData1 *partData, QHash<QVector<int>, mPostMeshFaceData1*> &_meshFace);
+		void createMesh(int ID, MViewBasic::MeshType meshType,
+			QVector<int> index, std::shared_ptr<mMeshPartData>partData, QHash<QVector<int>, std::shared_ptr<mMeshFaceData>> &_meshFace);
 
 		//创建网格
-		void createMesh(int ID, MViewBasic::MeshType meshType, MViewBasic::ElementType elementType,
-			QVector<int> index, mPostMeshPartData1 *partData, QVector<QVector<QPair<QPair<int, int>, mPostMeshFaceData1*>>> &_meshFace);
+		void createMesh(int ID, MViewBasic::MeshType meshType,
+			QVector<int> index, std::shared_ptr<mMeshPartData>partData, QVector<QVector<QPair<QPair<int, int>, std::shared_ptr<mMeshFaceData>>>> &_meshFace);
 
 		//隐藏网格
 		void maskMesh(set<int> meshIDs);
@@ -174,10 +169,10 @@ namespace MDataPost
 		int getNumByElementType(MViewBasic::ElementType elementType);
 
 		//获取网格的形心
-		QVector3D getMeshCenter(mPostMeshData1 *meshData, const QHash<int, QVector3D> &dis, QVector3D deformationScale, QVector3D explodeDis);
+		QVector3D getMeshCenter(std::shared_ptr<mMeshData>meshData, const QHash<int, QVector3D> &dis, QVector3D deformationScale, QVector3D explodeDis);
 
 		//获取网格的节点（不包括高阶节点）
-		QVector<QVector3D> getMeshVertexs(mPostMeshData1 *meshData, const QHash<int, QVector3D> &dis, QVector3D deformationScale, QVector3D explodeDis);
+		QVector<QVector3D> getMeshVertexs(std::shared_ptr<mMeshData>meshData, const QHash<int, QVector3D> &dis, QVector3D deformationScale, QVector3D explodeDis);
 
 		//删除网格
 		//void deleteMesh(set<int> meshIDs);
@@ -187,24 +182,24 @@ namespace MDataPost
 		 */
 
 		 //仅仅判断是否是表面，对于原始文件来说
-		bool MeshFaceIsSurfaceIDPointer(mPostMeshFaceData1* mMeshFaceData1);
+		bool MeshFaceIsSurfaceIDPointer(std::shared_ptr<mMeshFaceData> mMeshFaceData1);
 
 		//判断这个单元面是不是表面，对于原始文件来说,并且返回这个单元面所属的单元的指针,边界线可能存在于两个网格中（两个部件），如果是两个网格中，则也返回另一个单元的指针
-		bool MeshFaceIsSurface(mPostMeshFaceData1* mMeshFaceData1, mPostMeshData1 **meshData, int isInTwoMesh, mPostMeshData1 **meshData1);
+		bool MeshFaceIsSurface(std::shared_ptr<mMeshFaceData> mMeshFaceData1, std::shared_ptr<mMeshData> meshData, int isInTwoMesh, std::shared_ptr<mMeshData> meshData1);
 
 		//判断这个单元面是不是表面，对于一般情况来说
-		bool MeshFaceIsSurface(mPostMeshFaceData1 *mMeshFaceData1);
+		bool MeshFaceIsSurface(std::shared_ptr<mMeshFaceData>mMeshFaceData1);
 
 		//判断这个单元面是不是表面，对于一般情况来说,返回这个单元面现在所属的单元ID
-		int MeshFaceIsSurface1(mPostMeshFaceData1 *mMeshFaceData1);
+		int MeshFaceIsSurface1(std::shared_ptr<mMeshFaceData>mMeshFaceData1);
 
 		 //创建单元面
-		void createMeshFace(QVector<int>  set, QVector<int> index, mPostMeshData1* meshData, int order,
-			QString partName, mPostMeshPartData1* partData, QHash<QVector<int>, mPostMeshFaceData1*> &_meshFace);
+		void createMeshFace(QVector<int>  set, QVector<int> index, std::shared_ptr<mMeshData>  meshData, int order,
+			QString partName, std::shared_ptr<mMeshPartData> partData, QHash<QVector<int>, std::shared_ptr<mMeshFaceData>> &_meshFace);
 
 		//创建单元面
-		void createMeshFace(QVector<int> set,  mPostMeshData1* meshData, int order,
-			QString partName, QVector<QVector<QPair<QPair<int, int>, mPostMeshFaceData1*>>> &_meshFace);
+		void createMeshFace(QVector<int> set,  std::shared_ptr<mMeshData>  meshData, int order,
+			QString partName, QVector<QVector<QPair<QPair<int, int>, std::shared_ptr<mMeshFaceData>>>> &_meshFace);
 
 		//移除掉不是表面的单元面
 		void eraseNotMeshFace();
@@ -213,7 +208,7 @@ namespace MDataPost
 		void judgeMeshFaceIsShow();
 
 		//返回是否添加到表面,根据单元面判断的单元
-		bool getMeshFaceShow(mPostMeshFaceData1 *mMeshFaceData1,mPostMeshData1* meshData);
+		bool getMeshFaceShow(std::shared_ptr<mMeshFaceData>mMeshFaceData1,std::shared_ptr<mMeshData>  meshData);
 
 		//将表面存储到容器中
 		void setMeshFaceShow();
@@ -222,7 +217,7 @@ namespace MDataPost
 		void judgeMeshFaceIsShow(set<int> meshIDs);
 
 		//获取单元面的节点（不包括高阶节点）
-		QVector<QVector3D> getMeshFaceVertexs(mPostMeshFaceData1 *meshData, const QHash<int, QVector3D> &dis, QVector3D deformationScale, QVector3D explodeDis);
+		QVector<QVector3D> getMeshFaceVertexs(std::shared_ptr<mMeshFaceData>meshData, const QHash<int, QVector3D> &dis, QVector3D deformationScale, QVector3D explodeDis);
 
 		/*
 		 * 单元线操作
@@ -232,7 +227,7 @@ namespace MDataPost
 		void caculateMeshLine();
 
 		 //判断边界线属于单元的第几个线
-		int judgeMeshLineOrder(mPostMeshData1 *meshData, std::set<int> index);
+		int judgeMeshLineOrder(std::shared_ptr<mMeshData> meshData, std::set<int> index);
 
 		/*
 		 * 模型操作
@@ -241,7 +236,7 @@ namespace MDataPost
 		/*
 		 * 获取当前帧的所有模型
 		 */
-		QHash<QString, mPostMeshPartData1*> getAllPartData();
+		QHash<QString, std::shared_ptr<mMeshPartData>> getAllPartData();
 
 		/*
 		* 获取当前帧所有零件名
@@ -251,7 +246,7 @@ namespace MDataPost
 		/*
 		 * 通过名称获取当前帧的一个模型
 		 */
-		mPostMeshPartData1 *getOnePartDataByName(QString partName);
+		std::shared_ptr<mMeshPartData> getOnePartDataByName(QString partName);
 
 		/*
 		 * 删除这一帧的所有数据
@@ -286,7 +281,7 @@ namespace MDataPost
 		/*
 		 * 获取当前帧的节点迭代器
 		 */
-		QHashIterator<int, mPostMeshNodeData1*> getMeshNodeIterator();
+		QHashIterator<int, std::shared_ptr<mMeshNodeData> > getMeshNodeIterator();
 
 		///*
 		//* 存储刚性墙的终止坐标
@@ -323,7 +318,7 @@ namespace MDataPost
 		void caculateMeshSize();
 
 		//生成边界线
-		void generateMeshLine(mPostMeshFaceData1* surfaceID1, mPostMeshFaceData1* surfaceID2, mPostMeshData1 *meshData, QString partName, mPostMeshPartData1* partData);
+		void generateMeshLine(mMeshFaceData* surfaceID1, mMeshFaceData* surfaceID2, mMeshData *meshData, QString partName, mMeshPartData* partData);
 
 	private:
 
@@ -335,28 +330,24 @@ namespace MDataPost
 
 	protected:
 
-		QVector<mPostMeshNodeData1*> _nodeData2;
-		QHash<int, mPostMeshNodeData1*> _nodeData1;
+		QVector<std::shared_ptr<mMeshNodeData>> _nodeData2;
+		QHash<int, std::shared_ptr<mMeshNodeData>> _nodeData1;
 
-		QVector<mPostMeshData1*> _meshData2;
-		QHash<int, mPostMeshData1*> _meshData1;
+		QVector<std::shared_ptr<mMeshData>> _meshData2;
+		QHash<int, std::shared_ptr<mMeshData>> _meshData1;
 
 
-		QHash<int, mPostMeshLineData1*> _meshLineData1;
+		//QHash<int, mMeshLineData*> _meshLineData1;
 
-		std::vector<mPostMeshFaceData1*> _meshFaceData1;
+		//std::vector<std::shared_ptr<mMeshFaceData>> _meshFaceData1;
 
-		QHash<QString, mPostMeshPartData1*> _partData1;
-		QHash<MViewBasic::ElementType, int> _eleNum;
+		QHash<QString, std::shared_ptr<mMeshPartData>> _partData1;
 
 		//模型尺寸
 		MViewBasic::ModelSize _modelSize;
 
 		//是否对模型进行删除或者添加
 		bool _isAddOrDeletePart_Mesh;
-
-		//模型的单元大致尺寸
-		float _meshSize;
 		
 	};
 }

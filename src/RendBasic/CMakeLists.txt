@@ -28,7 +28,7 @@ add_library(RendBasic
 target_compile_definitions(RendBasic PRIVATE "RENDBASIC_LIB")
 
 list(APPEND _runtimes_libraries
-	Qt5::Core Qt5::Gui Qt5::Widgets MxFunctions Freetype
+	Qt5::Core Qt5::Gui Qt5::Widgets Freetype
 )
 
 #-----------------------------------------------------------------------------

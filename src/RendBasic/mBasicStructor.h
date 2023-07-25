@@ -3,12 +3,12 @@
 #include <QVector3D>
 #include <set>
 #include "mMeshViewEnum.h"
-#include "mElementFunction.h"
+
 #include <float.h>
 namespace MViewBasic
 {
 	using namespace std;
-	using namespace MxFunctions;
+	using namespace MViewBasic;
 	struct IDDepthBuffer
 	{
 		int id;
@@ -125,7 +125,7 @@ namespace MViewBasic
 
 		ModelSize()
 		{
-                        xmin = FLT_MAX;
+            xmin = FLT_MAX;
 			ymin = FLT_MAX;
 			zmin = FLT_MAX;
 			xmax = -FLT_MAX;

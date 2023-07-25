@@ -25,7 +25,7 @@
 
 namespace MPlotView
 {
-	mPlotView::mPlotView(const QString& name, ViewportType viewType):mBaseRend2D(name, viewType)
+	mPlotView::mPlotView(const QString& name):mBaseRend2D(name)
 	{
 		_qwtPlot = new QwtPlot();
 
@@ -194,7 +194,7 @@ namespace MPlotView
 		_qwtPlot->replot();
 	}
 
-	void mPlotView::appendPlotData(MxFunctions::PlotType plotType, QString text, QPointF point)
+	void mPlotView::appendPlotData(MViewBasic::PlotType plotType, QString text, QPointF point)
 	{
 		if (_plotType == plotType)
 		{

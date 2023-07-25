@@ -47,7 +47,7 @@ set_property(DIRECTORY ${CMAKE_SOURCE_DIR}
 
 list(APPEND _depend_library RendBasic RendData RendBase RendLabel RendLabelData RendView)
 list(APPEND _runtimes_libraries
-	Qt5::Core Qt5::Gui Qt5::Widgets MxFunctions Freetype MeshData MeshGeoData avcodec avformat avdevice avfilter avutil postproc swresample swscale
+	Qt5::Core Qt5::Gui Qt5::Widgets Freetype avcodec avformat avdevice avfilter avutil postproc swresample swscale
 )
 
 #-----------------------------------------------------------------------------

@@ -13,7 +13,7 @@
 
 #include "SpaceTree.h"
 
-#include "mBasicEnum.h"
+
 
 #include "mBaseRend.h"
 
@@ -52,7 +52,7 @@ namespace MBaseRend
 		Q_OBJECT
 
 	public:
-		mBaseRend3D(const QString& name = "", MxFunctions::ViewportType = MxFunctions::Viewport3D);
+		mBaseRend3D(const QString& name = "");
 		~mBaseRend3D();	
 
 		//设置是否显示原点坐标轴

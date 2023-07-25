@@ -1,7 +1,7 @@
 #include "mIMxdbFile1.h"
 
 //MViewBasic
-#include "mElementFunction.h"
+
 #include "mMeshViewEnum.h"
 
 //MDataPost
@@ -28,7 +28,7 @@
 #define optimazation false
 
 using namespace MViewBasic;
-using namespace MxFunctions;
+using namespace MViewBasic;
 QMutex postmutex;
 namespace MIOFile
 {
@@ -2967,14 +2967,14 @@ namespace MIOFile
 				//_byteAmount += 32* sizeof(char);
 
 				//存储
-				ElementType elementtype = mElementFunction::getElementType(QString(eletype).toUpper());
-				MeshType meshtype = mElementFunction::transformTypeStrToEnum(elementtype);
+				ElementType elementtype/* = mElementFunction::getElementType(QString(eletype).toUpper())*/;
+				MeshType meshtype /*= mElementFunction::transformTypeStrToEnum(elementtype)*/;
 				//if (meshtype != MeshHex && i >= 3  && meshtype != MeshWedge)
 				//{
 				//	qDebug() << "单元数量为" << elecount;
 				//}
 				//根据类型获取单元包含的节点个数
-				int elenode = mElementFunction::elementNodeCount(elementtype);
+				int elenode /*= mElementFunction::elementNodeCount(elementtype)*/;
 
 
 				//读取单元包含的节点ID

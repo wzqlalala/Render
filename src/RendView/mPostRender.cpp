@@ -500,7 +500,7 @@ namespace MPostRend
 
 	}
 
-	void mPostRender::setPickElementTypeFilter(std::set<MxFunctions::ElementType> pickElementTypeFilter)
+	void mPostRender::setPickElementTypeFilter(std::set<MViewBasic::ElementType> pickElementTypeFilter)
 	{
 		_rendStatus->_pickElementTypeFilter.clear();
 		for (ElementType et : pickElementTypeFilter)

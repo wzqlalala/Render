@@ -5,7 +5,7 @@
 
 #include <QDebug>
 
-using namespace MxFunctions;
+using namespace MViewBasic;
 namespace MDataGeo
 {
 	mGeoLineData1::mGeoLineData1(mGeoModelData1 *geoModelData, QString partName, int ID)

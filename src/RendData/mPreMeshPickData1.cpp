@@ -1,6 +1,12 @@
 #include "mPreMeshPickData1.h"
 
-namespace MDataPre
+#include "mMeshPartData.h"
+#include "mMeshData.h"
+#include "mMeshFaceData.h"
+#include "mMeshLineData.h"
+#include "mMeshNodeData.h"
+
+namespace MDataMesh
 {
 	void mPreMeshPickData1::setMeshPickFunction(int pickfunction)
 	{
@@ -17,7 +23,7 @@ namespace MDataPre
 
 	}
 
-	void mPreMeshPickData1::setSoloPickNodeData(MXMeshVertex* nodeid, float depth)
+	void mPreMeshPickData1::setSoloPickNodeData(shared_ptr<mMeshNodeData> nodeid, float depth)
 	{
 		if (nodeid != 0)
 		{
@@ -29,7 +35,7 @@ namespace MDataPre
 		}
 	}
 
-	void mPreMeshPickData1::setSoloPickMeshData(MXMeshElement* meshid, float depth)
+	void mPreMeshPickData1::setSoloPickMeshData(shared_ptr<mMeshData> meshid, float depth)
 	{
 		if (meshid != 0)
 		{
@@ -53,7 +59,7 @@ namespace MDataPre
 		}
 	}
 
-	void mPreMeshPickData1::setSoloPickMeshFaceData(MFace* meshfaceid, float depth)
+	void mPreMeshPickData1::setSoloPickMeshFaceData(shared_ptr<mMeshFaceData> meshfaceid, float depth)
 	{
 		if (meshfaceid != 0)
 		{
@@ -77,7 +83,7 @@ namespace MDataPre
 		}
 	}
 
-	void mPreMeshPickData1::setSoloPickNodeByPartData(set<MXMeshVertex*> nodeids, float depth)
+	void mPreMeshPickData1::setSoloPickNodeByPartData(set<shared_ptr<mMeshNodeData>> nodeids, float depth)
 	{
 		if (nodeids.size() != 0)
 		{
@@ -89,7 +95,7 @@ namespace MDataPre
 		}
 	}
 
-	void mPreMeshPickData1::setSoloPickMeshByPartData(set<MXMeshElement*> meshids, float depth)
+	void mPreMeshPickData1::setSoloPickMeshByPartData(set<shared_ptr<mMeshData>> meshids, float depth)
 	{
 		if (meshids.size() != 0)
 		{
@@ -113,7 +119,7 @@ namespace MDataPre
 		}
 	}
 
-	void mPreMeshPickData1::setSoloPickMeshFaceByPartData(set<MFace*> meshFaceids, float depth)
+	void mPreMeshPickData1::setSoloPickMeshFaceByPartData(set<shared_ptr<mMeshFaceData>> meshFaceids, float depth)
 	{
 		if (meshFaceids.size() != 0)
 		{
@@ -125,7 +131,7 @@ namespace MDataPre
 		}
 	}
 
-	void mPreMeshPickData1::setSoloPickMeshDataByAngle(MXMeshElement* meshid, QString partName, float depth)
+	void mPreMeshPickData1::setSoloPickMeshDataByAngle(shared_ptr<mMeshData> meshid, QString partName, float depth)
 	{
 		if (meshid != 0)
 		{
@@ -138,7 +144,7 @@ namespace MDataPre
 		}
 	}
 
-	void mPreMeshPickData1::setSoloPickMeshLineDataByAngle(void* meshlineid, QString partName, float depth)
+	void mPreMeshPickData1::setSoloPickMeshLineDataByAngle(shared_ptr<void> meshlineid, QString partName, float depth)
 	{
 		if (meshlineid != 0)
 		{
@@ -151,7 +157,7 @@ namespace MDataPre
 		}
 	}
 
-	void mPreMeshPickData1::setSoloPickMeshFaceDataByAngle(void * meshfaceid, QString partName, float depth)
+	void mPreMeshPickData1::setSoloPickMeshFaceDataByAngle(shared_ptr<void> meshfaceid, QString partName, float depth)
 	{
 		if (meshfaceid != 0)
 		{
@@ -261,7 +267,7 @@ namespace MDataPre
 		}
 	}
 
-	void mPreMeshPickData1::setMultiplyPickNodeData(std::set<MXMeshVertex*> nodeids)
+	void mPreMeshPickData1::setMultiplyPickNodeData(std::set<shared_ptr<mMeshNodeData>> nodeids)
 	{
 		if (_pickFunction == 0)
 		{
@@ -280,12 +286,12 @@ namespace MDataPre
 		}
 	}
 
-	void mPreMeshPickData1::setMultiplyPickNodeData(QVector<MXMeshVertex*> nodeids)
+	void mPreMeshPickData1::setMultiplyPickNodeData(QVector<shared_ptr<mMeshNodeData>> nodeids)
 	{
 		_pickNodesOrder.append(nodeids);
 	}
 
-	void mPreMeshPickData1::setMultiplyPickMeshData(std::set<MXMeshElement*> meshids)
+	void mPreMeshPickData1::setMultiplyPickMeshData(std::set<shared_ptr<mMeshData>> meshids)
 	{
 		if (_pickFunction == 0)
 		{
@@ -321,7 +327,7 @@ namespace MDataPre
 		}
 	}
 
-	void mPreMeshPickData1::setMultiplyPickMeshFaceData(std::set<MFace*> meshfaceids)
+	void mPreMeshPickData1::setMultiplyPickMeshFaceData(std::set<shared_ptr<mMeshFaceData>> meshfaceids)
 	{
 		if (_pickFunction == 0)
 		{
@@ -351,12 +357,12 @@ namespace MDataPre
 		}
 	}
 
-	void mPreMeshPickData1::setAllPickNodeData(set<MXMeshVertex*> nodeids)
+	void mPreMeshPickData1::setAllPickNodeData(set<shared_ptr<mMeshNodeData>> nodeids)
 	{
 		_pickNodes = nodeids;
 	}
 
-	void mPreMeshPickData1::setAllPickMeshData(set<MXMeshElement*> meshids)
+	void mPreMeshPickData1::setAllPickMeshData(set<shared_ptr<mMeshData>> meshids)
 	{
 		_pickMeshs = meshids;
 	}
@@ -366,7 +372,7 @@ namespace MDataPre
 		_pickMeshLines = meshlineids;
 	}
 
-	void mPreMeshPickData1::setAllPickMeshFaceData(set<MFace*> meshfaceids)
+	void mPreMeshPickData1::setAllPickMeshFaceData(set<shared_ptr<mMeshFaceData>> meshfaceids)
 	{
 		_pickMeshFaces = meshfaceids;
 	}
@@ -376,12 +382,12 @@ namespace MDataPre
 		_pickParts = partNames;
 	}
 
-	void mPreMeshPickData1::setAddPickNodeData(set<MXMeshVertex*> nodeids)
+	void mPreMeshPickData1::setAddPickNodeData(set<shared_ptr<mMeshNodeData>> nodeids)
 	{
 		_pickNodes.insert(nodeids.begin(), nodeids.end());
 	}
 
-	void mPreMeshPickData1::setAddPickMeshData(set<MXMeshElement*> meshids)
+	void mPreMeshPickData1::setAddPickMeshData(set<shared_ptr<mMeshData>> meshids)
 	{
 		_pickMeshs.insert(meshids.begin(), meshids.end());
 	}
@@ -391,7 +397,7 @@ namespace MDataPre
 		_pickMeshLines.insert(meshlineids.begin(), meshlineids.end());
 	}
 
-	void mPreMeshPickData1::setAddPickMeshFaceData(set<MFace*> meshfaceids)
+	void mPreMeshPickData1::setAddPickMeshFaceData(set<shared_ptr<mMeshFaceData>> meshfaceids)
 	{
 		_pickMeshFaces.insert(meshfaceids.begin(), meshfaceids.end());
 	}
@@ -401,7 +407,7 @@ namespace MDataPre
 		_pickParts.insert(partNames.begin(), partNames.end());
 	}
 
-	void mPreMeshPickData1::setReducePickNodeData(set<MXMeshVertex*> nodeids)
+	void mPreMeshPickData1::setReducePickNodeData(set<shared_ptr<mMeshNodeData>> nodeids)
 	{
 		for (auto iter = nodeids.begin(); iter != nodeids.end(); ++iter)
 		{
@@ -409,7 +415,7 @@ namespace MDataPre
 		}
 	}
 
-	void mPreMeshPickData1::setReducePickMeshData(set<MXMeshElement*> meshids)
+	void mPreMeshPickData1::setReducePickMeshData(set<shared_ptr<mMeshData>> meshids)
 	{
 		for (auto iter = meshids.begin(); iter != meshids.end(); ++iter)
 		{
@@ -425,7 +431,7 @@ namespace MDataPre
 		}
 	}
 
-	void mPreMeshPickData1::setReducePickMeshFaceData(set<MFace*> meshfaceids)
+	void mPreMeshPickData1::setReducePickMeshFaceData(set<shared_ptr<mMeshFaceData>> meshfaceids)
 	{
 		for (auto iter = meshfaceids.begin(); iter != meshfaceids.end(); ++iter)
 		{
@@ -441,17 +447,17 @@ namespace MDataPre
 		}
 	}
 
-	set<MXMeshVertex*> mPreMeshPickData1::getPickNodeIDs()
+	set<shared_ptr<mMeshNodeData>> mPreMeshPickData1::getPickNodeIDs()
 	{
 		return _pickNodes;
 	}
 
-	QVector<MXMeshVertex*> mPreMeshPickData1::getPickNodeIDsOrder()
+	QVector<shared_ptr<mMeshNodeData>> mPreMeshPickData1::getPickNodeIDsOrder()
 	{
 		return _pickNodesOrder;
 	}
 
-	set<MXMeshElement*> mPreMeshPickData1::getPickMeshIDs()
+	set<shared_ptr<mMeshData>> mPreMeshPickData1::getPickMeshIDs()
 	{
 		return _pickMeshs;
 	}
@@ -461,7 +467,7 @@ namespace MDataPre
 		return _pickMeshLines;
 	}
 
-	set<MFace*> mPreMeshPickData1::getPickMeshFaceIDs()
+	set<shared_ptr<mMeshFaceData>> mPreMeshPickData1::getPickMeshFaceIDs()
 	{
 		return _pickMeshFaces;
 	}
@@ -506,11 +512,11 @@ namespace MDataPre
 	{
 		_pickParts.clear();
 	}
-	QPair<PickObjectType, QPair<QString, void*>> mPreMeshPickData1::getSoloPickNodeDataByLineAngle()
+	QPair<PickObjectType, QPair<QString, shared_ptr<void>>> mPreMeshPickData1::getSoloPickNodeDataByLineAngle()
 	{
 		PickObjectType objectType = PickObjectType::Mesh1D;
 		QString partName = _meshPartNameBuffers.partName;
-		void *id = _meshPartNameBuffers.ptr;
+		shared_ptr<void> id = _meshPartNameBuffers.ptr;
 		if (_meshLinePartNameBuffers.ptr != 0 && _meshPartNameBuffers.ptr != 0)
 		{
 			if (_meshLinePartNameBuffers.depth < _meshPartNameBuffers.depth)
@@ -528,13 +534,13 @@ namespace MDataPre
 		}
 		_meshPartNameBuffers.initial();
 		_meshLinePartNameBuffers.initial();
-		return QPair<PickObjectType, QPair<QString, void*>>(objectType, { partName, id });
+		return QPair<PickObjectType, QPair<QString, shared_ptr<void>>>(objectType, { partName, id });
 	}
-	QPair<PickObjectType, QPair<QString, void*>> mPreMeshPickData1::getSoloPickNodeDataByFaceAngle()
+	QPair<PickObjectType, QPair<QString, shared_ptr<void>>> mPreMeshPickData1::getSoloPickNodeDataByFaceAngle()
 	{
 		PickObjectType objectType = PickObjectType::Mesh2D;
 		QString partName = _meshPartNameBuffers.partName;
-		void *id = _meshPartNameBuffers.ptr;
+		shared_ptr<void> id = _meshPartNameBuffers.ptr;
 		if (_meshFacePartNameBuffers.ptr != 0 && _meshPartNameBuffers.ptr != 0)
 		{
 			if (_meshFacePartNameBuffers.depth < _meshPartNameBuffers.depth)
@@ -552,23 +558,23 @@ namespace MDataPre
 		}
 		_meshPartNameBuffers.initial();
 		_meshFacePartNameBuffers.initial();
-		return QPair<PickObjectType, QPair<QString, void*>>(objectType, { partName, id});
+		return QPair<PickObjectType, QPair<QString, shared_ptr<void>>>(objectType, { partName, id});
 	}
-	QPair<QString, void*> mPreMeshPickData1::getSoloPickMeshDataByAngle()
+	QPair<QString, shared_ptr<void>> mPreMeshPickData1::getSoloPickMeshDataByAngle()
 	{
-		QPair<QString, void*> pair(_meshPartNameBuffers.partName, _meshPartNameBuffers.ptr);
+		QPair<QString, shared_ptr<void>> pair(_meshPartNameBuffers.partName, _meshPartNameBuffers.ptr);
 		_meshPartNameBuffers.initial();
 		return pair;
 	}
-	QPair<QString, void*> mPreMeshPickData1::getSoloPickMeshLineDataByAngle()
+	QPair<QString, shared_ptr<void>> mPreMeshPickData1::getSoloPickMeshLineDataByAngle()
 	{
-		QPair<QString, void*> pair(_meshLinePartNameBuffers.partName, _meshLinePartNameBuffers.ptr);
+		QPair<QString, shared_ptr<void>> pair(_meshLinePartNameBuffers.partName, _meshLinePartNameBuffers.ptr);
 		_meshLinePartNameBuffers.initial();
 		return pair;
 	}
-	QPair<QString, void*> mPreMeshPickData1::getSoloPickMeshFaceDataByAngle()
+	QPair<QString, shared_ptr<void>> mPreMeshPickData1::getSoloPickMeshFaceDataByAngle()
 	{
-		QPair<QString, void*> pair(_meshFacePartNameBuffers.partName, _meshFacePartNameBuffers.ptr);
+		QPair<QString, shared_ptr<void>> pair(_meshFacePartNameBuffers.partName, _meshFacePartNameBuffers.ptr);
 		_meshFacePartNameBuffers.initial();
 		return pair;
 	}

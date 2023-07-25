@@ -10,14 +10,14 @@
 #include "mPostMeshFaceData1.h"
 #include "mPostMeshNodeData1.h"
 
-#include "mBasicEnum.h"
+
 
 #include <renderpch.h>
 
 #include <QDebug>
 #include<math.h>
 
-using namespace MxFunctions;
+using namespace MViewBasic;
 namespace MPostRend
 {
 	int maxMeshID = 10000000;
@@ -1023,7 +1023,11 @@ namespace MPostRend
 	}
 	mPostStreamLineRender::~mPostStreamLineRender()
 	{
-
+		if (_parent)
+		{
+			_parent->removeChild(_geode);
+			_geode->removeAllChild();
+		}
 	}
 	void mPostStreamLineRender::setLineStateSet(std::shared_ptr<mxr::StateSet> stateSet)
 	{

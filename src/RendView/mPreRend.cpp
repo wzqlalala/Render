@@ -8,7 +8,7 @@
 #include "mModelView.h"
 
 //AppConfiguration
-#include <mAppConfiguration.h>
+//#include <mAppConfiguration.h>
 
 ////MxRender
 #include <renderpch.h>
@@ -26,13 +26,13 @@
 namespace MPreRend
 {
 
-	mPreRend::mPreRend(const QString& name) :mBaseRend3D(name, Viewport3D)
+	mPreRend::mPreRend(const QString& name) :mBaseRend3D(name)
 	{
 		*_pickFilter = PickFilter::PickAnyMesh;
 		//qDebug() << "Pre Struct";
 
 		//保存单位制
-		QString viewStyle = MAppConfiguration::mAppConfiguration::getInstance()->_viewStyle;
+		QString viewStyle = "MxSim";
 
 		this->clearCameraKeys();
 		this->clearPickKeys();

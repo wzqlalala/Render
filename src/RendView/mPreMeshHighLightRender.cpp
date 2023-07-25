@@ -18,12 +18,17 @@
 #include <QFileInfo>
 #include <QApplication>
 
-//BasicData
-#include <MeshMessage.h>
+//RendData
+#include "mMeshModelData.h"
+#include "mMeshData.h"
+#include "mMeshFaceData.h"
+#include "mMeshPartData.h"
+#include "mMeshNodeData.h"
 
 
 using namespace mxr;
 using namespace std;
+using namespace MDataMesh;
 namespace MPreRend
 {
 	mPreMeshHighLightRender::mPreMeshHighLightRender(std::shared_ptr<mxr::Application> app, shared_ptr<mxr::Group> parent, shared_ptr<mPreRendStatus> rendStatus, mPreMeshPickData1 *meshPickData):
@@ -56,34 +61,34 @@ namespace MPreRend
 		_pointRender->setStateSet(_pointStateSet);
 
 		QVector3D vertex0, vertex1, vertex2, vertex3, vertex4, vertex5, vertex6, vertex7;
-		set<MXMeshVertex*> nodeids = _meshPickData->getPickNodeIDs();
+		auto nodeids = _meshPickData->getPickNodeIDs();
 		for (auto iter : nodeids)
 		{
 			if (iter == nullptr)
 			{
 				continue;
 			}
-			_pointRender->_vertex0->append(QVector3D(iter->vx(), iter->vy(), iter->vz()));
+			_pointRender->_vertex0->append(iter->getNodeVertex());
 		}
 
-		QVector<MXMeshVertex*> nodeorderids = _meshPickData->getPickNodeIDsOrder();
+		auto nodeorderids = _meshPickData->getPickNodeIDsOrder();
 		for (auto iter : nodeorderids)
 		{
 			if (iter == nullptr)
 			{
 				continue;
 			}
-			_pointRender->_vertex0->append(QVector3D(iter->vx(), iter->vy(), iter->vz()));
+			_pointRender->_vertex0->append(iter->getNodeVertex());
 		}
 		
-		set<MXMeshElement*> meshIDs = _meshPickData->getPickMeshIDs();
+		auto meshIDs = _meshPickData->getPickMeshIDs();
 		for (auto iter : meshIDs)
 		{
 			if (iter == nullptr)
 			{
 				continue;
 			}
-			QVector<QVector3D> vertexs = iter->getallVertexs1();
+			QVector<QVector3D> vertexs = iter->getNodeVertex();
 			switch (iter->getMeshType())
 			{
 			case MeshPoint:
@@ -253,28 +258,28 @@ namespace MPreRend
 			}
 		}
 
-		set<MEdge*> meshlineids = _meshPickData->getPickMeshLineIDs();
-		for (auto iter : meshlineids)
-		{
-			if (iter == nullptr)
-			{
-				continue;
-			}
-			QVector<QVector3D> vertexs = iter->getAllVertexs();
-			_lineRender->_vertex0->append(vertexs);
-		}
+		//set<MEdge*> meshlineids = _meshPickData->getPickMeshLineIDs();
+		//for (auto iter : meshlineids)
+		//{
+		//	if (iter == nullptr)
+		//	{
+		//		continue;
+		//	}
+		//	QVector<QVector3D> vertexs = iter->getAllVertexs();
+		//	_lineRender->_vertex0->append(vertexs);
+		//}
 		
-		set<MFace*> meshfaceids = _meshPickData->getPickMeshFaceIDs();
+		auto meshfaceids = _meshPickData->getPickMeshFaceIDs();
 		for (auto iter : meshfaceids)
 		{
 			if (iter == nullptr)
 			{
 				continue;
 			}
-			QVector<QVector3D> vertexs = iter->getAllVertexsOfMFace();
-			switch (iter->type())
+			QVector<QVector3D> vertexs = iter->getNodeVertex();
+			switch (iter->getMeshFaceIsTri())
 			{
-			case 1:
+			case true:
 			{
 				_facelineRender->_vertex0->append(vertexs.at(0));
 				_facelineRender->_vertex0->append(vertexs.at(1));
@@ -283,7 +288,7 @@ namespace MPreRend
 
 				break;
 			}
-			case 2:
+			case false:
 			{
 				_facelineRender->_vertex0->append(vertexs.at(0));
 				_facelineRender->_vertex0->append(vertexs.at(1));
@@ -300,47 +305,43 @@ namespace MPreRend
 		set<QString> partNames = _meshPickData->getPickMeshPartNames();
 		for (QString partName : partNames)
 		{
-			QVector<MXGeoEdge*> geoEdges = MeshMessage::getInstance()->getGeoEdgeSamePart(partName);
-			//边界线		
-			for (auto geoEdge : geoEdges)
-			{
-				for (auto meshLine : geoEdge->_mLines)
-				{
-					if (meshLine == nullptr)
-					{
-						continue;
-					}
-					_lineRender->_vertex0->append(meshLine->getallVertexs1());
-				}
-			}
-			QVector<MEdge*> picks;
-			QVector<MXGeoSolid*> geoSolids = MeshMessage::getInstance()->getGeoSolidSamePart(partName);
-			for (auto geoSolid : geoSolids)
-			{
-				QVector<MEdge*> medges = geoSolid->boundaryMeshEdges;
-				picks.append(medges);
-			}
-			QVector<MXGeoFace*> geoFaces = MeshMessage::getInstance()->getFreeGFaceInPart(partName);
-			for (auto geoFace : geoFaces)
-			{
-				QVector<MEdge*> medges = geoFace->boundaryMeshEdgesInGface;
-				picks.append(medges);
-			}
-			for (auto medge : picks)
-			{
-				_lineRender->_vertex0->append(medge->getAllVertexs());
-			}
-			QVector<SpecialElement*> points = MeshMessage::getInstance()->getSpecialElementOfPart(partName);
-			//点网格
-			for (auto point : points)
-			{
-				if (!point)
-				{
-					continue;
-				}
-				_pointRender->_vertex0->append(point->getCentroid());
+			//for (auto meshLine : partName->get)
+			//{
+			//	if (meshLine == nullptr)
+			//	{
+			//		continue;
+			//	}
+			//	_lineRender->_vertex0->append(meshLine->getallVertexs1());
+			//}
 
-			}
+			//QVector<MEdge*> picks;
+			//QVector<MXGeoSolid*> geoSolids = MeshMessage::getInstance()->getGeoSolidSamePart(partName);
+			//for (auto geoSolid : geoSolids)
+			//{
+			//	QVector<MEdge*> medges = geoSolid->boundaryMeshEdges;
+			//	picks.append(medges);
+			//}
+			//QVector<MXGeoFace*> geoFaces = MeshMessage::getInstance()->getFreeGFaceInPart(partName);
+			//for (auto geoFace : geoFaces)
+			//{
+			//	QVector<MEdge*> medges = geoFace->boundaryMeshEdgesInGface;
+			//	picks.append(medges);
+			//}
+			//for (auto medge : picks)
+			//{
+			//	_lineRender->_vertex0->append(medge->getAllVertexs());
+			//}
+			//QVector<SpecialElement*> points = MeshMessage::getInstance()->getSpecialElementOfPart(partName);
+			////点网格
+			//for (auto point : points)
+			//{
+			//	if (!point)
+			//	{
+			//		continue;
+			//	}
+			//	_pointRender->_vertex0->append(point->getCentroid());
+
+			//}
 		}
 		
 		

@@ -95,20 +95,11 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 # Freetype
 find_package(Freetype REQUIRED)
 
-# MxFunctions
-find_package(MxFunctions REQUIRED)
-
-# BasicData
-find_package(BasicData REQUIRED)
-
 # Qwt
 find_package(Qwt REQUIRED)
 
 #ffmpeg
 find_package(ffmpeg REQUIRED)
-
-#ffms
-find_package(ffms REQUIRED)
 
 #-----------------------------------------------------------------------------
 # 开启项目分组

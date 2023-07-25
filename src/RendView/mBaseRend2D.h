@@ -13,7 +13,7 @@
 
 #include "SpaceTree.h"
 
-#include "mBasicEnum.h"
+
 
 #include "mBaseRend.h"
 
@@ -52,7 +52,7 @@ namespace MBaseRend
 		Q_OBJECT
 
 	public:
-		mBaseRend2D(const QString& name = "", MxFunctions::ViewportType = MxFunctions::Viewport2D);
+		mBaseRend2D(const QString& name = "");
 		~mBaseRend2D();
 
 	public:

@@ -7,15 +7,16 @@
 #include "mPreMeshHighLightRender.h"
 #include "mFontRender.h"
 #include "mArrowRender.h"
-#include "mPreMeshPickData1.h"
-#include "mPreMeshPickThread.h"
+
 
 //MDataGeo
 #include "mGeoPickData1.h"
 #include "mPreGeoPickThread.h"
 
-//BasicData
-#include "MeshMessage.h"
+//MDataMesh
+#include "mMeshModelData.h"
+#include "mPreMeshPickData1.h"
+#include "mPreMeshPickThread.h"
 
 #include <renderpch.h>
 #include "texture.h"
@@ -56,8 +57,9 @@ namespace MPreRend
 		_rendStatus->_showFunction = SmoothShaded;
 		_pointTexture = mTextureManage::GetInstance()->GetTexture("GeoPoint.png", 3);
 		_geoModelData = new mGeoModelData1();
+		_meshModelData = make_shared<mMeshModelData>();
 		_geoModelRender = MakeAsset<mPreGeoModelRender>(parent, _rendStatus, _geoModelData);
-		_meshModelRender = MakeAsset<mPreMeshModelRender>(parent, _rendStatus);
+		_meshModelRender = MakeAsset<mPreMeshModelRender>(parent, _rendStatus, _meshModelData);
 
 		/**********************************************************Ä£ÐÍ**********************************************************/
 		//face
@@ -282,6 +284,7 @@ namespace MPreRend
 			_meshPickThread->setWidget(_baseRend->getCamera()->SCR_WIDTH, _baseRend->getCamera()->SCR_HEIGHT);
 			_meshPickThread->setPickMode(*_baseRend->getCurrentPickMode(), *_baseRend->getMultiplyPickMode());
 			_meshPickThread->setPickAngleValue(_baseRend->getPickAngle());
+			_meshPickThread->setMeshModelData(_meshModelData);
 			if (*_baseRend->getCurrentPickMode() == PickMode::SoloPick)
 			{
 				float depth = this->getDepth(poses.first());
@@ -366,7 +369,7 @@ namespace MPreRend
 			aabb.push(_geoModelData->getModelSize());
 			hasModel = true;
 		}
-		if (MeshMessage::getInstance()->getMeshPartName().size() > 0)
+		if (_meshModelData->isExistModel())
 		{
 			auto model = _meshModelRender->getModelAABB();
 			aabb.push(model);
@@ -466,7 +469,7 @@ namespace MPreRend
 		}
 		if (isUpdateCamera)
 		{
-			if (MeshMessage::getInstance()->IsReadFileMark() || _geoModelData->isResetCamera())
+			if (/*MeshMessage::getInstance()->IsReadFileMark() || */_geoModelData->isResetCamera())
 			{
 				_baseRend->slotResetOrthoAndCamera();
 				mBaseRend3D *rend = dynamic_cast<mBaseRend3D*>(_baseRend);
@@ -475,7 +478,7 @@ namespace MPreRend
 					rend->FitView();
 					rend->SetRotateCenterToModelCenter();
 				}
-				MeshMessage::getInstance()->setReadFileMark(false);
+				//MeshMessage::getInstance()->setReadFileMark(false);
 				_geoModelData->setResetCamera(false);
 			}
 			else
@@ -530,18 +533,18 @@ namespace MPreRend
 
 	void mPreRender::setLineVisual(float r_l)
 	{
-		float line; //= _modelView->_MaxRadius / (_modelView->_Right - _modelView->_Left);
-		float meshsize = MeshMessage::getInstance()->getModeMeshSize();
-		line = (r_l) / meshsize;
-		//qDebug() << line << endl;
-		if (line >= 800)
-		{
-			_rendStatus->_faceLineColor.setW(0);
-		}
-		else
-		{
-			_rendStatus->_faceLineColor.setW(1 - sqrt(line / 800));
-		}
-		setFaceLineColor(_rendStatus->_faceLineColor);
+		//float line; //= _modelView->_MaxRadius / (_modelView->_Right - _modelView->_Left);
+		//float meshsize = MeshMessage::getInstance()->getModeMeshSize();
+		//line = (r_l) / meshsize;
+		////qDebug() << line << endl;
+		//if (line >= 800)
+		//{
+		//	_rendStatus->_faceLineColor.setW(0);
+		//}
+		//else
+		//{
+		//	_rendStatus->_faceLineColor.setW(1 - sqrt(line / 800));
+		//}
+		//setFaceLineColor(_rendStatus->_faceLineColor);
 	}
 }

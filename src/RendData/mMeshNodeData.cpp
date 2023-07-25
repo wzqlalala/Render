@@ -1,28 +1,28 @@
-#include "mPostMeshNodeData1.h"
+#include "mMeshNodeData.h"
 #include <fstream>
 #include "mGlobalVarible.h"
 
 #include <qguiapplication.h>
 
 using namespace MViewBasic;
-namespace MDataPost
+namespace MDataMesh
 {
-	mPostMeshNodeData1::mPostMeshNodeData1(int ID, QVector3D vertex)
+	mMeshNodeData::mMeshNodeData(int ID, QVector3D vertex)
 	{
 		_nodeID = ID;
 		_nodeVertex = vertex;
 	}
 
-	mPostMeshNodeData1::~mPostMeshNodeData1()
+	mMeshNodeData::~mMeshNodeData()
 	{
 	}
 
-	//void mPostMeshNodeData1::addMesh(int meshID)
+	//void mMeshNodeData::addMesh(int meshID)
 	//{
 	//	//_meshIds.insert(meshID);
 	//}
 
-	bool mPostMeshNodeData1::deleteMesh(int meshID)
+	bool mMeshNodeData::deleteMesh(int meshID)
 	{
 		//_meshIds.erase(meshID);
 		//if (_meshIds.size()==0)
@@ -31,27 +31,27 @@ namespace MDataPost
 		//}
 		return false;
 	}
-	int mPostMeshNodeData1::getNodeID()
+	int mMeshNodeData::getNodeID()
 	{
 		return _nodeID;
 	}
 
-	QVector3D mPostMeshNodeData1::getNodeVertex()
+	QVector3D mMeshNodeData::getNodeVertex()
 	{
 		return _nodeVertex;
 	}
 
-	void mPostMeshNodeData1::setNodeVertex(int position, float value)
+	void mMeshNodeData::setNodeVertex(int position, float value)
 	{
 		_nodeVertex[position] = value;
 	}
 
-	//void mPostMeshNodeData1::setNodeInMeshIDs(const std::set<int>& ids)
+	//void mMeshNodeData::setNodeInMeshIDs(const std::set<int>& ids)
 	//{
 	//	//_meshIds = ids;
 	//}
 
-	std::set<int> mPostMeshNodeData1::getNodeInMeshIDs()
+	std::set<int> mMeshNodeData::getNodeInMeshIDs()
 	{
 		std::set <int> ids;
 		if (pointcell.size == 0)
@@ -74,7 +74,7 @@ namespace MDataPost
 		return ids;
 	}
 
-	std::set<int> mPostMeshNodeData1::getNodeInMeshLineIDs()
+	std::set<int> mMeshNodeData::getNodeInMeshLineIDs()
 	{
 		std::set <int> ids;
 		if (pointline.size == 0)
@@ -94,9 +94,29 @@ namespace MDataPost
 	}
 
 
-	bool mPostMeshNodeData1::getNodeIsFreeNode()
+	bool mMeshNodeData::getNodeIsFreeNode()
 	{
 		std::set<int> ids = getNodeInMeshIDs();
 		return ids.empty();
 	}
+	bool operator<(const std::shared_ptr<mMeshNodeData>& left, const std::shared_ptr<mMeshNodeData>& right)
+	{
+		//return false;
+		if (left->getNodeID() == right->getNodeID())     //根据id去重
+		{
+			return false;
+		}
+		else
+		{
+			if (left->getNodeID() != right->getNodeID())
+			{
+				return left->getNodeID() < right->getNodeID();      //降序
+			}
+			else
+			{
+				return left->getNodeID() < right->getNodeID();
+			}
+
+		}
+	};
 }
