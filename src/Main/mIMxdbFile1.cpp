@@ -32,6 +32,11 @@ using namespace MViewBasic;
 QMutex postmutex;
 namespace MIOFile
 {
+	QStringList mIMxdbFile1::_elementStringList
+	{ "None","SENSOR","PRETENSIONER","MASS1","ELEMENTSPH","SLIPRING","RETRACTOR","SEATBELT","D2R2","D2R3","D3R2","D3R3","D2B2","D2B3","D3B2","D3B3","PIPE","ELAS1","SPRING1","SPRING2","SPRING3","GAP","CBUSH"/*,"VISCOUSDAMP"*/,"TS2","DB2","HB2","BS2","DISCRETE","PST3","PST6","PST3-1","PST3-2","PST3-3","TRIA3"/*,"CTRIA3"*/,"C0","PET3","PET6","PET3-1","PET3-2","PET3-3","PET3H","PET6H","AST3","AST6","AST3H",
+		"AST6H","CPDSG","DSG","SST3","SST6","CPDSG-3","MBT3","MBT6","SPT3","PSQ4","PSQ8","PSQ4R","PSQ8R","PSQ4I","PSQ8I","PEQ4","PEQ8","PEQ4R","PEQ8R","PEQ4H","PEQ8H","PEQ4I",
+		"PEQ8I","ASQ4","ASQ8","ASQ4R","ASQ8R","ASQ4H","ASQ8H","ASQ4I","ASQ8I","QPH","Q4R","MITC4","SSQ4","SSQ8","BT","HL","CY","BTSHELL"/*,"CQUAD4"*/,"MBQ4","MBQ4R","MBQ8","SPQ4","D3T4","D3T10","D3T4E","D3T4-1","D3T4-2","D3T4-3","D3T10M", "D3T10E","D3P5","D3P6","D3P6E",
+		"D3P6H","D3P15","D3P15H","D3P15E","D3S6R","SOLID","D3H8","D3H20","D3H8R","D3H20R","D3H8H","D3H20H","D3H8I","D3H20I","D3H8E","D3H20E","D3S8R","EMD3T4","EMD3T4-3","EMD3P6","EMD3H8" };
 	mIMxdbFile1::mIMxdbFile1():QRunnable()
 	{
 		_oneFrameRender = nullptr;
@@ -2967,14 +2972,14 @@ namespace MIOFile
 				//_byteAmount += 32* sizeof(char);
 
 				//存储
-				ElementType elementtype/* = mElementFunction::getElementType(QString(eletype).toUpper())*/;
-				MeshType meshtype /*= mElementFunction::transformTypeStrToEnum(elementtype)*/;
+				ElementType elementtype = mIMxdbFile1::getElementType(QString(eletype).toUpper());
+				MeshType meshtype = mIMxdbFile1::transformTypeStrToEnum(elementtype);
 				//if (meshtype != MeshHex && i >= 3  && meshtype != MeshWedge)
 				//{
 				//	qDebug() << "单元数量为" << elecount;
 				//}
 				//根据类型获取单元包含的节点个数
-				int elenode /*= mElementFunction::elementNodeCount(elementtype)*/;
+				int elenode = mIMxdbFile1::elementNodeCount(elementtype);
 
 
 				//读取单元包含的节点ID
@@ -3039,5 +3044,528 @@ namespace MIOFile
 		//mGlobalSignals::getInstance()->outputMessageSig(0, QString("边界线生成成功！"));
 
 		//QtConcurrent::run(fd, &mOneFrameData1::calculatePointCell);
+	}
+	MeshType mIMxdbFile1::transformTypeStrToEnum(ElementType elementType)
+	{
+		switch (elementType)
+		{
+		case Sensor:
+		case Pretensioner:
+			return MeshNone;
+		case Mass1:
+		case ElementSPH:
+		case Slipring:
+		case Retractor:
+		case SPRING2:
+			return MeshPoint;
+		case SeatBelt:
+		case D2R2:
+		case D3R2:
+		case D2B2:
+		case D3B2:
+		case TS2:
+		case DB2:
+		case HB2:
+		case BS2:
+		case ELAS1:
+		case SPRING1:
+		case SPRING3:
+		case GAP:
+		case CBUSH:
+		//case VISCOUSDAMP:
+		case Discrete:
+		case D2R3:
+		case D3R3:
+		case D2B3:
+		case D3B3:
+		case Pipe:
+			return MeshBeam;
+		case PST3:
+		case PST3_1:
+		case PST3_2:
+		case PST3_3:
+		case TRIA3:
+		//case CTRIA3:
+		case C0:
+		case PET3:
+		case PET3H:
+		case AST3:
+		case PET3_1:
+		case PET3_2:
+		case PET3_3:
+		case AST3H:
+		case CPDSG:
+		case DSG:
+		case SST3:
+		case CPDSG_3:
+		case MBT3:
+		case SPT3:
+		case PST6:
+		case PET6:
+		case PET6H:
+		case AST6H:
+		case MBT6:
+		case SST6:
+			return MeshTri;
+		case PSQ4:
+		case PSQ4R:
+		case PSQ4I:
+		case PEQ4:
+		case PEQ4R:
+		case PEQ4H:
+		case PEQ4I:
+		case ASQ4:
+		case ASQ4R:
+		case ASQ4H:
+		case ASQ4I:
+		case QPH:
+		case Q4R:
+		case MITC4:
+		case SSQ4:
+		case BT:
+		case HL:
+		case CY_:
+		case MBQ4R:
+		case MBQ4:
+		case SPQ4:
+		case PSQ8:
+		case PSQ8R:
+		case PSQ8I:
+		case PEQ8:
+		case PEQ8R:
+		case PEQ8H:
+		case PEQ8I:
+		case ASQ8:
+		case ASQ8R:
+		case ASQ8H:
+		case ASQ8I:
+		case MBQ8:
+		case SSQ8:
+		case BTShell:
+		//case CQUAD4:
+			return MeshQuad;
+		case D3T4:
+		case EMD3T4:
+		case EMD3T4_3:
+		case D3T4_1:
+		case D3T4_2:
+		case D3T4_3:
+		case D3T4E:
+		case D3T10:
+		case D3T10M:
+		case D3T10E:
+			return MeshTet;
+		case D3P5:
+			return MeshPyramid;
+		case D3P6:
+		case EMD3P6:
+		case D3P6H:
+		case D3P6E:
+		case D3S6R:
+		case D3P15:
+		case D3P15H:
+		case D3P15E:
+			return MeshWedge;
+		case SOLID:
+		case D3H8:
+		case EMD3H8:
+		case D3H8R:
+		case D3H8H:
+		case D3H8I:
+		case D3H8E:
+		case D3S8R:
+		case D3H20:
+		case D3H20R:
+		case D3H20H:
+		case D3H20I:
+		case D3H20E:
+			return MeshHex;
+		default:
+			return MeshPoint;
+		}
+	}
+
+	ElementType mIMxdbFile1::getElementType(QString elementstring)
+	{
+		ElementType elementtype{ Mass1 };
+		int index = _elementStringList.indexOf(elementstring.toUpper());
+		if (index >= 0)
+		{
+			elementtype = (ElementType)index;
+		}
+		return elementtype;
+	}
+	int mIMxdbFile1::elementNodeCount(ElementType elementType)
+	{
+		switch (elementType)
+		{
+		case Mass1:
+			return 1;
+			break;
+		case ElementSPH:
+			return 1;
+			break;
+		case Slipring:
+			return 1;
+			break;
+		case Retractor:
+			return 1;
+			break;
+		case SPRING2:
+			return 1;
+			break;
+		case SeatBelt:
+			return 2;
+			break;
+		case D2R2:
+			return 2;
+			break;
+		case D2R3:
+			return 3;
+			break;
+		case D3R2:
+			return 2;
+			break;
+		case D3R3:
+			return 3;
+			break;
+		case D2B2:
+			return 2;
+			break;
+		case D2B3:
+			return 3;
+			break;
+		case D3B2:
+			return 2;
+			break;
+		case D3B3:
+			return 3;
+			break;
+		case Pipe:
+			return 2;
+			break;
+
+		case ELAS1:
+			return 2;
+			break;
+		case SPRING1:
+			return 2;
+			break;
+		case SPRING3:
+			return 2;
+			break;
+		case GAP:
+			return 2;
+			break;
+		case CBUSH:
+			return 2;
+			break;
+			//case VISCOUSDAMP:
+			//	return 2;
+			//	break;
+		case DB2:
+			return 2;
+			break;
+		case HB2:
+			return 2;
+			break;
+		case TS2:
+			return 2;
+			break;
+		case BS2:
+			return 2;
+			break;
+		case Discrete:
+			return 2;
+			break;
+		case PST3:
+			return 3;
+			break;
+		case PST6:
+			return 6;
+			break;
+		case PST3_1:
+			return 3;
+			break;
+		case PST3_2:
+			return 3;
+			break;
+		case PST3_3:
+			return 3;
+			break;
+		case TRIA3:
+			return 3;
+			break;
+			//case CTRIA3:
+			//	return 3;
+			//	break;
+		case C0:
+			return 3;
+			break;
+		case PET3:
+			return 3;
+			break;
+		case PET6:
+			return 6;
+			break;
+		case PET3_1:
+			return 3;
+			break;
+		case PET3_2:
+			return 3;
+			break;
+		case PET3_3:
+			return 3;
+			break;
+		case PET3H:
+			return 3;
+			break;
+		case PET6H:
+			return 6;
+			break;
+		case AST3:
+			return 3;
+			break;
+		case AST6:
+			return 6;
+			break;
+		case AST3H:
+			return 3;
+			break;
+		case AST6H:
+			return 6;
+			break;
+		case CPDSG:
+			return 3;
+			break;
+		case DSG:
+			return 3;
+			break;
+		case SST3:
+			return 3;
+			break;
+		case SST6:
+			return 6;
+			break;
+		case CPDSG_3:
+			return 3;
+			break;
+		case MBT3:
+			return 3;
+			break;
+		case MBT6:
+			return 6;
+			break;
+		case SPT3:
+			return 3;
+			break;
+		case PSQ4:
+			return 4;
+			break;
+		case PSQ8:
+			return 8;
+			break;
+		case PSQ4R:
+			return 4;
+			break;
+		case PSQ8R:
+			return 8;
+			break;
+		case PSQ4I:
+			return 4;
+			break;
+		case PSQ8I:
+			return 8;
+			break;
+		case PEQ4:
+			return 4;
+			break;
+		case PEQ8:
+			return 8;
+			break;
+		case PEQ4R:
+			return 4;
+			break;
+		case PEQ8R:
+			return 8;
+			break;
+		case PEQ4H:
+			return 4;
+			break;
+		case PEQ8H:
+			return 8;
+			break;
+		case PEQ4I:
+			return 4;
+			break;
+		case PEQ8I:
+			return 8;
+			break;
+		case ASQ4:
+			return 4;
+			break;
+		case ASQ8:
+			return 8;
+			break;
+		case ASQ4R:
+			return 4;
+			break;
+		case ASQ8R:
+			return 8;
+			break;
+		case ASQ4H:
+			return 4;
+			break;
+		case ASQ8H:
+			return 8;
+			break;
+		case ASQ4I:
+			return 4;
+			break;
+		case ASQ8I:
+			return 8;
+			break;
+		case QPH:
+			return 4;
+			break;
+		case Q4R:
+			return 4;
+			break;
+		case MITC4:
+			return 4;
+			break;
+		case SSQ4:
+			return 4;
+			break;
+		case SSQ8:
+			return 8;
+			break;
+		case BT:
+			return 4;
+			break;
+		case HL:
+			return 4;
+			break;
+		case CY_:
+			return 4;
+			break;
+		case BTShell:
+			return 4;
+			break;
+			//case CQUAD4:
+			//	return 4;
+			//	break;
+		case MBQ4:
+			return 4;
+			break;
+		case MBQ4R:
+			return 4;
+			break;
+		case MBQ8:
+			return 8;
+			break;
+		case SPQ4:
+			return 4;
+			break;
+		case D3T4:
+			return 4;
+			break;
+		case D3T10:
+			return 10;
+			break;
+		case D3T4E:
+			return 4;
+			break;
+		case D3T4_1:
+			return 4;
+			break;
+		case D3T4_2:
+			return 4;
+			break;
+		case D3T4_3:
+			return 4;
+			break;
+		case D3T10M:
+			return 10;
+			break;
+		case D3T10E:
+			return 10;
+			break;
+		case D3P5:
+			return 5;
+			break;
+		case D3P6:
+			return 6;
+			break;
+		case D3P6H:
+			return 6;
+			break;
+		case D3P6E:
+			return 6;
+			break;
+		case D3P15:
+			return 15;
+			break;
+		case D3P15H:
+			return 15;
+			break;
+		case D3P15E:
+			return 15;
+			break;
+		case D3S6R:
+			return 6;
+			break;
+		case SOLID:
+			return 8;
+			break;
+		case D3H8:
+			return 8;
+			break;
+		case D3H20:
+			return 20;
+			break;
+		case D3H8R:
+			return 8;
+			break;
+		case D3H20R:
+			return 20;
+			break;
+		case D3H8H:
+			return 8;
+			break;
+		case D3H20H:
+			return 20;
+			break;
+		case D3H8I:
+			return 8;
+			break;
+		case D3H20I:
+			return 20;
+			break;
+		case D3H8E:
+			return 8;
+			break;
+		case D3H20E:
+			return 20;
+			break;
+		case D3S8R:
+			return 8;
+			break;
+		case EMD3T4:
+			return 4;
+			break;
+		case EMD3T4_3:
+			return 4;
+			break;
+		case EMD3P6:
+			return 6;
+			break;
+		case EMD3H8:
+			return 8;
+			break;
+		default:
+			break;
+		}
+		return 0;
 	}
 }

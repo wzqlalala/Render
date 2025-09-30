@@ -504,7 +504,7 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			int id = int(_multuiplyPickMode);
 			if (_multuiplyPickMode == MultiplyPickMode::PolygonPick)
 			{
-				_multuiplyPickMode = MultiplyPickMode::QuadPick;
+				_multuiplyPickMode = MultiplyPickMode::RoundPick;
 			}
 			else
 			{
@@ -998,7 +998,7 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			int id = int(_multuiplyPickMode);
 			if (_multuiplyPickMode == MultiplyPickMode::PolygonPick)
 			{
-				_multuiplyPickMode = MultiplyPickMode::QuadPick;
+				_multuiplyPickMode = MultiplyPickMode::RoundPick;
 			}
 			else
 			{

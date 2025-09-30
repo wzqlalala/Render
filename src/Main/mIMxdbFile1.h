@@ -29,6 +29,7 @@ namespace MDataPost
 
 using namespace std;
 using namespace MDataPost;
+using namespace MViewBasic;
 namespace MIOFile
 {
 	class mIMxdbFile1 : public QObject, public QRunnable
@@ -157,6 +158,15 @@ namespace MIOFile
 		*/
 		void readModelDatas(mOneFrameData1* fd);
 
+	private:
+
+		static QStringList _elementStringList;
+
+		static MeshType transformTypeStrToEnum(ElementType elementType);
+
+		static ElementType getElementType(QString elementstring);
+
+		static int elementNodeCount(ElementType elementType);
 	signals:
 		/*
 		* 发送信号，反馈文件读取情况

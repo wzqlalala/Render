@@ -1339,44 +1339,46 @@ namespace MDataPost
 			default:
 				break;
 			}
-			//for (int i = 0; i < face.size(); ++i)
-			//{
-			//	QPair<QPair<int, int>, mPostMeshFaceData1*> f = face.at(i);
-			//	if (f.first.first == pair.second && f.first.second == pair.first)//是内部面
-			//	{
-			//		f.second->appendMeshID(meshData->getMeshID(), order, set[0]);
-			//		meshData->appendMeshFace(f.second);
-			//		//meshData->setMeshFace(order, f.second);
-			//		face.removeAt(i);
-			//		f.second->setVisual(false);
-			//		isNeibu = true;
-			//		break;
-			//	}
-			//}
-			//if (!isNeibu)//外部面，重新创建
-			//{
-			//	mPostMeshFaceData1 *meshFaceData1 = new mPostMeshFaceData1(_meshFaceData1.size(), set, meshData->getMeshID(), order, partName);
-			//	this->appendMeshFaceData(0, meshFaceData1);
-			//	meshData->appendMeshFace(meshFaceData1);
-				//meshData->setMeshFace(order, meshFaceData1);
-				//if (in == 0)
-				//{
-				//	pair.first = set.at(2); pair.second = set.at(3);
-				//}
-				//else if (in == 1)
-				//{
-				//	pair.first = set.at(3); pair.second = set.at(0);
-				//}
-				//else if (in == 2)
-				//{
-				//	pair.first = set.at(0); pair.second = set.at(1);
-				//}
-				//else if (in == 3)
-				//{
-				//	pair.first = set.at(1); pair.second = set.at(2);
-				//}
-				//_meshFace[*itermin].append({ pair,meshFaceData1 });
-			//}
+			/*
+			for (int i = 0; i < face.size(); ++i)
+			{
+				QPair<QPair<int, int>, mPostMeshFaceData1*> f = face.at(i);
+				if (f.first.first == pair.second && f.first.second == pair.first)//是内部面
+				{
+					f.second->appendMeshID(meshData->getMeshID(), order, set[0]);
+					meshData->appendMeshFace(f.second);
+					//meshData->setMeshFace(order, f.second);
+					face.removeAt(i);
+					f.second->setVisual(false);
+					isNeibu = true;
+					break;
+				}
+			}
+			if (!isNeibu)//外部面，重新创建
+			{
+				mPostMeshFaceData1 *meshFaceData1 = new mPostMeshFaceData1(_meshFaceData1.size(), set, meshData->getMeshID(), order, partName);
+				this->appendMeshFaceData(0, meshFaceData1);
+				meshData->appendMeshFace(meshFaceData1);
+				meshData->setMeshFace(order, meshFaceData1);
+				if (in == 0)
+				{
+					pair.first = set.at(2); pair.second = set.at(3);
+				}
+				else if (in == 1)
+				{
+					pair.first = set.at(3); pair.second = set.at(0);
+				}
+				else if (in == 2)
+				{
+					pair.first = set.at(0); pair.second = set.at(1);
+				}
+				else if (in == 3)
+				{
+					pair.first = set.at(1); pair.second = set.at(2);
+				}
+				_meshFace[*itermin].append({ pair,meshFaceData1 });
+			}
+			*/
 		}
 		for (int i = 0, n = face.size(); i < n; ++i)
 		{
@@ -2123,19 +2125,28 @@ namespace MDataPost
 		for (int i = 0; i < _meshFaceData1.size(); i++)
 		{	
 			mPostMeshFaceData1* s = _meshFaceData1[i];
-			delete s;
+			if (s)
+			{
+				delete s;
+			}
 		}
 
 		for (int i = 0; i < _nodeData2.size(); i++)
 		{
 			mPostMeshNodeData1* s = _nodeData2[i];
-			delete s;
+			if (s)
+			{
+				delete s;
+			}
 		}
 
 		for (int i = 0; i < _meshData2.size(); i++)
 		{
 			mPostMeshData1* s = _meshData2[i];
-			delete s;
+			if (s)
+			{
+				delete s;
+			}
 		}
 
 		std::vector<mPostMeshFaceData1*>().swap(_meshFaceData1);
