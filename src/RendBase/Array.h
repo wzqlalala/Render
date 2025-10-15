@@ -65,7 +65,8 @@ namespace mxr
 		{
 			//_buffer要减少数据
 			
-
+			clear();
+			_buffer.reset(); // 保证引用计数-1
 
 			_data.clear();
 		}
@@ -100,7 +101,7 @@ namespace mxr
 		void remove(int i) 
 		{ 
 			_data.remove(i);
-			_Size -- ；
+			_Size--;
 		}
 		virtual void clear() { QVector<T>().swap(_data); }
 

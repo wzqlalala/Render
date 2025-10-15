@@ -52,6 +52,12 @@ namespace MPostRend
 		_oneFrameData = oneFrameData;
 		_oneFrameRendData = oneFrameRendData;
 
+		//_viewer->deleteAllData();
+		//if (_geode)
+		//{
+		//	_geode->removeAllChild();
+		//}
+
 		_pointRender = make_shared<mGroupRender1<Vec3Array>>(_geode);
 		_lineRender = make_shared<mGroupRender1<Vec3Array>>(_geode);
 		_facelineRender = make_shared<mGroupRender2<Vec3Array, FloatArray>>(_geode);

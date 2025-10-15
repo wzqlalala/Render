@@ -18,15 +18,32 @@ namespace mxr
 		initializeOpenGLFunctions();
 	}
 
-	IBuffer::IBuffer(GLsizeiptr size, const void* data, GLbitfield access) : _size(size), data_ptr(),_access(access)
+	IBuffer::IBuffer(GLsizeiptr size, const void* data, GLbitfield access)
+		: _size(size), _capacity(size * 2), data_ptr(), _access(access)  // 预分配2倍
 	{
-		//QOpenGLContext *context = QOpenGLContext::currentContext();
-		//qDebug() << "createbuffer" << QString::number(long long int(context), 16);
-		//Application::GetInstance()._context->makeCurrent(Application::GetInstance()._surface);
 		initializeOpenGLFunctions();
 		glCreateBuffers(1, &id);
-		glNamedBufferStorage(id, size, data, access);  // immutable storage
+		glNamedBufferStorage(id, _capacity, nullptr, access);  // 分配_capacity
+		if (data && size > 0) {
+			SetData(0, size, data);  // 初始数据
+		}
+	}
 
+	void IBuffer::Resize(GLsizeiptr new_capacity) {
+		if (new_capacity <= _capacity) return;
+
+		GLuint new_id;
+		glCreateBuffers(1, &new_id);
+		glNamedBufferStorage(new_id, new_capacity, nullptr, _access);
+
+		// 复制旧数据
+		if (_size > 0) {
+			Copy(id, new_id, 0, 0, _size);
+		}
+
+		glDeleteBuffers(1, &id);
+		id = new_id;
+		_capacity = new_capacity;
 	}
 
 	IBuffer::~IBuffer()
@@ -53,6 +70,9 @@ namespace mxr
 	void IBuffer::GetData(GLintptr offset, GLsizeiptr size, void* data)
 	{
 		glGetNamedBufferSubData(id, offset, size, data);
+		if (offset + size > _size) {
+			_size = offset + size; // 更新_size
+		}
 	}
 
 	void IBuffer::SetData(const void* data)
@@ -60,26 +80,29 @@ namespace mxr
 		glNamedBufferSubData(id, 0, this->_size, data);
 	}
 
-	void IBuffer::SetData(GLintptr offset, GLsizeiptr size, const void* data)
-	{	
+	void IBuffer::SetData(GLintptr offset, GLsizeiptr size, const void* data) {
 		glNamedBufferSubData(id, offset, size, data);
+		if (offset + size > _size) {
+			_size = offset + size; // 更新_size
+		}
 	}
 
 
-	void IBuffer::DeleteData(GLintptr offset, GLsizeiptr size)
-	{
-		if (offset + size > _size)
-		{
+	// 在DeleteData中，也更新_size，但不缩小_capacity（避免频繁resize）
+	void IBuffer::DeleteData(GLintptr offset, GLsizeiptr size) {
+		if (offset + size > _size) {
 			CORE_ERROR("Memory Error");
+			return;
 		}
+		// 移动后续数据（仍需复制，但可以优化为不移动，留空洞 - 见下文高级优化）
 		GLuint temp_id;
 		glCreateBuffers(1, &temp_id);
-		glNamedBufferStorage(temp_id, _size - size, nullptr, _access);
+		glNamedBufferStorage(temp_id, _capacity, nullptr, _access);  // 保持_capacity
 		Copy(id, temp_id, 0, 0, offset);
-		Copy(id, temp_id, offset+size, offset, _size-(offset + size));
+		Copy(id, temp_id, offset + size, offset, _size - (offset + size));
 		glDeleteBuffers(1, &id);
 		id = temp_id;
-		_size = _size - size;
+		_size -= size;
 	}
 
 

@@ -4,13 +4,16 @@
 #include "rendbase_global.h"
 #include "asset.h"
 #include <qdebug.h>
+#include <atomic>
+#include <iostream>
 namespace mxr
 {
 	class RENDBASE_EXPORT IBuffer :public QOpenGLFunctions_4_5_Core
 	{
 	protected:
 		GLuint id;
-		GLsizeiptr _size;
+		GLsizeiptr _size;     // 当前使用大小 (used size)
+		GLsizeiptr _capacity; // 总分配大小 (allocated size)
 		mutable void* data_ptr;
 		GLbitfield _access;
 		IBuffer();
@@ -23,6 +26,8 @@ namespace mxr
 		IBuffer& operator=(IBuffer&& other) noexcept;
 
 	public:
+		GLsizeiptr Capacity() const { return this->_capacity; }
+		void Resize(GLsizeiptr new_capacity);  // 新方法：扩展容量
 		GLuint ID() const { return this->id; }
 		GLsizeiptr Size() const { return this->_size; }
 		void* const Data() const { return this->data_ptr; }
@@ -46,12 +51,19 @@ namespace mxr
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////////
-
+	static std::atomic<int> g_vbo_count{ 0 };
 	class RENDBASE_EXPORT VBO : public IBuffer
 	{
 	public:
-		VBO(GLsizeiptr size, const void* data, GLbitfield access = 0) : IBuffer(size, data, access) {}
-		virtual ~VBO() { glDeleteBuffers(1, &id); }
+		VBO(GLsizeiptr size, const void* data, GLbitfield access = 0) : IBuffer(size, data, access) { 
+			++g_vbo_count; 
+			std::cout << "[VBO] ctor id=" << this << " total=" << g_vbo_count.load() << "\n";
+		}
+		virtual ~VBO() { 
+			glDeleteBuffers(1, &id);
+			--g_vbo_count;
+			std::cout << "[VBO] dtor id=" << this << " total=" << g_vbo_count.load() << "\n";
+		}
 	};
 
 	class RENDBASE_EXPORT IBO : public IBuffer
@@ -61,6 +73,7 @@ namespace mxr
 		{
 					
 		}
+		virtual ~IBO() { glDeleteBuffers(1, &id); }
 	};
 
 	class RENDBASE_EXPORT PBO : public IBuffer
