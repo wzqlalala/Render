@@ -30,7 +30,7 @@ target_compile_definitions(RendData PRIVATE "RENDDATA_LIB")
 
 list(APPEND _depend_library RendBasic)
 list(APPEND _runtimes_libraries
-	Qt5::Core Qt5::Gui Qt5::Widgets
+	Qt5::Core Qt5::Gui Qt5::Widgets  Qt::Concurrent
 )
 
 #-----------------------------------------------------------------------------

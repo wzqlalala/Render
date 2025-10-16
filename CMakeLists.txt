@@ -67,6 +67,7 @@ list(APPEND QtNeededModules
 	Core
 	Widgets
 	Gui
+	Concurrent
 )
 if(MxRender_LINUX)
 	list(APPEND QtNeededModules XcbQpa)
