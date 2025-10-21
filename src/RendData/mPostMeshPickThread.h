@@ -1,5 +1,5 @@
 #pragma once
-//½â¾öÖĞÎÄÂÒÂë
+//è§£å†³ä¸­æ–‡ä¹±ç 
 #pragma execution_character_set("utf-8")
 
 #include "renddata_global.h"
@@ -34,23 +34,23 @@ namespace MDataPost
 
 		virtual bool getPickIsIntersectionWithAABB(Space::SpaceTree * spaceTree) = 0;
 
-		virtual bool get2DAnd3DMeshCenterIsInPick(QVector3D pointCenter) = 0;//0Î¬ºÍ2Î¬ºÍ3Î¬
+		virtual bool get2DAnd3DMeshCenterIsInPick(QVector3D pointCenter) = 0;//0ç»´å’Œ2ç»´å’Œ3ç»´
 
-		virtual bool get1DMeshIsInPick(QVector<QVector3D> vertexs) = 0;//1Î¬
+		virtual bool get1DMeshIsInPick(QVector<QVector3D> vertexs) = 0;//1ç»´
 
-		virtual bool isIntersectionAABBAndPick(QVector<QVector2D> ap) = 0;//ÅĞ¶ÏÊÇ·ñÏà½»
+		virtual bool isIntersectionAABBAndPick(QVector<QVector2D> ap) = 0;//åˆ¤æ–­æ˜¯å¦ç›¸äº¤
 
-		virtual bool isAABBPointIsAllInPick(QVector<QVector2D> ap) = 0;//ÅĞ¶ÏµãÊÇ·ñÈ«²¿
+		virtual bool isAABBPointIsAllInPick(QVector<QVector2D> ap) = 0;//åˆ¤æ–­ç‚¹æ˜¯å¦å…¨éƒ¨
 
-		//½«AABBµÄ°Ë¸ö¶¥µã×ª»¯Îª¶şÎ¬ÆÁÄ»µÄµã
+		//å°†AABBçš„å…«ä¸ªé¡¶ç‚¹è½¬åŒ–ä¸ºäºŒç»´å±å¹•çš„ç‚¹
 		QVector<QVector2D> getAABBToScreenVertex(QVector3D minEdge, QVector3D maxEdge);
-		//½«ÆÁÄ»×ø±ê×ª»¯ÎªÊÀ½ç×ø±ê
+		//å°†å±å¹•åæ ‡è½¬åŒ–ä¸ºä¸–ç•Œåæ ‡
 		QVector3D ScreenvertexToWorldvertex(QVector3D vertex);
-		//½«ÊÀ½ç×ø±ê×ª»¯ÎªÆÁÄ»×ø±ê
+		//å°†ä¸–ç•Œåæ ‡è½¬åŒ–ä¸ºå±å¹•åæ ‡
 		QVector2D WorldvertexToScreenvertex(QVector3D Worldvertex);
 		QVector<QVector2D> WorldvertexToScreenvertex(QVector<QVector3D> Worldvertexs);
-		//½«ÊÀ½ç×ø±ê×ª»¯ÎªÆÁÄ»×ø±ê²¢ÇÒ·µ»ØËûµÄÉî¶ÈÖµ
-		QVector2D WorldvertexToScreenvertex(QVector3D Worldvertex, float &depth);	
+		//å°†ä¸–ç•Œåæ ‡è½¬åŒ–ä¸ºå±å¹•åæ ‡å¹¶ä¸”è¿”å›ä»–çš„æ·±åº¦å€¼
+		QVector2D WorldvertexToScreenvertex(QVector3D Worldvertex, float &depth);
 		void WorldvertexToScreenvertex(QVector<QVector3D> Worldvertexs, QVector<QVector2D> &Screenvertexs, std::set<float> &depths);
 
 	protected:
@@ -73,13 +73,13 @@ namespace MDataPost
 
 		bool getPickIsIntersectionWithAABB(Space::SpaceTree * spaceTree) override;
 
-		bool get2DAnd3DMeshCenterIsInPick(QVector3D pointCenter) override;//0Î¬ºÍ2Î¬ºÍ3Î¬
+		bool get2DAnd3DMeshCenterIsInPick(QVector3D pointCenter) override;//0ç»´å’Œ2ç»´å’Œ3ç»´
 
-		bool get1DMeshIsInPick(QVector<QVector3D> vertexs) override;//1Î¬
+		bool get1DMeshIsInPick(QVector<QVector3D> vertexs) override;//1ç»´
 
 		bool isIntersectionAABBAndPick(QVector<QVector2D> ap) override;
 
-		bool isAABBPointIsAllInPick(QVector<QVector2D> ap) override;//ÅĞ¶ÏµãÊÇ·ñÈ«²¿
+		bool isAABBPointIsAllInPick(QVector<QVector2D> ap) override;//åˆ¤æ–­ç‚¹æ˜¯å¦å…¨éƒ¨
 
 	protected:
 		QVector<QVector2D> _multiQuad;
@@ -91,20 +91,20 @@ namespace MDataPost
 	class mPolygonPick :public mBasePick
 	{
 	public:
-		mPolygonPick(QMatrix4x4 pvm, int w, int h, QVector<QVector2D> multiQuad):mBasePick(pvm, w, h),_multiQuad(multiQuad)
+		mPolygonPick(QMatrix4x4 pvm, int w, int h, QVector<QVector2D> multiQuad) :mBasePick(pvm, w, h), _multiQuad(multiQuad)
 		{
 			_center = (_multiQuad.first() + _multiQuad.last()) / 2.0;
 		};
 
 		bool getPickIsIntersectionWithAABB(Space::SpaceTree * spaceTree) override;
 
-		bool get2DAnd3DMeshCenterIsInPick(QVector3D pointCenter) override;//0Î¬ºÍ2Î¬ºÍ3Î¬
+		bool get2DAnd3DMeshCenterIsInPick(QVector3D pointCenter) override;//0ç»´å’Œ2ç»´å’Œ3ç»´
 
-		bool get1DMeshIsInPick(QVector<QVector3D> vertexs) override;//1Î¬
+		bool get1DMeshIsInPick(QVector<QVector3D> vertexs) override;//1ç»´
 
 		bool isIntersectionAABBAndPick(QVector<QVector2D> ap) override;
 
-		bool isAABBPointIsAllInPick(QVector<QVector2D> ap) override;//ÅĞ¶ÏµãÊÇ·ñÈ«²¿
+		bool isAABBPointIsAllInPick(QVector<QVector2D> ap) override;//åˆ¤æ–­ç‚¹æ˜¯å¦å…¨éƒ¨
 
 	protected:
 		QVector<QVector2D> _multiQuad;
@@ -119,9 +119,9 @@ namespace MDataPost
 		mRoundPick(QMatrix4x4 pvm, int w, int h, QVector2D p1, QVector2D p2, QVector3D centerDirection)
 			:mBasePick(pvm, w, h)
 		{
-			_screenCenter = (p1 + p2)/2.0;
-			QVector3D Point = ScreenvertexToWorldvertex(p2);//Ëã³öÔ²ÉÏÒ»µãµÄ×ø±ê
-			_centerPoint = ScreenvertexToWorldvertex(_screenCenter);//Ëã³öÔ²ĞÄ×ø±ê
+			_screenCenter = (p1 + p2) / 2.0;
+			QVector3D Point = ScreenvertexToWorldvertex(p2);//ç®—å‡ºåœ†ä¸Šä¸€ç‚¹çš„åæ ‡
+			_centerPoint = ScreenvertexToWorldvertex(_screenCenter);//ç®—å‡ºåœ†å¿ƒåæ ‡
 			_radius = _centerPoint.distanceToPoint(Point);
 			_screenRadius = _screenCenter.distanceToPoint(p1);
 			_centerDirection = centerDirection;
@@ -129,17 +129,17 @@ namespace MDataPost
 
 		bool getPickIsIntersectionWithAABB(Space::SpaceTree * spaceTree) override;
 
-		bool get2DAnd3DMeshCenterIsInPick(QVector3D pointCenter) override;//0Î¬ºÍ2Î¬ºÍ3Î¬
+		bool get2DAnd3DMeshCenterIsInPick(QVector3D pointCenter) override;//0ç»´å’Œ2ç»´å’Œ3ç»´
 
-		bool get1DMeshIsInPick(QVector<QVector3D> vertexs) override;//1Î¬
+		bool get1DMeshIsInPick(QVector<QVector3D> vertexs) override;//1ç»´
 
 		bool isIntersectionAABBAndPick(QVector<QVector2D> ap) override;
 
-		bool isAABBPointIsAllInPick(QVector<QVector2D> ap) override;//ÅĞ¶ÏµãÊÇ·ñÈ«²¿
+		bool isAABBPointIsAllInPick(QVector<QVector2D> ap) override;//åˆ¤æ–­ç‚¹æ˜¯å¦å…¨éƒ¨
 
 	protected:
-		QVector3D _centerPoint; QVector3D _centerDirection; double _radius; //¿Õ¼ä
-		QVector2D _screenCenter; double _screenRadius;//ÆÁÄ»
+		QVector3D _centerPoint; QVector3D _centerDirection; double _radius; //ç©ºé—´
+		QVector2D _screenCenter; double _screenRadius;//å±å¹•
 	};
 	class RENDDATA_EXPORT mPostMeshPickThread : public QObject
 	{
@@ -147,97 +147,97 @@ namespace MDataPost
 
 	public:
 		/*
-		* ¸´ÖÆ¹¹Ôìº¯Êı
+		* å¤åˆ¶æ„é€ å‡½æ•°
 		*/
 		mPostMeshPickThread(mPostMeshPickData *postMeshPickData);
 
 		/*
-		* Îö¹¹º¯Êı
+		* ææ„å‡½æ•°
 		*/
 		~mPostMeshPickThread();
 
 		/*
-		* ÉèÖÃµ±Ç°µÄÊ°È¡Ä£Ê½
+		* è®¾ç½®å½“å‰çš„æ‹¾å–æ¨¡å¼
 		*/
 		void setPickMode(PickMode pickMode, MultiplyPickMode multiplyPickMode);
 
 		/*
-		* ÉèÖÃµ±Ç°µÄÊ°È¡¹ıÂËÆ÷
+		* è®¾ç½®å½“å‰çš„æ‹¾å–è¿‡æ»¤å™¨
 		*/
 		void setPickFilter(PickFilter *pickFilter);
 
 		/*
-		 * ¿ªÊ¼Ê°È¡
+		 * å¼€å§‹æ‹¾å–
 		 */
 		void startPick();
 
 		/*
-		* Ìí¼Ó²¿¼şÊı¾İ
+		* æ·»åŠ éƒ¨ä»¶æ•°æ®
 		*/
 		void appendPartSpaceTree(QString partName, Space::SpaceTree *spaceTree);
 
 		/*
-		* ÉèÖÃµ±Ç°µÄäÖÈ¾Êı¾İ
+		* è®¾ç½®å½“å‰çš„æ¸²æŸ“æ•°æ®
 		*/
 		void setCurrentFrameRend(mOneFrameData1 * oneFrameData, mPostOneFrameRendData *postOneFrameRendData);
 
 		/*
-		* ÉèÖÃµ±Ç°µÄÉúĞ§µÄÆÊÇĞÆ½Ãæ
+		* è®¾ç½®å½“å‰çš„ç”Ÿæ•ˆçš„å‰–åˆ‡å¹³é¢
 		*/
 		void setCuttingPlaneNormalVertex(QVector<QPair<QVector3D, QVector3D>> postCuttingNormalVertex);
 
 		/*
-		* ÉèÖÃÊ°È¡µÄµ¥Ôª¹ıÂËÆ÷
+		* è®¾ç½®æ‹¾å–çš„å•å…ƒè¿‡æ»¤å™¨
 		*/
 		void setPickElementTypeFilter(std::set<int> pickElementTypeFilter);
 
 		/*
-		 * ÉèÖÃ¾ØÕó
+		 * è®¾ç½®çŸ©é˜µ
 		 */
 		void setMatrix(QMatrix4x4 projection, QMatrix4x4 view, QMatrix4x4 model);
 
 		/*
-		* ÉèÖÃ¾ØÕó
+		* è®¾ç½®çŸ©é˜µ
 		*/
 		void setMatrix(QMatrix4x4 pvm);
 
 		/*
-		* ÉèÖÃÍ¨¹ı½Ç¶ÈÊ°È¡µÄ½Ç¶È
+		* è®¾ç½®é€šè¿‡è§’åº¦æ‹¾å–çš„è§’åº¦
 		*/
 		void setPickAngleValue(double angle) { _pickAngleValue = angle; };
 
 		/*
-		 * ÉèÖÃµ¥Ñ¡Î»ÖÃ
+		 * è®¾ç½®å•é€‰ä½ç½®
 		 */
 		void setLocation(const QVector2D & pos, float depth);
 
 		/*
-		* ÉèÖÃÎ»ÖÃ(¾ØĞÎ»òÕß¶à±ßĞÎ¿òÑ¡)
+		* è®¾ç½®ä½ç½®(çŸ©å½¢æˆ–è€…å¤šè¾¹å½¢æ¡†é€‰)
 		*/
 		void setLocation(QVector<QVector2D> pickQuad, QVector3D direction = QVector3D());
 
 		/*
-		 * ÉèÖÃ´°¿Ú´óĞ¡
+		 * è®¾ç½®çª—å£å¤§å°
 		 */
 		void setWidget(int w, int h);
 
 		/*
-		 *	ÊÇ·ñÍê³ÉÊ°È¡
+		 *	æ˜¯å¦å®Œæˆæ‹¾å–
 		 */
 		bool isFinished();
 
 		/*
-		 * Ê°È¡Íê³ÉÉèÖÃÎªfalse
+		 * æ‹¾å–å®Œæˆè®¾ç½®ä¸ºfalse
 		 */
 		void setFinished();
 	private:
-		//Ê°È¡Ö÷³ÌĞò		
+		//æ‹¾å–ä¸»ç¨‹åº		
 		void doSoloPick(QString partName, Space::SpaceTree* spaceTree);
 		void doMultiplyPick(QString partName, Space::SpaceTree* spaceTree);
 		void doAnglePick();
 
 		/*
-		 * µ¥Ñ¡
+		 * å•é€‰
 		 */
 		void SoloPickNode(QString partName);
 		void SoloPick1DMesh(QString partName);
@@ -251,7 +251,7 @@ namespace MDataPost
 		void SoloPickMeshFaceByAngle(QString partName);
 
 		/*
-		* ¾ØĞÎ¿òÑ¡
+		* çŸ©å½¢æ¡†é€‰
 		*/
 		void MultiplyPickNode(QString partName, Space::SpaceTree* spaceTree);
 		void MultiplyPick1DMesh(QString partName, Space::SpaceTree* spaceTree);
@@ -271,55 +271,59 @@ namespace MDataPost
 		void RoundPickAnyMesh(QString partName, Space::SpaceTree* spaceTree);
 		void RoundPickMeshFace(QString partName, Space::SpaceTree* spaceTree);
 		*/
-		
-		//Í¨¹ı½Ç¶ÈÊ°È¡
-		void SoloPickNodeByLineAngle();		
+
+		//é€šè¿‡è§’åº¦æ‹¾å–
+		void SoloPickNodeByLineAngle();
 		void SoloPickNodeByFaceAngle();
 		void SoloPick1DMeshByAngle();
 		void SoloPickMeshLineByAngle();
 		void SoloPick2DMeshByAngle();
 		void SoloPickMeshFaceByAngle();
 
-		
-		//ÅĞ¶Ïµ¥Ñ¡ÊÇ·ñÊ°È¡µ½¸Ã²¿¼ş,²¢ÇÒ·µ»ØËûµÄÉî¶ÈÖµ
-		
+
+		//åˆ¤æ–­å•é€‰æ˜¯å¦æ‹¾å–åˆ°è¯¥éƒ¨ä»¶,å¹¶ä¸”è¿”å›ä»–çš„æ·±åº¦å€¼
+
 		bool IsSoloPickMeshPart(MDataPost::mPostMeshPartData1 *meshPartData, float &depth);
 
-		
-		//ÅĞ¶Ï¿òÑ¡ÊÇ·ñÊ°È¡µ½¸Ã²¿¼ş
+
+		//åˆ¤æ–­æ¡†é€‰æ˜¯å¦æ‹¾å–åˆ°è¯¥éƒ¨ä»¶
 		bool isMultiplyPickMeshPart(MDataPost::mPostMeshPartData1 *meshPartData);
 
-		
-		//½«ÊÀ½ç×ø±ê×ª»¯ÎªÆÁÄ»×ø±ê
+
+		//å°†ä¸–ç•Œåæ ‡è½¬åŒ–ä¸ºå±å¹•åæ ‡
 		QVector2D WorldvertexToScreenvertex(QVector3D Worldvertex);
 
 		QVector3D ScreenvertexToWorldvertex(QVector3D vertex);
-		
-		//½«ÊÀ½ç×ø±ê×ª»¯ÎªÆÁÄ»×ø±ê²¢ÇÒ·µ»ØËûµÄÉî¶ÈÖµ
+
+		//å°†ä¸–ç•Œåæ ‡è½¬åŒ–ä¸ºå±å¹•åæ ‡å¹¶ä¸”è¿”å›ä»–çš„æ·±åº¦å€¼
 		QVector2D WorldvertexToScreenvertex(QVector3D Worldvertex, float &depth);
 
 		/*
-		 * ½«ÊÀ½ç×ø±ê×ª»¯ÎªÆÁÄ»×ø±ê²¢ÇÒ·µ»ØËûµÄÉî¶ÈÖµ
+		 * å°†ä¸–ç•Œåæ ‡è½¬åŒ–ä¸ºå±å¹•åæ ‡å¹¶ä¸”è¿”å›ä»–çš„æ·±åº¦å€¼
 		 */
 		void WorldvertexToScreenvertex(QVector<QVector3D> Worldvertexs, QVector<QVector2D> &Screenvertexs, std::set<float> &depths);
 
 		/*
-		* ÅĞ¶Ï½ÚµãÊÇ·ñ±»Æ½Ãæ²Ã¼ô,¼´²»ÄÜÊ°È¡,true´ú±í±»²Ã¼õÁË£¬²»ÄÜÊ°È¡£»false´ú±íÃ»ÓĞ±»²Ã¼ô£¬¿ÉÒÔÊ°È¡
+		* åˆ¤æ–­èŠ‚ç‚¹æ˜¯å¦è¢«å¹³é¢è£å‰ª,å³ä¸èƒ½æ‹¾å–,trueä»£è¡¨è¢«è£å‡äº†ï¼Œä¸èƒ½æ‹¾å–ï¼›falseä»£è¡¨æ²¡æœ‰è¢«è£å‰ªï¼Œå¯ä»¥æ‹¾å–
 		*/
 		bool isVertexCuttingByPlane(QVector3D vertex);
 
 		/*
-		* ÅĞ¶ÏÒ»¸öµ¥ÔªµÄËùÓĞ½ÚµãÊÇ·ñ±»Æ½Ãæ²Ã¼ô£¬¼´Ö»ÓĞÈ«²¿½Úµã¶¼Ã»ÓĞ±»²Ã¼õÁË²ÅÄÜÊ°È¡£¬true´ú±í²¿·Ö±»²Ã¼õÁË£¬²»ÄÜÊ°È¡£»false´ú±íÈ«²¿Ã»ÓĞ±»²Ã¼ô£¬¿ÉÒÔÊ°È¡
+		* åˆ¤æ–­ä¸€ä¸ªå•å…ƒçš„æ‰€æœ‰èŠ‚ç‚¹æ˜¯å¦è¢«å¹³é¢è£å‰ªï¼Œå³åªæœ‰å…¨éƒ¨èŠ‚ç‚¹éƒ½æ²¡æœ‰è¢«è£å‡äº†æ‰èƒ½æ‹¾å–ï¼Œtrueä»£è¡¨éƒ¨åˆ†è¢«è£å‡äº†ï¼Œä¸èƒ½æ‹¾å–ï¼›falseä»£è¡¨å…¨éƒ¨æ²¡æœ‰è¢«è£å‰ªï¼Œå¯ä»¥æ‹¾å–
 		*/
 		bool isVertexCuttingByPlane(QVector<QVector3D> vertexs);
 
-		//»ñÈ¡ĞÎĞÄ
+		//è·å–å½¢å¿ƒ
 		QVector3D getCenter(QVector<QVector3D> vertexs);
 
+		// ä¼˜åŒ–: åŸºäºèŠ‚ç‚¹ç´¢å¼•ç›´æ¥è®¡ç®—ä¸­å¿ƒï¼Œé¿å…åˆ†é… QVector
+		QVector3D getCenterByNodeIndex(const QVector<int>& nodeIndex, const QVector3D &explodeDis);
 
+		// ä¼˜åŒ–: åŸºäºèŠ‚ç‚¹ç´¢å¼•æ£€æŸ¥æ˜¯å¦è¢«åˆ‡å‰²é¢è£å‰ªï¼Œé¿å…åˆ†é… QVector
+		bool isVertexCuttingByPlaneByNodeIndex(const QVector<int>& nodeIndex, const QVector3D &explodeDis);
 	signals:
 		/*
-		 * ·¢ËÍĞÅºÅÍê³É
+		 * å‘é€ä¿¡å·å®Œæˆ
 		 */
 		void finishedPickSig();
 
@@ -329,54 +333,54 @@ namespace MDataPost
 
 	private:
 
-		//Ê°È¡¹ıÂËÆ÷
+		//æ‹¾å–è¿‡æ»¤å™¨
 		PickFilter *_pickFilter;
 
-		//Ê°È¡Ä£Ê½
+		//æ‹¾å–æ¨¡å¼
 		MViewBasic::PickMode _pickMode;
 
-		//¿òÑ¡Ê°È¡Ä£Ê½
+		//æ¡†é€‰æ‹¾å–æ¨¡å¼
 		MViewBasic::MultiplyPickMode _multiplyPickMode;
 
-		//Ê°È¡µÄµ¥ÔªÀàĞÍ¹ıÂËÆ÷
+		//æ‹¾å–çš„å•å…ƒç±»å‹è¿‡æ»¤å™¨
 		std::set<int> _pickElementTypeFilter;
 
-		//Ê°È¡½Ç¶È
+		//æ‹¾å–è§’åº¦
 		float _pickAngleValue = 60;
 
-		//´°¿Ú´óĞ¡
+		//çª—å£å¤§å°
 		int _Win_WIDTH, _Win_HEIGHT;
 
-		//×ÅÉ«Æ÷ÊÓÍ¼¾ØÕó
+		//ç€è‰²å™¨è§†å›¾çŸ©é˜µ
 		QMatrix4x4 _projection, _view, _model, _pvm;
 
 		/*
-		* µ±Ç°Ö¡µÄÄ£ĞÍÊı¾İ
+		* å½“å‰å¸§çš„æ¨¡å‹æ•°æ®
 		*/
 		MDataPost::mOneFrameData1 *_oneFrameData;
 
 		/*
-		* µ±Ç°Ö¡µÄ±äÁ¿Êı¾İ
+		* å½“å‰å¸§çš„å˜é‡æ•°æ®
 		*/
 		mPostOneFrameRendData *_oneFrameRendData;
 
 		/*
-		* µ±Ç°Ö¡µÄÇĞÃæµÄ·¨ÏòÁ¿ºÍµã
+		* å½“å‰å¸§çš„åˆ‡é¢çš„æ³•å‘é‡å’Œç‚¹
 		*/
-		QVector<QPair<QVector3D,QVector3D>> _postCuttingNormalVertex;
+		QVector<QPair<QVector3D, QVector3D>> _postCuttingNormalVertex;
 
 		/*
-		* Ê°È¡Êı¾İ
+		* æ‹¾å–æ•°æ®
 		*/
 		mPostMeshPickData *_postMeshPickData;
 
 		/*
-		 * Ä£ĞÍÃû³Æ
+		 * æ¨¡å‹åç§°
 		 */
 		QHash<QString, Space::SpaceTree*> _partSpaceTrees;
 
 		/*
-		 * µãÑ¡Î»ÖÃ
+		 * ç‚¹é€‰ä½ç½®
 		 */
 		QVector2D _pos;
 		float _depth;
@@ -387,27 +391,27 @@ namespace MDataPost
 		/*********/
 		std::shared_ptr<mBasePick> _pick;
 		/*
-		 * µãÑ¡¾ØĞÎ
+		 * ç‚¹é€‰çŸ©å½¢
 		 */
 		QVector<QVector2D> soloQuad;
 
-		////¿òÑ¡¾ØĞÎ
+		////æ¡†é€‰çŸ©å½¢
 
 		///*
-		// * ¾ØĞÎºÍ¶à±ßĞÎ¿òÑ¡Î»ÖÃ
+		// * çŸ©å½¢å’Œå¤šè¾¹å½¢æ¡†é€‰ä½ç½®
 		// */
 		//QVector<QVector2D> multiQuad{};
 
 		///*
-		//* Ô²ĞÎ¿òÑ¡Î»ÖÃ
+		//* åœ†å½¢æ¡†é€‰ä½ç½®
 		//*/
 		//QVector3D _centerPoint; QVector3D _centerDirection; double _radius; QVector2D _centerScreenPoint; double _screenRadius;
 
-		////¾ØĞÎ¿òÑ¡ÖĞĞÄºÍÆä°ë¸ö¿í¶ÈºÍ°ë¸ö¸ß¶È
+		////çŸ©å½¢æ¡†é€‰ä¸­å¿ƒå’Œå…¶åŠä¸ªå®½åº¦å’ŒåŠä¸ªé«˜åº¦
 		//QVector2D _centerBox, _boxXY_2;
 
 		/*
-		 * ÊÇ·ñÍê³É
+		 * æ˜¯å¦å®Œæˆ
 		 */
 		bool _isfinished;
 

@@ -57,12 +57,12 @@ namespace mxr
 	public:
 		VBO(GLsizeiptr size, const void* data, GLbitfield access = 0) : IBuffer(size, data, access) { 
 			++g_vbo_count; 
-			std::cout << "[VBO] ctor id=" << this << " total=" << g_vbo_count.load() << "\n";
+			//std::cout << "[VBO] ctor id=" << this << " total=" << g_vbo_count.load() << "\n";
 		}
 		virtual ~VBO() { 
 			glDeleteBuffers(1, &id);
 			--g_vbo_count;
-			std::cout << "[VBO] dtor id=" << this << " total=" << g_vbo_count.load() << "\n";
+			//std::cout << "[VBO] dtor id=" << this << " total=" << g_vbo_count.load() << "\n";
 		}
 	};
 
