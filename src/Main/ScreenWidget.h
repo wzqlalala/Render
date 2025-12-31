@@ -25,6 +25,23 @@ enum ScreenType
 	SoftScreen,
 
 };
+enum HitRegion
+{
+	None,
+	Inside,        // 矩形内部 → 移动
+	Left,
+	Right,
+	Top,
+	Bottom,
+	TopLeft,
+	TopRight,
+	BottomLeft,
+	BottomRight
+};
+
+constexpr int RESIZE_MARGIN = 6; // px，靠近边界多远算 resize
+constexpr int MIN_RECT_SIZE = 10; // 最小宽高，防止翻转/消失
+
 //截屏对象类
 class Screen
 {
@@ -48,6 +65,11 @@ public:
 	int height();
 	bool isInArea(QPoint pos);          // 检测pos是否在截图区域内
 	void move(QPoint p);                // 按 p 移动截图区域
+	void resizeLeft(int dx);
+	void resizeRight(int dx);
+	void resizeTop(int dx);
+	void resizeBottom(int dx);
+	HitRegion hitTest(const QPoint& pos);
 
 private:
 	QPoint leftUpPos, rightDownPos;     //记录 截图区域 左上角、右下角
@@ -66,6 +88,8 @@ public:
 
 	virtual void startScreen(ScreenType screenType, QRect rect = QRect());
 
+	void updateCursor(HitRegion region);
+
 protected:
 	Screen *screen;         //截屏对象
 	QPixmap *fullScreen;    //保存全屏图像
@@ -73,6 +97,9 @@ protected:
 	QPoint movPos;          //坐标
 
 	ScreenType _screenType;//截屏类型
+
+	HitRegion _activeRegion = None;
+	QPoint _pressPos;
 
 protected:
 	void mousePressEvent(QMouseEvent *);

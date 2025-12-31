@@ -94,6 +94,41 @@ bool Screen::isInArea(QPoint pos)
 	return false;
 }
 
+HitRegion Screen::hitTest(const QPoint& pos)
+{
+	if (leftUpPos.x() < 0 || rightDownPos.x() < 0)
+		return None;
+
+	int x = pos.x();
+	int y = pos.y();
+
+	int l = leftUpPos.x();
+	int r = rightDownPos.x();
+	int t = leftUpPos.y();
+	int b = rightDownPos.y();
+
+	bool nearLeft = qAbs(x - l) <= RESIZE_MARGIN;
+	bool nearRight = qAbs(x - r) <= RESIZE_MARGIN;
+	bool nearTop = qAbs(y - t) <= RESIZE_MARGIN;
+	bool nearBottom = qAbs(y - b) <= RESIZE_MARGIN;
+
+	if (nearLeft && nearTop)     return TopLeft;
+	if (nearRight && nearTop)    return TopRight;
+	if (nearLeft && nearBottom)  return BottomLeft;
+	if (nearRight && nearBottom) return BottomRight;
+
+	if (nearLeft)   return Left;
+	if (nearRight)  return Right;
+	if (nearTop)    return Top;
+	if (nearBottom) return Bottom;
+
+	if (isInArea(pos))
+		return Inside;
+
+	return None;
+}
+
+
 void Screen::move(QPoint p)
 {
 	int lx = leftUpPos.x() + p.x();
@@ -127,6 +162,46 @@ void Screen::move(QPoint p)
 	endPos = rightDownPos;
 }
 
+void Screen::resizeLeft(int dx)
+{
+	int newX = leftUpPos.x() + dx;
+	newX = qBound(0, newX, rightDownPos.x() - MIN_RECT_SIZE);
+
+	leftUpPos.setX(newX);
+	startPos = leftUpPos;
+}
+
+
+void Screen::resizeRight(int dx)
+{
+	int newX = rightDownPos.x() + dx;
+	newX = qBound(leftUpPos.x() + MIN_RECT_SIZE, newX, maxWidth);
+
+	rightDownPos.setX(newX);
+	endPos = rightDownPos;
+}
+
+
+void Screen::resizeTop(int dy)
+{
+	int newY = leftUpPos.y() + dy;
+	newY = qBound(0, newY, rightDownPos.y() - MIN_RECT_SIZE);
+
+	leftUpPos.setY(newY);
+	startPos = leftUpPos;
+}
+
+
+void Screen::resizeBottom(int dy)
+{
+	int newY = rightDownPos.y() + dy;
+	newY = qBound(leftUpPos.y() + MIN_RECT_SIZE, newY, maxHeight);
+
+	rightDownPos.setY(newY);
+	endPos = rightDownPos;
+}
+
+
 void Screen::cmpPoint(QPoint &leftTop, QPoint &rightDown)
 {
 	QPoint l = leftTop;
@@ -157,6 +232,8 @@ void Screen::cmpPoint(QPoint &leftTop, QPoint &rightDown)
 
 ScreenWidgetBase::ScreenWidgetBase(QWidget *parent) :QWidget(parent)
 {
+	setMouseTracking(true);
+	setAttribute(Qt::WA_MouseTracking);
 	setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::Tool | Qt::X11BypassWindowManagerHint);//窗口无边框，窗口置顶，窗口任务栏隐藏
 	//取得屏幕大小
 	screen = new Screen(QApplication::desktop()->size());
@@ -205,39 +282,115 @@ void ScreenWidgetBase::startScreen(ScreenType screenType, QRect rect)
 
 }
 
+void ScreenWidgetBase::updateCursor(HitRegion region)
+{
+	switch (region)
+	{
+	case Inside:
+		setCursor(Qt::SizeAllCursor);
+		break;
+	case Left:
+	case Right:
+		setCursor(Qt::SizeHorCursor);
+		break;
+	case Top:
+	case Bottom:
+		setCursor(Qt::SizeVerCursor);
+		break;
+	case TopLeft:
+	case BottomRight:
+		setCursor(Qt::SizeFDiagCursor);
+		break;
+	case TopRight:
+	case BottomLeft:
+		setCursor(Qt::SizeBDiagCursor);
+		break;
+	default:
+		setCursor(Qt::CrossCursor); // 新建选择
+		break;
+	}
+}
+
 void ScreenWidgetBase::mouseMoveEvent(QMouseEvent *e)
 {
-	if (screen->getStatus() == Screen::SELECT) {
+	QPoint pos = e->pos();
+
+	if (!(e->buttons() & Qt::LeftButton))
+	{
+		HitRegion region = screen->hitTest(pos);
+		updateCursor(region);
+		return;
+	}
+
+	QPoint delta = e->pos() - _pressPos;
+	_pressPos = e->pos();
+
+	switch (_activeRegion)
+	{
+	case Inside:
+		screen->move(delta);
+		break;
+
+	case Left:
+		screen->resizeLeft(delta.x());
+		break;
+
+	case Right:
+		screen->resizeRight(delta.x());
+		break;
+
+	case Top:
+		screen->resizeTop(delta.y());
+		break;
+
+	case Bottom:
+		screen->resizeBottom(delta.y());
+		break;
+
+	case TopLeft:
+		screen->resizeLeft(delta.x());
+		screen->resizeTop(delta.y());
+		break;
+
+	case TopRight:
+		screen->resizeRight(delta.x());
+		screen->resizeTop(delta.y());
+		break;
+
+	case BottomLeft:
+		screen->resizeLeft(delta.x());
+		screen->resizeBottom(delta.y());
+		break;
+
+	case BottomRight:
+		screen->resizeRight(delta.x());
+		screen->resizeBottom(delta.y());
+		break;
+
+	default:
 		screen->setEnd(e->pos());
+		break;
 	}
-	else if (screen->getStatus() == Screen::MOV) {
-		QPoint p(e->x() - movPos.x(), e->y() - movPos.y());
-		screen->move(p);
-		movPos = e->pos();
-	}
+
+	update();
 
 	this->update();
 }
 
 void ScreenWidgetBase::mousePressEvent(QMouseEvent *e)
 {
-	int status = screen->getStatus();
+	if (e->button() != Qt::LeftButton)
+		return;
 
-	if (status == Screen::SELECT) {
-		screen->setStart(e->pos());
-	}
-	else if (status == Screen::MOV) {
-		if (screen->isInArea(e->pos()) == false) {
-			screen->setStart(e->pos());
-			screen->setStatus(Screen::SELECT);
-		}
-		else {
-			movPos = e->pos();
-			this->setCursor(Qt::SizeAllCursor);
-		}
-	}
+	_pressPos = e->pos();
+	_activeRegion = screen->hitTest(_pressPos);
 
-	this->update();
+	if (_activeRegion == None)
+	{
+		// 重新选择
+		screen->setStart(_pressPos);
+		screen->setEnd(_pressPos);
+	}
 }
 
 void ScreenWidgetBase::mouseReleaseEvent(QMouseEvent *)
@@ -258,27 +411,61 @@ void ScreenWidgetBase::paintEvent(QPaintEvent *)
 	int h = screen->getRightDown().y() - y;
 
 	QPainter painter(this);
+	painter.setRenderHint(QPainter::Antialiasing);
 
-	QPen pen;
-	pen.setColor(Qt::green);
+	painter.drawPixmap(0, 0, *bgScreen);
+
+	if (w > 0 && h > 0)
+		painter.drawPixmap(x, y, fullScreen->copy(x, y, w, h));
+
+	// ===== 绘制选择框 =====
+	QPen pen(Qt::green);
 	pen.setWidth(2);
 	pen.setStyle(Qt::DotLine);
 	painter.setPen(pen);
-	int width = bgScreen->width();
-	int wid = fullScreen->width();
-	painter.drawPixmap(0, 0, *bgScreen);//画模糊背景
+	painter.drawRect(x, y, w, h);
 
-	if (w != 0 && h != 0) {
-		painter.drawPixmap(x, y, fullScreen->copy(x, y, w, h));//画图像
+	// ===== 文字内容 =====
+	QString text = tr("截图范围：( %1, %2 ) - ( %3, %4 )   大小：( %5 x %6 )")
+		.arg(x).arg(y)
+		.arg(x + w).arg(y + h)
+		.arg(w).arg(h);
+
+	QFontMetrics fm(painter.font());
+	QRect textRect = fm.boundingRect(text);
+	const int padding = 6;
+
+	textRect.adjust(-padding, -padding, padding, padding);
+
+	// ===== 文字位置策略 =====
+	QPoint textPos;
+
+	// 优先放在矩形上方
+	if (y - textRect.height() - 4 >= 0)
+	{
+		textPos = QPoint(x, y - textRect.height() - 4);
+	}
+	else
+	{
+		textPos = QPoint(x + 4, y + 4);
 	}
 
-	painter.drawRect(x, y, w, h);//画边框
+	textRect.moveTopLeft(textPos);
+	if (w != 0 && h != 0)
+	{
+		// ===== 背景条（关键）=====
+		painter.setPen(Qt::NoPen);
+		painter.setBrush(QColor(0, 0, 0, 160));
+		painter.drawRoundedRect(textRect, 4, 4);
 
-	pen.setColor(Qt::yellow);
-	painter.setPen(pen);
-	painter.drawText(x + 2, y - 8, tr("截图范围：( %1 x %2 ) - ( %3 x %4 )  图片大小：( %5 x %6 )")//画文字
-		.arg(x).arg(y).arg(x + w).arg(y + h).arg(w).arg(h));
+		// ===== 文字 =====
+		painter.setPen(Qt::yellow);
+		painter.drawText(textRect.adjusted(padding, padding, -padding, -padding),
+			Qt::AlignLeft | Qt::AlignVCenter,
+			text);
+	}
 }
+
 
 void ScreenWidgetBase::showEvent(QShowEvent *e)
 {
