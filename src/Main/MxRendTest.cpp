@@ -1063,7 +1063,7 @@ void MxRendTest::keyPressEvent(QKeyEvent * event)
 			//ScreenWidget::Instance()->startScreen(SoftScreen, QRect(100,100,1000,1000));
 			break;
 		}
-		case Qt::Key_Enter:
+		case Qt::Key_Delete:
 		{
 			if (!isStartScreen)
 			{

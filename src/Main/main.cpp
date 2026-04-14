@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 	//}
 	//context2->setFormat(format);
 	//MxRendTest w0(0);
-	MxRendTest w1(1);
+	MxRendTest w1(0);
 
 	//MxRendTest w2(2);
 	//ScreenWidget::Instance()->showFullScreen();
