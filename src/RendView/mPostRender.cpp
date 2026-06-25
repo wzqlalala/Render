@@ -10,6 +10,7 @@
 #include "mArrowRender.h"
 #include "mPostFrameText.h"
 #include "mPostDragRender.h"
+#include "mPostPickController.h"
 
 #include <renderpch.h>
 #include "texture.h"
@@ -382,31 +383,30 @@ namespace MPostRend
 		_aniTimer->setInterval(0);
 		connect(_aniTimer, SIGNAL(timeout()), this, SLOT(slot_aniTimer()));
 
-		//连接拖拽信号
+		initializeInteractionRenderers();
+		//this->doneCurrent();
+	}
+	void mPostRender::initializeInteractionRenderers()
+	{
 		connect(this, SIGNAL(finishedDragSig()), this, SLOT(slot_finsishedDrag()));
 
-		//初始化高亮渲染
 		_pickData = new mPostMeshPickData;
+		_pickController.reset(new mPostPickController(_pickData, this));
 		_highLightRender = make_shared<mPostHighLightRender>(_rendStatus, _pickData);
-
-		//初始化临时高亮渲染
 		_tempHighLightRender = make_shared<mPostTempHighLightRender>(_rendStatus);
 
-		//添加积分球
-		shared_ptr<mPostSphereRender> sphereRender = MakeAsset<mPostSphereRender>("积分球", _app, _parent, _rendStatus);
-		_dragRenders.insert("积分球",sphereRender);
+		auto sphereRender = MakeAsset<mPostSphereRender>("积分球", _app, _parent, _rendStatus);
+		_dragRenders.insert("积分球", sphereRender);
 
-		shared_ptr<mPostMinMaxRender> minRender = MakeAsset<mPostMinMaxRender>("最小值", _app, _parent, _rendStatus);
+		auto minRender = MakeAsset<mPostMinMaxRender>("最小值", _app, _parent, _rendStatus);
 		_dragRenders.insert("最小值", minRender);
 		minRender->setColor(QVector3D(0, 0, 1));
 		minRender->setIsShow(false);
 
-		shared_ptr<mPostMinMaxRender> maxRender = MakeAsset<mPostMinMaxRender>("最大值", _app, _parent, _rendStatus);
+		auto maxRender = MakeAsset<mPostMinMaxRender>("最大值", _app, _parent, _rendStatus);
 		_dragRenders.insert("最大值", maxRender);
 		maxRender->setColor(QVector3D(1, 0, 0));
 		maxRender->setIsShow(false);
-
-		//this->doneCurrent();
 	}
 	bool mPostRender::getIsDragSomething(QVector2D pos)
 	{
@@ -449,55 +449,91 @@ namespace MPostRend
 	QTime time;
 	void mPostRender::startPick(QVector<QVector2D> poses)
 	{
-		if (_currentDragRender != nullptr)
+		if (consumeActiveDragPick())
 		{
-			//emit finishedDragSig();
-			_currentDragRender = nullptr;
 			return;
 		}
+
 		QTime time;
 		time.start();
 		makeCurrent();
-		//开始拾取操作
-		if (!_oneFrameRender)
+
+		if (!configurePickThread(poses))
 		{
 			return;
 		}
+
+		startPickTask(time);
+	}
+
+	bool mPostRender::consumeActiveDragPick()
+	{
+		if (_currentDragRender == nullptr)
+		{
+			return false;
+		}
+
+		//emit finishedDragSig();
+		_currentDragRender = nullptr;
+		return true;
+	}
+
+	bool mPostRender::configurePickThread(const QVector<QVector2D>& poses)
+	{
+		//开始拾取操作
+		if (!_oneFrameRender || !_pickController || !_pickController->isReady())
+		{
+			return false;
+		}
+
 		_pickData->setMeshPickFunction(int(_baseRend->getPickFuntion()));
-		_thread->setCurrentFrameRend(_oneFrameRender->getOneFrameData(), _oneFrameRender->getOneFrameRendData());
-		_thread->setMatrix(_baseRend->getCamera()->getPVMValue());
-		_thread->setWidget(_baseRend->getCamera()->SCR_WIDTH, _baseRend->getCamera()->SCR_HEIGHT);
-		_thread->setPickMode(*_baseRend->getCurrentPickMode(), *_baseRend->getMultiplyPickMode());
-		_thread->setPickAngleValue(_baseRend->getPickAngle());
-		_thread->setPickElementTypeFilter(_rendStatus->_pickElementTypeFilter);
+		auto pickThread = _pickController->thread();
+		pickThread->setCurrentFrameRend(_oneFrameRender->getOneFrameData(), _oneFrameRender->getOneFrameRendData());
+		pickThread->setMatrix(_baseRend->getCamera()->getPVMValue());
+		pickThread->setWidget(_baseRend->getCamera()->SCR_WIDTH, _baseRend->getCamera()->SCR_HEIGHT);
+		pickThread->setPickMode(*_baseRend->getCurrentPickMode(), *_baseRend->getMultiplyPickMode());
+		pickThread->setPickAngleValue(_baseRend->getPickAngle());
+		pickThread->setPickElementTypeFilter(_rendStatus->_pickElementTypeFilter);
+
 		if (*_baseRend->getCurrentPickMode() == PickMode::SoloPick)
-		{		
+		{
+			if (poses.empty())
+			{
+				return false;
+			}
+
 			float depth = this->getDepth(poses.first());
 			GLenum error = QOpenGLContext::currentContext()->functions()->glGetError();
 			if (error != 0)
 			{
 				qDebug() << error;
 			}
-			_thread->setLocation(poses.first(), depth);
+			pickThread->setLocation(poses.first(), depth);
 		}
 		else
 		{
-			_thread->setLocation(poses, (_baseRend->getCamera()->_Center - _baseRend->getCamera()->_Eye).normalized());
+			pickThread->setLocation(poses, (_baseRend->getCamera()->_Center - _baseRend->getCamera()->_Eye).normalized());
 		}
-		QFuture<void> future; 
-		future = QtConcurrent::run(_thread, &mPostMeshPickThread::startPick);
-		QObject::connect(&w, &QFutureWatcher<void>::finished, [this, time] {
-			qDebug() << "拾取消耗时间" << time.elapsed();
-			_highLightRender->updateHighLightRender(_oneFrameRender->getOneFrameData(), _oneFrameRender->getOneFrameRendData());
-			//this->
-			//set<int> ids = _pickData->getPickNodeIDs();
-			//qDebug() << "拾取完成";
-			QObject::disconnect(&w, 0, 0, 0);//断开信号
-			emit update();
-			emit finishedPickSig();
-		});
-		w.setFuture(future);
 
+		return true;
+	}
+
+	void mPostRender::startPickTask(const QTime& time)
+	{
+		_pickController->start(time, [this](const QTime& elapsedTime) {
+			finishPick(elapsedTime);
+		});
+	}
+
+	void mPostRender::finishPick(const QTime& time)
+	{
+		qDebug() << "拾取消耗时间" << time.elapsed();
+		_highLightRender->updateHighLightRender(_oneFrameRender->getOneFrameData(), _oneFrameRender->getOneFrameRendData());
+		//this->
+		//set<int> ids = _pickData->getPickNodeIDs();
+		//qDebug() << "拾取完成";
+		emit update();
+		emit finishedPickSig();
 	}
 
 	void mPostRender::setPickElementTypeFilter(std::set<MViewBasic::ElementType> pickElementTypeFilter)
@@ -531,18 +567,15 @@ namespace MPostRend
 		{
 			_oneFrameAnimationRender->updateOneModelOperate(postModelOperates);
 		}
-		for (auto rend : _animationRender)
-		{
+		forEachAnimationRender([postModelOperates](const shared_ptr<mPostOneFrameRender>& rend) {
 			rend->updateOneModelOperate(postModelOperates);
-		}
+		});
 
 		if (postModelOperates.first == HideOnePartOperate || postModelOperates.first == ShowOnePartOperate)
 		{
 			if (_rendStatus->_postMode == OneFrame || _rendStatus->_postMode == OneFrameLinearAnimation || _rendStatus->_postMode == OneFrameSinAnimation)
 			{
-				QFuture<void> future = QtConcurrent::run(this, &mPostRender::getMinMaxLocation);
-				QObject::connect(&w, &QFutureWatcher<void>::finished, [this] {	this->updateMinMaxRender();	});
-				w.setFuture(future);
+				scheduleMinMaxUpdate();
 			}
 		}
 	}
@@ -557,19 +590,30 @@ namespace MPostRend
 		{
 			_oneFrameAnimationRender->updateAllModelOperate(postModelOperate);
 		}
-		for (auto rend : _animationRender)
-		{
+		forEachAnimationRender([postModelOperate](const shared_ptr<mPostOneFrameRender>& rend) {
 			rend->updateAllModelOperate(postModelOperate);
-		}
+		});
 		if (postModelOperate == HideAllPartOperate || postModelOperate == ShowAllPartOperate)
 		{
 			if (_rendStatus->_postMode == OneFrame || _rendStatus->_postMode == OneFrameLinearAnimation || _rendStatus->_postMode == OneFrameSinAnimation)
 			{
-				QFuture<void> future = QtConcurrent::run(this, &mPostRender::getMinMaxLocation);
-				QObject::connect(&w, &QFutureWatcher<void>::finished, [this] {	this->updateMinMaxRender();	});
-				w.setFuture(future);
+				scheduleMinMaxUpdate();
 			}
 		}
+	}
+	void mPostRender::scheduleMinMaxUpdate()
+	{
+		if (!_oneFrameRender || minmaxw.isRunning())
+		{
+			return;
+		}
+
+		QFuture<void> future = QtConcurrent::run(this, &mPostRender::getMinMaxLocation);
+		QObject::connect(&minmaxw, &QFutureWatcher<void>::finished, [this] {
+			QObject::disconnect(&minmaxw, 0, 0, 0);
+			this->updateMinMaxRender();
+		});
+		minmaxw.setFuture(future);
 	}
 	Space::AABB mPostRender::getCurrentModelData()
 	{
@@ -584,12 +628,7 @@ namespace MPostRend
 		}
 		else
 		{
-			Space::AABB aabb;
-			for (auto render : _animationRender)
-			{
-				aabb.push(render->getModelRender()->getModelAABB());
-			}
-			return aabb;
+			return getAnimationModelAABB();
 		}
 		return Space::AABB();
 	}
@@ -615,6 +654,40 @@ namespace MPostRend
 		//_highLightRender->updateHighLightRender();
 		//_tempHighLightRender->setAllMeshData();
 	}
+	void mPostRender::initializeOneFrameRenderStates(const shared_ptr<mPostOneFrameRender>& oneFrameRender)
+	{
+		if (!oneFrameRender)
+		{
+			return;
+		}
+
+		oneFrameRender->setFaceStateSet(_faceStateSet);
+		oneFrameRender->setFaceTransparentNoDeformationStateSet(_faceTransparentNodeformationStateSet);
+		oneFrameRender->setFaceTransparentStateSet(_faceTransparentStateSet);
+		oneFrameRender->setEdgeLineStateSet(_edgelineStateSet);
+		oneFrameRender->setFaceLineStateSet(_facelineStateSet);
+		oneFrameRender->setLineStateSet(_lineStateSet);
+		oneFrameRender->setPointStateSet(_pointStateSet);
+	}
+	void mPostRender::ensureColorTableTexture(mPostOneFrameRendData* postOneFrameRendData)
+	{
+		if (_texture)
+		{
+			return;
+		}
+
+		mPostColorTableData* table = postOneFrameRendData->getRendColorTable();
+		_texture = new Texture(GL_TEXTURE_1D, table->getPostColorTableNum(), 0, 0, GL_RGB8, 1);
+		_texture->SetData(0, 0, table->getPostColorTableNum(), table->getColorTable());
+		_faceStateSet->setTexture("texture", _texture);
+		_facelineStateSet->setTexture("texture", _texture);
+		_lineStateSet->setTexture("texture", _texture);
+		_pointStateSet->setTexture("texture", _texture);
+		_cuttingPlaneStateSet->setTexture("texture", _texture);
+		_contourFaceStateSet->setTexture("texture", _texture);
+		_contourLineStateSet->setTexture("texture", _texture);
+		_streamlinePointStateSet->setTexture("texture", _texture);
+	}
 	void mPostRender::setRendCurrentFrameData(mPostOneFrameRendData* postOneFrameRendData)
 	{
 		this->makeCurrent();
@@ -628,35 +701,14 @@ namespace MPostRend
 		{
 			_oneFrameRender.reset();
 		}
-		if (!_texture)
-		{
-			mPostColorTableData *table = postOneFrameRendData->getRendColorTable();
-			_texture = new Texture(GL_TEXTURE_1D, table->getPostColorTableNum(), 0, 0, GL_RGB8, 1);
-			_texture->SetData(0, 0, table->getPostColorTableNum(), table->getColorTable());
-			_faceStateSet->setTexture("texture", _texture);
-			_facelineStateSet->setTexture("texture", _texture);
-			_lineStateSet->setTexture("texture", _texture);
-			_pointStateSet->setTexture("texture", _texture);
-			_cuttingPlaneStateSet->setTexture("texture", _texture);
-			_contourFaceStateSet->setTexture("texture", _texture);
-			_contourLineStateSet->setTexture("texture", _texture);
-			_streamlinePointStateSet->setTexture("texture", _texture);
-		}
+		ensureColorTableTexture(postOneFrameRendData);
 		_oneFrameRender = make_shared<mPostOneFrameRender>(_app, _rendStatus, oneFrameData, postOneFrameRendData);
-		_oneFrameRender->setFaceStateSet(_faceStateSet);
-		_oneFrameRender->setFaceTransparentNoDeformationStateSet(_faceTransparentNodeformationStateSet);
-		_oneFrameRender->setFaceTransparentStateSet(_faceTransparentStateSet);
-		_oneFrameRender->setEdgeLineStateSet(_edgelineStateSet);
-		_oneFrameRender->setFaceLineStateSet(_facelineStateSet);
-		_oneFrameRender->setLineStateSet(_lineStateSet);
-		_oneFrameRender->setPointStateSet(_pointStateSet);
+		initializeOneFrameRenderStates(_oneFrameRender);
 		_oneFrameRender->setTexture(_texture);
 		_oneFrameRender->updateAllModelOperate(ImportOperate);
 		this->setDispersed(true);
 		this->initialPickThreads();
-		QFuture<void> future = QtConcurrent::run(this, &mPostRender::getMinMaxLocation);
-		QObject::connect(&w, &QFutureWatcher<void>::finished, [this] {	this->updateMinMaxRender();	});
-		w.setFuture(future);
+		scheduleMinMaxUpdate();
 		//this->getMinMaxLocation();
 	}
 
@@ -672,10 +724,9 @@ namespace MPostRend
 		{
 			_oneFrameAnimationRender->getModelRender()->setShowFuntion(showFuntion);
 		}
-		for (auto rend : _animationRender)
-		{
+		forEachAnimationRender([showFuntion](const shared_ptr<mPostOneFrameRender>& rend) {
 			rend->getModelRender()->setShowFuntion(showFuntion);
-		}
+		});
 	}
 
 	void mPostRender::setDispersed(bool isdispersed)
@@ -700,10 +751,9 @@ namespace MPostRend
 		{
 			_oneFrameRender->setDeformationScale(deformationScale);
 		}
-		for (auto rend : _animationRender)
-		{
+		forEachAnimationRender([deformationScale](const shared_ptr<mPostOneFrameRender>& rend) {
 			rend->setDeformationScale(deformationScale);
-		}
+		});
 	}
 
 	void mPostRender::setIsShowInitialShape(bool isShowInitialShape)
@@ -718,10 +768,9 @@ namespace MPostRend
 		{
 			_oneFrameAnimationRender->getModelRender()->setIsShowInitialShape(isShowInitialShape);
 		}
-		for (auto rend : _animationRender)
-		{
+		forEachAnimationRender([isShowInitialShape](const shared_ptr<mPostOneFrameRender>& rend) {
 			rend->getModelRender()->setIsShowInitialShape(isShowInitialShape);
-		}
+		});
 	}
 
 	void mPostRender::setTextureCoordScale(float textureCoordScale)
@@ -731,10 +780,9 @@ namespace MPostRend
 		{
 			_oneFrameRender->setTextureCoordScale(textureCoordScale);
 		}
-		for (auto rend : _animationRender)
-		{
+		forEachAnimationRender([textureCoordScale](const shared_ptr<mPostOneFrameRender>& rend) {
 			rend->setTextureCoordScale(textureCoordScale);
-		}
+		});
 	}
 
 	void mPostRender::setMinMaxData(float maxValue, float minValue)
@@ -743,9 +791,7 @@ namespace MPostRend
 		if (_oneFrameRender)
 		{
 			_oneFrameRender->setMinMaxData(maxValue, minValue);
-			QFuture<void> future = QtConcurrent::run(this, &mPostRender::getMinMaxLocation);
-			QObject::connect(&w, &QFutureWatcher<void>::finished, [this] {	this->updateMinMaxRender();	});
-			w.setFuture(future);
+			scheduleMinMaxUpdate();
 		}
 	}
 
@@ -757,9 +803,7 @@ namespace MPostRend
 		{
 			_oneFrameRender->updateAllModelOperate(UpdateMinMax);
 		}
-		QFuture<void> future = QtConcurrent::run(this, &mPostRender::getMinMaxLocation);
-		QObject::connect(&w, &QFutureWatcher<void>::finished, [this] {	this->updateMinMaxRender();	});
-		w.setFuture(future);
+		scheduleMinMaxUpdate();
 	}
 
 	void mPostRender::setDispersIsEquivariance(bool isEquivariance)
@@ -859,12 +903,11 @@ namespace MPostRend
 		}
 		if (_oneFrameAnimationRender)
 		{
-			hasDeleteCuttingPlane = _oneFrameAnimationRender->deleteCuttingPlane(num);
+			hasDeleteCuttingPlane = _oneFrameAnimationRender->deleteCuttingPlane(num) || hasDeleteCuttingPlane;
 		}
-		for (auto rend : _animationRender)
-		{
-			hasDeleteCuttingPlane = rend->deleteCuttingPlane(num);
-		}
+		hasDeleteCuttingPlane = anyAnimationRender([num](const shared_ptr<mPostOneFrameRender>& rend) {
+			return rend->deleteCuttingPlane(num);
+		}) || hasDeleteCuttingPlane;
 		if (!hasDeleteCuttingPlane)
 		{
 			return;
@@ -883,12 +926,11 @@ namespace MPostRend
 		}
 		if (_oneFrameAnimationRender)
 		{
-			hasReverseCuttingPlane = _oneFrameAnimationRender->reverseCuttingPlaneNormal(num);
+			hasReverseCuttingPlane = _oneFrameAnimationRender->reverseCuttingPlaneNormal(num) || hasReverseCuttingPlane;
 		}
-		for (auto rend : _animationRender)
-		{
-			hasReverseCuttingPlane = rend->reverseCuttingPlaneNormal(num);
-		}
+		hasReverseCuttingPlane = anyAnimationRender([num](const shared_ptr<mPostOneFrameRender>& rend) {
+			return rend->reverseCuttingPlaneNormal(num);
+		}) || hasReverseCuttingPlane;
 		if (!hasReverseCuttingPlane)
 		{
 			return;
@@ -910,10 +952,9 @@ namespace MPostRend
 		{
 			_oneFrameAnimationRender->setOnlyShowCuttingPlane(isOnlyShowCuttingPlane);
 		}
-		for (auto rend : _animationRender)
-		{
+		forEachAnimationRender([isOnlyShowCuttingPlane](const shared_ptr<mPostOneFrameRender>& rend) {
 			rend->setOnlyShowCuttingPlane(isOnlyShowCuttingPlane);
-		}
+		});
 	}
 
 	void mPostRender::setIsShowCuttingPlane(int num, bool isShow)
@@ -927,10 +968,9 @@ namespace MPostRend
 		{
 			_oneFrameAnimationRender->setIsShowCuttingPlane(num, isShow);
 		}
-		for (auto rend : _animationRender)
-		{
+		forEachAnimationRender([num, isShow](const shared_ptr<mPostOneFrameRender>& rend) {
 			rend->setIsShowCuttingPlane(num, isShow);
-		}
+		});
 	}
 
 	void mPostRender::createCuttingPlane(int num, QVector3D normal, QVector3D vertex, bool hasVector)
@@ -943,12 +983,11 @@ namespace MPostRend
 		}
 		if (_oneFrameAnimationRender)
 		{
-			hasCreateCuttingPlane = _oneFrameAnimationRender->createCuttingPlane(_cuttingPlaneStateSet, _transparentPlaneStateSet, num, normal, vertex, hasVector);
+			hasCreateCuttingPlane = _oneFrameAnimationRender->createCuttingPlane(_cuttingPlaneStateSet, _transparentPlaneStateSet, num, normal, vertex, hasVector) || hasCreateCuttingPlane;
 		}
-		for (auto rend : _animationRender)
-		{
-			hasCreateCuttingPlane = rend->createCuttingPlane(_cuttingPlaneStateSet, _transparentPlaneStateSet, num, normal, vertex, hasVector);
-		}
+		hasCreateCuttingPlane = anyAnimationRender([this, num, normal, vertex, hasVector](const shared_ptr<mPostOneFrameRender>& rend) {
+			return rend->createCuttingPlane(_cuttingPlaneStateSet, _transparentPlaneStateSet, num, normal, vertex, hasVector);
+		}) || hasCreateCuttingPlane;
 		if (!hasCreateCuttingPlane)
 		{
 			return;
@@ -976,10 +1015,9 @@ namespace MPostRend
 		{
 			_oneFrameAnimationRender->setPlaneData(num, normal, centervertex, maxR);
 		}
-		for (auto rend : _animationRender)
-		{
+		forEachAnimationRender([num, normal, centervertex, maxR](const shared_ptr<mPostOneFrameRender>& rend) {
 			rend->setPlaneData(num, normal, centervertex, maxR);
-		}
+		});
 	}
 
 	void mPostRender::setIsShowPlane(bool isShow)
@@ -993,10 +1031,9 @@ namespace MPostRend
 		{
 			_oneFrameAnimationRender->setIsShowPlane(isShow);
 		}
-		for (auto rend : _animationRender)
-		{
+		forEachAnimationRender([isShow](const shared_ptr<mPostOneFrameRender>& rend) {
 			rend->setIsShowPlane(isShow);
-		}
+		});
 	}
 
 	void mPostRender::setAnimationFrame(int start, int end, int current)
@@ -1018,9 +1055,33 @@ namespace MPostRend
 
 	void mPostRender::setAnimationLoopPlay(bool istrue)
 	{
-		_rendStatus->_aniLoopPlay;
+		_rendStatus->_aniLoopPlay = istrue;
 	}
 
+	shared_ptr<mPostOneFrameRender> mPostRender::createAnimationFrameRender(int id)
+	{
+		auto oneFrameRender = make_shared<mPostOneFrameRender>(_app, _rendStatus, _dataPost->getOneFrameData(id), _rendAnimationData->getRendOneFrameData(id));
+		initializeOneFrameRenderStates(oneFrameRender);
+		oneFrameRender->setTextureCoordScale(1.0);
+		oneFrameRender->setDeformationScale(_rendStatus->_deformFactor);
+		return oneFrameRender;
+	}
+
+	void mPostRender::waitForAnimationUpdateFutures(QVector<QFuture<void>>& futures)
+	{
+		while (!futures.empty())
+		{
+			futures.back().waitForFinished();
+			futures.takeLast();
+		}
+	}
+
+	void mPostRender::bufferAnimationFrames()
+	{
+		forEachAnimationRender([this](const shared_ptr<mPostOneFrameRender>& rend) {
+			rend->bufferThisFrame(_app->GLContext());
+		});
+	}
 	void mPostRender::setRendAnimationFrame(std::shared_ptr<mPostAnimationRendData> allFrameRendData)
 	{
 		this->makeCurrent();
@@ -1028,87 +1089,108 @@ namespace MPostRend
 		{
 			return;
 		}
+
 		deleteAnimation();
 		_rendAnimationData = allFrameRendData;
-		set<int> ids = _rendAnimationData->getRendAnimationIds();
+
 		QVector<QFuture<void>> futures;
+		set<int> ids = _rendAnimationData->getRendAnimationIds();
 		for (int id : ids)
 		{
-			std::shared_ptr<mPostOneFrameRender> oneFrameRender = make_shared<mPostOneFrameRender>(_app, _rendStatus, _dataPost->getOneFrameData(id), _rendAnimationData->getRendOneFrameData(id));
-			oneFrameRender->setFaceStateSet(_faceStateSet);
-			oneFrameRender->setFaceTransparentNoDeformationStateSet(_faceTransparentNodeformationStateSet);
-			oneFrameRender->setFaceTransparentStateSet(_faceTransparentStateSet);
-			oneFrameRender->setEdgeLineStateSet(_edgelineStateSet);
-			oneFrameRender->setFaceLineStateSet(_facelineStateSet);
-			oneFrameRender->setLineStateSet(_lineStateSet);
-			oneFrameRender->setPointStateSet(_pointStateSet);
-			oneFrameRender->setTextureCoordScale(1.0);
-			oneFrameRender->setDeformationScale(_rendStatus->_deformFactor);
-			//oneFrameRender->updateAllModelOperate(ImportOperate);
-			//oneFrameRender->bufferThisFrame(_app->GLContext());
+			auto oneFrameRender = createAnimationFrameRender(id);
 			_animationRender.insert(id, oneFrameRender);
 			futures.append(QtConcurrent::run([oneFrameRender]
 			{
 				oneFrameRender->updateAllModelOperate(ImportOperate);
 			}));
 		}
-		while (!futures.empty())
-		{
-			futures.back().waitForFinished();
-			//futures.back().result()->bufferThisFrame(_app->GLContext());
-			futures.takeLast();
-		}
-		for (auto rend : _animationRender)
-		{
-			//QtConcurrent::run(rend.get(), &mPostOneFrameRender::bufferThisFrame,_app->GLContext());
-			rend->bufferThisFrame(_app->GLContext());
-		}
+
+		waitForAnimationUpdateFutures(futures);
+		bufferAnimationFrames();
 		_rendStatus->_postMode = Animation;
 	}
-
-	void mPostRender::setAnimationFrameRange(bool isAgreement)
+	void mPostRender::forEachAnimationRender(const std::function<void(const shared_ptr<mPostOneFrameRender>&)>& callback)
 	{
-		if (_rendStatus->_postMode == Animation)
+		if (!callback)
 		{
-			if (_rendAnimationData == nullptr)
+			return;
+		}
+
+		QHashIterator<int, shared_ptr<mPostOneFrameRender>> iter(_animationRender);
+		while (iter.hasNext())
+		{
+			iter.next();
+			auto oneFrameRend = iter.value();
+			if (oneFrameRend)
 			{
-				return;
-			}
-			_rendAnimationData->setAnimationFrameRange(isAgreement);
-			QHashIterator<int, std::shared_ptr<mPostOneFrameRender>> iter(_animationRender);
-			while (iter.hasNext())
-			{
-				iter.next();
-				auto oneFrameRend = iter.value();
-				if (oneFrameRend)
-				{
-					oneFrameRend->updateAllModelOperate(UpdateMinMax);
-				}
+				callback(oneFrameRend);
 			}
 		}
+	}
+	bool mPostRender::anyAnimationRender(const std::function<bool(const shared_ptr<mPostOneFrameRender>&)>& predicate)
+	{
+		if (!predicate)
+		{
+			return false;
+		}
+
+		bool result = false;
+		forEachAnimationRender([&](const shared_ptr<mPostOneFrameRender>& rend) {
+			result = predicate(rend) || result;
+		});
+		return result;
+	}
+
+	Space::AABB mPostRender::getAnimationModelAABB()
+	{
+		Space::AABB aabb;
+		forEachAnimationRender([&aabb](const shared_ptr<mPostOneFrameRender>& rend) {
+			aabb.push(rend->getModelRender()->getModelAABB());
+		});
+		return aabb;
+	}
+	void mPostRender::setAnimationFrameRange(bool isAgreement)
+	{
+		if (_rendStatus->_postMode != Animation || _rendAnimationData == nullptr)
+		{
+			return;
+		}
+
+		_rendAnimationData->setAnimationFrameRange(isAgreement);
+		forEachAnimationRender([](const shared_ptr<mPostOneFrameRender>& oneFrameRend) {
+			oneFrameRend->updateAllModelOperate(UpdateMinMax);
+		});
 	}
 
 	void mPostRender::setAnimationFrameRange(float maxValue, float minValue)
 	{
-		if (_rendStatus->_postMode == Animation)
+		if (_rendStatus->_postMode != Animation || _rendAnimationData == nullptr)
 		{
-			if (_rendAnimationData == nullptr)
-			{
-				return;
-			}
-			QHashIterator<int, std::shared_ptr<mPostOneFrameRender>> iter(_animationRender);
-			while (iter.hasNext())
-			{
-				iter.next();
-				auto oneFrameRend = iter.value();
-				if (oneFrameRend)
-				{
-					oneFrameRend->setMinMaxData(maxValue, minValue);
-				}
-			}
+			return;
 		}
-	}
 
+		forEachAnimationRender([maxValue, minValue](const shared_ptr<mPostOneFrameRender>& oneFrameRend) {
+			oneFrameRend->setMinMaxData(maxValue, minValue);
+		});
+	}
+	shared_ptr<mPostOneFrameRender> mPostRender::createOneFrameAnimationRender(mPostOneFrameRendData* postOneFrameRendData)
+	{
+		if (!postOneFrameRendData)
+		{
+			return nullptr;
+		}
+
+		int id = postOneFrameRendData->getRendID();
+		mOneFrameData1* oneFrameData = _dataPost->getOneFrameData(id);
+		auto newFrameRendData = new mPostOneFrameRendData(*postOneFrameRendData);
+		auto oneFrameAnimationRender = make_shared<mPostOneFrameRender>(_app, _rendStatus, oneFrameData, newFrameRendData);
+		initializeOneFrameRenderStates(oneFrameAnimationRender);
+		oneFrameAnimationRender->setTextureCoordScale(0.0);
+		oneFrameAnimationRender->setDeformationScale(QVector3D(0, 0, 0));
+		oneFrameAnimationRender->updateAllModelOperate(ImportOperate);
+		oneFrameAnimationRender->bufferThisFrame(_app->GLContext());
+		return oneFrameAnimationRender;
+	}
 	void mPostRender::createLinearAnimation(PostMode postMode)
 	{
 		this->makeCurrent();
@@ -1116,72 +1198,18 @@ namespace MPostRend
 		{
 			return;
 		}
+
 		deleteAnimation();
 		mPostOneFrameRendData* postOneFrameRendData = _oneFrameRender->getOneFrameRendData();
-		int id = postOneFrameRendData->getRendID();
+		_oneFrameAnimationRender = createOneFrameAnimationRender(postOneFrameRendData);
+		if (!_oneFrameAnimationRender)
+		{
+			return;
+		}
 
-		mOneFrameData1 *oneFrameData = _dataPost->getOneFrameData(id);
-
-		mPostOneFrameRendData *newFrameRendData = new mPostOneFrameRendData(*postOneFrameRendData);
-		_oneFrameAnimationRender = make_shared<mPostOneFrameRender>(_app, _rendStatus, oneFrameData, newFrameRendData);
-		_oneFrameAnimationRender->setFaceStateSet(_faceStateSet);
-		_oneFrameAnimationRender->setFaceTransparentNoDeformationStateSet(_faceTransparentNodeformationStateSet);
-		_oneFrameAnimationRender->setFaceTransparentStateSet(_faceTransparentStateSet);
-		_oneFrameAnimationRender->setEdgeLineStateSet(_edgelineStateSet);
-		_oneFrameAnimationRender->setFaceLineStateSet(_facelineStateSet);
-		_oneFrameAnimationRender->setLineStateSet(_lineStateSet);
-		_oneFrameAnimationRender->setPointStateSet(_pointStateSet);
-		_oneFrameAnimationRender->setTextureCoordScale(0.0);
-		_oneFrameAnimationRender->setDeformationScale(QVector3D(0,0,0));
-		_oneFrameAnimationRender->updateAllModelOperate(ImportOperate);
-		_oneFrameAnimationRender->bufferThisFrame(_app->GLContext());
 		_rendStatus->_aniCurrentFrame = 1;
 		_rendStatus->_postMode = postMode;
-
-		/*
-		int ids = 8;
-		QVector<QFuture<void>> futures;
-		for (int i = 0; i < ids; i++)
-		{
-			mPostOneFrameRendData *newFrameRendData = new mPostOneFrameRendData(*postOneFrameRendData);
-			std::shared_ptr<mPostOneFrameRender> oneFrameRender = make_shared<mPostOneFrameRender>(_rendStatus, oneFrameData, newFrameRendData);
-			float scale = postMode == OneFrameLinearAnimation ? i / float(ids - 1) : sin(2 * M_PI * i / float(ids - 1));
-
-			oneFrameRender->setFaceStateSet(_faceStateSet);
-			oneFrameRender->setFaceTransparentNoDeformationStateSet(_faceTransparentNodeformationStateSet);
-			oneFrameRender->setFaceTransparentStateSet(_faceTransparentStateSet);
-			oneFrameRender->setEdgeLineStateSet(_edgelineStateSet);
-			oneFrameRender->setFaceLineStateSet(_facelineStateSet);
-			oneFrameRender->setLineStateSet(_lineStateSet);
-			oneFrameRender->setPointStateSet(_pointStateSet);
-			oneFrameRender->setTextureCoordScale(scale);
-			oneFrameRender->setDeformationScale(deformationScale*scale);
-			_animationRender.insert(i + 1, oneFrameRender);
-			futures.append(QtConcurrent::run([oneFrameRender]
-			{
-				oneFrameRender->updateAllModelOperate(ImportOperate);
-			}));
-
-		}
-		while (!futures.empty())
-		{
-			futures.back().waitForFinished();
-			//futures.back().result()->bufferThisFrame(_app->GLContext());
-			futures.takeLast();
-		}
-		for (auto rend : _animationRender)
-		{
-			//QtConcurrent::run(rend.get(), &mPostOneFrameRender::bufferThisFrame,_app->GLContext());
-			rend->bufferThisFrame(_app->GLContext());
-		}
-		//for (auto rend : _animationRender)
-		//{
-		//	rend->getOneFrameRendData()->deleteValueAndDisplacementData();
-		//}
-		*/
-
 	}
-
 	void mPostRender::deleteAnimation()
 	{
 		this->makeCurrent();
@@ -1191,11 +1219,9 @@ namespace MPostRend
 			_oneFrameAnimationRender->deleteThieFrame();
 			_oneFrameAnimationRender.reset();
 		}
-		for (auto render : _animationRender)
-		{
+		forEachAnimationRender([](const shared_ptr<mPostOneFrameRender>& render) {
 			render->deleteThieFrame();
-			render.reset();
-		}
+		});
 		_animationRender.clear();
 	}
 
@@ -1382,10 +1408,9 @@ namespace MPostRend
 		{
 			_oneFrameRender->setIntergrateDirection(intergrateDirection);
 		}
-		for (auto render : _animationRender)
-		{
+		forEachAnimationRender([intergrateDirection](const shared_ptr<mPostOneFrameRender>& render) {
 			render->setIntergrateDirection(intergrateDirection);
-		}
+		});
 	}
 
 	void mPostRender::setIsShowSphere(bool isShow)
@@ -1413,10 +1438,9 @@ namespace MPostRend
 		{
 			_oneFrameRender->createStreamLine(_contourLineStateSet, _streamlinePointStateSet, center, radius, streamLineNum, ratio);
 		}
-		for (auto render : _animationRender)
-		{
+		forEachAnimationRender([this, center, radius, streamLineNum, ratio](const shared_ptr<mPostOneFrameRender>& render) {
 			render->createStreamLine(_contourLineStateSet, _streamlinePointStateSet, center, radius, streamLineNum, ratio);
-		}
+		});
 	}
 
 	void mPostRender::setMinIsShow(bool isshow)
@@ -1543,7 +1567,7 @@ namespace MPostRend
 		minRender->setData();
 		maxRender->setData();
 		setMinIsShow(_rendStatus->_isShowMinLine);
-		setMaxIsShow(_rendStatus->_isShowMinLine);
+		setMaxIsShow(_rendStatus->_isShowMaxLine);
 	}
 
 	void mPostRender::calculateMinMaxLinePosition()
@@ -1570,10 +1594,9 @@ namespace MPostRend
 		{
 			_oneFrameRender->createExplodedGraph();
 		}
-		for (auto render : _animationRender)
-		{
+		forEachAnimationRender([](const shared_ptr<mPostOneFrameRender>& render) {
 			render->createExplodedGraph();
-		}
+		});
 	}
 
 	void mPostRender::createExplodedGraphByTransplatePart(set<QString> partNames, QVector3D dis)
@@ -1582,10 +1605,9 @@ namespace MPostRend
 		{
 			_oneFrameRender->createExplodedGraphByTransplatePart(partNames, dis);
 		}
-		for (auto render : _animationRender)
-		{
+		forEachAnimationRender([partNames, dis](const shared_ptr<mPostOneFrameRender>& render) {
 			render->createExplodedGraphByTransplatePart(partNames, dis);
-		}
+		});
 	}
 
 	void mPostRender::createExplodedGraphByModelCenter(set<QString> partNames, QVector3D factor)
@@ -1594,10 +1616,9 @@ namespace MPostRend
 		{
 			_oneFrameRender->createExplodedGraphByModelCenter(partNames, factor);
 		}
-		for (auto render : _animationRender)
-		{
+		forEachAnimationRender([partNames, factor](const shared_ptr<mPostOneFrameRender>& render) {
 			render->createExplodedGraphByModelCenter(partNames, factor);
-		}
+		});
 	}
 
 	void mPostRender::clearExplodedGraph()
@@ -1606,14 +1627,18 @@ namespace MPostRend
 		{
 			_oneFrameRender->clearExplodedGraph();
 		}
-		for (auto render : _animationRender)
-		{
+		forEachAnimationRender([](const shared_ptr<mPostOneFrameRender>& render) {
 			render->clearExplodedGraph();
-		}
+		});
 	}
 
 	mPostRender::~mPostRender()
 	{
+		if (minmaxw.isRunning())
+		{
+			minmaxw.waitForFinished();
+		}
+
 		this->makeCurrent();
 		_oneFrameRender.reset();
 		_oneFrameAnimationRender.reset();
@@ -1976,19 +2001,12 @@ namespace MPostRend
 
 	void mPostRender::initialPickThreads()
 	{
-		if (!_dataPost)
+		if (!_dataPost || !_oneFrameRender || !_pickController)
 		{
 			return;
 		}
 
-		//初始化部件拾取多线程
-		set<QString> partNames = _dataPost->getAllPostPartNames();
-		_thread = new mPostMeshPickThread(_pickData);
-		_thread->setPickFilter(_baseRend->getPickFilter());
-		for (QString partName : partNames)
-		{
-			_thread->appendPartSpaceTree(partName, _oneFrameRender->getModelRender()->getPartSpaceTree(partName));
-		}	
+		_pickController->initialize(_dataPost.get(), _oneFrameRender.get(), _baseRend->getPickFilter());
 	}
 
 	void mPostRender::slot_finsishedDrag()

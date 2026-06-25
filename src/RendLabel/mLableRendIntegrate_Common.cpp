@@ -7,7 +7,7 @@
 #include"mLableRendAxis.h"
 #include"mLableRendArrow.h"
 //MDataLable
-#include"mLableDataController_common.cpp"
+#include"mLableDataController_common.h"
 //MViewBasic
 #include"mCommonView.h"
 #include"mModelView.h"

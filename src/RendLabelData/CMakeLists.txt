@@ -1,7 +1,6 @@
 #-----------------------------------------------------------------------------
 # 头文件搜索路径
 #-----------------------------------------------------------------------------
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../RendBasic)
 
 #-----------------------------------------------------------------------------
 # 自动添加include目录
@@ -28,6 +27,10 @@ add_library(RendLabelData
 	${_header}
 	${_source}
 )
+target_include_directories(RendLabelData PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}
+)
+
 
 #-----------------------------------------------------------------------------
 # 添加接口声明宏
@@ -43,7 +46,7 @@ list(APPEND _runtimes_libraries
 #-----------------------------------------------------------------------------
 # 链接依赖库
 #-----------------------------------------------------------------------------
-target_link_libraries(RendLabelData PRIVATE
+target_link_libraries(RendLabelData PUBLIC
 	${_runtimes_libraries}
 	${_depend_library}
 )
@@ -63,13 +66,5 @@ set(MxRender_RendLabelData_Runtimes_Libraries ${_runtimes_libraries})
 #-----------------------------------------------------------------------------
 install(
 	FILES ${_header}
-	DESTINATION ${INSTALL_INCDIR}			#将头文件安装到install/include目录
-)
-
-#-----------------------------------------------------------------------------
-# 安装几个特殊的CPP文件
-#-----------------------------------------------------------------------------
-install(
-	FILES mLableDataController_pre.cpp mLableDataController_post.cpp mLableDataController_common.cpp
 	DESTINATION ${INSTALL_INCDIR}			#将头文件安装到install/include目录
 )

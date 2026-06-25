@@ -641,4 +641,13 @@ namespace MDataLable
 		shared_ptr<mLableData_common> _lableData_common = nullptr;
 
 	};
+	// Explicit specializations are defined in mLableDataController_common.cpp.
+	template<> RENDLABELDATA_EXPORT QHash<QString, Fixed_Font_Common>& mLableDataController_common::getLableData<Fixed_Font_Common>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Common_Font_Common>& mLableDataController_common::getLableData<Common_Font_Common>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, X_Point_Common>& mLableDataController_common::getLableData<X_Point_Common>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, TempPoint_Common>& mLableDataController_common::getLableData<TempPoint_Common>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, TempMesh_Common>& mLableDataController_common::getLableData<TempMesh_Common>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Arrow_Font_Axis_Common>& mLableDataController_common::getLableData<Arrow_Font_Axis_Common>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Arrow_Common>& mLableDataController_common::getLableData<Arrow_Common>();
+
 }

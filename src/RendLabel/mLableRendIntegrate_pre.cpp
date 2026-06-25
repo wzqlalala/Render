@@ -11,7 +11,7 @@
 #include"mLableRendFixShapeRotate2.h"
 #include"mLableRendAxis.h"
 //MDataLable
-#include"mLableDataController_pre.cpp"
+#include"mLableDataController_pre.h"
 
 //MViewBasic
 #include"mCommonView.h"

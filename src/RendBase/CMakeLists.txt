@@ -1,9 +1,6 @@
 #-----------------------------------------------------------------------------
 # 头文件搜索路径
 #-----------------------------------------------------------------------------
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/spdlog/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/stb)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 #-----------------------------------------------------------------------------
 # 自动添加include目录
@@ -36,6 +33,12 @@ add_library(RendBase
 	${_header}
 	${_source}
 )
+target_include_directories(RendBase PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/spdlog/include
+	${CMAKE_CURRENT_SOURCE_DIR}/stb
+)
+
 
 #-----------------------------------------------------------------------------
 # 添加接口声明宏
@@ -49,7 +52,7 @@ list(APPEND _runtimes_libraries
 #-----------------------------------------------------------------------------
 # 链接依赖库
 #-----------------------------------------------------------------------------
-target_link_libraries(RendBase PRIVATE
+target_link_libraries(RendBase PUBLIC
 	${_runtimes_libraries}
 )
 

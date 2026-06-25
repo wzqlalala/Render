@@ -18,7 +18,7 @@
 #include"mLableRendController_pre.h"
 #include"mLableRendIntegrate_common.h"
 #include"mLableRendController_common.h"
-#include"mLableDataController_common.cpp"
+#include"mLableDataController_common.h"
 
 #include <math.h>
 #include <qglobal.h>

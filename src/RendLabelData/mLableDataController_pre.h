@@ -1260,4 +1260,50 @@ namespace MDataLable
 		//µç´ÅÊý¾Ý
 		shared_ptr<mLableData_magnet> _lableData_magnet = nullptr;
 	};
+	// Explicit specializations are defined in mLableDataController_pre.cpp.
+	template<> RENDLABELDATA_EXPORT std::shared_ptr<mLableData_implicit> mLableDataController_pre::getLableDataBase<mLableData_implicit>();
+	template<> RENDLABELDATA_EXPORT std::shared_ptr<mLableData_explicit> mLableDataController_pre::getLableDataBase<mLableData_explicit>();
+	template<> RENDLABELDATA_EXPORT std::shared_ptr<mLableData_fluid> mLableDataController_pre::getLableDataBase<mLableData_fluid>();
+	template<> RENDLABELDATA_EXPORT std::shared_ptr<mLableData_magnet> mLableDataController_pre::getLableDataBase<mLableData_magnet>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Arrow_Font_Axis_Implicit>& mLableDataController_pre::getLableData<Arrow_Font_Axis_Implicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Arrow_Font_Load_Implicit>& mLableDataController_pre::getLableData<Arrow_Font_Load_Implicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Triangle_Font_Load_Implicit>& mLableDataController_pre::getLableData<Triangle_Font_Load_Implicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Rhombus_Font_Load_Implicit>& mLableDataController_pre::getLableData<Rhombus_Font_Load_Implicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, X_Font_Load_Implicit>& mLableDataController_pre::getLableData<X_Font_Load_Implicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Lightning_Font_Load_Implicit>& mLableDataController_pre::getLableData<Lightning_Font_Load_Implicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, DF_BC_Implicit>& mLableDataController_pre::getLableData<DF_BC_Implicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Home_BC_Implicit>& mLableDataController_pre::getLableData<Home_BC_Implicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Line_Connect_Implicit>& mLableDataController_pre::getLableData<Line_Connect_Implicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, FaceToFace_Connect_Implicit>& mLableDataController_pre::getLableData<FaceToFace_Connect_Implicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, FaceToFace_Contact_Implicit>& mLableDataController_pre::getLableData<FaceToFace_Contact_Implicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Type1_RC_Implicit>& mLableDataController_pre::getLableData<Type1_RC_Implicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Type2_RC_Implicit>& mLableDataController_pre::getLableData<Type2_RC_Implicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Line_RC_Implicit>& mLableDataController_pre::getLableData<Line_RC_Implicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Sphere_RC_Implicit>& mLableDataController_pre::getLableData<Sphere_RC_Implicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, DF_RBC_Implicit>& mLableDataController_pre::getLableData<DF_RBC_Implicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Arrow_PlyCoordinate_Implicit>& mLableDataController_pre::getLableData<Arrow_PlyCoordinate_Implicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Line_RW_Explicit>& mLableDataController_pre::getLableData<Line_RW_Explicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Face_RW_Explicit>& mLableDataController_pre::getLableData<Face_RW_Explicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Axis_RW_Explicit>& mLableDataController_pre::getLableData<Axis_RW_Explicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Arrow_Font_Axis_Explicit>& mLableDataController_pre::getLableData<Arrow_Font_Axis_Explicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Arrow_Font_Load_Explicit>& mLableDataController_pre::getLableData<Arrow_Font_Load_Explicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, DF_Load_Explicit>& mLableDataController_pre::getLableData<DF_Load_Explicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, DF_BC_Explicit>& mLableDataController_pre::getLableData<DF_BC_Explicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Arrow_BC_Explicit>& mLableDataController_pre::getLableData<Arrow_BC_Explicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Line_Connect_Explicit>& mLableDataController_pre::getLableData<Line_Connect_Explicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, FaceToFace_Connect_Explicit>& mLableDataController_pre::getLableData<FaceToFace_Connect_Explicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, DF_Connect_Explicit>& mLableDataController_pre::getLableData<DF_Connect_Explicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Arrow_Font_InitCondition_Explicit>& mLableDataController_pre::getLableData<Arrow_Font_InitCondition_Explicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Triangle_Font_InitCondition_Explicit>& mLableDataController_pre::getLableData<Triangle_Font_InitCondition_Explicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, FaceToFace_Contact_Explicit>& mLableDataController_pre::getLableData<FaceToFace_Contact_Explicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Face_Box_Explicit>& mLableDataController_pre::getLableData<Face_Box_Explicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Line_Box_Explicit>& mLableDataController_pre::getLableData<Line_Box_Explicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Arrow_Vector_Explicit>& mLableDataController_pre::getLableData<Arrow_Vector_Explicit>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Arrow_Font_Axis_Magnet>& mLableDataController_pre::getLableData<Arrow_Font_Axis_Magnet>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Arrow_Font_Load_Magnet>& mLableDataController_pre::getLableData<Arrow_Font_Load_Magnet>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Triangle_Font_Load_Magnet>& mLableDataController_pre::getLableData<Triangle_Font_Load_Magnet>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Lightning_Font_Load_Magnet>& mLableDataController_pre::getLableData<Lightning_Font_Load_Magnet>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Arrow_BC_Magnet>& mLableDataController_pre::getLableData<Arrow_BC_Magnet>();
+	template<> RENDLABELDATA_EXPORT QHash<QString, Home_BC_Magnet>& mLableDataController_pre::getLableData<Home_BC_Magnet>();
+
 }

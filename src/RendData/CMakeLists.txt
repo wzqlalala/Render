@@ -1,8 +1,6 @@
 #-----------------------------------------------------------------------------
 # 头文件搜索路径
 #-----------------------------------------------------------------------------
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../RendBasic)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 #-----------------------------------------------------------------------------
 # 自动添加include目录
@@ -22,6 +20,10 @@ add_library(RendData
 	${_header}
 	${_source}
 )
+target_include_directories(RendData PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}
+)
+
 
 #-----------------------------------------------------------------------------
 # 添加接口声明宏
@@ -36,7 +38,7 @@ list(APPEND _runtimes_libraries
 #-----------------------------------------------------------------------------
 # 链接依赖库
 #-----------------------------------------------------------------------------
-target_link_libraries(RendData PRIVATE
+target_link_libraries(RendData PUBLIC
 	${_runtimes_libraries}
 	${_depend_library}
 )

@@ -19,8 +19,8 @@
 #include"mLableRendController_pre.h"
 #include"mLableRendController_common.h"
 //MDataLable
-#include"mLableDataController_pre.cpp"
-#include"mLableDataController_common.cpp"
+#include"mLableDataController_pre.h"
+#include"mLableDataController_common.h"
 
 #include "mGlobalVarible.h"
 

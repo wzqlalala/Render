@@ -3,7 +3,7 @@
 #include"mLableRendArrow.h"
 #include"mLableRendFont.h"
 //MDataLable
-#include"mLableDataController_post.cpp"
+#include"mLableDataController_post.h"
 //MViewBasic
 #include"mCommonView.h"
 #include"mModelView.h"

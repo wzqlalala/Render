@@ -113,4 +113,8 @@ namespace MDataLable
 		//后处理数据
 		shared_ptr<mLableData_post> _lableData_post = nullptr;
 	};
+	// Explicit specializations are defined in mLableDataController_post.cpp.
+	template<> RENDLABELDATA_EXPORT QHash<int, QHash<QString, VectorArrow_Post>>& mLableDataController_post::getLableData<VectorArrow_Post>();
+	template<> RENDLABELDATA_EXPORT QHash<int, QHash<QString, Fixed_Font_Post>>& mLableDataController_post::getLableData<Fixed_Font_Post>();
+
 }

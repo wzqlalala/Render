@@ -10,7 +10,9 @@
 #include <QVector3D>
 #include <QPair>
 #include <set>
+#include <functional>
 #include <QFutureWatcher>
+#include <QFuture>
 
 //MViewBasic
 #include "mMeshViewEnum.h"
@@ -24,6 +26,7 @@
 
 #include "SpaceTree.h"
 
+class QTime;
 namespace mxr
 {
 	class Shader;
@@ -64,6 +67,7 @@ namespace MPostRend
 	class mPostOneFrameRender;
 	class mPostAnimationRender;
 	class mPostFrameText;
+	class mPostPickController;
 	class mPostDragRender;
 	class RENDVIEW_EXPORT mPostRender :public mBaseRender
 	{
@@ -342,6 +346,26 @@ namespace MPostRend
 		//初始化线程
 		void initialPickThreads();
 
+		//拾取流程
+		bool consumeActiveDragPick();
+		bool configurePickThread(const QVector<QVector2D>& poses);
+		void startPickTask(const QTime& time);
+		void finishPick(const QTime& time);
+
+		// Schedule min/max marker position updates.
+		void scheduleMinMaxUpdate();
+
+		void initializeInteractionRenderers();
+		void initializeOneFrameRenderStates(const shared_ptr<mPostOneFrameRender>& oneFrameRender);
+		void ensureColorTableTexture(mPostOneFrameRendData* postOneFrameRendData);
+		shared_ptr<mPostOneFrameRender> createAnimationFrameRender(int id);
+		shared_ptr<mPostOneFrameRender> createOneFrameAnimationRender(mPostOneFrameRendData* postOneFrameRendData);
+		void waitForAnimationUpdateFutures(QVector<QFuture<void>>& futures);
+		void bufferAnimationFrames();
+		void forEachAnimationRender(const std::function<void(const shared_ptr<mPostOneFrameRender>&)>& callback);
+		bool anyAnimationRender(const std::function<bool(const shared_ptr<mPostOneFrameRender>&)>& predicate);
+		Space::AABB getAnimationModelAABB();
+
 		//
 	private slots:
 
@@ -411,7 +435,7 @@ namespace MPostRend
 
 		//拾取线程
 		////前面的部件数量少
-		mPostMeshPickThread *_thread; QFutureWatcher<void> w;
+		std::unique_ptr<mPostPickController> _pickController;
 		mPostMeshPickData *_pickData;
 		shared_ptr<mPostHighLightRender> _highLightRender;
 
